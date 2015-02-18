@@ -9,7 +9,11 @@ import 'package:template_binding/template_binding.dart' as tmpl_bnd;
 typedef dynamic _Nullary();
 
 @Decorator(
-  selector: '[py-*]'
+  selector: '[py-*]',
+  exportExpressionAttrs: const [
+    'py-value',
+    'py-opened',
+  ]
 )
 class PolymerDec {
   PolymerDec(Node node, ng.Parser parser, ng.Scope scope) {
