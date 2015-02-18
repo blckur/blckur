@@ -1,23 +1,72 @@
 library polymer_dec;
 
-import 'dart:html';
 import 'package:angular/angular.dart' show Decorator;
 import 'package:angular/angular.dart' as ng;
 import 'package:observe/observe.dart' as obsrv;
 import 'package:template_binding/template_binding.dart' as tmpl_bnd;
+import 'dart:html' as dom;
 
 typedef dynamic _Nullary();
 
 @Decorator(
   selector: '[py-*]',
   exportExpressionAttrs: const [
-    'py-value',
+    'py-mini',
+    'py-raised',
+    'py-closeSelector',
+    'py-pin',
+    'py-text',
+    'py-autoCloseDisabled',
+    'py-autoValidate',
+    'py-disabled',
+    'py-src',
+    'py-duration',
+    'py-alt',
+    'py-dragging',
+    'py-labelVisible',
+    'py-fill',
+    'py-rows',
+    'py-checked',
     'py-opened',
+    'py-responsiveWidth',
+    'py-indeterminate',
+    'py-label',
+    'py-immediateValue',
+    'py-hideScrollButton',
+    'py-icon',
+    'py-secondaryProgress',
+    'py-committedValue',
+    'py-snaps',
+    'py-scrollable',
+    'py-toggles',
+    'py-editable',
+    'py-recenteringTouch',
+    'py-closedIcon',
+    'py-initialOpacity',
+    'py-openedIcon',
+    'py-noslide',
+    'py-active',
+    'py-noink',
+    'py-swipeDisabled',
+    'py-nobar',
+    'py-disableDrag',
+    'py-z',
+    'py-target',
+    'py-isInvalid',
+    'py-transition',
+    'py-value',
+    'py-layered',
+    'py-maxRows',
+    'py-error',
+    'py-floatingLabel',
+    'py-opacityDecayVelocity',
+    'py-animated',
+    'py-heading',
   ]
 )
 class PolymerDec {
-  PolymerDec(Node node, ng.Parser parser, ng.Scope scope) {
-    Element element = node;
+  PolymerDec(dom.Node node, ng.Parser parser, ng.Scope scope) {
+    dom.Element element = node;
 
     element.attributes.forEach((key, value) {
       if (!key.startsWith('py-')) {
@@ -40,9 +89,19 @@ class PolymerDec {
 }
 
 class ValueBindable implements obsrv.Bindable {
-  var _value;
   Function callback;
   Function onChange;
+
+  var _value;
+  void set value(dynamic value) {
+    this._value = value;
+    if (this.onChange != null) {
+      this.onChange(this._value);
+    }
+  }
+  dynamic get value {
+    return this._value;
+  }
 
   void close() {
     this.callback = null;
@@ -63,16 +122,6 @@ class ValueBindable implements obsrv.Bindable {
         this.callback(this._value);
       }
     }
-  }
-
-  void set value(dynamic value) {
-    this._value = value;
-    if (this.onChange != null) {
-      this.onChange(this._value);
-    }
-  }
-  dynamic get value {
-    return this._value;
   }
 
   void deliver() {}
