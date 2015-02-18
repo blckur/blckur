@@ -4,8 +4,14 @@ import 'package:angular/angular.dart' show Component;
 
 @Component(
   selector: 'test',
-  template: '<div class="test">Test</div>',
+  templateUrl: 'packages/blckur/components/test/test.html',
   cssUrl: 'packages/blckur/components/test/test.css'
 )
 class TestComp {
+  String inputValue;
+  bool showToast;
+
+  void onClick() {
+    this.showToast = this.showToast != true;
+  }
 }
