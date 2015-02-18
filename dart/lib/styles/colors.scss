@@ -1,0 +1,11 @@
+@import 'styles/variables.scss';
+@import 'styles/mixins.scss';
+
+// ####################################
+// base
+// ####################################
+body {
+  x-label: body;
+  color: map-get($body, fg);
+  background-color: map-get($body, bg);
+}
