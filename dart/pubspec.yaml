@@ -6,6 +6,9 @@ dependencies:
   browser: ">=0.10.0+2"
   barback: ">=0.14.1"
   logging: ">=0.9.3"
+  polymer: ">=0.15.5"
+  core_elements: ">=0.6.0"
+  paper_elements: ">=0.6.1"
 transformers:
 - blckur
 - angular
