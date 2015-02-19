@@ -7,3 +7,8 @@ core-drawer-panel:not([narrow]) .menu-toggle {
 core-drawer-panel:not([narrow]) .toolbar {
   height: 144px;
 }
+
+core-menu {
+  margin: 0;
+  overflow-y: scroll;
+}
