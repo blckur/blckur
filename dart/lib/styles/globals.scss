@@ -17,6 +17,12 @@ body /deep/ *:after {
   box-sizing: border-box;
 }
 
+body /deep/ paper-progress {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
