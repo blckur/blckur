@@ -1,0 +1,9 @@
+@import 'styles/base.scss';
+
+core-drawer-panel:not([narrow]) .menu-toggle {
+  display: none;
+}
+
+core-drawer-panel:not([narrow]) .toolbar {
+  height: 144px;
+}
