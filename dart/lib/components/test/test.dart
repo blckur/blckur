@@ -25,5 +25,10 @@ class TestComp implements ng.ShadowRootAware {
     sliderElem.addEventListener('core-change', (evt) {
       print('sliderEvent: ${evt}');
     });
+
+    var menuElem = root.querySelector('paper-dropdown-menu');
+    menuElem.addEventListener('core-select', (evt) {
+      print('menuEvent: ${evt}');
+    });
   }
 }
