@@ -1,10 +1,19 @@
+<core-toolbar>
+  <div flex>Toolbar</div>
+  <core-icon-button icon="menu"></core-icon-button>
+</core-toolbar>
 <paper-toast py-opened="showToast">Polymer Toast</paper-toast>
 <input type="text" placeholder="Angular Input" ng-model="inputValue">
 <br>
-<paper-input label="Polymer Input" py-value="inputValue"></paper-input>
+<paper-input label="Polymer Input" py-value="inputValue"
+  py-committedValue="commitedInputValue"></paper-input>
+<br>
+<paper-slider py-immediateValue="sliderValue" max="1000"></paper-slider>
 <br>
 <paper-button raised="true" ng-click="onClick()">Toggle Toast</paper-button>
 <br>
 <br>
 <div>showToast: {{showToast}}</div>
 <div>inputValue: {{inputValue}}</div>
+<div>commitedInputValue: {{commitedInputValue}}</div>
+<div>sliderValue: {{sliderValue}}</div>
