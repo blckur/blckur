@@ -2,7 +2,17 @@
   <div flex>Toolbar</div>
   <core-icon-button icon="menu"></core-icon-button>
 </core-toolbar>
-<paper-toast py-opened="showToast">Polymer Toast</paper-toast>
+<paper-dropdown-menu label="Test Dropdown Menu">
+  <paper-dropdown class="dropdown">
+    <core-menu class="menu" py-selected="menuSelected">
+      <paper-item>Item 1</paper-item>
+      <paper-item>Item 2</paper-item>
+      <paper-item>Item 3</paper-item>
+      <paper-item>Item 4</paper-item>
+    </core-menu>
+  </paper-dropdown>
+</paper-dropdown-menu>
+<br>
 <input type="text" placeholder="Angular Input" ng-model="inputValue">
 <br>
 <paper-input label="Polymer Input" py-value="inputValue"
@@ -10,10 +20,12 @@
 <br>
 <paper-slider py-immediateValue="sliderValue" max="1000"></paper-slider>
 <br>
+<paper-toast py-opened="showToast">Polymer Toast</paper-toast>
 <paper-button raised="true" ng-click="onClick()">Toggle Toast</paper-button>
 <br>
 <br>
-<div>showToast: {{showToast}}</div>
+<div>menuSelected: {{menuSelected}}</div>
 <div>inputValue: {{inputValue}}</div>
 <div>commitedInputValue: {{commitedInputValue}}</div>
 <div>sliderValue: {{sliderValue}}</div>
+<div>showToast: {{showToast}}</div>

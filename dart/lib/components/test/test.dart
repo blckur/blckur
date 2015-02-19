@@ -10,6 +10,7 @@ import 'dart:html' as dom;
   cssUrl: 'packages/blckur/components/test/test.css'
 )
 class TestComp implements ng.ShadowRootAware {
+  int menuSelected;
   String inputValue;
   String commitedInputValue;
   int sliderValue;
