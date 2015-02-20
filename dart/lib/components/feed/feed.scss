@@ -1,11 +1,53 @@
 @import 'styles/base.scss';
 
+img {
+  border-radius: 100%;
+  width: 70px;
+}
+
+.main-panel,
+.side-panel {
+  position: relative;
+}
+
+.drop-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+}
+
+.toolbar {
+  color: #fff;
+}
+
+.toolbar .logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 34px;
+}
+
 core-drawer-panel:not([narrow]) .menu-toggle {
   display: none;
 }
 
 core-drawer-panel:not([narrow]) .toolbar {
   height: 144px;
+}
+
+core-drawer-panel:not([narrow]) .toolbar .logo {
+  font-size: 60px;
+  margin-top: 36px;
+}
+
+core-header-panel[main] .toolbar {
+  background-color: #03a9f4;
+}
+
+core-header-panel[drawer] .toolbar {
+  height: 144px;
+  background-color: #069bde;
 }
 
 core-menu {
