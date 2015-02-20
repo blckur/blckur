@@ -23,7 +23,7 @@
 }
 
 .toolbar .row {
-  margin: 20px 0 0 0;
+  margin: 35px 0 0 0;
 }
 
 .toolbar .avatar {
@@ -46,8 +46,9 @@ core-drawer-panel:not([narrow]) .menu-toggle {
   display: none;
 }
 
+core-header-panel[drawer] .toolbar,
 core-drawer-panel:not([narrow]) .toolbar {
-  height: 144px;
+  height: 100px;
 }
 
 core-drawer-panel:not([narrow]) .toolbar .logo {
@@ -59,8 +60,10 @@ core-header-panel[main] .toolbar {
   background-color: #03a9f4;
 }
 
+core-header-panel[drawer] {
+}
+
 core-header-panel[drawer] .toolbar {
-  height: 144px;
   background-color: #069bde;
 }
 
