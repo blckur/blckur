@@ -12,3 +12,8 @@ core-menu {
   margin: 0;
   overflow-y: scroll;
 }
+
+core-menu core-item {
+  height: 90px;
+  padding-left: 20px;
+}
