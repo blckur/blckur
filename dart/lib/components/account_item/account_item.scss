@@ -1,0 +1,25 @@
+@import 'styles/base.scss';
+
+core-item {
+  color: #595959;
+}
+
+.content,
+core-item {
+  height: 90px;
+}
+
+brand-logo {
+  margin: 10px;
+}
+
+.buttons {
+  margin-top: 5px;
+}
+
+.info {
+  font-weight: 300;
+  font-size: 14px;
+  text-align: right;
+  margin-right: 12px;
+}
