@@ -71,9 +71,23 @@ core-menu {
 }
 
 core-menu core-item {
-  font-weight: 500;
   color: #595959;
   height: 90px;
+}
+
+core-menu core-item .content {
+  height: 90px;
+}
+
+core-menu core-item .buttons {
+  margin-top: 5px;
+}
+
+core-menu core-item .info {
+  font-weight: 500;
+  font-size: 14px;
+  text-align: right;
+  margin-right: 8px;
 }
 
 core-menu core-item img {
