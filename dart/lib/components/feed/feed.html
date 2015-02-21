@@ -27,35 +27,22 @@
     </core-toolbar>
     <div class="side-panel" layout vertical flex>
       <core-menu flex>
-        <core-item layout center horizontal>Account 1</core-item>
-        <core-item layout center horizontal>Account 2</core-item>
-        <core-item layout center horizontal>Account 3</core-item>
-        <core-item layout center horizontal>Account 4</core-item>
-        <core-item layout center horizontal>Account 5</core-item>
-        <core-item layout center horizontal>Account 6</core-item>
-        <core-item layout center horizontal>Account 7</core-item>
-        <core-item layout center horizontal>Account 8</core-item>
-        <core-item layout center horizontal>Account 9</core-item>
-        <core-item layout center horizontal>Account 10</core-item>
-        <core-item layout center horizontal>Account 11</core-item>
-        <core-item layout center horizontal>Account 12</core-item>
-        <core-item layout center horizontal>Account 13</core-item>
-        <core-item layout center horizontal>Account 14</core-item>
-        <core-item layout center horizontal>Account 15</core-item>
-        <core-item layout center horizontal>Account 16</core-item>
-        <core-item layout center horizontal>Account 17</core-item>
-        <core-item layout center horizontal>Account 18</core-item>
-        <core-item layout center horizontal>Account 19</core-item>
-        <core-item layout center horizontal>Account 20</core-item>
-        <core-item layout center horizontal>Account 21</core-item>
-        <core-item layout center horizontal>Account 22</core-item>
-        <core-item layout center horizontal>Account 23</core-item>
-        <core-item layout center horizontal>Account 24</core-item>
-        <core-item layout center horizontal>Account 25</core-item>
-
-        <core-item layout center horizontal>
+        <core-item layout horizontal flex>
+          <img src="/img/twitter.svg">
+          <div class="info" flex>Twitter Account</div>
+        </core-item>
+        <core-item layout horizontal>
+          <img src="/img/github.png">
+          <div class="info" flex>GitHub Account</div>
+        </core-item>
+        <core-item layout horizontal>
+          <img src="/img/gmail.svg">
+          <div class="info" flex>Gmail Account</div>
+        </core-item>
+        <core-item class="add-account" layout horizontal>
           <paper-fab icon="add" title="Add account" role="button"
-            tabindex="0" aria-label="Add account"></paper-fab>Add account
+            tabindex="0" aria-label="Add account"></paper-fab>
+          <div class="info" flex>Add new account</div>
         </core-item>
       </core-menu>
     </div>
