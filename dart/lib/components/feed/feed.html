@@ -26,46 +26,16 @@
       </div>
     </core-toolbar>
     <div class="side-panel" layout vertical flex>
-      <core-menu flex>
-        <core-item layout horizontal flex>
-          <brand-logo icon="twitter"></brand-logo>
-          <div class="content" layout vertical flex>
-            <div class="buttons" layout horizontal>
-              <div flex></div>
-              <core-icon-button icon="settings"></core-icon-button>
-              <core-icon-button icon="delete"></core-icon-button>
-            </div>
-            <div class="info" flex>@zachhuff386</div>
-          </div>
-        </core-item>
-        <core-item layout horizontal>
-          <brand-logo icon="github"></brand-logo>
-          <div class="content" layout vertical flex>
-            <div class="buttons" layout horizontal>
-              <div flex></div>
-              <core-icon-button icon="settings"></core-icon-button>
-              <core-icon-button icon="delete"></core-icon-button>
-            </div>
-            <div class="info" flex>zachhuff386</div>
-          </div>
-        </core-item>
-        <core-item layout horizontal>
-          <brand-logo icon="gmail"></brand-logo>
-          <div class="content" layout vertical flex>
-            <div class="buttons" layout horizontal>
-              <div flex></div>
-              <core-icon-button icon="settings"></core-icon-button>
-              <core-icon-button icon="delete"></core-icon-button>
-            </div>
-            <div class="info" flex>zach.huff.386@gmail.com</div>
-          </div>
-        </core-item>
+      <div class="menu" flex>
+        <account-item></account-item>
+        <account-item></account-item>
+        <account-item></account-item>
         <core-item class="add-account" layout horizontal>
           <paper-fab icon="add" title="Add account" role="button"
             tabindex="0" aria-label="Add account"></paper-fab>
           <div class="info" flex>Add new account</div>
         </core-item>
-      </core-menu>
+      </div>
     </div>
   </core-header-panel>
 </core-drawer-panel>
