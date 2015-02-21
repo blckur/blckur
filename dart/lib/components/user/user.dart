@@ -8,4 +8,13 @@ import 'package:angular/angular.dart' show Component;
   cssUrl: 'packages/blckur/components/user/user.css'
 )
 class UserComp {
+  bool settings;
+
+  void onSettings() {
+    settings = this.settings != true;
+  }
+
+  void onSave() {
+    settings = false;
+  }
 }

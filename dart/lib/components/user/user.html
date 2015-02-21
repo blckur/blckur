@@ -1,12 +1,25 @@
-<div class="content" layout horizontal flex>
-  <img class="avatar"
-    src="https://avatars0.githubusercontent.com/u/1305774?v=3&s=460">
-  <div layout vertical flex>
-    <div class="buttons" layout horizontal>
-      <div flex></div>
-      <core-icon-button icon="settings"></core-icon-button>
-      <core-icon-button icon="exit-to-app"></core-icon-button>
+<div class="content" layout vertical flex>
+  <div class="row" layout horizontal>
+    <img class="avatar"
+      src="https://avatars0.githubusercontent.com/u/1305774?v=3&s=460">
+    <div layout vertical flex>
+      <div class="buttons" layout horizontal>
+        <div flex></div>
+        <core-icon-button icon="settings"
+          ng-click="onSettings()"></core-icon-button>
+        <core-icon-button icon="exit-to-app"></core-icon-button>
+      </div>
+      <div class="info">zach.huff.386@gmail.com</div>
     </div>
-    <div class="info" flex>zach.huff.386@gmail.com</div>
+  </div>
+  <div ng-if="settings" class="row" layout vertical>
+    <paper-input-decorator label="Email address">
+      <input is="core-input" type="email">
+    </paper-input-decorator>
+    <paper-input-decorator label="New password">
+      <input is="core-input" type="password">
+    </paper-input-decorator>
+    <paper-button role="button" tabindex="0"
+      ng-click="onSave()">Save</paper-button>
   </div>
 </div>
