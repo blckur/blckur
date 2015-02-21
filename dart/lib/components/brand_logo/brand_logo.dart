@@ -5,7 +5,7 @@ import 'package:angular/angular.dart' as ng;
 import 'dart:html' as dom;
 
 @Component(
-  selector: 'brand-logo',
+  selector: 'x-brand-logo',
   template: '<img>'
 )
 class BrandLogoComp implements ng.ShadowRootAware {
