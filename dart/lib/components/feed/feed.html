@@ -6,9 +6,7 @@
         core-drawer-toggle></paper-icon-button>
       <div class="logo">blckur</div>
     </core-toolbar>
-    <div class="main-panel">
-    </div>
-
+    <div class="main-panel"></div>
   </core-header-panel>
   <core-header-panel mode="cover" drawer layout vertical>
     <core-toolbar class="toolbar">
@@ -27,14 +25,10 @@
     </core-toolbar>
     <div class="side-panel" layout vertical flex>
       <div class="menu" flex>
-        <account-item></account-item>
-        <account-item></account-item>
-        <account-item></account-item>
-        <core-item class="add-account" layout horizontal>
-          <paper-fab icon="add" title="Add account" role="button"
-            tabindex="0" aria-label="Add account"></paper-fab>
-          <div class="info" flex>Add new account</div>
-        </core-item>
+        <account></account>
+        <account></account>
+        <account></account>
+        <account-add></account-add>
       </div>
     </div>
   </core-header-panel>
