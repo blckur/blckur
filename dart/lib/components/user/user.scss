@@ -16,3 +16,21 @@
   font-weight: 500;
   text-align: right;
 }
+
+.settings.ng-enter {
+  max-height: 0;
+  @include transition(max-height .2s);
+}
+
+.settings.ng-enter.ng-enter-active {
+  max-height: 170px;
+}
+
+.settings.ng-leave {
+  max-height: 170px;
+  @include transition(max-height .2s);
+}
+
+.settings.ng-leave.ng-leave-active {
+  max-height: 0;
+}
