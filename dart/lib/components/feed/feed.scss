@@ -65,36 +65,37 @@ core-header-panel[drawer] .toolbar {
   background-color: #069bde;
 }
 
-core-menu {
+.menu {
   margin: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
-core-menu core-item {
+.menu core-item {
   color: #595959;
   height: 90px;
 }
 
-core-menu core-item .content {
+.menu core-item .content {
   height: 90px;
 }
 
-core-menu core-item .buttons {
+.menu core-item .buttons {
   margin-top: 5px;
 }
 
-core-menu core-item .info {
-  font-weight: 500;
+.menu core-item .info {
+  font-weight: 300;
   font-size: 14px;
   text-align: right;
-  margin-right: 8px;
+  margin-right: 12px;
 }
 
-core-menu core-item img {
-  width: 80px;
-  margin: 10px;
+.add-account .info {
+  text-align: left;
+  font-size: 22px;
+  font-weight: 300;
 }
 
 .add-account paper-fab {
-  margin: 0 25px;
+  margin: 0 22px;
 }
