@@ -70,6 +70,16 @@ core-menu {
 }
 
 core-menu core-item {
+  font-weight: 500;
+  color: #595959;
   height: 90px;
-  padding-left: 20px;
+}
+
+core-menu core-item img {
+  width: 80px;
+  margin: 10px;
+}
+
+.add-account paper-fab {
+  margin: 0 25px;
 }
