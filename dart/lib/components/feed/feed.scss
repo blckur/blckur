@@ -22,64 +22,35 @@
   color: #fff;
 }
 
+user {
+  color: #fff;
+  min-height: 100px;
+  background-color: #069bde;
+}
+
+.toolbar {
+  background-color: #03a9f4;
+}
+
+core-drawer-panel:not([narrow]) .toolbar {
+  height: 100px;
+}
+
 .toolbar .logo {
   font-family: 'Pacifico', cursive;
   font-size: 34px;
+}
+
+core-drawer-panel:not([narrow]) .toolbar .logo {
+  margin-top: 36px;
+  font-size: 60px;
 }
 
 core-drawer-panel:not([narrow]) .menu-toggle {
   display: none;
 }
 
-core-header-panel[drawer] .toolbar,
-core-drawer-panel:not([narrow]) .toolbar {
-  height: 100px;
-}
-
-core-drawer-panel:not([narrow]) .toolbar .logo {
-  font-size: 60px;
-  margin-top: 36px;
-}
-
-core-header-panel[main] .toolbar {
-  background-color: #03a9f4;
-}
-
-core-header-panel[drawer] .toolbar {
-  background-color: #069bde;
-}
-
 .menu {
   margin: 0;
   overflow-y: auto;
-}
-
-.menu core-item {
-  color: #595959;
-  height: 90px;
-}
-
-.menu core-item .content {
-  height: 90px;
-}
-
-.menu core-item .buttons {
-  margin-top: 5px;
-}
-
-.menu core-item .info {
-  font-weight: 300;
-  font-size: 14px;
-  text-align: right;
-  margin-right: 12px;
-}
-
-.add-account .info {
-  text-align: left;
-  font-size: 22px;
-  font-weight: 300;
-}
-
-.add-account paper-fab {
-  margin: 0 22px;
 }
