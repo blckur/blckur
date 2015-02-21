@@ -12,3 +12,5 @@ dependencies:
 transformers:
 - blckur
 - angular
+- polymer:
+    entry_points: web/index.html
