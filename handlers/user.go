@@ -5,13 +5,13 @@ import (
     "labix.org/v2/mgo/bson"
 )
 
-type Account struct {
+type User struct {
     Id bson.ObjectId `json:"id" binding:"required"`
     Email string `json:"email" binding:"required"`
 }
 
-func account_get(c *gin.Context) {
-    acct := &Account{
+func user_get(c *gin.Context) {
+    acct := &User{
         Id: bson.NewObjectId(),
         Email: "zach.huff.386@gmail.com",
     }

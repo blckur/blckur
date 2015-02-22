@@ -5,5 +5,5 @@ import (
 )
 
 func Register(engine *gin.Engine) {
-    engine.GET("/account", account_get)
+    engine.GET("/user", user_get)
 }
