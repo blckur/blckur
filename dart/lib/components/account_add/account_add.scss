@@ -1,5 +1,9 @@
 @import 'styles/base.scss';
 
+:host {
+  cursor: pointer;
+}
+
 core-item {
   color: #595959;
 }
@@ -10,6 +14,6 @@ paper-fab {
 
 .info {
   text-align: left;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 300;
 }
