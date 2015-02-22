@@ -8,4 +8,5 @@ import 'package:angular/angular.dart' show Component;
   cssUrl: 'packages/blckur/components/feed/feed.css'
 )
 class FeedComp {
+  bool addAccount;
 }
