@@ -1,7 +1,34 @@
-<core-item class="add-account" layout horizontal>
-  <paper-button flex>
-    <paper-fab icon="add" title="Add account" role="button"
-      aria-label="Add account"></paper-fab>
-    <div class="info" flex>Add new account</div>
-  </paper-button>
-</core-item>
+<div ng-switch="addAccount">
+  <div ng-switch-when="true" flex>
+    <core-item class="account-type" layout horizontal>
+      <paper-button flex ng-click="onAccountAdd()">
+        <x-brand-logo icon="twitter"></x-brand-logo>
+        <div class="content" flex>Twitter</div>
+        <core-icon icon="chevron-right"></core-icon>
+      </paper-button>
+    </core-item>
+    <core-item class="account-type" layout horizontal>
+      <paper-button flex ng-click="onAccountAdd()">
+        <x-brand-logo icon="github"></x-brand-logo>
+        <div class="content" flex>GitHub</div>
+        <core-icon icon="chevron-right"></core-icon>
+      </paper-button>
+    </core-item>
+    <core-item class="account-type" layout horizontal>
+      <paper-button flex ng-click="onAccountAdd()">
+        <x-brand-logo icon="gmail"></x-brand-logo>
+        <div class="content" flex>Gmail</div>
+        <core-icon icon="chevron-right"></core-icon>
+      </paper-button>
+    </core-item>
+  </div>
+  <div ng-switch-default>
+    <core-item layout horizontal>
+      <paper-button flex ng-click="onAccountAdd()">
+        <paper-fab icon="add" title="Add account" role="button"
+          aria-label="Add account"></paper-fab>
+        <div class="info" flex>Add new account</div>
+      </paper-button>
+    </core-item>
+  </div>
+</div>
