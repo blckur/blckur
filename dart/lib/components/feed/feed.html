@@ -11,11 +11,16 @@
   <core-header-panel mode="cover" drawer layout vertical>
     <x-user></x-user>
     <div class="side-panel" layout vertical flex>
-      <div class="menu" flex>
-        <x-account></x-account>
-        <x-account></x-account>
-        <x-account></x-account>
-        <x-account-add></x-account-add>
+      <div class="menu scrollable" flex>
+        <div ng-if="addAccount != true">
+          <x-account></x-account>
+          <x-account></x-account>
+          <x-account></x-account>
+          <x-account></x-account>
+          <x-account></x-account>
+          <x-account></x-account>
+        </div>
+        <x-account-add add-account="addAccount"></x-account-add>
       </div>
     </div>
   </core-header-panel>
