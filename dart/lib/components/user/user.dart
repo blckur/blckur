@@ -31,6 +31,10 @@ class UserComp {
   }
 
   void onSave() {
+    this.settingsModel.save().catchError((err) {
+      logger.severe('Failed to save user', err);
+    });
+
     settings = false;
     this.model = this.settingsModel;
   }
