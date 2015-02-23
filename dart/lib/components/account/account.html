@@ -1,11 +1,11 @@
 <core-item layout horizontal flex>
-  <x-brand-logo icon="twitter"></x-brand-logo>
+  <x-brand-logo icon="{{model.type}}"></x-brand-logo>
   <div class="content" layout vertical flex>
     <div class="buttons" layout horizontal>
       <div flex></div>
       <core-icon-button icon="settings"></core-icon-button>
       <core-icon-button icon="delete"></core-icon-button>
     </div>
-    <div class="info" flex>@zachhuff386</div>
+    <div class="info" ng-bind="model.identity" flex></div>
   </div>
 </core-item>

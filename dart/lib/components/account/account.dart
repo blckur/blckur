@@ -1,6 +1,8 @@
 library account_comp;
 
-import 'package:angular/angular.dart' show Component;
+import 'package:blckur/models/account.dart' as acct;
+
+import 'package:angular/angular.dart' show Component, NgOneWay;
 
 @Component(
   selector: 'x-account',
@@ -8,4 +10,6 @@ import 'package:angular/angular.dart' show Component;
   cssUrl: 'packages/blckur/components/account/account.css'
 )
 class AccountComp {
+  @NgOneWay('model')
+  acct.Account model;
 }
