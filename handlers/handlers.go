@@ -12,5 +12,5 @@ func AccessControl() gin.HandlerFunc {
 
 func Register(engine *gin.Engine) {
     engine.Use(AccessControl())
-    engine.GET("/user", user_get)
+    engine.GET("/user", userGet)
 }

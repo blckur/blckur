@@ -10,10 +10,11 @@ type User struct {
     Email string `json:"email" binding:"required"`
 }
 
-func user_get(c *gin.Context) {
-    acct := &User{
-        Id: bson.NewObjectId(),
-        Email: "zach.huff.386@gmail.com",
-    }
-    c.JSON(200, acct)
+var user = &User{
+    Id: bson.NewObjectId(),
+    Email: "zach.huff.386@gmail.com",
+}
+
+func userGet(c *gin.Context) {
+    c.JSON(200, user)
 }
