@@ -18,3 +18,12 @@ var user = &User{
 func userGet(c *gin.Context) {
     c.JSON(200, user)
 }
+
+func userPut(c *gin.Context) {
+    var json User
+    c.Bind(&json)
+
+    user.Email = json.Email
+
+    c.JSON(200, user)
+}
