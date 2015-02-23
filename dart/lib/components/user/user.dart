@@ -13,6 +13,7 @@ import 'package:angular/angular.dart' show Component;
 class UserComp {
   bool settings;
   usr.User model;
+  usr.User settingsModel;
 
   UserComp(this.model) {
     this.update();
@@ -25,10 +26,12 @@ class UserComp {
   }
 
   void onSettings() {
+    this.settingsModel = this.model.clone();
     settings = this.settings != true;
   }
 
   void onSave() {
     settings = false;
+    this.model = this.settingsModel;
   }
 }
