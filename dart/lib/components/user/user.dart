@@ -1,5 +1,8 @@
 library user_comp;
 
+import 'package:blckur/models/user.dart' as usr;
+import 'package:blckur/logger.dart' as logger;
+
 import 'package:angular/angular.dart' show Component;
 
 @Component(
@@ -9,6 +12,17 @@ import 'package:angular/angular.dart' show Component;
 )
 class UserComp {
   bool settings;
+  usr.User model;
+
+  UserComp(this.model) {
+    this.update();
+  }
+
+  void update() {
+    this.model.fetch().catchError((err) {
+      logger.severe('Failed to load organizations', err);
+    });
+  }
 
   void onSettings() {
     settings = this.settings != true;
