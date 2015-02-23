@@ -9,12 +9,12 @@
           ng-click="onSettings()"></core-icon-button>
         <core-icon-button icon="exit-to-app"></core-icon-button>
       </div>
-      <div class="info">zach.huff.386@gmail.com</div>
+      <div class="info" ng-bind="model.email"></div>
     </div>
   </div>
   <div ng-if="settings" class="row settings" layout vertical ng-animate>
     <paper-input-decorator label="Email address">
-      <input is="core-input" type="email">
+      <input is="core-input" type="email" ng-model="settingsModel.email">
     </paper-input-decorator>
     <paper-input-decorator label="New password">
       <input is="core-input" type="password">
