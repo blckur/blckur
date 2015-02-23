@@ -21,7 +21,7 @@ class UserComp {
 
   void update() {
     this.model.fetch().catchError((err) {
-      logger.severe('Failed to load organizations', err);
+      logger.severe('Failed to load user', err);
     });
   }
 
