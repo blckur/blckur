@@ -13,5 +13,5 @@ class AccountType extends mdl.Model {
   @mdl.Attribute('type')
   String type;
 
-  Account(ng.Http http) : super(http);
+  AccountType(ng.Http http) : super(http);
 }
