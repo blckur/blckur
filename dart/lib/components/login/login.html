@@ -1,0 +1,22 @@
+<div class="container" layout horizontal center>
+  <div class="modal" layout vertical flex>
+    <header>blckur</header>
+    <form>
+      <paper-input-decorator label="Email address">
+        <input is="core-input" type="email">
+      </paper-input-decorator>
+      <paper-input-decorator label="Password">
+        <input is="core-input" type="password">
+      </paper-input-decorator>
+      <div layout horizontal>
+        <paper-checkbox for role="checkbox"
+          label="Remember me" no-select></paper-checkbox>
+        <div flex></div>
+        <div class="forgot-pass link" no-select>Forgot password?</div>
+      </div>
+      <paper-button role="button" tabindex="0" raised>Login</paper-button>
+      <div class="signup">Don't have an account? <span
+        class="link" no-select>Sign up</span></div>
+    </form>
+  </div>
+</div>
