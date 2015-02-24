@@ -1,23 +1,10 @@
 <div ng-switch="addAccount">
   <div ng-switch-when="true" flex>
-    <core-item class="account-type" layout horizontal>
+    <core-item ng-repeat="accountType in accountTypes"
+        class="account-type" layout horizontal>
       <paper-button flex ng-click="onAccountAdd()">
-        <x-brand-logo icon="twitter"></x-brand-logo>
-        <div class="content" flex>Twitter</div>
-        <core-icon icon="chevron-right"></core-icon>
-      </paper-button>
-    </core-item>
-    <core-item class="account-type" layout horizontal>
-      <paper-button flex ng-click="onAccountAdd()">
-        <x-brand-logo icon="github"></x-brand-logo>
-        <div class="content" flex>GitHub</div>
-        <core-icon icon="chevron-right"></core-icon>
-      </paper-button>
-    </core-item>
-    <core-item class="account-type" layout horizontal>
-      <paper-button flex ng-click="onAccountAdd()">
-        <x-brand-logo icon="gmail"></x-brand-logo>
-        <div class="content" flex>Gmail</div>
+        <x-brand-logo icon="{{accountType.type}}"></x-brand-logo>
+        <div class="content" ng-bind="accountType.label" flex></div>
         <core-icon icon="chevron-right"></core-icon>
       </paper-button>
     </core-item>
