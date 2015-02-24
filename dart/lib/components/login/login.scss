@@ -79,6 +79,9 @@ paper-input-decorator {
   color: #fff;
   font-size: 20px;
 }
+paper-input-decorator.invalid {
+  color: #d34336;
+}
 paper-input-decorator /deep/ .label-text {
   color: rgba(255, 255, 255, .87);
 }
