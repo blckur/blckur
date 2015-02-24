@@ -5,10 +5,6 @@ paper-input-decorator {
   font-size: 20px;
 }
 
-paper-input-decorator.invalid {
-  color: #d34336;
-}
-
 paper-input-decorator /deep/ .label-text {
   color: rgba(255, 255, 255, .87);
 }
@@ -27,6 +23,30 @@ paper-input-decorator /deep/ :-ms-input-placeholder {
 
 paper-input-decorator /deep/ .unfocused-underline {
   background-color: rgba(255, 255, 255, .85);
+}
+
+paper-input-decorator.invalid {
+  color: #d34336;
+}
+
+paper-input-decorator.invalid /deep/ .label-text {
+  color: rgba(211, 67, 54, 0.87);
+}
+
+paper-input-decorator.invalid /deep/ ::-webkit-input-placeholder {
+  color: rgba(211, 67, 54, 0.85);
+}
+
+paper-input-decorator.invalid /deep/ ::-moz-placeholder {
+  color: rgba(211, 67, 54, 0.85);
+}
+
+paper-input-decorator.invalid /deep/ :-ms-input-placeholder {
+  color: rgba(211, 67, 54, 0.85);
+}
+
+paper-input-decorator.invalid /deep/ .unfocused-underline {
+  background-color: rgba(211, 67, 54, 0.85);
 }
 
 paper-input-decorator[focused] /deep/ .floating-label .label-text {
