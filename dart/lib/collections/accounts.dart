@@ -12,5 +12,5 @@ class Accounts extends collec.Collection {
 
   Accounts(ng.Http http) : super(http);
 
-  String url = 'http://localhost:3000/account';
+  String url = 'http://localhost:3000/accounts';
 }
