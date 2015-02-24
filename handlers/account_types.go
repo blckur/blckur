@@ -23,6 +23,10 @@ func accountsTypesGet(c *gin.Context) {
             Label: "Gmail",
             Type: "gmail",
         },
+        &AccountType{
+            Label: "HipChat",
+            Type: "hipchat",
+        },
     }
 
     c.JSON(200, types)
