@@ -2,14 +2,10 @@
   <div class="modal" layout vertical flex>
     <header>blckur</header>
     <form>
-      <paper-input-decorator label="{{emailLabel}}"
-          floatingLabel="{{emailFloat}}" ng-class="emailClass">
-        <input is="core-input" type="email" ng-model="model.email">
-      </paper-input-decorator>
-      <paper-input-decorator label="{{passwordLabel}}"
-        floatingLabel="{{passwordFloat}}" ng-class="passwordClass">
-        <input is="core-input" type="password" ng-model="model.password">
-      </paper-input-decorator>
+      <x-input type="text" placeholder="Email address" error="emailError"
+        model="model.email"></x-input>
+      <x-input type="password" placeholder="Password" error="passwordError"
+        model="model.password"></x-input>
       <div layout horizontal>
         <paper-checkbox for role="checkbox"
           label="Remember me" no-select></paper-checkbox>
