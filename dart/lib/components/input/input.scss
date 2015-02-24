@@ -1,0 +1,38 @@
+@import 'styles/base.scss';
+
+paper-input-decorator {
+  color: #fff;
+  font-size: 20px;
+}
+
+paper-input-decorator.invalid {
+  color: #d34336;
+}
+
+paper-input-decorator /deep/ .label-text {
+  color: rgba(255, 255, 255, .87);
+}
+
+paper-input-decorator /deep/ ::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, .85);
+}
+
+paper-input-decorator /deep/ ::-moz-placeholder {
+  color: rgba(255, 255, 255, .85);
+}
+
+paper-input-decorator /deep/ :-ms-input-placeholder {
+  color: rgba(255, 255, 255, .85);
+}
+
+paper-input-decorator /deep/ .unfocused-underline {
+  background-color: rgba(255, 255, 255, .85);
+}
+
+paper-input-decorator[focused] /deep/ .floating-label .label-text {
+  color: #fff;
+}
+
+paper-input-decorator /deep/ .focused-underline {
+  background-color: #fff;
+}
