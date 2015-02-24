@@ -188,6 +188,5 @@ abstract class Model extends remote.Remote {
     });
   }
 
-  void init() {
-  }
+  void init() {}
 }

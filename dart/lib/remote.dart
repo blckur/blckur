@@ -65,8 +65,7 @@ abstract class Remote {
 
   void import(dynamic responseData);
 
-  void imported() {
-  }
+  void imported() {}
 
   async.Future fetch() {
     var fetchCheckId = utils.uuid();

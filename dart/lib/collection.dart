@@ -53,17 +53,13 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     return clone;
   }
 
-  void imported() {
-  }
+  void imported() {}
 
-  void added(mdl.Model model) {
-  }
+  void added(mdl.Model model) {}
 
-  void changed(mdl.Model model) {
-  }
+  void changed(mdl.Model model) {}
 
-  void removed(mdl.Model model) {
-  }
+  void removed(mdl.Model model) {}
 
   void import(dynamic responseData) {
     var data;
