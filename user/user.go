@@ -52,10 +52,10 @@ func (u *User) SetPassword(password string) (err error) {
 
 func FindUser(email string) (usr *User, err error) {
     db := database.GetDatabase()
-    usrs := db.Users()
+    usrsCol := db.Users()
     usr = &User{}
 
-    err = usrs.Find(bson.M{
+    err = usrsCol.Find(bson.M{
         "email": email,
     }).One(usr)
 
