@@ -12,30 +12,6 @@ type Account struct {
     Identity string `json:"identity" binding:"required"`
 }
 
-type AccountType struct {
-    Label string `json:"label" binding:"required"`
-    Type string `json:"type" binding:"required"`
-}
-
-func accountsTypesGet(c *gin.Context) {
-    types := []*AccountType{
-        &AccountType{
-            Label: "Twitter",
-            Type: "twitter",
-        },
-        &AccountType{
-            Label: "GitHub",
-            Type: "github",
-        },
-        &AccountType{
-            Label: "Gmail",
-            Type: "gmail",
-        },
-    }
-
-    c.JSON(200, types)
-}
-
 func accountsGet(c *gin.Context) {
     accounts := []*Account{
         &Account{
