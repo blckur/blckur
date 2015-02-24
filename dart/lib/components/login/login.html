@@ -2,11 +2,13 @@
   <div class="modal" layout vertical flex>
     <header>blckur</header>
     <form>
-      <paper-input-decorator label="Email address">
-        <input is="core-input" type="email">
+      <paper-input-decorator label="{{emailLabel}}"
+          floatingLabel="{{emailFloat}}" ng-class="emailClass">
+        <input is="core-input" type="email" ng-model="model.email">
       </paper-input-decorator>
-      <paper-input-decorator label="Password">
-        <input is="core-input" type="password">
+      <paper-input-decorator label="{{passwordLabel}}"
+        floatingLabel="{{passwordFloat}}" ng-class="passwordClass">
+        <input is="core-input" type="password" ng-model="model.password">
       </paper-input-decorator>
       <div layout horizontal>
         <paper-checkbox for role="checkbox"
