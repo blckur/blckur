@@ -54,6 +54,8 @@ class InputComp implements ng.ShadowRootAware {
     return this._error;
   }
 
+  InputComp() : labelFloat = false;
+
   void onShadowRoot(dom.ShadowRoot root) {
     root.querySelector('input').onInput.listen((_) {
       this.error = null;
