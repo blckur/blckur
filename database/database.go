@@ -33,3 +33,19 @@ func GetDatabase() (db *Database) {
     }
     return
 }
+
+func InitIndexes() (err error) {
+    db := GetDatabase()
+
+    usrsCol := db.Users()
+    err = usrsCol.EnsureIndex(mgo.Index{
+        Key: []string{"email"},
+        Unique: true,
+        Background: true,
+    })
+    if err != nil {
+        return
+    }
+
+    return
+}
