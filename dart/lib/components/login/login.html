@@ -1,21 +1,33 @@
 <div class="container" layout horizontal center>
   <div class="modal" layout vertical flex>
     <header>blckur</header>
-    <form>
-      <x-input type="text" placeholder="Email address" error="emailError"
-        model="model.email"></x-input>
-      <x-input type="password" placeholder="Password" error="passwordError"
-        model="model.password"></x-input>
-      <div layout horizontal>
-        <paper-checkbox for role="checkbox"
-          label="Remember me" no-select></paper-checkbox>
-        <div flex></div>
-        <div class="forgot-pass link" no-select>Forgot password?</div>
-      </div>
-      <paper-button role="button" tabindex="0" raised
-        ng-click="onLogin()">Login</paper-button>
-      <div class="signup">Don't have an account? <span
-        class="link" no-select>Sign up</span></div>
-    </form>
+    <div ng-switch="mode">
+      <form ng-switch-when="login">
+        <x-input type="text" placeholder="Email address" error="emailError"
+          model="model.email"></x-input>
+        <x-input type="password" placeholder="Password" error="passwordError"
+          model="model.password"></x-input>
+        <div layout horizontal>
+          <paper-checkbox for role="checkbox"
+            label="Remember me" no-select></paper-checkbox>
+          <div flex></div>
+          <div class="forgot-pass link" no-select>Forgot password?</div>
+        </div>
+        <paper-button role="button" tabindex="0" raised
+          ng-click="onLogin()">Login</paper-button>
+        <div class="signup">Don't have an account? <span class="link"
+          no-select ng-click="mode = 'signup'">Sign up</span></div>
+      </form>
+      <form ng-switch-when="signup">
+        <x-input type="text" placeholder="Email address" error="emailError"
+          model="model.email"></x-input>
+        <x-input type="password" placeholder="Password" error="passwordError"
+          model="model.password"></x-input>
+        <paper-button role="button" tabindex="0" raised
+          ng-click="onLogin()">Sign Up</paper-button>
+        <div class="signup">Already a Blckur member? <span class="link"
+          no-select ng-click="mode = 'login'">Log in</span></div>
+      </form>
+    </div>
   </div>
 </div>

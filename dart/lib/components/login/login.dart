@@ -14,8 +14,9 @@ class LoginComp {
   ath.Auth model;
   String emailError;
   String passwordError;
+  String mode;
 
-  LoginComp(this.model);
+  LoginComp(this.model) : mode = 'login';
 
   void onLogin() {
     this.model.create().then((_) {
