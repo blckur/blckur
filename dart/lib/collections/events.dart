@@ -19,7 +19,7 @@ class Events extends collec.Collection {
 
   Events(ng.Http http, this.rootScope) : super(http);
 
-  String url = 'ws://localhost:3000/event';
+  String url = 'ws://localhost:3000/events';
 
   void onEvent(dom.MessageEvent evt) {
     var event = new evnt.Event(this.http);
