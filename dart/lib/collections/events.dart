@@ -19,7 +19,7 @@ class Events extends collec.Collection {
 
   Events(ng.Http http, this.rootScope) : super(http);
 
-  String url = 'ws://localhost:3000/events';
+  String url = '/events';
 
   void onEvent(dom.MessageEvent evt) {
     var event = new evnt.Event(this.http);
@@ -37,7 +37,8 @@ class Events extends collec.Collection {
   }
 
   void openSocket() {
-    this.socket = new dom.WebSocket(this.url);
+    this.socket = new dom.WebSocket(
+      'ws://${dom.window.location.host}${this.url}');
     this.socket.onMessage.listen(this.onEvent);
     this.socket.onClose.listen(this.onClose);
   }
