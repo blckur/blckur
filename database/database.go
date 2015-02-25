@@ -15,6 +15,11 @@ func (d *Database) Users() (coll *mgo.Collection) {
     return
 }
 
+func (d *Database) Sessions() (coll *mgo.Collection) {
+    coll = d.database.C("sessions")
+    return
+}
+
 func Connect() (err error) {
     Session, err = mgo.Dial("localhost")
     if err != nil {
