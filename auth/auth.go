@@ -21,6 +21,16 @@ func (s *Session) Clear() (err error) {
     return
 }
 
+func GetSession(db *database.Database, id bson.ObjectId) (
+        sess *Session, err error) {
+    sessCol := db.Sessions()
+    sess = &Session{}
+
+    err = sessCol.FindId(id).One(sess)
+
+    return
+}
+
 func NewSession(db *database.Database, userId bson.ObjectId) (
         sess *Session, err error) {
     sessCol := db.Sessions()
