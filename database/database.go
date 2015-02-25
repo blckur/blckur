@@ -39,7 +39,7 @@ func GetDatabase() (db *Database) {
     return
 }
 
-func InitIndexes() (err error) {
+func AddIndexes() (err error) {
     db := GetDatabase()
 
     usrsCol := db.Users()
@@ -51,6 +51,17 @@ func InitIndexes() (err error) {
     if err != nil {
         return
     }
+
+    return
+}
+
+func Init() (err error) {
+    err = Connect()
+    if err != nil {
+        return
+    }
+
+    err = AddIndexes()
 
     return
 }
