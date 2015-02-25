@@ -4,7 +4,6 @@ import (
     "github.com/blckur/blckur/database"
     "github.com/blckur/blckur/user"
     "github.com/blckur/blckur/auth"
-    "github.com/blckur/blckur/error"
     "github.com/gin-gonic/gin"
     "labix.org/v2/mgo"
 )
@@ -36,7 +35,7 @@ func loginPost(c *gin.Context) {
     usr, err := user.FindUser(db, data.Email)
     if err != nil {
         if err == mgo.ErrNotFound {
-            c.JSON(401, &error.ErrorData{
+            c.JSON(401, &ErrorData{
                 Error: "auth_email_invalid",
                 Message: "Email is invalid",
             })
@@ -46,7 +45,7 @@ func loginPost(c *gin.Context) {
     }
 
     if auth := usr.CheckPassword(data.Password); auth != true {
-        c.JSON(401, &error.ErrorData{
+        c.JSON(401, &ErrorData{
             Error: "auth_password_invalid",
             Message: "Password is invalid",
         })
