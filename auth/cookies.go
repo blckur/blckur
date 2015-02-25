@@ -63,9 +63,16 @@ func (c *Cookie) Save() (err error) {
 }
 
 func GetCookie(con *gin.Context) (cook *Cookie, err error) {
-    data, err := Store.Get(con.Request, "blckur")
+    data, err := Store.New(con.Request, "blckur")
     if err != nil {
-        return
+        err = err.(securecookie.MultiError)[0]
+
+        switch err {
+        case securecookie.ErrMacInvalid:
+            err = nil
+        default:
+            return
+        }
     }
 
     cook = &Cookie{
