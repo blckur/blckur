@@ -2,10 +2,11 @@ package auth
 
 import (
     "github.com/blckur/blckur/database"
+    "github.com/gorilla/securecookie"
     "github.com/gorilla/sessions"
-    "labix.org/v2/mgo"
     "labix.org/v2/mgo/bson"
     "github.com/gin-gonic/gin"
+    "github.com/dropbox/godropbox/errors"
 )
 
 var Store *sessions.CookieStore
@@ -34,12 +35,19 @@ func (c *Cookie) GetSession(db *database.Database) (
         sess *Session, err error) {
     val := c.Get("id")
     if val == "" {
-        // TODO
-        err = mgo.ErrNotFound
+        err = &NotFoundError{
+            errors.New("auth: Session not found"),
+        }
         return
     }
 
     sess, err = GetSession(db, bson.ObjectIdHex(val))
+    if err != nil {
+        err = &UnknownError{
+            errors.Wrap(err, "auth: Unknown session error"),
+        }
+        return
+    }
 
     return
 }
@@ -48,6 +56,7 @@ func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId) (
         sess *Session, err error) {
     sess, err = NewSession(db, id)
     if err != nil {
+        err = errors.Wrap(err, "auth: Unknown session error")
         return
     }
 
@@ -71,6 +80,7 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
         case securecookie.ErrMacInvalid:
             err = nil
         default:
+            err = errors.Wrap(err, "auth: Unknown cookie error")
             return
         }
     }
