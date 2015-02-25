@@ -11,10 +11,10 @@ import (
 )
 
 type User struct {
-    Id bson.ObjectId `bson:"_id,omitempty"`
-    Email string `bson:"email"`
-    PasswordSalt []byte `bson:"password_salt"`
-    PasswordHash []byte `bson:"password_hash"`
+    Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
+    Email string `bson:"email" json:"email"`
+    PasswordSalt []byte `bson:"password_salt" json:"-"`
+    PasswordHash []byte `bson:"password_hash" json:"-"`
 }
 
 func (u *User) hashPassword(password string) []byte {
