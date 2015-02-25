@@ -29,6 +29,13 @@ func Register(engine *gin.Engine) {
     corsGroup := engine.Group("")
     corsGroup.Use(AccessControl())
 
+
+    corsGroup.POST("/login", loginPost)
+    corsGroup.OPTIONS("/login", nil)
+
+    corsGroup.POST("/auth", authPost)
+    corsGroup.OPTIONS("/auth", nil)
+
     corsGroup.GET("/account_types", accountsTypesGet)
 
     corsGroup.GET("/accounts", accountsGet)

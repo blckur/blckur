@@ -1,29 +1,56 @@
 package handlers
 
 import (
+    "github.com/blckur/blckur/user"
     "github.com/gin-gonic/gin"
+    "labix.org/v2/mgo"
     "labix.org/v2/mgo/bson"
 )
+
+type ErrorData struct {
+    Error string `json:"error" binding:"required"`
+    Message string `json:"error_msg" binding:"required"`
+}
 
 type User struct {
     Id bson.ObjectId `json:"id" binding:"required"`
     Email string `json:"email" binding:"required"`
 }
 
-var user = &User{
-    Id: bson.NewObjectId(),
-    Email: "zach.huff.386@gmail.com",
+type LoginData struct {
+    Email string `json:"email" binding:"required"`
+    Password string `json:"password" binding:"required"`
 }
 
 func userGet(c *gin.Context) {
-    c.JSON(200, user)
 }
 
 func userPut(c *gin.Context) {
-    var json User
-    c.Bind(&json)
+}
 
-    user.Email = json.Email
+func loginPost(c *gin.Context) {
+    data := &LoginData{}
+    c.Bind(data)
 
-    c.JSON(200, user)
+    usr, err := user.FindUser(data.Email)
+    if err != nil {
+        if err == mgo.ErrNotFound {
+            c.JSON(401, &ErrorData{
+                Error: "auth_email_invalid",
+                Message: "Email is invalid",
+            })
+            return
+        }
+        panic(err)
+    }
+
+    if auth := usr.CheckPassword(data.Password); auth != true {
+        c.JSON(401, &ErrorData{
+            Error: "auth_password_invalid",
+            Message: "Password is invalid",
+        })
+        return
+    }
+
+    c.JSON(200, usr)
 }
