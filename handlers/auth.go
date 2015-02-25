@@ -22,10 +22,12 @@ func loginPost(c *gin.Context) {
     }
 
     sess, err := cook.GetSession(db)
-    if err == nil {
+    switch err.(type) {
+    case nil:
         c.JSON(200, sess)
         return
-    } else if err != mgo.ErrNotFound {
+    case auth.NotFoundError:
+    default:
         panic(err)
     }
 
@@ -33,14 +35,15 @@ func loginPost(c *gin.Context) {
     c.Bind(data)
 
     usr, err := user.FindUser(db, data.Email)
-    if err != nil {
-        if err == mgo.ErrNotFound {
-            c.JSON(401, &ErrorData{
-                Error: "auth_email_invalid",
-                Message: "Email is invalid",
-            })
-            return
-        }
+    switch err.(type) {
+    case nil:
+    case user.NotFoundError:
+        c.JSON(401, &ErrorData{
+            Error: "auth_email_invalid",
+            Message: "Email is invalid",
+        })
+        return
+    default:
         panic(err)
     }
 
