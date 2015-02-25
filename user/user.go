@@ -15,6 +15,7 @@ type User struct {
     Email string `bson:"email" json:"email"`
     PasswordSalt []byte `bson:"password_salt" json:"-"`
     PasswordHash []byte `bson:"password_hash" json:"-"`
+    db *database.Database
 }
 
 func (u *User) hashPassword(password string) []byte {
@@ -50,10 +51,11 @@ func (u *User) SetPassword(password string) (err error) {
     return
 }
 
-func FindUser(email string) (usr *User, err error) {
-    db := database.GetDatabase()
+func FindUser(db *database.Database, email string) (usr *User, err error) {
     usrsCol := db.Users()
-    usr = &User{}
+    usr = &User{
+        db: db,
+    }
 
     err = usrsCol.Find(bson.M{
         "email": email,
@@ -62,16 +64,17 @@ func FindUser(email string) (usr *User, err error) {
     return
 }
 
-func NewUser(email string, password string) (acct *User, err error) {
-    db := database.GetDatabase()
-    usrs := db.Users()
+func NewUser(db *database.Database, email string, password string) (
+        usr *User, err error) {
+    usrsCol := db.Users()
 
-    usr := &User{
+    usr = &User{
         Email: email,
+        db: db,
     }
     usr.SetPassword(password)
 
-    err = usrs.Insert(usr)
+    err = usrsCol.Insert(usr)
 
     return
 }

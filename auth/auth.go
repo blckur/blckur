@@ -10,25 +10,26 @@ type Session struct {
     Id bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
     UserId bson.ObjectId `bson:"user_id" json:"user_id" binding:"required"`
     Timestamp time.Time `bson:"timestamp" json:"-"`
+    db *database.Database
 }
 
 func (s *Session) Clear() (err error) {
-    db := database.GetDatabase()
-    sessCol := db.Sessions()
+    sessCol := s.db.Sessions()
 
     err = sessCol.RemoveId(s.Id)
 
     return
 }
 
-func NewSession(userId bson.ObjectId) (sess *Session, err error) {
-    db := database.GetDatabase()
+func NewSession(db *database.Database, userId bson.ObjectId) (
+        sess *Session, err error) {
     sessCol := db.Sessions()
 
     sess = &Session{
         Id: bson.NewObjectId(),
         UserId: userId,
         Timestamp: time.Now(),
+        db: db,
     }
 
     err = sessCol.Insert(sess)
