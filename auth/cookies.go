@@ -56,7 +56,9 @@ func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId) (
         sess *Session, err error) {
     sess, err = NewSession(db, id)
     if err != nil {
-        err = errors.Wrap(err, "auth: Unknown session error")
+        err = &UnknownError{
+            errors.Wrap(err, "auth: Unknown session error"),
+        }
         return
     }
 
@@ -80,7 +82,9 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
         case securecookie.ErrMacInvalid:
             err = nil
         default:
-            err = errors.Wrap(err, "auth: Unknown cookie error")
+            err = &UnknownError{
+                errors.Wrap(err, "auth: Unknown cookie error"),
+            }
             return
         }
     }
