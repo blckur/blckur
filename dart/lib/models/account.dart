@@ -21,5 +21,5 @@ class Account extends mdl.Model {
 
   Account(ng.Http http) : super(http);
 
-  String url = 'http://localhost:3000/account';
+  String url = '/account';
 }

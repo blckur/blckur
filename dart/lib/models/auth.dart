@@ -29,5 +29,5 @@ class Auth extends mdl.Model {
 
   Auth(ng.Http http) : super(http);
 
-  String url = 'http://localhost:3000/login';
+  String url = '/login';
 }

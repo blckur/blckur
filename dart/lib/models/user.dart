@@ -15,5 +15,5 @@ class User extends mdl.Model {
 
   User(ng.Http http) : super(http);
 
-  String url = 'http://localhost:3000/user';
+  String url = '/user';
 }
