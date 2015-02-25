@@ -2,20 +2,10 @@ package handlers
 
 import (
     "github.com/blckur/blckur/user"
+    "github.com/blckur/blckur/error"
     "github.com/gin-gonic/gin"
     "labix.org/v2/mgo"
-    "labix.org/v2/mgo/bson"
 )
-
-type ErrorData struct {
-    Error string `json:"error" binding:"required"`
-    Message string `json:"error_msg" binding:"required"`
-}
-
-type User struct {
-    Id bson.ObjectId `json:"id" binding:"required"`
-    Email string `json:"email" binding:"required"`
-}
 
 type LoginData struct {
     Email string `json:"email" binding:"required"`
@@ -35,7 +25,7 @@ func loginPost(c *gin.Context) {
     usr, err := user.FindUser(data.Email)
     if err != nil {
         if err == mgo.ErrNotFound {
-            c.JSON(401, &ErrorData{
+            c.JSON(401, &error.ErrorData{
                 Error: "auth_email_invalid",
                 Message: "Email is invalid",
             })
@@ -45,7 +35,7 @@ func loginPost(c *gin.Context) {
     }
 
     if auth := usr.CheckPassword(data.Password); auth != true {
-        c.JSON(401, &ErrorData{
+        c.JSON(401, &error.ErrorData{
             Error: "auth_password_invalid",
             Message: "Password is invalid",
         })
