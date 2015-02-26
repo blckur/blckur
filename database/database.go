@@ -28,9 +28,14 @@ func (d *Database) Settings() (coll *mgo.Collection) {
 func Connect() (err error) {
     Session, err = mgo.Dial("localhost")
     if err != nil {
+        err = &ConnectionError{
+            errors.Wrap(err, "database: Connection error"),
+        }
         return
     }
+
     Session.SetMode(mgo.Monotonic, true)
+
     return
 }
 
@@ -54,7 +59,9 @@ func AddIndexes() (err error) {
         Background: true,
     })
     if err != nil {
-        return
+        err = &IndexError{
+            errors.Wrap(err, "database: Index error"),
+        }
     }
 
     return
