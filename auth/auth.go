@@ -2,7 +2,9 @@ package auth
 
 import (
     "github.com/blckur/blckur/database"
+    "labix.org/v2/mgo"
     "labix.org/v2/mgo/bson"
+    "github.com/dropbox/godropbox/errors"
     "time"
 )
 
@@ -17,6 +19,12 @@ func (s *Session) Clear() (err error) {
     sessCol := s.db.Sessions()
 
     err = sessCol.RemoveId(s.Id)
+    if err != nil {
+        err = &DatabaseError{
+            errors.Wrap(err, "auth: Database error"),
+        }
+        return
+    }
 
     return
 }
@@ -27,6 +35,19 @@ func GetSession(db *database.Database, id bson.ObjectId) (
     sess = &Session{}
 
     err = sessCol.FindId(id).One(sess)
+    if err != nil {
+        switch err {
+            case mgo.ErrNotFound:
+                err = &NotFoundError{
+                    errors.Wrap(err, "auth: Session not found"),
+                }
+            default:
+                err = &DatabaseError{
+                    errors.Wrap(err, "auth: Database error"),
+                }
+        }
+        return
+    }
 
     return
 }
@@ -43,6 +64,12 @@ func NewSession(db *database.Database, userId bson.ObjectId) (
     }
 
     err = sessCol.Insert(sess)
+    if err != nil {
+        err = &DatabaseError{
+            errors.Wrap(err, "auth: Database error"),
+        }
+        return
+    }
 
     return
 }
