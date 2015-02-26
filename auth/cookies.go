@@ -3,6 +3,7 @@ package auth
 import (
     "github.com/blckur/blckur/database"
     "github.com/blckur/blckur/settings"
+    "github.com/blckur/blckur/errortypes"
     "github.com/gorilla/securecookie"
     "github.com/gorilla/sessions"
     "labix.org/v2/mgo/bson"
@@ -45,9 +46,9 @@ func (c *Cookie) GetSession(db *database.Database) (
     sess, err = GetSession(db, bson.ObjectIdHex(sessId))
     if err != nil {
         switch err.(type) {
-        case *NotFoundError:
+        case *database.NotFoundError:
         default:
-            err = &UnknownError{
+            err = &errortypes.UnknownError{
                 errors.Wrap(err, "auth: Unknown session error"),
             }
         }
@@ -61,7 +62,7 @@ func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId) (
         sess *Session, err error) {
     sess, err = NewSession(db, id)
     if err != nil {
-        err = &UnknownError{
+        err = &errortypes.UnknownError{
             errors.Wrap(err, "auth: Unknown session error"),
         }
         return
@@ -87,7 +88,7 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
         case securecookie.ErrMacInvalid:
             err = nil
         default:
-            err = &UnknownError{
+            err = &errortypes.UnknownError{
                 errors.Wrap(err, "auth: Unknown cookie error"),
             }
             return
@@ -107,7 +108,7 @@ func Init() (err error) {
 
     keyInt, err := settings.Get(db, "system", "cookie_key")
     if err != nil {
-        err = &UnknownError{
+        err = &errortypes.UnknownError{
             errors.Wrap(err, "auth: Unknown error"),
         }
         return
