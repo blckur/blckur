@@ -1,7 +1,7 @@
 package database
 
 import (
-"github.com/dropbox/godropbox/errors"
+    "github.com/dropbox/godropbox/errors"
 )
 
 type ConnectionError struct {
