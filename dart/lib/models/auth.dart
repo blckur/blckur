@@ -4,9 +4,12 @@ import 'package:blckur/model.dart' as mdl;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
+import 'dart:async' as async;
 
 @Injectable()
 class Auth extends mdl.Model {
+  String url = '/auth';
+
   @mdl.Attribute('email')
   String email;
 
@@ -29,5 +32,13 @@ class Auth extends mdl.Model {
 
   Auth(ng.Http http) : super(http);
 
-  String url = '/login';
+  async.Future login() {
+    this.url = '/login';
+    return this.create();
+  }
+
+  async.Future signup() {
+    this.url = '/signup';
+    return this.create();
+  }
 }
