@@ -61,3 +61,34 @@ func loginPost(c *gin.Context) {
 
     c.JSON(200, sess)
 }
+
+func signupPost(c *gin.Context) {
+    db := c.MustGet("db").(*database.Database)
+    data := &AuthData{}
+    c.Bind(data)
+
+    usr, err := user.NewUser(db, data.Email, data.Password)
+    switch err.(type) {
+        case nil:
+        case *user.ExistsError:
+            c.JSON(401, &ErrorData{
+                Error: "signup_email_exists",
+                Message: "Email is already signed up",
+            })
+            return
+        default:
+            panic(err)
+    }
+
+    cook, err := auth.GetCookie(c)
+    if err != nil {
+        panic(err)
+    }
+
+    _, err = cook.NewSession(db, usr.Id)
+    if err != nil {
+        panic(err)
+    }
+
+    c.JSON(200, usr)
+}
