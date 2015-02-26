@@ -14,24 +14,14 @@ type AuthData struct {
 
 func loginPost(c *gin.Context) {
     db := c.MustGet("db").(*database.Database)
-
-    cook, err := auth.GetCookie(c)
-    if err != nil {
-        panic(err)
-    }
-
-    sess, err := cook.GetSession(db)
-    switch err.(type) {
-    case nil:
-        c.JSON(200, sess)
-        return
-    case *auth.NotFoundError:
-    default:
-        panic(err)
-    }
-
+    sess := c.MustGet("session")
     data := &AuthData{}
     c.Bind(data)
+
+    if sess != nil {
+        c.JSON(200, sess)
+        return
+    }
 
     usr, err := user.FindUser(db, data.Email)
     switch err.(type) {
@@ -52,6 +42,11 @@ func loginPost(c *gin.Context) {
             Message: "Password is invalid",
         })
         return
+    }
+
+    cook, err := auth.GetCookie(c)
+    if err != nil {
+        panic(err)
     }
 
     sess, err = cook.NewSession(db, usr.Id)
