@@ -87,6 +87,7 @@ func NewUser(db *database.Database, email string, password string) (
     usrsCol := db.Users()
 
     usr = &User{
+        Id: bson.NewObjectId(),
         Email: email,
         db: db,
     }
