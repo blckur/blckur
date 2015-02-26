@@ -13,15 +13,8 @@ type Session struct {
     db *database.Database
 }
 
-func (s *Session) Clear() (err error) {
-    sessCol := s.db.Sessions()
-
-    err = sessCol.RemoveId(s.Id)
-    if err != nil {
-        err = database.ParseError(err)
-        return
-    }
-
+func (s *Session) Remove() (err error) {
+    err = RemoveSession(s.db, s.Id)
     return
 }
 
@@ -35,6 +28,8 @@ func GetSession(db *database.Database, id bson.ObjectId) (
         err = database.ParseError(err)
         return
     }
+
+    sess.db = db
 
     return
 }
@@ -51,6 +46,18 @@ func NewSession(db *database.Database, userId bson.ObjectId) (
     }
 
     err = sessCol.Insert(sess)
+    if err != nil {
+        err = database.ParseError(err)
+        return
+    }
+
+    return
+}
+
+func RemoveSession(db *database.Database, id bson.ObjectId) (err error) {
+    sessCol := db.Sessions()
+
+    err = sessCol.RemoveId(id)
     if err != nil {
         err = database.ParseError(err)
         return
