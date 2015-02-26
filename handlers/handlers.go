@@ -2,6 +2,7 @@ package handlers
 
 import (
     "github.com/blckur/blckur/database"
+    "github.com/blckur/blckur/auth"
     "github.com/gin-gonic/gin"
     "net/http"
     "io/ioutil"
@@ -9,6 +10,33 @@ import (
 
 func Database(c *gin.Context) {
     c.Set("db", database.GetDatabase())
+}
+
+func Session(required bool) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        db := c.MustGet("db").(*database.Database)
+
+        cook, err := auth.GetCookie(c)
+        if err != nil {
+            panic(err)
+        }
+
+        sess, err := cook.GetSession(db)
+        switch err.(type) {
+            case nil:
+            case *auth.NotFoundError:
+                sess = nil
+                err = nil
+            default:
+                panic(err)
+        }
+
+        if required && sess == nil {
+            c.AbortWithStatus(401)
+        }
+
+        c.Set("session", sess)
+    }
 }
 
 func Static(c *gin.Context) {
@@ -31,17 +59,20 @@ func Register(engine *gin.Engine) {
     engine.Use(gin.Recovery())
     engine.Use(Database)
 
+    authGroup := engine.Group("")
+    authGroup.Use(Session(true))
+
     engine.POST("/login", loginPost)
     engine.POST("/signup", signupPost)
 
-    engine.GET("/account_types", accountsTypesGet)
+    authGroup.GET("/account_types", accountsTypesGet)
 
-    engine.GET("/accounts", accountsGet)
+    authGroup.GET("/accounts", accountsGet)
 
-    engine.GET("/user", userGet)
-    engine.PUT("/user", userPut)
+    authGroup.GET("/user", userGet)
+    authGroup.PUT("/user", userPut)
 
-    engine.GET("/events", eventGet)
+    authGroup.GET("/events", eventGet)
 
     engine.GET("/s/*path", Static)
 }
