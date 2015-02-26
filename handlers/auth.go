@@ -66,7 +66,7 @@ func signupPost(c *gin.Context) {
     switch err.(type) {
         case nil:
         case *database.DuplicateKeyError:
-            c.JSON(401, &ErrorData{
+            c.JSON(400, &ErrorData{
                 Error: "signup_email_exists",
                 Message: "Email is already signed up",
             })
