@@ -1,7 +1,10 @@
 package handlers
 
 import (
+    "github.com/blckur/blckur/database"
     "github.com/gin-gonic/gin"
+    "net/http"
+    "io/ioutil"
 )
 
 func AccessControl() gin.HandlerFunc {
@@ -25,21 +28,41 @@ func AccessControl() gin.HandlerFunc {
     }
 }
 
+func Database(c *gin.Context) {
+    c.Set("db", database.GetDatabase())
+}
+
+func Static(c *gin.Context) {
+    resp, err := http.Get(
+        "http://localhost:8080" + c.Params.ByName("path"))
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        panic(err)
+    }
+
+    c.Data(200, resp.Header.Get("Content-Type"), body)
+}
+
 func Register(engine *gin.Engine) {
-    corsGroup := engine.Group("")
-    corsGroup.Use(AccessControl())
+    engine.Use(gin.Recovery())
+    engine.Use(Database)
 
-    corsGroup.POST("/login", loginPost)
-    corsGroup.OPTIONS("/login", nil)
+    engine.POST("/login", loginPost)
+    engine.POST("/signup", signupPost)
 
-    corsGroup.GET("/account_types", accountsTypesGet)
+    engine.GET("/account_types", accountsTypesGet)
 
-    corsGroup.GET("/accounts", accountsGet)
-    //corsGroup.GET("/accounts/detail", todo)
+    engine.GET("/accounts", accountsGet)
 
-    corsGroup.GET("/user", userGet)
-    corsGroup.PUT("/user", userPut)
-    corsGroup.OPTIONS("/user", nil)
+    engine.GET("/user", userGet)
+    engine.PUT("/user", userPut)
 
     engine.GET("/events", eventGet)
+
+    engine.GET("/s/*path", Static)
 }
