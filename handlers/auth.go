@@ -5,7 +5,6 @@ import (
     "github.com/blckur/blckur/user"
     "github.com/blckur/blckur/auth"
     "github.com/gin-gonic/gin"
-    "labix.org/v2/mgo"
 )
 
 type LoginData struct {
