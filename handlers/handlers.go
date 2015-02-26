@@ -59,11 +59,17 @@ func Register(engine *gin.Engine) {
     engine.Use(gin.Recovery())
     engine.Use(Database)
 
+    engine.POST("/signup", signupPost)
+
+
+    sessGroup := engine.Group("")
+    sessGroup.Use(Session(false))
+
+    sessGroup.POST("/login", loginPost)
+
+
     authGroup := engine.Group("")
     authGroup.Use(Session(true))
-
-    engine.POST("/login", loginPost)
-    engine.POST("/signup", signupPost)
 
     authGroup.GET("/account_types", accountsTypesGet)
 
