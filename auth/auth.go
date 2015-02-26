@@ -1,8 +1,8 @@
 package auth
 
 import (
-    "labix.org/v2/mgo/bson"
     "github.com/blckur/blckur/database"
+    "labix.org/v2/mgo/bson"
     "time"
 )
 
