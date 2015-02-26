@@ -3,6 +3,7 @@ package user
 import (
     "github.com/blckur/blckur/utils"
     "github.com/blckur/blckur/database"
+    "github.com/blckur/blckur/errortypes"
     "github.com/dropbox/godropbox/errors"
     "labix.org/v2/mgo/bson"
     "crypto/sha512"
@@ -43,7 +44,7 @@ func (u *User) CheckPassword(password string) bool {
 func (u *User) SetPassword(password string) (err error) {
     salt, err := utils.RandBytes(16)
     if (err != nil) {
-        err = &UnknownError{
+        err = &errortypes.UnknownError{
             errors.Wrap(err, "user: Unknown error"),
         }
         return

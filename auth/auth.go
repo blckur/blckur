@@ -20,9 +20,7 @@ func (s *Session) Clear() (err error) {
 
     err = sessCol.RemoveId(s.Id)
     if err != nil {
-        err = &DatabaseError{
-            errors.Wrap(err, "auth: Database error"),
-        }
+        err = database.ParseError(err)
         return
     }
 
@@ -36,16 +34,7 @@ func GetSession(db *database.Database, id bson.ObjectId) (
 
     err = sessCol.FindId(id).One(sess)
     if err != nil {
-        switch err {
-            case mgo.ErrNotFound:
-                err = &NotFoundError{
-                    errors.Wrap(err, "auth: Session not found"),
-                }
-            default:
-                err = &DatabaseError{
-                    errors.Wrap(err, "auth: Database error"),
-                }
-        }
+        err = database.ParseError(err)
         return
     }
 
@@ -65,9 +54,7 @@ func NewSession(db *database.Database, userId bson.ObjectId) (
 
     err = sessCol.Insert(sess)
     if err != nil {
-        err = &DatabaseError{
-            errors.Wrap(err, "auth: Database error"),
-        }
+        err = database.ParseError(err)
         return
     }
 
