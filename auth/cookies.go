@@ -2,6 +2,7 @@ package auth
 
 import (
     "github.com/blckur/blckur/database"
+    "github.com/blckur/blckur/settings"
     "github.com/gorilla/securecookie"
     "github.com/gorilla/sessions"
     "labix.org/v2/mgo/bson"
@@ -97,6 +98,27 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
     return
 }
 
-func Init() {
-    Store = sessions.NewCookieStore([]byte("todo"))
+func Init() (err error) {
+    db := database.GetDatabase()
+
+    keyInt, err := settings.Get(db, "system", "cookie_key")
+    if err != nil {
+        err = &UnknownError{
+            errors.Wrap(err, "auth: Unknown error"),
+        }
+        return
+    }
+
+    var key []byte
+
+    if keyInt == nil {
+        key = securecookie.GenerateRandomKey(64)
+        settings.Set(db, "system", "cookie_key", key)
+    } else {
+        key = keyInt.([]byte)
+    }
+
+    Store = sessions.NewCookieStore(key)
+
+    return
 }
