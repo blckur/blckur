@@ -1,7 +1,8 @@
 library input_comp;
 
+import 'package:blckur/all_aware.dart' as all_aware;
+
 import 'package:angular/angular.dart' show Component, NgAttr, NgTwoWay;
-import 'package:angular/angular.dart' as ng;
 import 'dart:html' as dom;
 
 @Component(
@@ -9,7 +10,7 @@ import 'dart:html' as dom;
   templateUrl: 'packages/blckur/components/input/input.html',
   cssUrl: 'packages/blckur/components/input/input.css'
 )
-class InputComp implements ng.ShadowRootAware {
+class InputComp extends all_aware.AllAware {
   String label;
   String labelClass;
   bool labelFloat;
@@ -56,9 +57,11 @@ class InputComp implements ng.ShadowRootAware {
 
   InputComp() : labelFloat = false;
 
-  void onShadowRoot(dom.ShadowRoot root) {
-    root.querySelector('input').onInput.listen((_) {
-      this.error = null;
-    });
+  void onAll(dom.ShadowRoot root) {
+    root.querySelector('input')
+      ..onInput.listen((_) {
+        this.error = null;
+      })
+      ..attributes["type"] = this.type;
   }
 }
