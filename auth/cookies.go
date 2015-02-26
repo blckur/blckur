@@ -34,18 +34,22 @@ func (c *Cookie) Set(key string, val string) {
 
 func (c *Cookie) GetSession(db *database.Database) (
         sess *Session, err error) {
-    val := c.Get("id")
-    if val == "" {
+    sessId := c.Get("id")
+    if sessId == "" {
         err = &NotFoundError{
             errors.New("auth: Session not found"),
         }
         return
     }
 
-    sess, err = GetSession(db, bson.ObjectIdHex(val))
+    sess, err = GetSession(db, bson.ObjectIdHex(sessId))
     if err != nil {
-        err = &UnknownError{
-            errors.Wrap(err, "auth: Unknown session error"),
+        switch err.(type) {
+        case *NotFoundError:
+        default:
+            err = &UnknownError{
+                errors.Wrap(err, "auth: Unknown session error"),
+            }
         }
         return
     }
