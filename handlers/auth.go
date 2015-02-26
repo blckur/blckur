@@ -26,7 +26,7 @@ func loginPost(c *gin.Context) {
     usr, err := user.FindUser(db, data.Email)
     switch err.(type) {
     case nil:
-    case *user.NotFoundError:
+    case *database.NotFoundError:
         c.JSON(401, &ErrorData{
             Error: "auth_email_invalid",
             Message: "Email is invalid",
