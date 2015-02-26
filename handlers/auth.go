@@ -14,7 +14,7 @@ type AuthData struct {
 
 func loginPost(c *gin.Context) {
     db := c.MustGet("db").(*database.Database)
-    sess := c.MustGet("session")
+    sess := c.MustGet("session").(*auth.Session)
     data := &AuthData{}
     c.Bind(data)
 
