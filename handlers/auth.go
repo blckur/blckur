@@ -7,13 +7,13 @@ import (
     "github.com/gin-gonic/gin"
 )
 
-type LoginData struct {
+type AuthData struct {
     Email string `json:"email" binding:"required"`
     Password string `json:"password" binding:"required"`
 }
 
 func loginPost(c *gin.Context) {
-    db := database.GetDatabase()
+    db := c.MustGet("db").(*database.Database)
 
     cook, err := auth.GetCookie(c)
     if err != nil {
@@ -30,7 +30,7 @@ func loginPost(c *gin.Context) {
         panic(err)
     }
 
-    data := &LoginData{}
+    data := &AuthData{}
     c.Bind(data)
 
     usr, err := user.FindUser(db, data.Email)
