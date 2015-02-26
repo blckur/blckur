@@ -47,6 +47,9 @@ func (c *Cookie) GetSession(db *database.Database) (
     if err != nil {
         switch err.(type) {
         case *database.NotFoundError:
+            err = &NotFoundError{
+                errors.New("auth: Session not found"),
+            }
         default:
             err = &errortypes.UnknownError{
                 errors.Wrap(err, "auth: Unknown session error"),
