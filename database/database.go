@@ -2,6 +2,7 @@ package database
 
 import (
     "labix.org/v2/mgo"
+    "github.com/dropbox/godropbox/errors"
 )
 
 var Session *mgo.Session
