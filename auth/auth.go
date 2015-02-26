@@ -2,9 +2,7 @@ package auth
 
 import (
     "github.com/blckur/blckur/database"
-    "labix.org/v2/mgo"
     "labix.org/v2/mgo/bson"
-    "github.com/dropbox/godropbox/errors"
     "time"
 )
 
