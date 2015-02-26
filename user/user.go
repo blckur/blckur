@@ -4,7 +4,6 @@ import (
     "github.com/blckur/blckur/utils"
     "github.com/blckur/blckur/database"
     "github.com/dropbox/godropbox/errors"
-    "labix.org/v2/mgo"
     "labix.org/v2/mgo/bson"
     "crypto/sha512"
     "math/rand"
@@ -66,16 +65,7 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
         "email": email,
     }).One(usr)
     if err != nil {
-        switch err {
-        case mgo.ErrNotFound:
-            err = &NotFoundError{
-                errors.Wrap(err, "user: User not found"),
-            }
-        default:
-            err = &DatabaseError{
-                errors.Wrap(err, "user: Database error"),
-            }
-        }
+        err = database.ParseError(err)
         return
     }
 
@@ -95,9 +85,7 @@ func NewUser(db *database.Database, email string, password string) (
 
     err = usrsCol.Insert(usr)
     if err != nil {
-        err = &DatabaseError{
-            errors.Wrap(err, "user: Database error"),
-        }
+        err = database.ParseError(err)
         return
     }
 
