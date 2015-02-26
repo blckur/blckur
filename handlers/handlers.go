@@ -7,27 +7,6 @@ import (
     "io/ioutil"
 )
 
-func AccessControl() gin.HandlerFunc {
-    return func(c *gin.Context) {
-        headers := c.Writer.Header()
-
-        headers.Add("Access-Control-Allow-Origin", "*")
-        headers.Add("Access-Control-Allow-Methods",
-            "GET,PUT,POST,DELETE")
-        headers.Add("Access-Control-Max-Age", "43200")
-        headers.Add("Access-Control-Allow-Headers",
-            "Authorization,Content-Type,Accept,Origin,User-Agent,DNT," +
-            "Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With," +
-            "If-Modified-Since")
-
-        if (c.Request.Method == "OPTIONS") {
-            c.AbortWithStatus(200)
-        } else {
-            c.Next()
-        }
-    }
-}
-
 func Database(c *gin.Context) {
     c.Set("db", database.GetDatabase())
 }
