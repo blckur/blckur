@@ -56,15 +56,44 @@ func (u *User) SetPassword(password string) (err error) {
     return
 }
 
+func (u *User) Commit(db *database.Database) (err error) {
+    usrsCol := db.Users()
+
+    err = usrsCol.UpdateId(u.Id, bson.M{
+        "$set": u,
+    })
+    if err != nil {
+        err = database.ParseError(err)
+        return
+    }
+
+    return
+}
+
 func FindUser(db *database.Database, email string) (usr *User, err error) {
     usrsCol := db.Users()
     usr = &User{
         db: db,
     }
 
-    err = usrsCol.Find(&bson.M{
+    err = usrsCol.Find(bson.M{
         "email": email,
     }).One(usr)
+    if err != nil {
+        err = database.ParseError(err)
+        return
+    }
+
+    return
+}
+
+func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
+    usrsCol := db.Users()
+    usr = &User{
+        db: db,
+    }
+
+    err = usrsCol.FindId(id).One(usr)
     if err != nil {
         err = database.ParseError(err)
         return
