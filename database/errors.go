@@ -1,25 +1,25 @@
 package database
 
 import (
-    "github.com/dropbox/godropbox/errors"
+	"github.com/dropbox/godropbox/errors"
 )
 
 type ConnectionError struct {
-    errors.DropboxError
+	errors.DropboxError
 }
 
 type IndexError struct {
-    errors.DropboxError
+	errors.DropboxError
 }
 
 type NotFoundError struct {
-    errors.DropboxError
+	errors.DropboxError
 }
 
 type DuplicateKeyError struct {
-    errors.DropboxError
+	errors.DropboxError
 }
 
 type UnknownError struct {
-    errors.DropboxError
+	errors.DropboxError
 }

@@ -1,54 +1,54 @@
 package handlers
 
 import (
-    "github.com/gin-gonic/gin"
-    "github.com/gorilla/websocket"
-    "labix.org/v2/mgo/bson"
-    "net/http"
-    "time"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"labix.org/v2/mgo/bson"
+	"net/http"
+	"time"
 )
 
 var upgrader = websocket.Upgrader{
-    ReadBufferSize:  1024,
-    WriteBufferSize: 1024,
-    CheckOrigin: func(r *http.Request) bool {
-        // TODO Check r.Header.Get("Origin")
-        return true
-    },
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		// TODO Check r.Header.Get("Origin")
+		return true
+	},
 }
 
 type Event struct {
-    Id bson.ObjectId `json:"id" binding:"required"`
-    Type string `json:"type" binding:"required"`
-    Resource string `json:"resource_id"`
+	Id       bson.ObjectId `json:"id" binding:"required"`
+	Type     string        `json:"type" binding:"required"`
+	Resource string        `json:"resource_id"`
 }
 
 func eventGet(c *gin.Context) {
-    conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
-    if err != nil {
-        panic(err)
-    }
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		panic(err)
+	}
 
-    go func() {
-        for {
-            if _, _, err := conn.NextReader(); err != nil {
-                conn.Close()
-                break
-            }
-        }
-    }()
+	go func() {
+		for {
+			if _, _, err := conn.NextReader(); err != nil {
+				conn.Close()
+				break
+			}
+		}
+	}()
 
-    for {
-        evt := &Event{
-            Id: bson.NewObjectId(),
-            Type: "test_event",
-        }
+	for {
+		evt := &Event{
+			Id:   bson.NewObjectId(),
+			Type: "test_event",
+		}
 
-        err = conn.WriteJSON(evt)
-        if err != nil {
-            panic(err)
-        }
+		err = conn.WriteJSON(evt)
+		if err != nil {
+			panic(err)
+		}
 
-        time.Sleep(time.Second)
-    }
+		time.Sleep(time.Second)
+	}
 }

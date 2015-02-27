@@ -1,9 +1,9 @@
 package auth
 
 import (
-    "github.com/dropbox/godropbox/errors"
+	"github.com/dropbox/godropbox/errors"
 )
 
 type NotFoundError struct {
-    errors.DropboxError
+	errors.DropboxError
 }

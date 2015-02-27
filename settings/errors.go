@@ -1,13 +1,13 @@
 package settings
 
 import (
-    "github.com/dropbox/godropbox/errors"
+	"github.com/dropbox/godropbox/errors"
 )
 
 type DatabaseError struct {
-    errors.DropboxError
+	errors.DropboxError
 }
 
 type UnknownError struct {
-    errors.DropboxError
+	errors.DropboxError
 }

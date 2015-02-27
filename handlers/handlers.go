@@ -1,89 +1,89 @@
 package handlers
 
 import (
-    "github.com/blckur/blckur/database"
-    "github.com/blckur/blckur/auth"
-    "github.com/gin-gonic/gin"
-    "net/http"
-    "io/ioutil"
+	"github.com/blckur/blckur/auth"
+	"github.com/blckur/blckur/database"
+	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http"
 )
 
 func Limiter(c *gin.Context) {
-    c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 4096)
+	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 4096)
 }
 
 func Database(c *gin.Context) {
-    c.Set("db", database.GetDatabase())
+	c.Set("db", database.GetDatabase())
 }
 
 func Session(required bool) gin.HandlerFunc {
-    return func(c *gin.Context) {
-        db := c.MustGet("db").(*database.Database)
+	return func(c *gin.Context) {
+		db := c.MustGet("db").(*database.Database)
 
-        cook, err := auth.GetCookie(c)
-        if err != nil {
-            panic(err)
-        }
+		cook, err := auth.GetCookie(c)
+		if err != nil {
+			panic(err)
+		}
 
-        sess, err := cook.GetSession(db)
-        switch err.(type) {
-            case nil:
-            case *auth.NotFoundError:
-                sess = nil
-                err = nil
-            default:
-                panic(err)
-        }
+		sess, err := cook.GetSession(db)
+		switch err.(type) {
+		case nil:
+		case *auth.NotFoundError:
+			sess = nil
+			err = nil
+		default:
+			panic(err)
+		}
 
-        if required && sess == nil {
-            c.AbortWithStatus(401)
-        }
+		if required && sess == nil {
+			c.AbortWithStatus(401)
+		}
 
-        c.Set("session", sess)
-    }
+		c.Set("session", sess)
+	}
 }
 
 func Static(c *gin.Context) {
-    resp, err := http.Get(
-        "http://localhost:8080" + c.Params.ByName("path"))
-    if err != nil {
-        panic(err)
-    }
-    defer resp.Body.Close()
+	resp, err := http.Get(
+		"http://localhost:8080" + c.Params.ByName("path"))
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
 
-    body, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        panic(err)
-    }
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
 
-    c.Data(200, resp.Header.Get("Content-Type"), body)
+	c.Data(200, resp.Header.Get("Content-Type"), body)
 }
 
 func Register(engine *gin.Engine) {
-    engine.Use(Limiter)
-    engine.Use(gin.Recovery())
+	engine.Use(Limiter)
+	engine.Use(gin.Recovery())
 
-    dbGroup := engine.Group("")
-    dbGroup.Use(Database)
+	dbGroup := engine.Group("")
+	dbGroup.Use(Database)
 
-    authGroup := dbGroup.Group("")
-    authGroup.Use(Session(true))
+	authGroup := dbGroup.Group("")
+	authGroup.Use(Session(true))
 
-    sessGroup := dbGroup.Group("")
-    sessGroup.Use(Session(false))
+	sessGroup := dbGroup.Group("")
+	sessGroup.Use(Session(false))
 
-    dbGroup.POST("/signup", signupPost)
-    sessGroup.POST("/login", loginPost)
-    authGroup.DELETE("/session", sessionDelete)
+	dbGroup.POST("/signup", signupPost)
+	sessGroup.POST("/login", loginPost)
+	authGroup.DELETE("/session", sessionDelete)
 
-    authGroup.GET("/account_types", accountsTypesGet)
+	authGroup.GET("/account_types", accountsTypesGet)
 
-    authGroup.GET("/accounts", accountsGet)
+	authGroup.GET("/accounts", accountsGet)
 
-    authGroup.GET("/user", userGet)
-    authGroup.PUT("/user", userPut)
+	authGroup.GET("/user", userGet)
+	authGroup.PUT("/user", userPut)
 
-    authGroup.GET("/events", eventGet)
+	authGroup.GET("/events", eventGet)
 
-    engine.GET("/s/*path", Static)
+	engine.GET("/s/*path", Static)
 }

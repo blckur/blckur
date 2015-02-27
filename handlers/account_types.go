@@ -1,33 +1,33 @@
 package handlers
 
 import (
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 )
 
 type AccountType struct {
-    Label string `json:"label" binding:"required"`
-    Type string `json:"type" binding:"required"`
+	Label string `json:"label" binding:"required"`
+	Type  string `json:"type" binding:"required"`
 }
 
 func accountsTypesGet(c *gin.Context) {
-    types := []*AccountType{
-        &AccountType{
-            Label: "Twitter",
-            Type: "twitter",
-        },
-        &AccountType{
-            Label: "GitHub",
-            Type: "github",
-        },
-        &AccountType{
-            Label: "Gmail",
-            Type: "gmail",
-        },
-        &AccountType{
-            Label: "HipChat",
-            Type: "hipchat",
-        },
-    }
+	types := []*AccountType{
+		&AccountType{
+			Label: "Twitter",
+			Type:  "twitter",
+		},
+		&AccountType{
+			Label: "GitHub",
+			Type:  "github",
+		},
+		&AccountType{
+			Label: "Gmail",
+			Type:  "gmail",
+		},
+		&AccountType{
+			Label: "HipChat",
+			Type:  "hipchat",
+		},
+	}
 
-    c.JSON(200, types)
+	c.JSON(200, types)
 }
