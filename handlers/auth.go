@@ -57,6 +57,17 @@ func loginPost(c *gin.Context) {
     c.JSON(200, sess)
 }
 
+func sessionDelete(c *gin.Context) {
+    sess := c.MustGet("session").(*auth.Session)
+
+    err := sess.Remove()
+    if err != nil {
+        panic(err)
+    }
+
+    c.String(200, "")
+}
+
 func signupPost(c *gin.Context) {
     db := c.MustGet("db").(*database.Database)
     data := &AuthData{}
