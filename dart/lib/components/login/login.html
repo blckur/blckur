@@ -17,7 +17,7 @@
         <paper-button role="button" tabindex="0" raised
           ng-click="onLogin()">Log In</paper-button>
         <div class="signup">Don't have an account? <span class="link"
-          no-select ng-click="mode = 'signup'">Sign up</span></div>
+          no-select ng-click="setMode('signup')">Sign up</span></div>
       </form>
       <form ng-switch-when="signup">
         <x-input type="text" placeholder="Email address" error="emailError"
@@ -27,7 +27,7 @@
         <paper-button role="button" tabindex="0" raised
           ng-click="onSignup()">Sign Up</paper-button>
         <div class="signup">Already a Blckur member? <span class="link"
-          no-select ng-click="mode = 'login'">Log in</span></div>
+          no-select ng-click="setMode('login')">Log in</span></div>
       </form>
     </div>
   </div>

@@ -1,18 +1,19 @@
 library login_comp;
 
+import 'package:blckur/exceptions.dart';
 import 'package:blckur/models/auth.dart' as ath;
 import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
 import 'package:angular/angular.dart' as ng;
-import 'dart:async' as async;
+import 'dart:html' as dom;
 
 @Component(
   selector: 'x-login',
   templateUrl: 'packages/blckur/components/login/login.html',
   cssUrl: 'packages/blckur/components/login/login.css'
 )
-class LoginComp {
+class LoginComp implements ng.ShadowRootAware {
   ath.Auth model;
   String emailError;
   String passwordError;
@@ -23,26 +24,72 @@ class LoginComp {
     this.model.remember = true;
   }
 
-  void _handlerError(async.AsyncError err) {
+  void onShadowRoot(dom.ShadowRoot root) {
+    root.querySelector('.modal').onKeyPress.listen((evt) {
+      if (evt.keyCode == 13) {
+        evt.stopPropagation();
+        if (this.mode == 'login') {
+          this.onLogin();
+        }
+        else {
+          this.onSignup();
+        }
+      }
+    });
+  }
+
+  void _handlerError(HttpError err) {
+    this.clearErrors();
+
     if (err.error == 'email_invalid') {
       this.emailError = 'Email is invalid';
-      this.passwordError = null;
     }
     else if (err.error == 'password_invalid') {
       this.passwordError = 'Password is invalid';
-      this.emailError = null;
     }
     else if (err.error == 'email_exists') {
       this.emailError = 'Email is already signed up';
-      this.passwordError = null;
     }
   }
 
+  void clearErrors() {
+    this.emailError = null;
+    this.passwordError = null;
+  }
+
+  bool validate() {
+    this.clearErrors();
+
+    try {
+      this.model.validate('email');
+    } catch(err) {
+      this.emailError = err.toString();
+      return false;
+    }
+
+    try {
+      this.model.validate('password');
+    } catch(err) {
+      this.passwordError = err.toString();
+      return false;
+    }
+
+    return true;
+  }
+
+  void setMode(String mode) {
+    this.mode = mode;
+    this.clearErrors();
+  }
+
   void onLogin() {
-    this.model.login(['username', 'password', 'remember']).then((_) {
-      this.emailError = null;
-      this.passwordError = null;
-      this.router.gotoUrl('/root').then((_) {
+    if (!this.validate()) {
+      return;
+    }
+
+    this.model.login(['email', 'password', 'remember']).then((_) {
+      this.clearErrors();
+      this.router.gotoUrl('/').then((_) {
         this.model.clear();
       });
     }).catchError((err) {
@@ -52,9 +99,12 @@ class LoginComp {
   }
 
   void onSignup() {
-    this.model.signup(['username', 'password']).then((_) {
-      this.emailError = null;
-      this.passwordError = null;
+    if (!this.validate()) {
+      return;
+    }
+
+    this.model.signup(['email', 'password']).then((_) {
+      this.clearErrors();
       this.router.gotoUrl('/root').then((_) {
         this.model.clear();
       });
