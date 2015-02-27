@@ -13,6 +13,9 @@ class User extends mdl.Model {
   @mdl.Attribute('email')
   String email;
 
+  @mdl.Attribute('password')
+  String password;
+
   User(ng.Http http) : super(http);
 
   String url = '/user';
