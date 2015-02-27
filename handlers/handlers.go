@@ -8,6 +8,10 @@ import (
     "io/ioutil"
 )
 
+func Limiter(c *gin.Context) {
+    c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 4096)
+}
+
 func Database(c *gin.Context) {
     c.Set("db", database.GetDatabase())
 }
@@ -56,6 +60,7 @@ func Static(c *gin.Context) {
 }
 
 func Register(engine *gin.Engine) {
+    engine.Use(Limiter)
     engine.Use(gin.Recovery())
     engine.Use(Database)
 
