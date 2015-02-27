@@ -1,9 +1,11 @@
 library user_comp;
 
+import 'package:blckur/models/auth.dart' as ath;
 import 'package:blckur/models/user.dart' as usr;
 import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
+import 'package:angular/angular.dart'as ng;
 
 @Component(
   selector: 'x-user',
@@ -14,8 +16,10 @@ class UserComp {
   bool settings;
   usr.User model;
   usr.User settingsModel;
+  ath.Auth authModel;
+  ng.Router router;
 
-  UserComp(this.model) {
+  UserComp(this.model, this.authModel, this.router) {
     this.update();
   }
 
@@ -37,5 +41,13 @@ class UserComp {
 
     settings = false;
     this.model = this.settingsModel;
+  }
+
+  void onLogout() {
+    this.authModel.logout().then((_) {
+      this.router.gotoUrl("/login");
+    }).catchError((err) {
+      logger.severe('Failed to logout', err);
+    });
   }
 }
