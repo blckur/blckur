@@ -70,6 +70,16 @@ func (u *User) Commit() (err error) {
 	return
 }
 
+func (u *User) SelectCommit(fields set.Set) (err error) {
+	err = u.UpdateId(u.Id, database.SelectFields(u, fields))
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
+
 func FindUser(db *database.Database, email string) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{}
