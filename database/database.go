@@ -7,7 +7,6 @@ import (
     "github.com/dropbox/godropbox/container/set"
     "reflect"
     "strings"
-    "fmt"
 )
 
 var Session *mgo.Session
@@ -45,8 +44,6 @@ func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
         val := val.Field(i).Interface()
 
         data[tag] = val
-
-        fmt.Printf("%#v: %#v\n", tag, val)
     }
 
     return
