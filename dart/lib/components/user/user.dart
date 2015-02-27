@@ -31,16 +31,18 @@ class UserComp {
 
   void onSettings() {
     this.settingsModel = this.model.clone();
-    settings = this.settings != true;
+    this.settings = this.settings != true;
   }
 
   void onSave() {
-    this.settingsModel.save().catchError((err) {
+    this.settingsModel.save().then((_) {
+      this.settingsModel.password = null;
+      this.settings = false;
+      this.model = this.settingsModel;
+    }).catchError((err) {
       logger.severe('Failed to save user', err);
     });
 
-    settings = false;
-    this.model = this.settingsModel;
   }
 
   void onLogout() {
