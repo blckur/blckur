@@ -1,6 +1,7 @@
 package auth
 
 import (
+    "github.com/blckur/blckur/user"
     "github.com/blckur/blckur/database"
     "labix.org/v2/mgo/bson"
     "time"
@@ -15,6 +16,11 @@ type Session struct {
 
 func (s *Session) Remove() (err error) {
     err = RemoveSession(s.db, s.Id)
+    return
+}
+
+func (s *Session) GetUser() (usr *user.User, err error) {
+    usr, err = user.GetUser(s.db, s.UserId)
     return
 }
 
