@@ -47,7 +47,9 @@ class InputComp extends all_aware.AllAware {
       else {
         this.label = val;
         this.labelClass = 'invalid';
-        this.labelFloat = true;
+        if (this.model != '' && this.model != null) {
+          this.labelFloat = true;
+        }
       }
     }
   }
