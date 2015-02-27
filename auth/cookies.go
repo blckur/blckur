@@ -61,8 +61,8 @@ func (c *Cookie) GetSession(db *database.Database) (
     return
 }
 
-func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId) (
-        sess *Session, err error) {
+func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId,
+        remember bool) (sess *Session, err error) {
     sess, err = NewSession(db, id)
     if err != nil {
         err = &errortypes.UnknownError{
@@ -72,6 +72,16 @@ func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId) (
     }
 
     c.Set("id", sess.Id.Hex())
+    maxAge := 0
+
+    if !remember {
+        maxAge = 86400
+    }
+
+    c.data.Options = &sessions.Options{
+        maxAge: maxAge,
+    }
+
     err = c.Save()
     if err != nil {
         err = &errortypes.UnknownError{
