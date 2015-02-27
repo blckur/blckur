@@ -15,12 +15,12 @@ var Store *sessions.CookieStore
 
 type Cookie struct {
     Id bson.ObjectId
-    data *sessions.Session
+    store *sessions.Session
     con *gin.Context
 }
 
 func (c *Cookie) Get(key string) (val string) {
-    valInter := c.data.Values[key]
+    valInter := c.store.Values[key]
     if valInter == nil {
         val = ""
     } else {
@@ -30,7 +30,7 @@ func (c *Cookie) Get(key string) (val string) {
 }
 
 func (c *Cookie) Set(key string, val string) {
-    c.data.Values[key] = val
+    c.store.Values[key] = val
 }
 
 func (c *Cookie) GetSession(db *database.Database) (
@@ -74,12 +74,12 @@ func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId,
     c.Set("id", sess.Id.Hex())
     maxAge := 0
 
-    if !remember {
-        maxAge = 86400
+    if remember {
+        maxAge = 15778500
     }
 
-    c.data.Options = &sessions.Options{
-        maxAge: maxAge,
+    c.store.Options = &sessions.Options{
+        MaxAge: maxAge,
     }
 
     err = c.Save()
@@ -120,12 +120,12 @@ func (c *Cookie) Remove(db *database.Database) (err error) {
 }
 
 func (c *Cookie) Save() (err error) {
-    err = c.data.Save(c.con.Request, c.con.Writer)
+    err = c.store.Save(c.con.Request, c.con.Writer)
     return
 }
 
 func GetCookie(con *gin.Context) (cook *Cookie, err error) {
-    data, err := Store.New(con.Request, "blckur")
+    store, err := Store.New(con.Request, "blckur")
     if err != nil {
         err = err.(securecookie.MultiError)[0]
 
@@ -141,7 +141,7 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
     }
 
     cook = &Cookie{
-        data: data,
+        store: store,
         con: con,
     }
 

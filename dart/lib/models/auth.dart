@@ -40,9 +40,9 @@ class Auth extends mdl.Model {
     return this.create(fields);
   }
 
-  async.Future logout([List<String> fields]) {
+  async.Future logout() {
     this.url = '/session';
-    return this.destroy(fields);
+    return this.destroy();
   }
 
   async.Future signup([List<String> fields]) {

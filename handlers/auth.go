@@ -5,11 +5,13 @@ import (
     "github.com/blckur/blckur/user"
     "github.com/blckur/blckur/auth"
     "github.com/gin-gonic/gin"
+    "github.com/blckur/blckur/utils"
 )
 
 type AuthData struct {
     Email string `json:"email" binding:"required"`
     Password string `json:"password" binding:"required"`
+    Remember bool `json:"remember"`
 }
 
 func loginPost(c *gin.Context) {
@@ -28,7 +30,7 @@ func loginPost(c *gin.Context) {
     case nil:
     case *database.NotFoundError:
         c.JSON(401, &ErrorData{
-            Error: "auth_email_invalid",
+            Error: "email_invalid",
             Message: "Email is invalid",
         })
         return
@@ -38,7 +40,7 @@ func loginPost(c *gin.Context) {
 
     if auth := usr.CheckPassword(data.Password); auth != true {
         c.JSON(401, &ErrorData{
-            Error: "auth_password_invalid",
+            Error: "password_invalid",
             Message: "Password is invalid",
         })
         return
@@ -49,7 +51,7 @@ func loginPost(c *gin.Context) {
         panic(err)
     }
 
-    sess, err = cook.NewSession(db, usr.Id)
+    sess, err = cook.NewSession(db, usr.Id, data.Remember)
     if err != nil {
         panic(err)
     }
@@ -78,7 +80,7 @@ func signupPost(c *gin.Context) {
         case nil:
         case *database.DuplicateKeyError:
             c.JSON(400, &ErrorData{
-                Error: "signup_email_exists",
+                Error: "email_exists",
                 Message: "Email is already signed up",
             })
             return
@@ -91,7 +93,7 @@ func signupPost(c *gin.Context) {
         panic(err)
     }
 
-    _, err = cook.NewSession(db, usr.Id)
+    _, err = cook.NewSession(db, usr.Id, true)
     if err != nil {
         panic(err)
     }
