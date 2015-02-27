@@ -1,8 +1,13 @@
 package database
 
 import (
+    "labix.org/v2/mgo/bson"
     "labix.org/v2/mgo"
     "github.com/dropbox/godropbox/errors"
+    "github.com/dropbox/godropbox/container/set"
+    "reflect"
+    "strings"
+    "fmt"
 )
 
 var Session *mgo.Session
@@ -13,6 +18,38 @@ type Database struct {
 
 type Collection struct {
     *mgo.Collection
+}
+
+func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
+    val := reflect.ValueOf(obj).Elem()
+    data = bson.M{}
+
+    n := val.NumField()
+    for i := 0; i < n; i++ {
+        typ := val.Type().Field(i)
+
+        if typ.PkgPath != "" {
+            continue
+        }
+
+        tag := typ.Tag.Get("bson")
+        if tag == "" || tag == "-" {
+            continue
+        }
+        tag = strings.Split(tag, ",")[0]
+
+        if !fields.Contains(tag) {
+            continue
+        }
+
+        val := val.Field(i).Interface()
+
+        data[tag] = val
+
+        fmt.Printf("%#v: %#v\n", tag, val)
+    }
+
+    return
 }
 
 func (d *Database) Users() (coll *Collection) {
