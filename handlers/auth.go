@@ -75,7 +75,16 @@ func signupPost(c *gin.Context) {
     data := &AuthData{}
     c.Bind(data)
 
-    usr, err := user.NewUser(db, data.Email, data.Password)
+    email, err := utils.ParseEmail(data.Email)
+    if err != nil {
+        c.JSON(400, &ErrorData{
+            Error: "email_invalid",
+            Message: "Email is invalid",
+        })
+        return
+    }
+
+    usr, err := user.NewUser(db, email, data.Password)
     switch err.(type) {
         case nil:
         case *database.DuplicateKeyError:
