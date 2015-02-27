@@ -5,6 +5,8 @@ import (
     "github.com/blckur/blckur/database"
     "github.com/blckur/blckur/auth"
     "github.com/gin-gonic/gin"
+    "net/http"
+    "time"
 )
 
 func main() {
@@ -21,5 +23,13 @@ func main() {
     router := gin.Default()
     handlers.Register(router)
 
-    router.Run(":3000")
+    server := &http.Server{
+        Addr: ":3000",
+        Handler: router,
+        ReadTimeout: 10 * time.Second,
+        WriteTimeout: 10 * time.Second,
+        MaxHeaderBytes: 4096,
+    }
+
+    server.ListenAndServe()
 }
