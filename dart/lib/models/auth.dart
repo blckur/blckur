@@ -30,15 +30,23 @@ class Auth extends mdl.Model {
     }
   }
 
+  @mdl.Attribute('remember')
+  bool remember;
+
   Auth(ng.Http http) : super(http);
 
-  async.Future login() {
+  async.Future login([List<String> fields]) {
     this.url = '/login';
-    return this.create();
+    return this.create(fields);
   }
 
-  async.Future signup() {
+  async.Future logout([List<String> fields]) {
+    this.url = '/session';
+    return this.destroy(fields);
+  }
+
+  async.Future signup([List<String> fields]) {
     this.url = '/signup';
-    return this.create();
+    return this.create(fields);
   }
 }
