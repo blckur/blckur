@@ -73,6 +73,38 @@ func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId) (
 
     c.Set("id", sess.Id.Hex())
     err = c.Save()
+    if err != nil {
+        err = &errortypes.UnknownError{
+            errors.Wrap(err, "auth: Unknown session error"),
+        }
+        return
+    }
+
+    return
+}
+
+func (c *Cookie) Remove(db *database.Database) (err error) {
+    sessId := c.Get("id")
+    if sessId == "" {
+        return
+    }
+
+    err = RemoveSession(db, bson.ObjectIdHex(sessId))
+    if err != nil {
+        err = &errortypes.UnknownError{
+            errors.Wrap(err, "auth: Unknown session error"),
+        }
+        return
+    }
+
+    c.Set("id", "")
+    err = c.Save()
+    if err != nil {
+        err = &errortypes.UnknownError{
+            errors.Wrap(err, "auth: Unknown session error"),
+        }
+        return
+    }
 
     return
 }
