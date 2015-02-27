@@ -11,18 +11,28 @@ type Database struct {
     database *mgo.Database
 }
 
-func (d *Database) Users() (coll *mgo.Collection) {
-    coll = d.database.C("users")
+type Collection struct {
+    *mgo.Collection
+}
+
+func (d *Database) Users() (coll *Collection) {
+    coll = &Collection{
+        d.database.C("users"),
+    }
     return
 }
 
-func (d *Database) Sessions() (coll *mgo.Collection) {
-    coll = d.database.C("sessions")
+func (d *Database) Sessions() (coll *Collection) {
+    coll = &Collection{
+        d.database.C("sessions"),
+    }
     return
 }
 
-func (d *Database) Settings() (coll *mgo.Collection) {
-    coll = d.database.C("settings")
+func (d *Database) Settings() (coll *Collection) {
+    coll = &Collection{
+        d.database.C("settings"),
+    }
     return
 }
 
