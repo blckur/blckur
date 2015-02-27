@@ -13,9 +13,9 @@ func Get(db *database.Database, group string, key string) (
 
     grp := map[string]interface{}{}
 
-    err = setCol.Find(bson.M{
+    err = setCol.Find(&bson.M{
         "_id": group,
-    }).Select(bson.M{
+    }).Select(&bson.M{
         key: 1,
     }).One(grp)
     if err != nil {
@@ -38,9 +38,9 @@ func Set(db *database.Database, group string, key string, val interface{}) (
         err error) {
     setCol := db.Settings()
 
-    _, err = setCol.Upsert(bson.M{
+    _, err = setCol.Upsert(&bson.M{
         "_id": group,
-    }, bson.M{
+    }, &bson.M{
         key: val,
     })
     if err != nil {

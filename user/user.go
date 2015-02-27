@@ -62,7 +62,7 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
         db: db,
     }
 
-    err = usrsCol.Find(bson.M{
+    err = usrsCol.Find(&bson.M{
         "email": email,
     }).One(usr)
     if err != nil {
