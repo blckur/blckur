@@ -19,7 +19,9 @@ class LoginComp {
   String mode;
   ng.Router router;
 
-  LoginComp(this.model, this.router) : mode = 'login';
+  LoginComp(this.model, this.router) : mode = 'login' {
+    this.model.remember = true;
+  }
 
   void _handlerError(async.AsyncError err) {
     if (err.error == 'email_invalid') {
@@ -37,7 +39,7 @@ class LoginComp {
   }
 
   void onLogin() {
-    this.model.login().then((_) {
+    this.model.login(['username', 'password', 'remember']).then((_) {
       this.emailError = null;
       this.passwordError = null;
       this.router.gotoUrl('/root').then((_) {
@@ -50,7 +52,7 @@ class LoginComp {
   }
 
   void onSignup() {
-    this.model.signup().then((_) {
+    this.model.signup(['username', 'password']).then((_) {
       this.emailError = null;
       this.passwordError = null;
       this.router.gotoUrl('/root').then((_) {
