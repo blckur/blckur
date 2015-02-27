@@ -13,8 +13,8 @@ import (
 )
 
 type User struct {
-    Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
-    Email string `bson:"email" json:"email"`
+    Id bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
+    Email string `bson:"email" json:"email" binding:"required"`
     PasswordSalt []byte `bson:"password_salt" json:"-"`
     PasswordHash []byte `bson:"password_hash" json:"-"`
     db *database.Database
