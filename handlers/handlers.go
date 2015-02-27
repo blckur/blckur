@@ -62,19 +62,19 @@ func Static(c *gin.Context) {
 func Register(engine *gin.Engine) {
     engine.Use(Limiter)
     engine.Use(gin.Recovery())
-    engine.Use(Database)
 
-    engine.POST("/signup", signupPost)
+    dbGroup := engine.Group("")
+    dbGroup.Use(Database)
 
+    authGroup := dbGroup.Group("")
+    authGroup.Use(Session(true))
 
-    sessGroup := engine.Group("")
+    sessGroup := dbGroup.Group("")
     sessGroup.Use(Session(false))
 
+    dbGroup.POST("/signup", signupPost)
     sessGroup.POST("/login", loginPost)
-
-
-    authGroup := engine.Group("")
-    authGroup.Use(Session(true))
+    authGroup.DELETE("/session", sessionDelete)
 
     authGroup.GET("/account_types", accountsTypesGet)
 
