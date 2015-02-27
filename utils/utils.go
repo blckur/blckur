@@ -21,6 +21,5 @@ func ParseEmail(input string) (email string, err error) {
         return
     }
     email = address.Address
-
     return
 }
