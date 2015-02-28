@@ -12,6 +12,7 @@ import (
 var Session *mgo.Session
 
 type Database struct {
+	session *mgo.Session
 	database *mgo.Database
 }
 
@@ -47,6 +48,10 @@ func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
 	}
 
 	return
+}
+
+func (d *Database) Close() {
+	d.session.Close()
 }
 
 func (d *Database) Users() (coll *Collection) {
@@ -89,6 +94,7 @@ func GetDatabase() (db *Database) {
 	database := session.DB("blckur")
 
 	db = &Database{
+		session: session,
 		database: database,
 	}
 	return
