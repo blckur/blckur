@@ -68,8 +68,8 @@ func GetDatabase() (db *Database) {
 func AddIndexes() (err error) {
 	db := GetDatabase()
 
-	usrsCol := db.Users()
-	err = usrsCol.EnsureIndex(mgo.Index{
+	coll := db.Users()
+	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"email"},
 		Unique: true,
 		Background: true,
