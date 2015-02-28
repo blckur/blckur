@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/blckur/blckur/auth"
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
@@ -23,7 +23,7 @@ func Session(required bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := c.MustGet("db").(*database.Database)
 
-		cook, err := auth.GetCookie(c)
+		cook, err := session.GetCookie(c)
 		if err != nil {
 			panic(err)
 		}
@@ -31,7 +31,7 @@ func Session(required bool) gin.HandlerFunc {
 		sess, err := cook.GetSession(db)
 		switch err.(type) {
 		case nil:
-		case *auth.NotFoundError:
+		case *session.NotFoundError:
 			sess = nil
 			err = nil
 		default:

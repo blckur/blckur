@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/blckur/blckur/auth"
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/user"
 	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ type AuthData struct {
 
 func loginPost(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
-	sess := c.MustGet("session").(*auth.Session)
+	sess := c.MustGet("session").(*session.Session)
 	data := &AuthData{}
 	c.Bind(data)
 
@@ -46,7 +46,7 @@ func loginPost(c *gin.Context) {
 		return
 	}
 
-	cook, err := auth.GetCookie(c)
+	cook, err := session.GetCookie(c)
 	if err != nil {
 		panic(err)
 	}
@@ -60,7 +60,7 @@ func loginPost(c *gin.Context) {
 }
 
 func sessionDelete(c *gin.Context) {
-	sess := c.MustGet("session").(*auth.Session)
+	sess := c.MustGet("session").(*session.Session)
 
 	err := sess.Remove()
 	if err != nil {
@@ -97,7 +97,7 @@ func signupPost(c *gin.Context) {
 		panic(err)
 	}
 
-	cook, err := auth.GetCookie(c)
+	cook, err := session.GetCookie(c)
 	if err != nil {
 		panic(err)
 	}

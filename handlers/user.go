@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/blckur/blckur/auth"
+	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ type UserData struct {
 }
 
 func userGet(c *gin.Context) {
-	sess := c.MustGet("session").(*auth.Session)
+	sess := c.MustGet("session").(*session.Session)
 
 	usr, err := sess.GetUser()
 	if err != nil {
@@ -23,7 +23,7 @@ func userGet(c *gin.Context) {
 }
 
 func userPut(c *gin.Context) {
-	sess := c.MustGet("session").(*auth.Session)
+	sess := c.MustGet("session").(*session.Session)
 	data := &UserData{}
 	c.Bind(data)
 
