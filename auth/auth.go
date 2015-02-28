@@ -7,51 +7,57 @@ import (
 	"time"
 )
 
-type Session struct {
+type Data struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
 	UserId bson.ObjectId `bson:"user_id" json:"user_id" binding:"required"`
 	Timestamp time.Time `bson:"timestamp" json:"-"`
-	db *database.Database
+}
+
+type Session struct {
+	*Data
+	coll *database.Collection
 }
 
 func (s *Session) Remove() (err error) {
-	err = RemoveSession(s.db, s.Id)
+	err = RemoveSession(s.coll.Database, s.Id)
 	return
 }
 
 func (s *Session) GetUser() (usr *user.User, err error) {
-	usr, err = user.GetUser(s.db, s.UserId)
+	usr, err = user.GetUser(s.coll.Database, s.UserId)
 	return
 }
 
 func GetSession(db *database.Database, id bson.ObjectId) (
-	sess *Session, err error) {
-	sessCol := db.Sessions()
-	sess = &Session{}
+		sess *Session, err error) {
+	coll := db.Sessions()
+	sess = &Session{
+		&Data{},
+		coll,
+	}
 
-	err = sessCol.FindId(id).One(sess)
+	err = coll.FindId(id).One(sess.Data)
 	if err != nil {
 		err = database.ParseError(err)
 		return
 	}
 
-	sess.db = db
-
 	return
 }
 
 func NewSession(db *database.Database, userId bson.ObjectId) (
-	sess *Session, err error) {
-	sessCol := db.Sessions()
-
+		sess *Session, err error) {
+	coll := db.Sessions()
 	sess = &Session{
-		Id: bson.NewObjectId(),
-		UserId: userId,
-		Timestamp: time.Now(),
-		db: db,
+		&Data{
+			Id: bson.NewObjectId(),
+			UserId: userId,
+			Timestamp: time.Now(),
+		},
+		coll,
 	}
 
-	err = sessCol.Insert(sess)
+	err = coll.Insert(sess.Data)
 	if err != nil {
 		err = database.ParseError(err)
 		return
@@ -61,9 +67,9 @@ func NewSession(db *database.Database, userId bson.ObjectId) (
 }
 
 func RemoveSession(db *database.Database, id bson.ObjectId) (err error) {
-	sessCol := db.Sessions()
+	coll := db.Sessions()
 
-	err = sessCol.RemoveId(id)
+	err = coll.RemoveId(id)
 	if err != nil {
 		err = database.ParseError(err)
 		return
