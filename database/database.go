@@ -11,14 +11,54 @@ import (
 
 var Session *mgo.Session
 
-type Database struct {
-	session *mgo.Session
-	database *mgo.Database
-}
-
 type Collection struct {
 	*mgo.Collection
 	Database *Database
+}
+
+func (c *Collection) FindOne(query interface{}, result interface{}) (
+		err error) {
+	err = c.Find(query).One(result)
+	if err != nil {
+		err = ParseError(err)
+		return
+	}
+
+	return
+}
+
+func (c *Collection) FindOneId(id bson.ObjectId, result interface{}) (
+		err error) {
+	err = c.FindId(id).One(result)
+	if err != nil {
+		err = ParseError(err)
+		return
+	}
+
+	return
+}
+
+func (c *Collection) Commit(id bson.ObjectId, data interface{}) (err error) {
+	err = c.UpdateId(id, bson.M{
+		"$set": data,
+	})
+	if err != nil {
+		err = ParseError(err)
+		return
+	}
+
+	return
+}
+
+func (c *Collection) CommitFields(id bson.ObjectId, data interface{},
+		fields set.Set) (err error) {
+	err = c.UpdateId(id, SelectFields(data, fields))
+	if err != nil {
+		err = ParseError(err)
+		return
+	}
+
+	return
 }
 
 func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
@@ -49,6 +89,11 @@ func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
 	}
 
 	return
+}
+
+type Database struct {
+	session *mgo.Session
+	database *mgo.Database
 }
 
 func (d *Database) Close() {
