@@ -56,7 +56,7 @@ func loginPost(c *gin.Context) {
 		panic(err)
 	}
 
-	c.JSON(200, sess)
+	c.JSON(200, sess.Data)
 }
 
 func sessionDelete(c *gin.Context) {
