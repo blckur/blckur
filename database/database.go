@@ -154,8 +154,8 @@ func AddIndexes() (err error) {
 
 	usrsCol := db.Users()
 	err = usrsCol.EnsureIndex(mgo.Index{
-		Key:        []string{"email"},
-		Unique:     true,
+		Key: []string{"email"},
+		Unique: true,
 		Background: true,
 	})
 	if err != nil {
