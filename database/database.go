@@ -18,6 +18,7 @@ type Database struct {
 
 type Collection struct {
 	*mgo.Collection
+	Database *Database
 }
 
 func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
@@ -57,6 +58,7 @@ func (d *Database) Close() {
 func (d *Database) Users() (coll *Collection) {
 	coll = &Collection{
 		d.database.C("users"),
+		d,
 	}
 	return
 }
@@ -64,6 +66,7 @@ func (d *Database) Users() (coll *Collection) {
 func (d *Database) Sessions() (coll *Collection) {
 	coll = &Collection{
 		d.database.C("sessions"),
+		d,
 	}
 	return
 }
@@ -71,6 +74,7 @@ func (d *Database) Sessions() (coll *Collection) {
 func (d *Database) Settings() (coll *Collection) {
 	coll = &Collection{
 		d.database.C("settings"),
+		d,
 	}
 	return
 }
