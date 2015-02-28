@@ -21,8 +21,8 @@ type Data struct {
 }
 
 type User struct {
-	*database.Collection
 	*Data
+	coll *database.Collection
 }
 
 func (u *User) hashPassword(password string) []byte {
@@ -62,8 +62,8 @@ func (u *User) SetPassword(password string) (err error) {
 }
 
 func (u *User) Commit() (err error) {
-	err = u.UpdateId(u.Id, bson.M{
-		"$set": u,
+	err = u.coll.UpdateId(u.Id, bson.M{
+		"$set": u.Data,
 	})
 	if err != nil {
 		err = database.ParseError(err)
@@ -74,7 +74,7 @@ func (u *User) Commit() (err error) {
 }
 
 func (u *User) SelectCommit(fields set.Set) (err error) {
-	err = u.UpdateId(u.Id, database.SelectFields(u, fields))
+	err = u.coll.UpdateId(u.Id, database.SelectFields(u.Data, fields))
 	if err != nil {
 		err = database.ParseError(err)
 		return
@@ -86,8 +86,8 @@ func (u *User) SelectCommit(fields set.Set) (err error) {
 func FindUser(db *database.Database, email string) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		coll,
 		&Data{},
+		coll,
 	}
 
 	err = coll.Find(bson.M{
@@ -98,16 +98,14 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
 		return
 	}
 
-	usr.Collection = coll
-
 	return
 }
 
 func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		coll,
 		&Data{},
+		coll,
 	}
 
 	err = coll.FindId(id).One(usr.Data)
@@ -122,14 +120,14 @@ func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 func NewUser(db *database.Database, email string, password string) (
 		usr *User, err error) {
 	coll := db.Users()
-
 	usr = &User{
-		coll,
 		&Data{
 			Id: bson.NewObjectId(),
 			Email: email,
 		},
+		coll,
 	}
+
 	usr.SetPassword(password)
 
 	err = coll.Insert(usr.Data)
