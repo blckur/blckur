@@ -13,13 +13,16 @@ import (
 	"time"
 )
 
+type Data struct {
+	Id bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
+	Email string `bson:"email" json:"email" binding:"required"`
+	PasswordSalt []byte `bson:"password_salt" json:"-"`
+	PasswordHash []byte `bson:"password_hash" json:"-"`
+}
+
 type User struct {
-	Id           bson.ObjectId `bson:"_id,omitempty"
-		json:"id" binding:"required"`
-	Email        string        `bson:"email" json:"email" binding:"required"`
-	PasswordSalt []byte        `bson:"password_salt" json:"-"`
-	PasswordHash []byte        `bson:"password_hash" json:"-"`
 	*database.Collection
+	*Data
 }
 
 func (u *User) hashPassword(password string) []byte {
@@ -82,11 +85,14 @@ func (u *User) SelectCommit(fields set.Set) (err error) {
 
 func FindUser(db *database.Database, email string) (usr *User, err error) {
 	coll := db.Users()
-	usr = &User{}
+	usr = &User{
+		coll,
+		&Data{},
+	}
 
 	err = coll.Find(bson.M{
 		"email": email,
-	}).One(usr)
+	}).One(usr.Data)
 	if err != nil {
 		err = database.ParseError(err)
 		return
@@ -99,15 +105,16 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
 
 func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	coll := db.Users()
-	usr = &User{}
+	usr = &User{
+		coll,
+		&Data{},
+	}
 
-	err = coll.FindId(id).One(usr)
+	err = coll.FindId(id).One(usr.Data)
 	if err != nil {
 		err = database.ParseError(err)
 		return
 	}
-
-	usr.Collection = coll
 
 	return
 }
@@ -117,13 +124,15 @@ func NewUser(db *database.Database, email string, password string) (
 	coll := db.Users()
 
 	usr = &User{
-		Id:         bson.NewObjectId(),
-		Email:      email,
-		Collection: coll,
+		coll,
+		&Data{
+			Id: bson.NewObjectId(),
+			Email: email,
+		},
 	}
 	usr.SetPassword(password)
 
-	err = coll.Insert(usr)
+	err = coll.Insert(usr.Data)
 	if err != nil {
 		err = database.ParseError(err)
 		return
