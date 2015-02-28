@@ -24,10 +24,10 @@ func main() {
 	handlers.Register(router)
 
 	server := &http.Server{
-		Addr:           ":3000",
-		Handler:        router,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		Addr: ":3000",
+		Handler: router,
+		ReadTimeout: 10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 		MaxHeaderBytes: 4096,
 	}
 
