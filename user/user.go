@@ -62,24 +62,12 @@ func (u *User) SetPassword(password string) (err error) {
 }
 
 func (u *User) Commit() (err error) {
-	err = u.coll.UpdateId(u.Id, bson.M{
-		"$set": u.Data,
-	})
-	if err != nil {
-		err = database.ParseError(err)
-		return
-	}
-
+	err = u.coll.Commit(u.Id, u.Data)
 	return
 }
 
-func (u *User) SelectCommit(fields set.Set) (err error) {
-	err = u.coll.UpdateId(u.Id, database.SelectFields(u.Data, fields))
-	if err != nil {
-		err = database.ParseError(err)
-		return
-	}
-
+func (u *User) CommitFields(fields set.Set) (err error) {
+	err = u.coll.CommitFields(u.Id, u.Data, fields)
 	return
 }
 
@@ -90,14 +78,9 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
 		coll,
 	}
 
-	err = coll.Find(bson.M{
+	err = coll.FindOne(bson.M{
 		"email": email,
-	}).One(usr.Data)
-	if err != nil {
-		err = database.ParseError(err)
-		return
-	}
-
+	}, usr.Data)
 	return
 }
 
@@ -108,12 +91,7 @@ func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 		coll,
 	}
 
-	err = coll.FindId(id).One(usr.Data)
-	if err != nil {
-		err = database.ParseError(err)
-		return
-	}
-
+	err = coll.FindOneId(id, usr)
 	return
 }
 
