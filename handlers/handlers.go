@@ -13,7 +13,10 @@ func Limiter(c *gin.Context) {
 }
 
 func Database(c *gin.Context) {
-	c.Set("db", database.GetDatabase())
+	db := database.GetDatabase()
+	c.Set("db", db)
+	c.Next()
+	db.Close()
 }
 
 func Session(required bool) gin.HandlerFunc {
