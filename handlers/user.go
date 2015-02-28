@@ -7,7 +7,7 @@ import (
 )
 
 type UserData struct {
-	Email    string `json:"email"`
+	Email string `json:"email"`
 	Password string `json:"password"`
 }
 
@@ -36,7 +36,7 @@ func userPut(c *gin.Context) {
 		email, err := utils.ParseEmail(data.Email)
 		if err != nil {
 			c.JSON(400, &ErrorData{
-				Error:   "email_invalid",
+				Error: "email_invalid",
 				Message: "Email is invalid",
 			})
 			return

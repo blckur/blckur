@@ -8,10 +8,10 @@ import (
 )
 
 type Session struct {
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
-	UserId    bson.ObjectId `bson:"user_id" json:"user_id" binding:"required"`
-	Timestamp time.Time     `bson:"timestamp" json:"-"`
-	db        *database.Database
+	Id bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
+	UserId bson.ObjectId `bson:"user_id" json:"user_id" binding:"required"`
+	Timestamp time.Time `bson:"timestamp" json:"-"`
+	db *database.Database
 }
 
 func (s *Session) Remove() (err error) {
@@ -45,10 +45,10 @@ func NewSession(db *database.Database, userId bson.ObjectId) (
 	sessCol := db.Sessions()
 
 	sess = &Session{
-		Id:        bson.NewObjectId(),
-		UserId:    userId,
+		Id: bson.NewObjectId(),
+		UserId: userId,
 		Timestamp: time.Now(),
-		db:        db,
+		db: db,
 	}
 
 	err = sessCol.Insert(sess)

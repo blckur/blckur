@@ -9,9 +9,9 @@ import (
 )
 
 type AuthData struct {
-	Email    string `json:"email" binding:"required"`
+	Email string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	Remember bool   `json:"remember"`
+	Remember bool `json:"remember"`
 }
 
 func loginPost(c *gin.Context) {
@@ -30,7 +30,7 @@ func loginPost(c *gin.Context) {
 	case nil:
 	case *database.NotFoundError:
 		c.JSON(401, &ErrorData{
-			Error:   "email_invalid",
+			Error: "email_invalid",
 			Message: "Email is invalid",
 		})
 		return
@@ -40,7 +40,7 @@ func loginPost(c *gin.Context) {
 
 	if auth := usr.CheckPassword(data.Password); auth != true {
 		c.JSON(401, &ErrorData{
-			Error:   "password_invalid",
+			Error: "password_invalid",
 			Message: "Password is invalid",
 		})
 		return
@@ -78,7 +78,7 @@ func signupPost(c *gin.Context) {
 	email, err := utils.ParseEmail(data.Email)
 	if err != nil {
 		c.JSON(400, &ErrorData{
-			Error:   "email_invalid",
+			Error: "email_invalid",
 			Message: "Email is invalid",
 		})
 		return
@@ -89,7 +89,7 @@ func signupPost(c *gin.Context) {
 	case nil:
 	case *database.DuplicateKeyError:
 		c.JSON(400, &ErrorData{
-			Error:   "email_exists",
+			Error: "email_exists",
 			Message: "Email is already signed up",
 		})
 		return

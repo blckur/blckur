@@ -14,9 +14,9 @@ import (
 var Store *sessions.CookieStore
 
 type Cookie struct {
-	Id    bson.ObjectId
+	Id bson.ObjectId
 	store *sessions.Session
-	con   *gin.Context
+	con *gin.Context
 }
 
 func (c *Cookie) Get(key string) (val string) {
@@ -142,7 +142,7 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
 
 	cook = &Cookie{
 		store: store,
-		con:   con,
+		con: con,
 	}
 
 	return

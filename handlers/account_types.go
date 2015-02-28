@@ -6,26 +6,26 @@ import (
 
 type AccountType struct {
 	Label string `json:"label" binding:"required"`
-	Type  string `json:"type" binding:"required"`
+	Type string `json:"type" binding:"required"`
 }
 
 func accountsTypesGet(c *gin.Context) {
 	types := []*AccountType{
 		&AccountType{
 			Label: "Twitter",
-			Type:  "twitter",
+			Type: "twitter",
 		},
 		&AccountType{
 			Label: "GitHub",
-			Type:  "github",
+			Type: "github",
 		},
 		&AccountType{
 			Label: "Gmail",
-			Type:  "gmail",
+			Type: "gmail",
 		},
 		&AccountType{
 			Label: "HipChat",
-			Type:  "hipchat",
+			Type: "hipchat",
 		},
 	}
 

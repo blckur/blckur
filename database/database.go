@@ -94,7 +94,7 @@ func GetDatabase() (db *Database) {
 	database := session.DB("blckur")
 
 	db = &Database{
-		session: session,
+		session:  session,
 		database: database,
 	}
 	return
