@@ -36,12 +36,7 @@ func GetSession(db *database.Database, id bson.ObjectId) (
 		coll,
 	}
 
-	err = coll.FindId(id).One(sess.Data)
-	if err != nil {
-		err = database.ParseError(err)
-		return
-	}
-
+	err = coll.FindOneId(id, sess)
 	return
 }
 
