@@ -9,11 +9,11 @@ import (
 
 func Get(db *database.Database, group string, key string) (
 	val interface{}, err error) {
-	setCol := db.Settings()
+	coll := db.Settings()
 
 	grp := map[string]interface{}{}
 
-	err = setCol.Find(bson.M{
+	err = coll.Find(bson.M{
 		"_id": group,
 	}).Select(bson.M{
 		key: 1,
@@ -36,9 +36,9 @@ func Get(db *database.Database, group string, key string) (
 
 func Set(db *database.Database, group string, key string, val interface{}) (
 	err error) {
-	setCol := db.Settings()
+	coll := db.Settings()
 
-	_, err = setCol.Upsert(bson.M{
+	_, err = coll.Upsert(bson.M{
 		"_id": group,
 	}, bson.M{
 		key: val,
