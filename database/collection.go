@@ -25,7 +25,7 @@ err error) {
 }
 
 func (c *Collection) FindOneId(id interface{}, result interface{}) (
-err error) {
+		err error) {
 	err = c.FindId(id).One(result)
 	if err != nil {
 		err = ParseError(err)
