@@ -24,7 +24,7 @@ func main() {
 	handlers.Register(router)
 
 	server := &http.Server{
-		Addr: ":3000",
+		Addr: ":80",
 		Handler: router,
 		ReadTimeout: 10 * time.Second,
 		WriteTimeout: 10 * time.Second,
