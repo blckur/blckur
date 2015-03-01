@@ -29,6 +29,11 @@ func (d *Database) Accounts() (coll *Collection) {
 	return
 }
 
+func (d *Database) Tokens() (coll *Collection) {
+	coll = d.getCollection("tokens")
+	return
+}
+
 func (d *Database) Users() (coll *Collection) {
 	coll = d.getCollection("users")
 	return
