@@ -1,13 +1,16 @@
 package queue
 
 import (
+	"encoding/json"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/kr/beanstalk"
-	"encoding/json"
 	"labix.org/v2/mgo/bson"
 	"time"
 //	"log"
+	"github.com/blckur/blckur/utils"
+	"sync"
+	"fmt"
 )
 
 var (
@@ -118,35 +121,54 @@ func (q *Queue) Put(data interface{}, priority uint32,
 		return
 	}
 
-	servers := make([]string, len(q.servers))
-	copy(servers, q.servers)
+	servers := utils.NewStringStack(utils.ShuffleStringsNew(q.servers))
 
+	waiters := &sync.WaitGroup{}
+	waiters.Add(q.consistency)
 	sent := 0
-	for _, server := range servers {
-		conn, err := q.conn(server)
-		if err != nil {
-			continue
-		}
+	sentMutex := &sync.Mutex{}
 
-		if sent == 0 {
-			_, err = conn.Put(normalJob, priority, delay, ttr)
-			if err != nil {
-				continue
+	for i := 0; i < q.consistency; i++ {
+		go func(check bool) {
+			for {
+				server := servers.Pop()
+				if server == "" {
+					break
+				}
+
+				conn, err := q.conn(server)
+				if err != nil {
+					q.close(server)
+					continue
+				}
+
+				if check {
+					_, err = conn.Put(checkJob, priority,
+						time.Duration(2) * ttr + delay, ttr)
+					if err != nil {
+						q.close(server)
+						continue
+					}
+				} else {
+					_, err = conn.Put(normalJob, priority, delay, ttr)
+					if err != nil {
+						q.close(server)
+						continue
+					}
+				}
+
+				sentMutex.Lock()
+				sent += 1
+				sentMutex.Unlock()
+
+				waiters.Done()
+
+				break
 			}
-		} else {
-			_, err = conn.Put(checkJob, priority,
-				time.Duration(2) * ttr + delay, ttr)
-			if err != nil {
-				continue
-			}
-		}
-
-		sent += 1
-
-		if sent >= q.consistency {
-			break
-		}
+		}(i == 0)
 	}
+
+	waiters.Wait()
 
 	if sent < q.consistency {
 		if err != nil {
