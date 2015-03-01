@@ -16,6 +16,14 @@ func (d *Database) Close() {
 	d.session.Close()
 }
 
+func (d *Database) Accounts() (coll *Collection) {
+	coll = &Collection{
+		d.database.C("accounts"),
+		d,
+	}
+	return
+}
+
 func (d *Database) Users() (coll *Collection) {
 	coll = &Collection{
 		d.database.C("users"),
