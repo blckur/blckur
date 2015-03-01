@@ -69,7 +69,6 @@ func (q *Queue) close(server string) (err error) {
 		return
 	}
 
-	println("remove")
 	q.pool[server] = nil
 
 	return
