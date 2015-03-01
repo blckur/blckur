@@ -34,7 +34,7 @@ func (c *Cookie) Set(key string, val string) {
 }
 
 func (c *Cookie) GetSession(db *database.Database) (
-	sess *Session, err error) {
+		sess *Session, err error) {
 	sessId := c.Get("id")
 	if sessId == "" {
 		err = &NotFoundError{
@@ -62,7 +62,7 @@ func (c *Cookie) GetSession(db *database.Database) (
 }
 
 func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId,
-	remember bool) (sess *Session, err error) {
+		remember bool) (sess *Session, err error) {
 	sess, err = NewSession(db, id)
 	if err != nil {
 		err = &errortypes.UnknownError{
