@@ -11,7 +11,7 @@ type StringStack struct {
 
 func (s *StringStack) Push(elem string) {
 	s.mutex.Lock()
-	append(s.data, elem)
+	s.data = append(s.data, elem)
 	s.mutex.Unlock()
 }
 
