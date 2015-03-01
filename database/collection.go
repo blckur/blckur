@@ -35,7 +35,7 @@ func (c *Collection) FindOneId(id interface{}, result interface{}) (
 	return
 }
 
-func (c *Collection) Commit(id bson.ObjectId, data interface{}) (err error) {
+func (c *Collection) Commit(id interface{}, data interface{}) (err error) {
 	err = c.UpdateId(id, bson.M{
 		"$set": data,
 	})
@@ -47,7 +47,7 @@ func (c *Collection) Commit(id bson.ObjectId, data interface{}) (err error) {
 	return
 }
 
-func (c *Collection) CommitFields(id bson.ObjectId, data interface{},
+func (c *Collection) CommitFields(id interface{}, data interface{},
 		fields set.Set) (err error) {
 	err = c.UpdateId(id, SelectFields(data, fields))
 	if err != nil {
