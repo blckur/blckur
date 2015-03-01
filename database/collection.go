@@ -24,7 +24,7 @@ err error) {
 	return
 }
 
-func (c *Collection) FindOneId(id bson.ObjectId, result interface{}) (
+func (c *Collection) FindOneId(id interface{}, result interface{}) (
 err error) {
 	err = c.FindId(id).One(result)
 	if err != nil {
