@@ -3,8 +3,8 @@ package handlers
 import (
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
-	"github.com/gin-gonic/gin"
 	"github.com/blckur/blckur/utils"
+	"github.com/gin-gonic/gin"
 )
 
 func callbackTwitterGet(c *gin.Context) {
