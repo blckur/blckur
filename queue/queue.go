@@ -91,29 +91,32 @@ func (q *Queue) Close() (err error) {
 	return
 }
 
-func (q *Queue) Put(data interface{}, priority uint32,
-		delay time.Duration, ttr time.Duration) (err error) {
-	jobId := bson.NewObjectId()
-
-	normalJobData := &JobData{
-		Id: jobId,
+func (q *Queue) marhsalJobs(data interface{}) (
+		normalJob []byte, checkJob []byte, err error) {
+	jobData := &JobData{
+		Id: bson.NewObjectId(),
 		Type: NORMAL,
 		Data: data,
 	}
-	normalJob, err := json.Marshal(normalJobData)
+
+	normalJob, err = json.Marshal(jobData)
 	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "queue: Unknown parse error"),
-		}
 		return
 	}
 
-	checkJobData := &JobData{
-		Id: jobId,
-		Type: CHECK,
-		Data: data,
+	jobData.Type = CHECK
+
+	checkJob, err = json.Marshal(jobData)
+	if err != nil {
+		return
 	}
-	checkJob, err := json.Marshal(checkJobData)
+
+	return
+}
+
+func (q *Queue) Put(data interface{}, priority uint32,
+		delay time.Duration, ttr time.Duration) (err error) {
+	normalJob, checkJob, err := q.marhsalJobs(data)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "queue: Unknown parse error"),
