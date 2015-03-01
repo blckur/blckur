@@ -16,35 +16,31 @@ func (d *Database) Close() {
 	d.session.Close()
 }
 
-func (d *Database) Accounts() (coll *Collection) {
+func (d *Database) getCollection(name string) (coll *Collection) {
 	coll = &Collection{
-		d.database.C("accounts"),
+		d.database.C(name),
 		d,
 	}
+	return
+}
+
+func (d *Database) Accounts() (coll *Collection) {
+	coll = d.getCollection("accounts")
 	return
 }
 
 func (d *Database) Users() (coll *Collection) {
-	coll = &Collection{
-		d.database.C("users"),
-		d,
-	}
+	coll = d.getCollection("users")
 	return
 }
 
 func (d *Database) Sessions() (coll *Collection) {
-	coll = &Collection{
-		d.database.C("sessions"),
-		d,
-	}
+	coll = d.getCollection("sessions")
 	return
 }
 
 func (d *Database) Settings() (coll *Collection) {
-	coll = &Collection{
-		d.database.C("settings"),
-		d,
-	}
+	coll = d.getCollection("settings")
 	return
 }
 
