@@ -14,7 +14,7 @@ type Collection struct {
 }
 
 func (c *Collection) FindOne(query interface{}, result interface{}) (
-err error) {
+		err error) {
 	err = c.Find(query).One(result)
 	if err != nil {
 		err = ParseError(err)
@@ -48,7 +48,7 @@ func (c *Collection) Commit(id bson.ObjectId, data interface{}) (err error) {
 }
 
 func (c *Collection) CommitFields(id bson.ObjectId, data interface{},
-fields set.Set) (err error) {
+		fields set.Set) (err error) {
 	err = c.UpdateId(id, SelectFields(data, fields))
 	if err != nil {
 		err = ParseError(err)
