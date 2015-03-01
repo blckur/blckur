@@ -83,6 +83,8 @@ func Register(engine *gin.Engine) {
 
 	authGroup.GET("/accounts", accountsGet)
 
+	dbGroup.GET("/callback/twitter", callbackTwitterGet)
+
 	authGroup.GET("/user", userGet)
 	authGroup.PUT("/user", userPut)
 
