@@ -91,7 +91,7 @@ func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 		coll,
 	}
 
-	err = coll.FindOneId(id, usr)
+	err = coll.FindOneId(id, usr.Data)
 	return
 }
 
