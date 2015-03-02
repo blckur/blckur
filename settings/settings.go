@@ -3,9 +3,48 @@ package settings
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/dropbox/godropbox/errors"
-	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
+	"github.com/dropbox/godropbox/container/set"
 )
+
+var (
+	System *system
+)
+
+type system struct {
+	Id string `bson:"_id"`
+	CookieKey []byte `bson:"cookie_key"`
+}
+
+func Commit(db *database.Database, group interface{}, fields set.Set) (
+		err error) {
+	coll := db.Settings()
+
+	selector := database.SelectFields(group, set.NewSet("_id"))
+	update := database.SelectFields(group, fields)
+
+	err = coll.Update(selector, update)
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
+
+func Init() (err error) {
+	db := database.GetDatabase()
+	coll := db.Settings()
+
+	System = &system{}
+	err = coll.FindOneId("system", System)
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
 
 func Get(db *database.Database, group string, key string) (
 		val interface{}, err error) {
