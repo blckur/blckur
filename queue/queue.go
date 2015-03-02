@@ -191,13 +191,16 @@ func (q *Queue) Put(data interface{}, priority uint32,
 	waiters.Wait()
 
 	if sent < q.consistency {
+		msg := fmt.Sprintf("queue: Job consistency unmet %d/%d",
+		sent, q.consistency)
+
 		if err != nil {
 			err = &JobFailed{
-				errors.Wrap(err, "queue: Job queue failed"),
+				errors.Wrap(err, msg),
 			}
 		} else {
 			err = &JobFailed{
-				errors.New("queue: Job queue failed"),
+				errors.New(msg),
 			}
 		}
 		return
