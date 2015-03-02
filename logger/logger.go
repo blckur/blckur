@@ -9,8 +9,8 @@ import (
 var (
 	log = logging.MustGetLogger("blckur")
 	format = logging.MustStringFormatter(
-		"%{color:bold}%{time:06/01/02 15:04:05 }" +
-		"%{shortfunc} %{level:.4s} ▶ %{color:reset} %{message}")
+		"%{color:bold}%{time:06/01/02 15:04:05} " +
+		"%{shortfunc} %{level:.4s} ▶%{color:reset} %{message}")
 )
 
 func Init() (err error) {
