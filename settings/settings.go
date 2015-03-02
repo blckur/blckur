@@ -100,7 +100,7 @@ func parseFindError(inErr error) (err error) {
 	return
 }
 
-func Init() (err error) {
+func Init() {
 	utils.After("database")
 
 	db := database.GetDatabase()
@@ -110,9 +110,9 @@ func Init() (err error) {
 	System = &system{
 		Id: "system",
 	}
-	err = parseFindError(coll.FindOneId("system", System))
+	err := parseFindError(coll.FindOneId("system", System))
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	Twitter = &twitter{
@@ -120,10 +120,8 @@ func Init() (err error) {
 	}
 	err = parseFindError(coll.FindOneId("twitter", System))
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	utils.Register("settings")
-
-	return
 }

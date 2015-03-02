@@ -17,15 +17,9 @@ import (
 func main() {
 	flag.Parse()
 
-	err := database.Init()
-	if err != nil {
-		panic(err)
-	}
-
-	err = settings.Init()
-	if err != nil {
-		panic(err)
-	}
+	database.Init()
+	settings.Init()
+	logger.Init()
 
 	switch flag.Arg(0) {
 	case "set":
@@ -35,7 +29,7 @@ func main() {
 		db := database.GetDatabase()
 		defer db.Close()
 
-		err = settings.Set(db, group, key, val)
+		err := settings.Set(db, group, key, val)
 		if err != nil {
 			panic(err)
 		}
@@ -47,13 +41,7 @@ func main() {
 			port = "80"
 		}
 		addr := host + ":" + port
-
-		logger.Notice("Starting server %s", addr)
-
-		err = session.Init()
-		if err != nil {
-			panic(err)
-		}
+		session.Init()
 
 		router := gin.Default()
 		handlers.Register(router)
@@ -66,6 +54,7 @@ func main() {
 			MaxHeaderBytes: 4096,
 		}
 
+		logger.Notice("Starting server %s", addr)
 		server.ListenAndServe()
 	}
 }

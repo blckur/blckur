@@ -37,7 +37,7 @@ func Critical(format string, args ...interface{}) {
 	log.Critical(format, args...)
 }
 
-func Init() (err error) {
+func Init() {
 	utils.After("database")
 
 	backend := logging.NewLogBackend(os.Stderr, "", 0)
@@ -47,6 +47,4 @@ func Init() (err error) {
 	logging.SetBackend(leveled)
 
 	utils.Register("logger")
-
-	return
 }

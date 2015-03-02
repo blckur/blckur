@@ -141,25 +141,23 @@ func AddCollections() (err error) {
 	return
 }
 
-func Init() (err error) {
-	err = Connect()
+func Init() {
+	err := Connect()
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	err = AddCollections()
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	err = AddIndexes()
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	utils.Register("database")
-
-	return
 }
 
 func GetErrorCode(err error) (errCode int) {
