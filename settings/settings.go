@@ -39,8 +39,12 @@ func Init() (err error) {
 	System = &system{}
 	err = coll.FindOneId("system", System)
 	if err != nil {
-		err = database.ParseError(err)
-		return
+		switch err.(type) {
+		case *database.NotFoundError:
+			err = nil
+		default:
+			return
+		}
 	}
 
 	return
