@@ -23,7 +23,7 @@ func Commit(db *database.Database, group interface{}, fields set.Set) (
 	selector := database.SelectFields(group, set.NewSet("_id"))
 	update := database.SelectFields(group, fields)
 
-	err = coll.Update(selector, update)
+	_, err = coll.Upsert(selector, update)
 	if err != nil {
 		err = database.ParseError(err)
 		return
