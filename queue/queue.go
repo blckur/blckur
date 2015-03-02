@@ -192,7 +192,7 @@ func (q *Queue) Put(data interface{}, priority uint32,
 
 	if sent < q.consistency {
 		msg := fmt.Sprintf("queue: Job consistency unmet %d/%d",
-		sent, q.consistency)
+			sent, q.consistency)
 
 		if err != nil {
 			err = &JobFailed{
