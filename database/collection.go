@@ -58,7 +58,6 @@ func (c *Collection) CommitFields(id interface{}, data interface{},
 	return
 }
 
-
 func SelectFields(obj interface{}, fields set.Set) (data bson.M) {
 	val := reflect.ValueOf(obj).Elem()
 	data = bson.M{}
