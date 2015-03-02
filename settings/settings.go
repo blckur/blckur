@@ -36,7 +36,9 @@ func Init() (err error) {
 	db := database.GetDatabase()
 	coll := db.Settings()
 
-	System = &system{}
+	System = &system{
+		Id: "system",
+	}
 	err = coll.FindOneId("system", System)
 	if err != nil {
 		switch err.(type) {
