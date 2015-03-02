@@ -114,6 +114,26 @@ func (q *Queue) marhsalJobs(data interface{}) (
 	return
 }
 
+func (q *Queue) putRetry(server string, data []byte, priority uint32,
+		delay time.Duration, ttr time.Duration) (err error) {
+	for i := 0; i < 2; i++ {
+		conn, e := q.conn(server)
+		if e != nil {
+			err = e
+			return
+		}
+
+		_, err = conn.Put(data, priority, delay, ttr)
+		if err != nil {
+			q.close(server)
+		} else {
+			break
+		}
+	}
+
+	return
+}
+
 func (q *Queue) Put(data interface{}, priority uint32,
 		delay time.Duration, ttr time.Duration) (err error) {
 	normalJob, checkJob, err := q.marhsalJobs(data)
