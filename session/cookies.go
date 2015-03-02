@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"labix.org/v2/mgo/bson"
+	"github.com/dropbox/godropbox/container/set"
 )
 
 var Store *sessions.CookieStore
@@ -151,24 +152,15 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
 func Init() (err error) {
 	db := database.GetDatabase()
 
-	keyInt, err := settings.Get(db, "system", "cookie_key")
-	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "auth: Unknown error"),
+	if settings.System.CookieKey == nil {
+		settings.System.CookieKey = securecookie.GenerateRandomKey(64)
+		err = settings.Commit(db, settings.System, set.NewSet("cookie_key"))
+		if err != nil {
+			return
 		}
-		return
 	}
 
-	var key []byte
-
-	if keyInt == nil {
-		key = securecookie.GenerateRandomKey(64)
-		settings.Set(db, "system", "cookie_key", key)
-	} else {
-		key = keyInt.([]byte)
-	}
-
-	Store = sessions.NewCookieStore(key)
+	Store = sessions.NewCookieStore(settings.System.CookieKey)
 
 	return
 }
