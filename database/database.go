@@ -3,6 +3,7 @@ package database
 import (
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo"
+	"fmt"
 )
 
 var Session *mgo.Session
@@ -184,7 +185,7 @@ func ParseError(err error) (newErr error) {
 		}
 	default:
 		newErr = &UnknownError{
-			errors.New("database: Unknown error"),
+			errors.New(fmt.Sprintf("database: Unknown error %d", errCode)),
 		}
 	}
 
