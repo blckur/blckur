@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/handlers"
+	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
@@ -46,6 +47,8 @@ func main() {
 			port = "80"
 		}
 		addr := host + ":" + port
+
+		logger.Notice("Starting server %s", addr)
 
 		err = session.Init()
 		if err != nil {
