@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"time"
 	"flag"
+	"os"
 )
 
 func main() {
@@ -39,6 +40,13 @@ func main() {
 		}
 		return
 	case "start":
+		host := os.Getenv("HOST")
+		port := os.Getenv("PORT")
+		if port == "" {
+			port = "80"
+		}
+		addr := host + ":" + port
+
 		err = session.Init()
 		if err != nil {
 			panic(err)
@@ -48,7 +56,7 @@ func main() {
 		handlers.Register(router)
 
 		server := &http.Server{
-			Addr: ":80",
+			Addr: addr,
 			Handler: router,
 			ReadTimeout: 10 * time.Second,
 			WriteTimeout: 10 * time.Second,
