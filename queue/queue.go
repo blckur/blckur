@@ -158,32 +158,23 @@ func (q *Queue) Put(data interface{}, priority uint32,
 	sentMutex := &sync.Mutex{}
 
 	for i := 0; i < q.consistency; i++ {
-		go func(check bool) {
+		go func(normal bool) {
+			var err error
+
 			for {
 				server := servers.Pop()
 				if server == "" {
 					break
 				}
 
-				conn, err := q.conn(server)
-				if err != nil {
-					q.close(server)
-					continue
-				}
-
-				if check {
-					_, err = conn.Put(checkJob, priority,
-						time.Duration(2) * ttr + delay, ttr)
-					if err != nil {
-						q.close(server)
-						continue
-					}
+				if normal {
+					err = q.putRetry(server, normalJob, priority, delay, ttr)
 				} else {
-					_, err = conn.Put(normalJob, priority, delay, ttr)
-					if err != nil {
-						q.close(server)
-						continue
-					}
+					err = q.putRetry(server, checkJob, priority,
+						time.Duration(2) * ttr + delay, ttr)
+				}
+				if err != nil {
+					continue
 				}
 
 				sentMutex.Lock()
