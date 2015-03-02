@@ -82,9 +82,9 @@ func Set(db *database.Database, group string, key string, val interface{}) (
 
 	_, err = coll.Upsert(bson.M{
 		"_id": group,
-	}, bson.M{
+	}, bson.M{"$set": bson.M{
 		key: val,
-	})
+	}})
 	if err != nil {
 		err = database.ParseError(err)
 		return
