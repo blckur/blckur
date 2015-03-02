@@ -26,16 +26,17 @@ func loginPost(c *gin.Context) {
 	}
 
 	usr, err := user.FindUser(db, data.Email)
-	switch err.(type) {
-	case nil:
-	case *database.NotFoundError:
-		c.JSON(401, &ErrorData{
-			Error: "email_invalid",
-			Message: "Email is invalid",
-		})
-		return
-	default:
-		panic(err)
+	if err != nil {
+		switch err.(type) {
+		case *database.NotFoundError:
+			c.JSON(401, &ErrorData{
+				Error: "email_invalid",
+				Message: "Email is invalid",
+			})
+			return
+		default:
+			panic(err)
+		}
 	}
 
 	if auth := usr.CheckPassword(data.Password); auth != true {
