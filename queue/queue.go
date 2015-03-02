@@ -77,6 +77,12 @@ func (q *Queue) close(server string) (err error) {
 	return
 }
 
+func (q *Queue) Conn() {
+	for _, server := range q.servers {
+		q.conn(server)
+	}
+}
+
 func (q *Queue) Close() (err error) {
 	for _, server := range q.servers {
 		err = q.close(server)
