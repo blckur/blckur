@@ -83,6 +83,7 @@ func GetDatabase() (db *Database) {
 
 func AddIndexes() (err error) {
 	db := GetDatabase()
+	defer db.Close()
 
 	coll := db.Users()
 	err = coll.EnsureIndex(mgo.Index{
@@ -112,6 +113,7 @@ func AddIndexes() (err error) {
 
 func AddCollections() (err error) {
 	db := GetDatabase()
+	defer db.Close()
 	coll := db.Messages()
 
 	names, err := db.database.CollectionNames()

@@ -31,6 +31,7 @@ func main() {
 		key := flag.Arg(2)
 		val := flag.Arg(3)
 		db := database.GetDatabase()
+		defer db.Close()
 
 		err = settings.Set(db, group, key, val)
 		if err != nil {

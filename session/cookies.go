@@ -155,6 +155,7 @@ func Init() (err error) {
 	utils.After("settings")
 
 	db := database.GetDatabase()
+	defer db.Close()
 
 	if settings.System.CookieKey == nil {
 		settings.System.CookieKey = securecookie.GenerateRandomKey(64)

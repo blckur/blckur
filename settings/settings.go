@@ -104,6 +104,7 @@ func Init() (err error) {
 	utils.After("database")
 
 	db := database.GetDatabase()
+	defer db.Close()
 	coll := db.Settings()
 
 	System = &system{
