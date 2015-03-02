@@ -9,7 +9,14 @@ import (
 
 var (
 	System *system
+	Twitter *twitter
 )
+
+type twitter struct {
+	Id string `bson:"_id"`
+	ConsumerKey string `bson:"consumer_key"`
+	ConsumerSecret string  `bson:"consumer_secret"`
+}
 
 type system struct {
 	Id string `bson:"_id"`
@@ -27,26 +34,6 @@ func Commit(db *database.Database, group interface{}, fields set.Set) (
 	if err != nil {
 		err = database.ParseError(err)
 		return
-	}
-
-	return
-}
-
-func Init() (err error) {
-	db := database.GetDatabase()
-	coll := db.Settings()
-
-	System = &system{
-		Id: "system",
-	}
-	err = coll.FindOneId("system", System)
-	if err != nil {
-		switch err.(type) {
-		case *database.NotFoundError:
-			err = nil
-		default:
-			return
-		}
 	}
 
 	return
@@ -93,6 +80,42 @@ func Set(db *database.Database, group string, key string, val interface{}) (
 	}})
 	if err != nil {
 		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
+
+func parseFindError(inErr error) (err error) {
+	if inErr != nil {
+		switch inErr.(type) {
+			case *database.NotFoundError:
+			err = nil
+			default:
+			err = inErr
+		}
+	}
+
+	return
+}
+
+func Init() (err error) {
+	db := database.GetDatabase()
+	coll := db.Settings()
+
+	System = &system{
+		Id: "system",
+	}
+	err = parseFindError(coll.FindOneId("system", System))
+	if err != nil {
+		return
+	}
+
+	Twitter = &twitter{
+		Id: "twitter",
+	}
+	err = parseFindError(coll.FindOneId("twitter", System))
+	if err != nil {
 		return
 	}
 
