@@ -5,6 +5,7 @@ import (
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/blckur/blckur/utils"
 )
 
 var (
@@ -100,6 +101,8 @@ func parseFindError(inErr error) (err error) {
 }
 
 func Init() (err error) {
+	utils.After("database")
+
 	db := database.GetDatabase()
 	coll := db.Settings()
 
@@ -118,6 +121,8 @@ func Init() (err error) {
 	if err != nil {
 		return
 	}
+
+	utils.Register("settings")
 
 	return
 }

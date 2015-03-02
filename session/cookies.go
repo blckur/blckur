@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/utils"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
@@ -150,6 +151,9 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
 }
 
 func Init() (err error) {
+	utils.After("database")
+	utils.After("settings")
+
 	db := database.GetDatabase()
 
 	if settings.System.CookieKey == nil {
@@ -161,6 +165,8 @@ func Init() (err error) {
 	}
 
 	Store = sessions.NewCookieStore(settings.System.CookieKey)
+
+	utils.Register("session")
 
 	return
 }

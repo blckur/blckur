@@ -4,6 +4,7 @@ import (
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo"
 	"fmt"
+	"github.com/blckur/blckur/utils"
 )
 
 var Session *mgo.Session
@@ -153,6 +154,8 @@ func Init() (err error) {
 	if err != nil {
 		return
 	}
+
+	utils.Register("database")
 
 	return
 }
