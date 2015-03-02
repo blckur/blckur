@@ -34,6 +34,11 @@ func (d *Database) Tokens() (coll *Collection) {
 	return
 }
 
+func (d *Database) Messages() (coll *Collection) {
+	coll = d.getCollection("messages")
+	return
+}
+
 func (d *Database) Users() (coll *Collection) {
 	coll = d.getCollection("users")
 	return
