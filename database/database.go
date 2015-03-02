@@ -94,6 +94,46 @@ func AddIndexes() (err error) {
 		}
 	}
 
+	coll = db.Messages()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"channel"},
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
+	return
+}
+
+func AddCollections() (err error) {
+	db := GetDatabase()
+	coll := db.Messages()
+
+	names, err := db.database.CollectionNames()
+	if err != nil {
+		err = ParseError(err)
+		return
+	}
+
+	for _, name := range names {
+		if name == "messages" {
+			return
+		}
+	}
+
+	err = coll.Create(&mgo.CollectionInfo{
+		Capped: true,
+		MaxDocs: 1024,
+		MaxBytes: 100000,
+	})
+	if err != nil {
+		err = ParseError(err)
+		return
+	}
+
 	return
 }
 
@@ -103,7 +143,15 @@ func Init() (err error) {
 		return
 	}
 
+	err = AddCollections()
+	if err != nil {
+		return
+	}
+
 	err = AddIndexes()
+	if err != nil {
+		return
+	}
 
 	return
 }
