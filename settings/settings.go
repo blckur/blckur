@@ -19,15 +19,18 @@ func Get(db *database.Database, group string, key string) (
 		key: 1,
 	}).One(grp)
 	if err != nil {
-		if err == mgo.ErrNotFound {
+		err = database.ParseError(err)
+
+		switch err.(type) {
+		case *database.NotFoundError:
 			err = nil
 			return
+		default:
+			err = &DatabaseError{
+				errors.Wrap(err, "settings: Database error"),
+			}
+			return
 		}
-
-		err = &DatabaseError{
-			errors.Wrap(err, "settings: Database error"),
-		}
-		return
 	}
 
 	val = grp[key]
@@ -44,9 +47,7 @@ func Set(db *database.Database, group string, key string, val interface{}) (
 		key: val,
 	})
 	if err != nil {
-		err = &DatabaseError{
-			errors.Wrap(err, "settings: Database error"),
-		}
+		err = database.ParseError(err)
 		return
 	}
 
