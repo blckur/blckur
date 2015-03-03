@@ -3,6 +3,7 @@ package account
 import (
 	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/utils"
 )
 
 type Resource struct {
@@ -47,4 +48,13 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	}
 
 	return
+}
+
+func Init() {
+	utils.After("settings")
+	utils.Before("messenger")
+
+	InitTwitter()
+
+	utils.Register("account")
 }

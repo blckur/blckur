@@ -1,4 +1,4 @@
-package twitter
+package account
 
 import (
 	"encoding/json"
@@ -17,8 +17,8 @@ import (
 )
 
 var (
-	consumer *oauth.Consumer
-	callback string
+	twitterConsumer *oauth.Consumer
+	twitterCallback string
 )
 
 type Twitter struct {
@@ -29,7 +29,7 @@ func AuthTwitter(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
 	coll := db.Tokens()
 
-	reqToken, url, err := consumer.GetRequestTokenAndUrl(callback)
+	reqTokn, url, err := twitterConsumer.GetRequestTokenAndUrl(twitterCallback)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "account: Unknown twitter api error"),
@@ -38,8 +38,8 @@ func AuthTwitter(db *database.Database, userId bson.ObjectId) (
 	}
 
 	tokn := &Token{
-		Token: reqToken.Token,
-		Secret: reqToken.Secret,
+		Token: reqTokn.Token,
+		Secret: reqTokn.Secret,
 		UserId: userId,
 	}
 
@@ -69,7 +69,7 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 		Secret: tokn.Secret,
 	}
 
-	accessTokn, err := consumer.AuthorizeToken(reqTokn, verifier)
+	accessTokn, err := twitterConsumer.AuthorizeToken(reqTokn, verifier)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "account: Unknown twitter api error"),
@@ -77,7 +77,7 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 		return
 	}
 
-	resp, err := consumer.Get(
+	resp, err := twitterConsumer.Get(
 		"https://api.twitter.com/1.1/account/settings.json",
 		nil, accessTokn)
 	if err != nil {
@@ -128,7 +128,7 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 	return
 }
 
-func update() {
+func updateTwitter() {
 	for {
 		err := settings.Twitter.Update()
 		if err != nil {
@@ -140,7 +140,7 @@ func update() {
 		time.Sleep(constants.DB_RETRY_DELAY)
 	}
 
-	consumer = oauth.NewConsumer(
+	twitterConsumer = oauth.NewConsumer(
 		settings.Twitter.ConsumerKey,
 		settings.Twitter.ConsumerSecret,
 		oauth.ServiceProvider{
@@ -149,15 +149,15 @@ func update() {
 			AccessTokenUrl: "https://api.twitter.com/oauth/access_token",
 		},
 	)
-	callback = settings.System.Domain + "/callback/twitter"
+	twitterCallback = settings.System.Domain + "/callback/twitter"
 }
 
-func Init() {
+func InitTwitter() {
 	utils.After("settings")
 	utils.Before("messenger")
 
-	update()
-	messenger.Register("settings", "twitter", update)
+	messenger.Register("settings", "twitter", updateTwitter)
+	updateTwitter()
 
 	utils.Register("account")
 }
