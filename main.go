@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+	utils.SeedRand()
 	flag.Parse()
 
 	database.Init()
