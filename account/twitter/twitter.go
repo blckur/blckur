@@ -1,4 +1,4 @@
-package account
+package twitter
 
 import (
 	"encoding/json"
