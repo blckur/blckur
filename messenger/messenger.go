@@ -70,7 +70,8 @@ func Publish(db *database.Database, channel string, data interface{}) (
 	return
 }
 
-func Subscribe(db *database.Database, channel string) (err error) {
+func Subscribe(db *database.Database, channel string, duration time.Duration,
+		onMsg func(*Message) bool) (err error) {
 	coll := db.Messages()
 	cursorId, err := getCursorId(coll, channel)
 	if err != nil {
@@ -78,14 +79,17 @@ func Subscribe(db *database.Database, channel string) (err error) {
 		return
 	}
 
-	for {
-		iter := coll.Find(&bson.M{
-			"_id": &bson.M{
-				"$gt": cursorId,
-			},
-			"channel": channel,
-		}).Sort("$natural").Tail(30 * time.Second)
+	iter := coll.Find(&bson.M{
+		"_id": &bson.M{
+			"$gt": cursorId,
+		},
+		"channel": channel,
+	}).Sort("$natural").Tail(duration) // TODO
+	defer func() {
+		iter.Close()
+	}()
 
+	for {
 		msg := &Message{}
 		for iter.Next(msg) {
 			if msg.Data == nil {
@@ -93,8 +97,9 @@ func Subscribe(db *database.Database, channel string) (err error) {
 				continue
 			}
 
-			// TODO
-			fmt.Println(msg.Data.(string))
+			if onMsg(msg) == false {
+				return
+			}
 		}
 
 		if iter.Err() != nil {
@@ -103,7 +108,17 @@ func Subscribe(db *database.Database, channel string) (err error) {
 		}
 
 		if iter.Timeout() {
+			onMsg(nil)
 			continue
 		}
+
+		iter = coll.Find(&bson.M{
+			"_id": &bson.M{
+				"$gt": cursorId,
+			},
+			"channel": channel,
+		}).Sort("$natural").Tail(duration) // TODO
 	}
+
+	return
 }
