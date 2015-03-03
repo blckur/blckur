@@ -9,20 +9,22 @@ var (
 	loaded = set.NewSet()
 )
 
-func Before(name string) (err error) {
+func Before(name string) {
 	if loaded.Contains(name) {
-		err = &InitError{
-			errors.Wrap(err, "settings: Init before error"),
+		err := &InitError{
+			errors.New( "settings: Init before error"),
 		}
+		panic(err)
 	}
 	return
 }
 
-func After(name string) (err error) {
+func After(name string) {
 	if !loaded.Contains(name) {
-		err = &InitError{
-			errors.Wrap(err, "settings: Init after error"),
+		err := &InitError{
+			errors.New("settings: Init after error"),
 		}
+		panic(err)
 	}
 	return
 }
