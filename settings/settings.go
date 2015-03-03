@@ -19,10 +19,20 @@ type twitter struct {
 	ConsumerSecret string  `bson:"consumer_secret"`
 }
 
+func (t *twitter) Update() (err error) {
+	err = update("twitter", t)
+	return
+}
+
 type system struct {
 	Id string `bson:"_id"`
 	CookieKey []byte `bson:"cookie_key"`
 	Domain string `bson:"domain"`
+}
+
+func (t *system) Update() (err error) {
+	err = update("system", t)
+	return
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
@@ -101,25 +111,31 @@ func parseFindError(inErr error) (err error) {
 	return
 }
 
-func Init() {
-	utils.After("database")
-
+func update(group string, data interface{}) (err error) {
 	db := database.GetDatabase()
 	defer db.Close()
 	coll := db.Settings()
 
-	System = &system{
-		Id: "system",
+	err = parseFindError(coll.FindOneId(group, data))
+	if err != nil {
+		database.ParseError(err)
+		return
 	}
-	err := parseFindError(coll.FindOneId("system", System))
+
+	return
+}
+
+func Init() {
+	utils.After("database")
+
+	System = &system{}
+	err := System.Update()
 	if err != nil {
 		panic(err)
 	}
 
-	Twitter = &twitter{
-		Id: "twitter",
-	}
-	err = parseFindError(coll.FindOneId("twitter", System))
+	Twitter = &twitter{}
+	err = Twitter.Update()
 	if err != nil {
 		panic(err)
 	}
