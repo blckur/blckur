@@ -22,6 +22,7 @@ type twitter struct {
 type system struct {
 	Id string `bson:"_id"`
 	CookieKey []byte `bson:"cookie_key"`
+	Domain string `bson:"domain"`
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
