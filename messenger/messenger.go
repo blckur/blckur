@@ -84,7 +84,7 @@ func Subscribe(db *database.Database, channel string, duration time.Duration,
 			"$gt": cursorId,
 		},
 		"channel": channel,
-	}).Sort("$natural").Tail(duration) // TODO
+	}).Sort("$natural").Tail(duration)
 	defer func() {
 		iter.Close()
 	}()
@@ -119,7 +119,7 @@ func Subscribe(db *database.Database, channel string, duration time.Duration,
 				"$gt": cursorId,
 			},
 			"channel": channel,
-		}).Sort("$natural").Tail(duration) // TODO
+		}).Sort("$natural").Tail(duration)
 	}
 
 	return
