@@ -5,10 +5,15 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/logger"
+	"github.com/blckur/blckur/constants"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/mrjones/oauth"
 	"io/ioutil"
 	"labix.org/v2/mgo/bson"
+	"time"
 )
 
 var (
@@ -123,7 +128,18 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 	return
 }
 
-func Init() {
+func update() {
+	for {
+		err := settings.Twitter.Update()
+		if err != nil {
+			logger.Error("account: Twitter update error %s", err)
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
+	}
+
 	consumer = oauth.NewConsumer(
 		settings.Twitter.ConsumerKey,
 		settings.Twitter.ConsumerSecret,
@@ -135,4 +151,14 @@ func Init() {
 	)
 
 	callback = settings.System.Domain + "/callback/twitter"
+}
+
+func Init() {
+	utils.After("settings")
+	utils.Before("messenger")
+
+	update()
+	messenger.Register("settings", "twitter", update)
+
+	utils.Register("account")
 }
