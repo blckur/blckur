@@ -9,7 +9,6 @@ import (
 	"labix.org/v2/mgo/bson"
 	"strings"
 	"time"
-	"fmt"
 )
 
 var (
