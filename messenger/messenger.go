@@ -108,7 +108,9 @@ func Subscribe(db *database.Database, channel string, duration time.Duration,
 		}
 
 		if iter.Timeout() {
-			onMsg(nil)
+			if onMsg(nil) == false {
+				return
+			}
 			continue
 		}
 
