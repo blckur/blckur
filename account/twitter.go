@@ -26,7 +26,8 @@ func AuthTwitter(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
 	coll := db.Tokens()
 
-	reqTokn, url, err := twitterConsumer.GetRequestTokenAndUrl(twitterCallback)
+	reqTokn, url, err := twitterConsumer.GetRequestTokenAndUrl(
+		twitterCallback)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "account: Unknown twitter api error"),
