@@ -19,9 +19,15 @@ var (
 )
 
 func init() {
-	PapperTrail = &papperTrail{}
-	Twitter = &twitter{}
-	System = &system{}
+	PapperTrail = &papperTrail{
+		Id: "paper_trail",
+	}
+	Twitter = &twitter{
+		Id: "twitter",
+	}
+	System = &system{
+		Id: "system",
+	}
 }
 
 type papperTrail struct {
