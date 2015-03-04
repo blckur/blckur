@@ -16,7 +16,7 @@ type Account struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
 	Type string `bson:"type" json:"type"`
-	Name string `bson:"name" json:"name"`
+	Identity string `bson:"identity" json:"identity"`
 	Token string `bson:"token" json:"-"`
 	Secret string `bson:"secret" json:"-"`
 	Events map[string]bool `bson:"events" json:"events"`
