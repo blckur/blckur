@@ -11,13 +11,11 @@ import (
 	"github.com/Sirupsen/logrus"
 	"os"
 	"net"
-	"fmt"
 	"time"
 )
 
 var (
 	buffer = make(chan *logrus.Entry, 128)
-	blueArrow = colorize.ColorString("▶", colorize.BlueBold, colorize.None)
 )
 
 func formatLevel(lvl logrus.Level) (str string) {
@@ -72,24 +70,9 @@ func paperTrailConn() (conn net.Conn) {
 }
 
 func sendEntry(conn net.Conn, entry *logrus.Entry) (err error) {
-	msg := fmt.Sprintf("%s %s %s", formatLevel(entry.Level), blueArrow,
-		entry.Message)
-
-	var error string
-	for key, val := range entry.Data {
-		if key == "error" {
-			error = fmt.Sprintf("%s", val)
-			continue
-		}
-
-		msg += fmt.Sprintf(" ◆ %s=%s",
-		colorize.ColorString(key, colorize.CyanBold, colorize.None),
-		colorize.ColorString(fmt.Sprintf("%#v", val),
-		colorize.PurpleBold, colorize.None))
-	}
-
-	if error != "" {
-		msg += "\n" + colorize.ColorString(error, colorize.Red, colorize.None)
+	msg, err := entry.String()
+	if err != nil {
+		return
 	}
 
 	_, err = conn.Write([]byte(msg))
@@ -132,9 +115,7 @@ func Init() {
 
 	initSender()
 
-	logrus.SetFormatter(&logrus.TextFormatter{
-		ForceColors: true,
-	})
+	logrus.SetFormatter(&Formatter{})
 	logrus.AddHook(&logHook{})
 	logrus.SetOutput(os.Stderr)
 	logrus.SetLevel(logrus.InfoLevel)
