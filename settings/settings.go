@@ -2,10 +2,13 @@ package settings
 
 import (
 	"github.com/blckur/blckur/database"
-	"github.com/dropbox/godropbox/errors"
-	"labix.org/v2/mgo/bson"
-	"github.com/dropbox/godropbox/container/set"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/utils"
+	"github.com/Sirupsen/logrus"
+	"github.com/dropbox/godropbox/errors"
+	"github.com/dropbox/godropbox/container/set"
+	"labix.org/v2/mgo/bson"
+	"time"
 )
 
 var (
@@ -129,15 +132,31 @@ func Init() {
 	utils.After("database")
 
 	System = &system{}
-	err := System.Update()
-	if err != nil {
-		panic(err)
+	for {
+		err := System.Update()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("database: System update")
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
 	}
 
 	Twitter = &twitter{}
-	err = Twitter.Update()
-	if err != nil {
-		panic(err)
+	for {
+		err := Twitter.Update()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("database: Twitter update")
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
 	}
 
 	utils.Register("settings")
