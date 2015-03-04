@@ -22,6 +22,9 @@ func main() {
 	settings.Init()
 	logger.Init()
 
+	account.Init()
+	messenger.Init()
+
 	switch flag.Arg(0) {
 	case "set":
 		group := flag.Arg(1)
