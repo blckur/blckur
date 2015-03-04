@@ -7,6 +7,9 @@ import (
 	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/account"
+	"github.com/Sirupsen/logrus"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -64,7 +67,10 @@ func main() {
 			MaxHeaderBytes: 4096,
 		}
 
-		logger.Notice("Starting server %s", addr)
+		logrus.WithFields(logrus.Fields{
+			"address": addr,
+		}).Info("Starting server")
+
 		server.ListenAndServe()
 	}
 }
