@@ -120,7 +120,7 @@ func initSender() {
 		}
 	}()
 
-	messenger.Register("settings", "papertrail", func(msg *messenger.Message) {
+	messenger.Register("settings", "papertrail", func(_ *messenger.Message) {
 		if conn != nil {
 			conn.Close()
 		}

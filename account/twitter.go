@@ -143,7 +143,7 @@ func InitTwitter() {
 	utils.After("settings")
 	utils.Before("messenger")
 
-	messenger.Register("settings", "twitter", func(msg *messenger.Message) {
+	messenger.Register("settings", "twitter", func(_ *messenger.Message) {
 		updateTwitter()
 	})
 	updateTwitter()
