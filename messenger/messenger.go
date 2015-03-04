@@ -12,8 +12,12 @@ import (
 )
 
 var (
-	listeners map[string][]func()
+	listeners map[string][]func(*Message)
 )
+
+func init() {
+	listeners = map[string][]func(*Message){}
+}
 
 type Message struct {
 	Id bson.ObjectId `bson:"_id,omitempty"`
@@ -150,7 +154,7 @@ func Subscribe(db *database.Database, channels []string,
 	return
 }
 
-func Register(channel string, event string, callback func()) {
+func Register(channel string, event string, callback func(*Message)) {
 	utils.Before("messenger")
 
 	key := channel + ":" + event
@@ -158,7 +162,7 @@ func Register(channel string, event string, callback func()) {
 	callbacks := listeners[key]
 
 	if callbacks == nil {
-		callbacks = []func(){}
+		callbacks = []func(*Message){}
 	}
 
 	listeners[key] = append(callbacks, callback)
@@ -192,7 +196,7 @@ func Init() {
 				key := msg.Channel + ":" + msg.Data.(string)
 
 				for _, listener := range listeners[key] {
-					listener()
+					listener(msg)
 				}
 
 				return false
@@ -208,8 +212,4 @@ func Init() {
 	}()
 
 	utils.Register("messenger")
-}
-
-func init() {
-	listeners = map[string][]func(){}
 }
