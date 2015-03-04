@@ -2,7 +2,7 @@
   <div ng-switch-when="true" flex>
     <core-item ng-repeat="accountType in accountTypes"
         class="account-type" layout horizontal>
-      <paper-button flex ng-click="onAccountAdd()">
+      <paper-button flex ng-click="onAccountClick(accountType.type)">
         <x-brand-logo icon="{{accountType.type}}"></x-brand-logo>
         <div class="content" ng-bind="accountType.label" flex></div>
         <core-icon icon="chevron-right"></core-icon>
