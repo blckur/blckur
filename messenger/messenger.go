@@ -3,9 +3,9 @@ package messenger
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/utils"
-	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/constants"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 	"strings"
 	"time"
@@ -196,7 +196,9 @@ func Init() {
 				return false
 			})
 			if err != nil {
-				logger.Error("messenger: Listener error %s", err)
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("messenger: Listener")
 			}
 
 			time.Sleep(constants.DB_RETRY_DELAY)

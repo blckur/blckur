@@ -7,10 +7,10 @@ import (
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/constants"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/mrjones/oauth"
+	"github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"labix.org/v2/mgo/bson"
 	"time"
@@ -132,7 +132,9 @@ func updateTwitter() {
 	for {
 		err := settings.Twitter.Update()
 		if err != nil {
-			logger.Error("account: Twitter update error %s", err)
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("account: Twitter update")
 		} else {
 			break
 		}
