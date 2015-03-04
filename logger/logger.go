@@ -50,9 +50,7 @@ func formatLevel(lvl logrus.Level) (str string) {
 
 func paperTrailConn() (conn net.Conn) {
 	for {
-		println(settings.PapperTrail.Address)
 		if settings.PapperTrail.Address != "" {
-			println("connect")
 			c, err := net.Dial("udp", settings.PapperTrail.Address)
 			if err != nil {
 				err = &errortypes.UnknownError{
