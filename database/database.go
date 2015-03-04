@@ -9,7 +9,9 @@ import (
 	"time"
 )
 
-var Session *mgo.Session
+var (
+	Session *mgo.Session
+)
 
 type Database struct {
 	session *mgo.Session
