@@ -7,13 +7,10 @@ import (
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/constants"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/mrjones/oauth"
-	"github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"labix.org/v2/mgo/bson"
-	"time"
 )
 
 var (
@@ -129,19 +126,6 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 }
 
 func updateTwitter() {
-	for {
-		err := settings.Twitter.Update()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("account: Twitter update")
-		} else {
-			break
-		}
-
-		time.Sleep(constants.DB_RETRY_DELAY)
-	}
-
 	twitterConsumer = oauth.NewConsumer(
 		settings.Twitter.ConsumerKey,
 		settings.Twitter.ConsumerSecret,
