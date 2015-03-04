@@ -2,49 +2,137 @@ package logger
 
 import (
 	"github.com/blckur/blckur/utils"
-	"github.com/op/go-logging"
+	"github.com/blckur/blckur/colorize"
+	"github.com/blckur/blckur/errortypes"
+	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/messenger"
+	"github.com/dropbox/godropbox/errors"
+	"github.com/Sirupsen/logrus"
 	"os"
+	"net"
+	"fmt"
+	"time"
 )
 
 var (
-	log = logging.MustGetLogger("blckur")
-	format = logging.MustStringFormatter(
-		"%{color:bold}%{time:06/01/02 15:04:05} " +
-		"%{level:.4s} ▶%{color:reset} %{message}")
+	buffer = make(chan *logrus.Entry, 128)
+	blueArrow = colorize.ColorString("▶", colorize.BlueBold, colorize.None)
 )
 
-func Debug(format string, args ...interface{}) {
-	log.Debug(format, args...)
+func formatLevel(lvl logrus.Level) (str string) {
+	var colorBg colorize.Color
+
+	switch lvl {
+	case logrus.InfoLevel:
+		colorBg = colorize.CyanBg
+		str = "[INFO]"
+	case logrus.WarnLevel:
+		colorBg = colorize.YellowBg
+		str = "[WARN]"
+	case logrus.ErrorLevel:
+		colorBg = colorize.RedBg
+		str = "[ERRO]"
+	case logrus.FatalLevel:
+		colorBg = colorize.RedBg
+		str = "[FATL]"
+	case logrus.PanicLevel:
+		colorBg = colorize.RedBg
+		str = "[PANC]"
+	default:
+		colorBg = colorize.BlackBg
+	}
+
+	str = colorize.ColorString(str, colorize.WhiteBold, colorBg)
+
+	return
 }
 
-func Info(format string, args ...interface{}) {
-	log.Info(format, args...)
+func paperTrailConn() (conn net.Conn) {
+	for {
+		c, err := net.Dial("udp", "") // TODO
+		if err != nil {
+			err = &errortypes.UnknownError{
+				errors.Wrap(err, "logger: Papertrail connection"),
+			}
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("logger: Papertrail connection")
+		} else {
+			conn = c
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
+	}
+
+	return
 }
 
-func Notice(format string, args ...interface{}) {
-	log.Notice(format, args...)
+func sendEntry(conn net.Conn, entry *logrus.Entry) (err error) {
+	msg := fmt.Sprintf("%s %s %s", formatLevel(entry.Level), blueArrow,
+		entry.Message)
+
+	var error string
+	for key, val := range entry.Data {
+		if key == "error" {
+			error = fmt.Sprintf("%s", val)
+			continue
+		}
+
+		msg += fmt.Sprintf(" ◆ %s=%s",
+		colorize.ColorString(key, colorize.CyanBold, colorize.None),
+		colorize.ColorString(fmt.Sprintf("%#v", val),
+		colorize.PurpleBold, colorize.None))
+	}
+
+	if error != "" {
+		msg += "\n" + colorize.ColorString(error, colorize.Red, colorize.None)
+	}
+
+	_, err = conn.Write([]byte(msg))
+	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "logger: Papertrail write"),
+		}
+	}
+
+	return
 }
 
-func Warning(format string, args ...interface{}) {
-	log.Warning(format, args...)
-}
+func initSender() {
+	var conn net.Conn
 
-func Error(format string, args ...interface{}) {
-	log.Error(format, args...)
-}
+	go func() {
+		conn = paperTrailConn()
 
-func Critical(format string, args ...interface{}) {
-	log.Critical(format, args...)
+		for {
+			entry := <-buffer
+			err := sendEntry(conn, entry)
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("logger: Send entry")
+				conn = paperTrailConn()
+			}
+		}
+	}()
+
+	messenger.Register("settings", "papertrail", func() {
+		conn = paperTrailConn()
+	})
 }
 
 func Init() {
-	utils.After("database")
+	utils.After("settings")
 
-	backend := logging.NewLogBackend(os.Stderr, "", 0)
-	formatted := logging.NewBackendFormatter(backend, format)
-	leveled := logging.AddModuleLevel(formatted)
-	leveled.SetLevel(logging.DEBUG, "")
-	logging.SetBackend(leveled)
+	initSender()
+
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors: true,
+	})
+	logrus.AddHook(&logHook{})
+	logrus.SetOutput(os.Stderr)
+	logrus.SetLevel(logrus.InfoLevel)
 
 	utils.Register("logger")
 }
