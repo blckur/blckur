@@ -12,9 +12,30 @@ import (
 )
 
 var (
+	PapperTrail *papperTrail
 	System *system
 	Twitter *twitter
 )
+
+func init() {
+	PapperTrail = &papperTrail{}
+	Twitter = &twitter{}
+	System = &system{}
+}
+
+type Group interface {
+	Update() error
+}
+
+type papperTrail struct {
+	Id string `bson:"_id"`
+	Address string `bson:"address"`
+}
+
+func (t *papperTrail) Update() (err error) {
+	err = update("paper_trail", t)
+	return
+}
 
 type twitter struct {
 	Id string `bson:"_id"`
