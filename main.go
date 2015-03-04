@@ -54,6 +54,7 @@ func main() {
 			port = "80"
 		}
 		addr := host + ":" + port
+
 		session.Init()
 
 		router := gin.Default()
