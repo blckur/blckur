@@ -2,9 +2,12 @@ package database
 
 import (
 	"github.com/dropbox/godropbox/errors"
+	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/constants"
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo"
 	"fmt"
-	"github.com/blckur/blckur/utils"
+	"time"
 )
 
 var Session *mgo.Session
@@ -170,19 +173,43 @@ func AddCollections() (err error) {
 }
 
 func Init() {
-	err := Connect()
-	if err != nil {
-		panic(err)
+	for {
+		err := Connect()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("database: Connection")
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
 	}
 
-	err = AddCollections()
-	if err != nil {
-		panic(err)
+	for {
+		err := AddCollections()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("database: Add collections")
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
 	}
 
-	err = AddIndexes()
-	if err != nil {
-		panic(err)
+	for {
+		err := AddIndexes()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("database: Add indexes")
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
 	}
 
 	utils.Register("database")
