@@ -153,7 +153,7 @@ func Update(groupName string) {
 			break
 		}
 
-		time.Sleep(constants.DB_RETRY_DELAY)
+		time.Sleep(constants.RETRY_DELAY)
 	}
 }
 

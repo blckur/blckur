@@ -183,7 +183,7 @@ func Init() {
 			break
 		}
 
-		time.Sleep(constants.DB_RETRY_DELAY)
+		time.Sleep(constants.RETRY_DELAY)
 	}
 
 	for {
@@ -196,7 +196,7 @@ func Init() {
 			break
 		}
 
-		time.Sleep(constants.DB_RETRY_DELAY)
+		time.Sleep(constants.RETRY_DELAY)
 	}
 
 	for {
@@ -209,7 +209,7 @@ func Init() {
 			break
 		}
 
-		time.Sleep(constants.DB_RETRY_DELAY)
+		time.Sleep(constants.RETRY_DELAY)
 	}
 
 	utils.Register("database")

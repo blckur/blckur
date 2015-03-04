@@ -4,6 +4,6 @@ import (
 	"time"
 )
 
-var (
-	DB_RETRY_DELAY = 3 * time.Second
+const (
+	RETRY_DELAY = 3 * time.Second
 )

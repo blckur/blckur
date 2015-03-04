@@ -44,7 +44,7 @@ func main() {
 		if cmd != nil {
 			cmd.Process.Kill()
 			cmd.Wait()
-			time.Sleep(constants.DB_RETRY_DELAY)
+			time.Sleep(constants.RETRY_DELAY)
 		}
 
 		cmd = exec.Command("./beanstalkd2", args...) // TODO
@@ -62,7 +62,7 @@ func main() {
 		delay := false
 		for {
 			if delay {
-				time.Sleep(constants.DB_RETRY_DELAY)
+				time.Sleep(constants.RETRY_DELAY)
 			} else {
 				delay = true
 			}
