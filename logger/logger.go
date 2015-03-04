@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/Sirupsen/logrus"
 	"os"
@@ -49,17 +50,21 @@ func formatLevel(lvl logrus.Level) (str string) {
 
 func paperTrailConn() (conn net.Conn) {
 	for {
-		c, err := net.Dial("udp", "") // TODO
-		if err != nil {
-			err = &errortypes.UnknownError{
-				errors.Wrap(err, "logger: Papertrail connection"),
+		println(settings.PapperTrail.Address)
+		if settings.PapperTrail.Address != "" {
+			println("connect")
+			c, err := net.Dial("udp", settings.PapperTrail.Address)
+			if err != nil {
+				err = &errortypes.UnknownError{
+					errors.Wrap(err, "logger: Papertrail connection"),
+				}
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("logger: Papertrail connection")
+			} else {
+				conn = c
+				break
 			}
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("logger: Papertrail connection")
-		} else {
-			conn = c
-			break
 		}
 
 		time.Sleep(constants.DB_RETRY_DELAY)
@@ -117,8 +122,10 @@ func initSender() {
 		}
 	}()
 
-	messenger.Register("settings", "papertrail", func() {
-		conn = paperTrailConn()
+	messenger.Register("settings", "papertrail", func(msg *messenger.Message) {
+		if conn != nil {
+			conn.Close()
+		}
 	})
 }
 
