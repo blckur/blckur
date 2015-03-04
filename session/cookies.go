@@ -1,19 +1,26 @@
 package session
 
 import (
+	"bytes"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/constants"
+	"github.com/Sirupsen/logrus"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"labix.org/v2/mgo/bson"
 	"github.com/dropbox/godropbox/container/set"
+	"time"
 )
 
-var Store *sessions.CookieStore
+var (
+	curCookieKey []byte
+	Store *sessions.CookieStore
+)
 
 type Cookie struct {
 	Id bson.ObjectId
@@ -150,24 +157,50 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
 	return
 }
 
-func Init() (err error) {
-	utils.After("database")
-	utils.After("settings")
-
+func commitCookieKey() (err error) {
 	db := database.GetDatabase()
 	defer db.Close()
 
-	if settings.System.CookieKey == nil {
-		settings.System.CookieKey = securecookie.GenerateRandomKey(64)
-		err = settings.Commit(db, settings.System, set.NewSet("cookie_key"))
-		if err != nil {
-			return
+	err = settings.Commit(db, settings.System, set.NewSet("cookie_key"))
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func update() {
+	cookieKey := settings.System.CookieKey
+
+	if cookieKey == nil {
+		cookieKey = securecookie.GenerateRandomKey(64)
+		settings.System.CookieKey = cookieKey
+
+		for {
+			err := commitCookieKey()
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("session: Init cookie key")
+			} else {
+				break
+			}
+
+			time.Sleep(constants.DB_RETRY_DELAY)
 		}
 	}
 
-	Store = sessions.NewCookieStore(settings.System.CookieKey)
+	if !bytes.Equal(curCookieKey, cookieKey) {
+		Store = sessions.NewCookieStore(cookieKey)
+		curCookieKey = cookieKey
+	}
+}
+
+func Init() {
+	utils.After("database")
+	utils.After("settings")
+
+	update()
 
 	utils.Register("session")
-
-	return
 }
