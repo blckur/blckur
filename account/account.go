@@ -43,6 +43,10 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 		return
 	}
 
+	for _, acct := range accts {
+		acct.coll = coll
+	}
+
 	return
 }
 
