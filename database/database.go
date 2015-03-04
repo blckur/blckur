@@ -51,6 +51,11 @@ func (d *Database) Sessions() (coll *Collection) {
 	return
 }
 
+func (d *Database) Nodes() (coll *Collection) {
+	coll = d.getCollection("nodes")
+	return
+}
+
 func (d *Database) Settings() (coll *Collection) {
 	coll = d.getCollection("settings")
 	return
@@ -100,6 +105,29 @@ func AddIndexes() (err error) {
 	coll = db.Messages()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"channel"},
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
+	coll = db.Nodes()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"type"},
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
+	coll = db.Nodes()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"timestamp"},
+		ExpireAfter: 30 * time.Second,
 		Background: true,
 	})
 	if err != nil {
