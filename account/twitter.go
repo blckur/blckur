@@ -104,7 +104,7 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 		return
 	}
 
-	identity := data["screen_name"].(string)
+	identity := "@" + data["screen_name"].(string)
 
 	acct = &Account{
 		UserId: tokn.UserId,
