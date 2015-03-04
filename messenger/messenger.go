@@ -193,8 +193,12 @@ func Init() {
 					return false
 				}
 
-				key := msg.Channel + ":" + msg.Data.(string)
+				key := msg.Channel + ":all"
+				for _, listener := range listeners[key] {
+					listener(msg)
+				}
 
+				key = msg.Channel + ":" + msg.Data.(string)
 				for _, listener := range listeners[key] {
 					listener(msg)
 				}
