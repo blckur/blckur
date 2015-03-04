@@ -34,6 +34,10 @@ func (f *Formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 		msg += "\n" + colorize.ColorString(error, colorize.Red, colorize.None)
 	}
 
+	if string(msg[len(msg) - 1]) != "\n" {
+		msg += "\n"
+	}
+
 	output = []byte(msg)
 
 	return
