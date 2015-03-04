@@ -27,7 +27,7 @@ func (f *Formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 		msg += fmt.Sprintf(" %s %s=%s", whiteDiamond,
 			colorize.ColorString(key, colorize.CyanBold, colorize.None),
 			colorize.ColorString(fmt.Sprintf("%#v", val),
-			colorize.PurpleBold, colorize.None))
+			colorize.GreenBold, colorize.None))
 	}
 
 	if error != "" {
