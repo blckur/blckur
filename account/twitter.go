@@ -107,17 +107,15 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 	name := data["screen_name"].(string)
 
 	acct = &Account{
-		&Data{
-			UserId: tokn.UserId,
-			Type: "twitter",
-			Name: name,
-			Token: tokn.Token,
-			Secret: tokn.Secret,
-		},
-		acctColl,
+		UserId: tokn.UserId,
+		Type: "twitter",
+		Name: name,
+		Token: tokn.Token,
+		Secret: tokn.Secret,
+		coll: acctColl,
 	}
 
-	err = acctColl.Insert(acct.Data)
+	err = acctColl.Insert(acct)
 	if err != nil {
 		err = database.ParseError(err)
 		return

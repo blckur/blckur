@@ -12,20 +12,16 @@ type Resource struct {
 	Events map[string]bool `bson:"events" json:"events"`
 }
 
-type Data struct {
+type Account struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	UserId bson.ObjectId `bson:"user_id" json:"userid"`
+	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
 	Type string `bson:"type" json:"type"`
 	Name string `bson:"name" json:"name"`
 	Token string `bson:"token" json:"-"`
 	Secret string `bson:"secret" json:"-"`
 	Events map[string]bool `bson:"events" json:"events"`
-	Resources []*Resource `bson:"resources"`
-}
-
-type Account struct {
-	*Data
-	coll *database.Collection
+	Resources []*Resource `bson:"resources" json:"resources"`
+	coll *database.Collection `bson:"-" json:"-"`
 }
 
 type Token struct {
