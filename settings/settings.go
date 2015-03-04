@@ -3,6 +3,7 @@ package settings
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/utils"
 	"github.com/Sirupsen/logrus"
 	"github.com/dropbox/godropbox/errors"
@@ -149,36 +150,42 @@ func update(group string, data interface{}) (err error) {
 	return
 }
 
+func Update(groupName string) {
+	var group Group
+
+	switch groupName {
+	case "paper_trail":
+		group = PapperTrail
+	case "system":
+		group = System
+	case "twitter":
+		group = Twitter
+	}
+
+	for {
+		err := group.Update()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("database: Update")
+		} else {
+			break
+		}
+
+		time.Sleep(constants.DB_RETRY_DELAY)
+	}
+}
+
 func Init() {
 	utils.After("database")
 
-	System = &system{}
-	for {
-		err := System.Update()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("database: System update")
-		} else {
-			break
-		}
+	Update("paper_trail")
+	Update("twitter")
+	Update("system")
 
-		time.Sleep(constants.DB_RETRY_DELAY)
-	}
-
-	Twitter = &twitter{}
-	for {
-		err := Twitter.Update()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("database: Twitter update")
-		} else {
-			break
-		}
-
-		time.Sleep(constants.DB_RETRY_DELAY)
-	}
+	messenger.Register("settings", "all", func(msg *messenger.Message) {
+		Update(msg.Data.(string))
+	})
 
 	utils.Register("settings")
 }
