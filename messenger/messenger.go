@@ -151,6 +151,8 @@ func Subscribe(db *database.Database, channels []string,
 }
 
 func Register(channel string, event string, callback func()) {
+	utils.Before("messenger")
+
 	key := channel + ":" + event
 
 	callbacks := listeners[key]
