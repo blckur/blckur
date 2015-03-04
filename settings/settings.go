@@ -24,18 +24,9 @@ func init() {
 	System = &system{}
 }
 
-type Group interface {
-	Update() error
-}
-
 type papperTrail struct {
 	Id string `bson:"_id"`
 	Address string `bson:"address"`
-}
-
-func (t *papperTrail) Update() (err error) {
-	err = update("paper_trail", t)
-	return
 }
 
 type twitter struct {
@@ -44,20 +35,10 @@ type twitter struct {
 	ConsumerSecret string  `bson:"consumer_secret"`
 }
 
-func (t *twitter) Update() (err error) {
-	err = update("twitter", t)
-	return
-}
-
 type system struct {
 	Id string `bson:"_id"`
 	CookieKey []byte `bson:"cookie_key"`
 	Domain string `bson:"domain"`
-}
-
-func (t *system) Update() (err error) {
-	err = update("system", t)
-	return
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
@@ -151,7 +132,7 @@ func update(group string, data interface{}) (err error) {
 }
 
 func Update(groupName string) {
-	var group Group
+	var group interface{}
 
 	switch groupName {
 	case "paper_trail":
@@ -163,7 +144,7 @@ func Update(groupName string) {
 	}
 
 	for {
-		err := group.Update()
+		err := update(groupName, group)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
