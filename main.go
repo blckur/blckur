@@ -34,6 +34,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
+		err = messenger.Publish(db, "settings", group)
+		if err != nil {
+			panic(err)
+		}
+
 		return
 	case "start":
 		host := os.Getenv("HOST")
