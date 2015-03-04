@@ -21,12 +21,9 @@ func main() {
 	utils.SeedRand()
 	flag.Parse()
 
+	logger.Init()
 	database.Init()
 	settings.Init()
-	logger.Init()
-
-	account.Init()
-	messenger.Init()
 
 	switch flag.Arg(0) {
 	case "set":
@@ -55,6 +52,8 @@ func main() {
 		}
 		addr := host + ":" + port
 
+		account.Init()
+		messenger.Init()
 		session.Init()
 
 		router := gin.Default()
