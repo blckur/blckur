@@ -31,11 +31,17 @@ class AccountAddComp extends lodin.Loading {
   }
 
   void onAccountClick(String type) {
+    if (!this.setLoading()) {
+      return;
+    }
+
     this.model.type = type;
     this.model.create().then((_) {
       dom.window.location.replace(this.model.redirect);
     }).catchError((err) {
       logger.severe('Failed to add account', err);
+    }).whenComplete(() {
+      this.clearLoading();
     });
   }
 }

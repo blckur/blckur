@@ -1,5 +1,6 @@
 <div ng-switch="addAccount">
   <div ng-switch-when="true" flex>
+    <paper-progress ng-if="loading" indeterminate></paper-progress>
     <core-item ng-repeat="accountType in accountTypes"
         class="account-type" layout horizontal>
       <paper-button flex ng-click="onAccountClick(accountType.type)">
