@@ -3,6 +3,7 @@ package queue
 import (
 	"encoding/json"
 	"github.com/blckur/blckur/errortypes"
+	"github.com/blckur/blckur/stack"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/kr/beanstalk"
 	"labix.org/v2/mgo/bson"
@@ -150,7 +151,7 @@ func (q *Queue) Put(data interface{}, priority uint32,
 		return
 	}
 
-	servers := utils.NewStringStack(utils.ShuffleStringsNew(q.servers))
+	servers := stack.NewStringStack(utils.ShuffleStringsNew(q.servers))
 
 	waiters := &sync.WaitGroup{}
 	waiters.Add(q.consistency)
