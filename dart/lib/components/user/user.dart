@@ -46,7 +46,7 @@ class UserComp {
 
   void onLogout() {
     this.authModel.logout().then((_) {
-      this.router.gotoUrl("/login");
+      this.router.gotoUrl('/login');
     }).catchError((err) {
       logger.severe('Failed to logout', err);
     });
