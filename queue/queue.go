@@ -6,10 +6,10 @@ import (
 	"github.com/blckur/blckur/stack"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/kr/beanstalk"
+	"github.com/blckur/blckur/utils"
 	"labix.org/v2/mgo/bson"
 	"time"
 	"log"
-	"github.com/blckur/blckur/utils"
 	"sync"
 	"fmt"
 )
