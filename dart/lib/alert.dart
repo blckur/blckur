@@ -9,6 +9,16 @@ class Alert {
   Function retryCallback;
   String text;
 
+  Alert(this.text, [this.retryCallback]) {
+    this.opened = true;
+
+    alerts.add(this);
+
+    while (alerts.length > 3) {
+      alerts.removeFirst();
+    }
+  }
+
   bool _opened;
   bool get opened {
     return this._opened;
@@ -19,16 +29,6 @@ class Alert {
       new async.Timer(const Duration(milliseconds: 100), () {
         alerts.remove(this);
       });
-    }
-  }
-  
-  Alert(this.text, [this.retryCallback]) {
-    this.opened = true;
-
-    alerts.add(this);
-
-    while (alerts.length > 3) {
-      alerts.removeFirst();
     }
   }
 }
