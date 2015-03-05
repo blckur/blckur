@@ -42,7 +42,6 @@ class UserComp {
     }).catchError((err) {
       logger.severe('Failed to save user', err);
     });
-
   }
 
   void onLogout() {
