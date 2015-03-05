@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/settings"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,16 +13,19 @@ func callbackTwitterGet(c *gin.Context) {
 	params := utils.ParseParams(c.Request)
 	token := params.GetByName("oauth_token")
 	verifier := params.GetByName("oauth_verifier")
+	denied := params.GetByName("denied")
 
-	if token == "" || verifier == "" {
-		c.AbortWithStatus(400)
-		return
+	if denied == "" {
+		if token == "" || verifier == "" {
+			c.AbortWithStatus(400)
+			return
+		}
+
+		_, err := account.NewTwitter(db, token, verifier)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	acct, err := account.NewTwitter(db, token, verifier)
-	if err != nil {
-		panic(err)
-	}
-
-	c.JSON(200, acct)
+	c.Redirect(301, settings.System.Domain + "/s/") // TODO
 }
