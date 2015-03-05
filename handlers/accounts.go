@@ -44,26 +44,17 @@ func accountsPost(c *gin.Context) {
 }
 
 func accountsGet(c *gin.Context) {
-	accounts := []*Account{
-		&Account{
-			Id: bson.NewObjectId(),
-			UserId: bson.NewObjectId(),
-			Type: "gmail",
-			Identity: "zach.huff.386@gmail.com",
-		},
-		&Account{
-			Id: bson.NewObjectId(),
-			UserId: bson.NewObjectId(),
-			Type: "twitter",
-			Identity: "@zachhuff386",
-		},
-		&Account{
-			Id: bson.NewObjectId(),
-			UserId: bson.NewObjectId(),
-			Type: "github",
-			Identity: "zachhuff386",
-		},
+	db := c.MustGet("db").(*database.Database)
+	sess := c.MustGet("session").(*session.Session)
+
+	if rand.Intn(3) != 0 {
+		panic("test")
 	}
 
-	c.JSON(200, accounts)
+	accts, err := account.GetAccounts(db, sess.UserId)
+	if err != nil {
+		panic(err)
+	}
+
+	c.JSON(200, accts)
 }
