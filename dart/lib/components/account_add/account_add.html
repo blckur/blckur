@@ -9,6 +9,13 @@
         <core-icon icon="chevron-right"></core-icon>
       </paper-button>
     </core-item>
+    <core-item layout horizontal>
+      <paper-button flex ng-click="onAccountCancel()">
+        <paper-fab icon="clear" title="Cancel" role="button"
+          aria-label="Cancel"></paper-fab>
+        <div class="info" flex>Cancel</div>
+      </paper-button>
+    </core-item>
   </div>
   <div ng-switch-default>
     <core-item layout horizontal>

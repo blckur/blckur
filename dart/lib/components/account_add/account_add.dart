@@ -4,6 +4,7 @@ import 'package:blckur/models/account_add.dart' as acct_ad;
 import 'package:blckur/collections/account_types.dart' as acct_typs;
 import 'package:blckur/loading.dart' as lodin;
 import 'package:blckur/logger.dart' as logger;
+import 'package:blckur/alert.dart' as alrt;
 
 import 'package:angular/angular.dart' show Component, NgTwoWay;
 import 'dart:html' as dom;
@@ -30,6 +31,11 @@ class AccountAddComp extends lodin.Loading {
     this.addAccount = true;
   }
 
+  void onAccountCancel() {
+    this.addAccount = false;
+    this.clearLoading();
+  }
+
   void onAccountClick(String type) {
     if (!this.setLoading()) {
       return;
@@ -37,8 +43,14 @@ class AccountAddComp extends lodin.Loading {
 
     this.model.type = type;
     this.model.create().then((_) {
+      if (this.addAccount != true) {
+        return;
+      }
       dom.window.location.replace(this.model.redirect);
     }).catchError((err) {
+      if (this.addAccount != true) {
+        return;
+      }
       logger.severe('Failed to add account', err);
       new alrt.Alert('Unable to add account, try again later.', () {
         this.onAccountClick(type);
