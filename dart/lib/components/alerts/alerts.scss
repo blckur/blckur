@@ -1,0 +1,17 @@
+@import 'styles/base.scss';
+
+paper-toast.alert0.core-opened {
+  @include transform(translateY(0));
+}
+
+paper-toast.alert1.core-opened {
+  @include transform(translateY(-125%));
+}
+
+paper-toast.alert2.core-opened {
+  @include transform(translateY(-250%));
+}
+
+.retry {
+  color: #eeff41;
+}
