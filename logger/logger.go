@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/colorize"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/constants"
@@ -118,5 +118,5 @@ func Init() {
 	logrus.SetOutput(os.Stderr)
 	logrus.SetLevel(logrus.InfoLevel)
 
-	utils.Register("logger")
+	requires.Register("logger")
 }

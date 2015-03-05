@@ -5,7 +5,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/constants"
 	"github.com/Sirupsen/logrus"
 	"github.com/dropbox/godropbox/errors"
@@ -197,10 +197,10 @@ func update() {
 }
 
 func Init() {
-	utils.After("database")
-	utils.After("settings")
+	requires.After("database")
+	requires.After("settings")
 
 	update()
 
-	utils.Register("session")
+	requires.Register("session")
 }

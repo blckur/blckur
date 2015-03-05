@@ -4,7 +4,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/requires"
 	"github.com/Sirupsen/logrus"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/dropbox/godropbox/container/set"
@@ -164,7 +164,7 @@ func Update(groupName string) {
 }
 
 func Init() {
-	utils.After("database")
+	requires.After("database")
 
 	Update("paper_trail")
 	Update("twitter")
@@ -174,5 +174,5 @@ func Init() {
 		Update(msg.Data.(string))
 	})
 
-	utils.Register("settings")
+	requires.Register("settings")
 }

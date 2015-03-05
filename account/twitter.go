@@ -5,7 +5,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/messenger"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/mrjones/oauth"
@@ -138,13 +138,13 @@ func updateTwitter() {
 }
 
 func InitTwitter() {
-	utils.After("settings")
-	utils.Before("messenger")
+	requires.After("settings")
+	requires.Before("messenger")
 
 	messenger.Register("settings", "twitter", func(_ *messenger.Message) {
 		updateTwitter()
 	})
 	updateTwitter()
 
-	utils.Register("account")
+	requires.Register("account")
 }

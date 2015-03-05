@@ -2,7 +2,7 @@ package messenger
 
 import (
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/constants"
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/Sirupsen/logrus"
@@ -155,7 +155,7 @@ func Subscribe(db *database.Database, channels []string,
 }
 
 func Register(channel string, event string, callback func(*Message)) {
-	utils.Before("messenger")
+	requires.Before("messenger")
 
 	key := channel + ":" + event
 
@@ -169,7 +169,7 @@ func Register(channel string, event string, callback func(*Message)) {
 }
 
 func Init() {
-	utils.After("settings")
+	requires.After("settings")
 
 	go func() {
 		channelsSet := set.NewSet()
@@ -215,5 +215,5 @@ func Init() {
 		}
 	}()
 
-	utils.Register("messenger")
+	requires.Register("messenger")
 }

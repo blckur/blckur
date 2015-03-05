@@ -2,7 +2,7 @@ package database
 
 import (
 	"github.com/dropbox/godropbox/errors"
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/constants"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo"
@@ -213,5 +213,5 @@ func Init() {
 		time.Sleep(constants.RETRY_DELAY)
 	}
 
-	utils.Register("database")
+	requires.Register("database")
 }
