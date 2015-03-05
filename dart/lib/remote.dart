@@ -5,11 +5,13 @@ import 'package:blckur/utils/utils.dart' as utils;
 
 import 'package:angular/angular.dart' as ng;
 import 'dart:async' as async;
+import 'dart:html' as dom;
 
 abstract class Remote {
   String _loadCheckId;
   String _fetchCheckId;
   ng.Http http;
+  ng.Router router;
   String url;
   String error;
   String errorMsg;
@@ -53,6 +55,10 @@ abstract class Remote {
     this.error = httpErr.error;
     this.errorMsg = httpErr.errorMsg;
     this.errorStatus = httpErr.resp.status;
+
+    if (this.errorStatus == 401) {
+      dom.window.location.replace('#/login');
+    }
 
     return httpErr;
   }
