@@ -16,6 +16,8 @@ import 'package:blckur/components/user/user.dart'
   as user;
 import 'package:blckur/components/login/login.dart'
   as login;
+import 'package:blckur/components/recaptcha/recaptcha.dart'
+  as recaptcha;
 
 import 'package:angular/angular.dart' as ng;
 
@@ -29,5 +31,6 @@ class ComponentsMod extends ng.Module {
     this.bind(input.InputComp);
     this.bind(user.UserComp);
     this.bind(login.LoginComp);
+    this.bind(recaptcha.RecaptchaComp);
   }
 }
