@@ -40,6 +40,9 @@ class AccountAddComp extends lodin.Loading {
       dom.window.location.replace(this.model.redirect);
     }).catchError((err) {
       logger.severe('Failed to add account', err);
+      new alrt.Alert('Unable to add account, try again later.', () {
+        this.onAccountClick(type);
+      });
     }).whenComplete(() {
       this.clearLoading();
     });
