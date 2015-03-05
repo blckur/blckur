@@ -111,8 +111,6 @@ func initSender() {
 }
 
 func Init() {
-	utils.After("settings")
-
 	initSender()
 
 	logrus.SetFormatter(&Formatter{})
