@@ -7,7 +7,3 @@ import (
 type InvalidEmailError struct {
 	errors.DropboxError
 }
-
-type InitError struct {
-	errors.DropboxError
-}
