@@ -172,7 +172,7 @@ func commitCookieKey() (err error) {
 func update() {
 	cookieKey := settings.System.CookieKey
 
-	if cookieKey == nil {
+	if len(cookieKey) == 0 {
 		cookieKey = securecookie.GenerateRandomKey(64)
 		settings.System.CookieKey = cookieKey
 
