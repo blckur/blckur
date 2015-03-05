@@ -12,7 +12,7 @@ var (
 func Before(name string) {
 	if loaded.Contains(name) {
 		err := &InitError{
-			errors.New( "settings: Init before error"),
+			errors.New("settings: Init before error"),
 		}
 		panic(err)
 	}
