@@ -31,6 +31,13 @@ class Alert {
       });
     }
   }
+
+  int get duration {
+    if (this.retryCallback != null) {
+      return 3600000;
+    }
+    return 4000;
+  }
 }
 
 void clear() {
