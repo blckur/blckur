@@ -1,5 +1,7 @@
 library main_rout;
 
+import 'package:blckur/alert.dart' as alrt;
+
 import 'package:angular/angular.dart' as ng;
 
 MainRout(ng.Router router, ng.RouteViewFactory views) {
@@ -7,11 +9,17 @@ MainRout(ng.Router router, ng.RouteViewFactory views) {
     'feed': ng.ngRoute(
       path: '/feed',
       view: 'packages/blckur/views/feed.html',
-      defaultRoute: true
+      defaultRoute: true,
+      enter: (_) {
+        alrt.clear();
+      }
     ),
     'login': ng.ngRoute(
       path: '/login',
-      view: 'packages/blckur/views/login.html'
+      view: 'packages/blckur/views/login.html',
+      enter: (_) {
+        alrt.clear();
+      }
     )
   });
 }
