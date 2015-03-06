@@ -6,7 +6,6 @@ import (
 	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
 	"labix.org/v2/mgo/bson"
-	"math/rand"
 )
 
 type Account struct {
