@@ -31,6 +31,12 @@ func accountsPost(c *gin.Context) {
 			panic(err)
 		}
 		acct.Redirect = url
+	} else if acctType == "gmail" {
+		url, err := account.AuthGmail(db, sess.UserId)
+		if err != nil {
+			panic(err)
+		}
+		acct.Redirect = url
 	} else {
 		c.JSON(400, &ErrorData{
 			Error: "unknown_type",
