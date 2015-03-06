@@ -36,8 +36,8 @@ func AuthTwitter(db *database.Database, userId bson.ObjectId) (
 	}
 
 	tokn := &Token{
-		Token: reqTokn.Token,
-		Secret: reqTokn.Secret,
+		Id: reqTokn.Token,
+		OauthSecret: reqTokn.Secret,
 		UserId: userId,
 	}
 
@@ -63,8 +63,8 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 	}
 
 	reqTokn := &oauth.RequestToken{
-		Token: tokn.Token,
-		Secret: tokn.Secret,
+		Token: tokn.Id,
+		Secret: tokn.OauthSecret,
 	}
 
 	accessTokn, err := twitterConsumer.AuthorizeToken(reqTokn, verifier)
@@ -110,8 +110,8 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 		UserId: tokn.UserId,
 		Type: "twitter",
 		Identity: identity,
-		Token: tokn.Token,
-		Secret: tokn.Secret,
+		OauthToken: tokn.Id,
+		OauthSecret: tokn.OauthSecret,
 		coll: acctColl,
 	}
 
