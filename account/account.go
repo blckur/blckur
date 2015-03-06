@@ -54,6 +54,7 @@ func Init() {
 	requires.After("settings")
 	requires.Before("messenger")
 
+	InitGmail()
 	InitTwitter()
 
 	requires.Register("account")
