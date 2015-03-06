@@ -9,6 +9,20 @@ import (
 	"os"
 )
 
+var (
+	chars = []rune(
+		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+)
+
+func RandStr(n int) (str string) {
+	strList := make([]rune, n)
+	for i := range strList {
+		strList[i] = chars[rand.Intn(len(chars))]
+	}
+	str = string(strList)
+	return
+}
+
 func ParseEmail(input string) (email string, err error) {
 	address, err := mail.ParseAddress(input)
 	if err != nil {
