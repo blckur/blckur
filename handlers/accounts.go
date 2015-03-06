@@ -46,10 +46,6 @@ func accountsGet(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
 
-	if rand.Intn(3) != 0 {
-		panic("test")
-	}
-
 	accts, err := account.GetAccounts(db, sess.UserId)
 	if err != nil {
 		panic(err)
