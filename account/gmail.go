@@ -65,7 +65,7 @@ func InitGmail() {
 	requires.After("settings")
 	requires.Before("messenger")
 
-	messenger.Register("settings", "gmail", func(_ *messenger.Message) {
+	messenger.Register("settings", "google", func(_ *messenger.Message) {
 		updateGmail()
 	})
 	updateGmail()
