@@ -27,7 +27,7 @@ func AuthGmail(db *database.Database, userId bson.ObjectId) (
 	url = gmailConf.AuthCodeURL(state, oauth2.AccessTypeOnline)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown twitter api error"),
+			errors.Wrap(err, "account: Unknown gmail api error"),
 		}
 		return
 	}
