@@ -95,9 +95,10 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	return
 }
 
-func (o *Oauth1) NewClient(token string, secret string) (
-		client *Oauth1Client) {
+func (o *Oauth1) NewClient(userId bson.ObjectId, token string,
+		secret string) (client *Oauth1Client) {
 	client = &Oauth1Client{
+		UserId: userId,
 		Token: token,
 		Secret: secret,
 		conf: o,
