@@ -45,6 +45,7 @@ type system struct {
 	Id string `bson:"_id"`
 	CookieKey []byte `bson:"cookie_key"`
 	Domain string `bson:"domain"`
+	AppHome string `bson:"app_home"`
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
