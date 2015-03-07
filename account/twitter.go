@@ -18,7 +18,7 @@ type Twitter struct {
 }
 
 func (t *Twitter) Update() (err error) {
-	client := twitterConf.NewClient(t.OauthToken, t.OauthSecret)
+	client := twitterConf.NewClient(t.UserId, t.OauthToken, t.OauthSecret)
 
 	data := &struct {
 		ScreenName string `json:"screen_name"`
