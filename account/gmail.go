@@ -66,18 +66,18 @@ func AuthGmail(db *database.Database, state string, code string) (
 }
 
 func updateGmail() {
-	gmailConf = &oauth2.Config{
-		ClientID: settings.Google.ClientID,
+	gmailConf = &oauth.Oauth2{
+		Type: "gmail",
+		ClientId: settings.Google.ClientId,
 		ClientSecret: settings.Google.ClientSecret,
-		RedirectURL: settings.System.Domain + "/callback/gmail",
+		CallbackUrl: settings.System.Domain + "/callback/gmail",
+		AuthUrl: "https://accounts.google.com/o/oauth2/auth",
+		TokenUrl: "https://www.googleapis.com/oauth2/v3/token",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/gmail.readonly",
 		},
-		Endpoint: oauth2.Endpoint{
-			AuthURL: "https://accounts.google.com/o/oauth2/auth",
-			TokenURL: "https://www.googleapis.com/oauth2/v3/token",
-		},
 	}
+	gmailConf.Init()
 }
 
 func InitGmail() {
