@@ -34,7 +34,8 @@ func ParseError(err error) (newErr error) {
 		}
 		default:
 		newErr = &UnknownError{
-			errors.New(fmt.Sprintf("database: Unknown error %d", errCode)),
+			errors.Wrap(err, fmt.Sprintf(
+				"database: Unknown error %d", errCode)),
 		}
 	}
 
