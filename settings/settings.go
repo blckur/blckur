@@ -15,6 +15,7 @@ import (
 var (
 	PapperTrail *papperTrail
 	System *system
+	Google *google
 	Twitter *twitter
 )
 
@@ -33,6 +34,12 @@ func init() {
 type papperTrail struct {
 	Id string `bson:"_id"`
 	Address string `bson:"address"`
+}
+
+type google struct {
+	Id string `bson:"_id"`
+	ClientID string `bson:"client_id"`
+	ClientSecret string  `bson:"lient_secret"`
 }
 
 type twitter struct {
