@@ -18,11 +18,11 @@ type Account struct {
 	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
 	Type string `bson:"type" json:"type"`
 	Identity string `bson:"identity" json:"identity"`
-	OauthToken string `bson:"oauth_token" json:"-"`
-	OauthSecret string `bson:"oauth_secret" json:"-"`
-	Oauth2AccessToken string `bson:"oauth2_access_token" json:"-"`
-	Oauth2RefreshToken string `bson:"oauth2_refresh_token" json:"-"`
-	Oauth2Expiry time.Time `bson:"oauth2_expiry" json:"-"`
+	OauthTokn string `bson:"oauth_tokn,omitempty" json:"-"`
+	OauthSec string `bson:"oauth_sec,omitempty" json:"-"`
+	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
+	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
+	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
 	Events map[string]bool `bson:"events" json:"events"`
 	Resources []*Resource `bson:"resources" json:"resources"`
 	coll *database.Collection `bson:"-" json:"-"`
