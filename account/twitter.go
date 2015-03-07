@@ -93,6 +93,7 @@ func updateTwitter() {
 		CallbackUrl: settings.System.Domain + "/callback/twitter",
 	}
 	conf.Init()
+
 	twitterConf = conf
 }
 
