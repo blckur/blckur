@@ -27,5 +27,31 @@ func callbackTwitterGet(c *gin.Context) {
 		}
 	}
 
-	c.Redirect(301, settings.System.Domain + "/s/") // TODO
+	c.Redirect(301, settings.System.Domain + "/s/")
+}
+
+func callbackGoogleGet(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	params := utils.ParseParams(c.Request)
+	state := params.GetByName("state")
+	code := params.GetByName("code")
+	error := params.GetByName("error")
+
+	if error == "" {
+		if state == "" || code == "" {
+			c.AbortWithStatus(400)
+			return
+		}
+
+		_, err := account.NewGmail(db, state, code)
+		if err != nil {
+			panic(err)
+		}
+	} else if error == "access_denied" {
+
+	} else {
+		// TODO
+	}
+
+	c.Redirect(301, settings.System.Domain + "/s/")
 }
