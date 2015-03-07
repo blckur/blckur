@@ -17,6 +17,24 @@ type Twitter struct {
 	*Account
 }
 
+func (t *Twitter) Update() (err error) {
+	client := twitterConf.NewClient(t.OauthToken, t.OauthSecret)
+
+	data := &struct {
+		ScreenName string `json:"screen_name"`
+	}{}
+
+	err = client.GetJson(
+		"https://api.twitter.com/1.1/account/settings.json", nil, data)
+	if err != nil {
+		return
+	}
+
+	t.Identity = "@" + data.ScreenName
+
+	return
+}
+
 func ReqTwitter(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
 	url, err = twitterConf.Request(db, userId)
