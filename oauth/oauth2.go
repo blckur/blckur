@@ -127,6 +127,25 @@ type Oauth2Client struct {
 	conf *Oauth2
 }
 
+func (c *Oauth2Client) Check() (refreshed bool, err error) {
+	tokn, err := c.client.Transport.(*oauth2.Transport).Source.Token()
+	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "oauth: Unknown oauth2 token error"),
+		}
+		return
+	}
+
+	refreshed = !(tokn.AccessToken != c.AccessToken)
+	if refreshed {
+		c.AccessToken = tokn.AccessToken
+		c.RefreshToken = tokn.RefreshToken
+		c.Expiry = tokn.Expiry
+	}
+
+	return
+}
+
 func (c *Oauth2Client) GetJson(url string, resp interface{}) (err error) {
 	httpResp, err := c.client.Get(url)
 	if err != nil {
