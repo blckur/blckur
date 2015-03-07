@@ -43,7 +43,7 @@ func callbackGmailGet(c *gin.Context) {
 			return
 		}
 
-		_, err := account.NewGmail(db, state, code)
+		_, err := account.AuthGmail(db, state, code)
 		if err != nil {
 			panic(err)
 		}
