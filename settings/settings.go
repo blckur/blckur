@@ -39,7 +39,7 @@ type papperTrail struct {
 type google struct {
 	Id string `bson:"_id"`
 	ClientID string `bson:"client_id"`
-	ClientSecret string  `bson:"lient_secret"`
+	ClientSecret string  `bson:"client_secret"`
 }
 
 type twitter struct {
