@@ -8,9 +8,9 @@ import (
 
 func GetErrorCode(err error) (errCode int) {
 	switch err := err.(type) {
-		case *mgo.LastError:
+	case *mgo.LastError:
 		errCode = err.Code
-		case *mgo.QueryError:
+	case *mgo.QueryError:
 		errCode = err.Code
 	}
 
