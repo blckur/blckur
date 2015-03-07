@@ -56,7 +56,7 @@ func updateGmail() {
 		},
 		Endpoint: oauth2.Endpoint{
 			AuthURL: "https://accounts.google.com/o/oauth2/auth",
-			TokenURL: "https://accounts.google.com/o/oauth2/token",
+			TokenURL: "https://www.googleapis.com/oauth2/v3/token",
 		},
 	}
 }
