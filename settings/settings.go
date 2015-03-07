@@ -153,6 +153,8 @@ func Update(groupName string) {
 		group = PapperTrail
 	case "system":
 		group = System
+	case "google":
+		group = Google
 	case "twitter":
 		group = Twitter
 	}
@@ -175,6 +177,7 @@ func Init() {
 	requires.After("database")
 
 	Update("paper_trail")
+	Update("google")
 	Update("twitter")
 	Update("system")
 
