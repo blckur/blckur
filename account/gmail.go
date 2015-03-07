@@ -48,9 +48,9 @@ func AuthGmail(db *database.Database, userId bson.ObjectId) (
 
 func updateGmail() {
 	gmailConf = &oauth2.Config{
-		ClientID: "",
-		ClientSecret: "",
-		RedirectURL: "",
+		ClientID: settings.Google.ClientID,
+		ClientSecret: settings.Google.ClientSecret,
+		RedirectURL: settings.System.Domain + "/callback/gmail",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/gmail.readonly",
 		},
