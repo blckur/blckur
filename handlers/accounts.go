@@ -33,7 +33,7 @@ func accountsPost(c *gin.Context) {
 		}
 		acct.Redirect = url
 	case "twitter":
-		url, err := account.AuthTwitter(db, sess.UserId)
+		url, err := account.ReqTwitter(db, sess.UserId)
 		if err != nil {
 			panic(err)
 		}
