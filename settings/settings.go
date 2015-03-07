@@ -38,7 +38,7 @@ type papperTrail struct {
 
 type google struct {
 	Id string `bson:"_id"`
-	ClientID string `bson:"client_id"`
+	ClientId string `bson:"client_id"`
 	ClientSecret string  `bson:"client_secret"`
 }
 
