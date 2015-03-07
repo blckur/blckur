@@ -27,7 +27,7 @@ func accountsPost(c *gin.Context) {
 
 	switch acctType {
 	case "gmail":
-		url, err := account.AuthGmail(db, sess.UserId)
+		url, err := account.ReqGmail(db, sess.UserId)
 		if err != nil {
 			panic(err)
 		}
