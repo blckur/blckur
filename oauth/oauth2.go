@@ -42,7 +42,8 @@ func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
 	coll := db.Tokens()
 	state := utils.RandStr(32)
 
-	url = o.conf.AuthCodeURL(state, oauth2.AccessTypeOffline)
+	url = o.conf.AuthCodeURL(state, oauth2.AccessTypeOffline,
+		oauth2.ApprovalForce)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "account: Unknown oauth2 api error"),
