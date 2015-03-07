@@ -30,7 +30,7 @@ func callbackTwitterGet(c *gin.Context) {
 	c.Redirect(301, settings.System.AppHome)
 }
 
-func callbackGoogleGet(c *gin.Context) {
+func callbackGmailGet(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	params := utils.ParseParams(c.Request)
 	state := params.GetByName("state")
