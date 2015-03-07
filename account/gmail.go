@@ -2,42 +2,61 @@ package account
 
 import (
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
-	"github.com/dropbox/godropbox/errors"
-	"golang.org/x/oauth2"
+	"github.com/blckur/blckur/oauth"
 	"labix.org/v2/mgo/bson"
 )
 
 var (
-	gmailConf *oauth2.Config
+	gmailConf *oauth.Oauth2
 )
 
 type Gmail struct {
 	*Account
 }
 
-func AuthGmail(db *database.Database, userId bson.ObjectId) (
+func ReqGmail(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
-	coll := db.Tokens()
-	state := utils.RandStr(32)
-
-	url = gmailConf.AuthCodeURL(state, oauth2.AccessTypeOnline)
+	url, err = gmailConf.Request(db, userId)
 	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown gmail api error"),
-		}
 		return
 	}
 
-	tokn := &Token{
-		Token: state,
-		UserId: userId,
+	return
+}
+
+func AuthGmail(db *database.Database, state string, code string) (
+		acct *Account, err error) {
+	coll := db.Accounts()
+
+	client, err := gmailConf.Authorize(db, state, code)
+	if err != nil {
+		return
 	}
 
-	err = coll.Insert(tokn)
+	data := &struct {
+		EmailAddress string `bson:"emailAddress"`
+	}{}
+
+	err = client.GetJson(
+		"https://www.googleapis.com/gmail/v1/users/me/profile", data)
+	if err != nil {
+		return
+	}
+
+	acct = &Account{
+		UserId: client.UserId,
+		Type: "gmail",
+		Identity: data.EmailAddress,
+		Oauth2AccessToken: client.AccessToken,
+		Oauth2RefreshToken: client.RefreshToken,
+		Oauth2Expiry: client.Expiry,
+		coll: coll,
+	}
+
+	err = coll.Insert(acct)
 	if err != nil {
 		err = database.ParseError(err)
 		return
