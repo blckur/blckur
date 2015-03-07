@@ -27,7 +27,7 @@ func callbackTwitterGet(c *gin.Context) {
 		}
 	}
 
-	c.Redirect(301, settings.System.Domain + "/s/")
+	c.Redirect(301, settings.System.AppHome)
 }
 
 func callbackGoogleGet(c *gin.Context) {
@@ -53,5 +53,5 @@ func callbackGoogleGet(c *gin.Context) {
 		// TODO
 	}
 
-	c.Redirect(301, settings.System.Domain + "/s/")
+	c.Redirect(301, settings.System.AppHome)
 }
