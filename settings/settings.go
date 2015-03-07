@@ -154,12 +154,12 @@ func Update(groupName string) {
 	switch groupName {
 	case "paper_trail":
 		group = PapperTrail
-	case "system":
-		group = System
 	case "google":
 		group = Google
 	case "twitter":
 		group = Twitter
+	case "system":
+		group = System
 	}
 
 	for {
