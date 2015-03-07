@@ -21,7 +21,7 @@ type Oauth1 struct {
 	consumer *oauth.Consumer
 }
 
-func (o *Oauth1) Init() {
+func (o *Oauth1) Config() {
 	o.consumer = oauth.NewConsumer(
 		o.ConsumerKey,
 		o.ConsumerSecret,

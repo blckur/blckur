@@ -92,7 +92,7 @@ func updateTwitter() {
 		AccsTokenUrl: "https://api.twitter.com/oauth/access_token",
 		CallbackUrl: settings.System.Domain + "/callback/twitter",
 	}
-	conf.Init()
+	conf.Config()
 
 	twitterConf = conf
 }

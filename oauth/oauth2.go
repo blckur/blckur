@@ -24,7 +24,7 @@ type Oauth2 struct {
 	conf *oauth2.Config
 }
 
-func (o *Oauth2) Init() {
+func (o *Oauth2) Config() {
 	o.conf = &oauth2.Config{
 		ClientID: o.ClientId,
 		ClientSecret: o.ClientSecret,

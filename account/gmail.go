@@ -77,7 +77,7 @@ func updateGmail() {
 			"https://www.googleapis.com/auth/gmail.readonly",
 		},
 	}
-	gmailConf.Init()
+	gmailConf.Config()
 }
 
 func InitGmail() {
