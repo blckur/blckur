@@ -4,6 +4,7 @@ import (
 	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
+	"time"
 )
 
 type Resource struct {
@@ -17,8 +18,11 @@ type Account struct {
 	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
 	Type string `bson:"type" json:"type"`
 	Identity string `bson:"identity" json:"identity"`
-	Token string `bson:"token" json:"-"`
-	Secret string `bson:"secret" json:"-"`
+	OauthToken string `bson:"oauth_token" json:"-"`
+	OauthSecret string `bson:"oauth_secret" json:"-"`
+	Oauth2AccessToken string `bson:"oauth2_access_token" json:"-"`
+	Oauth2RefreshToken string `bson:"oauth2_refresh_token" json:"-"`
+	Oauth2Expiry time.Time `bson:"oauth2_expiry" json:"-"`
 	Events map[string]bool `bson:"events" json:"events"`
 	Resources []*Resource `bson:"resources" json:"resources"`
 	coll *database.Collection `bson:"-" json:"-"`
