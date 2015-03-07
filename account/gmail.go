@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
 	"labix.org/v2/mgo/bson"
+	"github.com/dropbox/godropbox/container/set"
 )
 
 var (
@@ -15,6 +16,47 @@ var (
 
 type Gmail struct {
 	*Account
+}
+
+func (g *Gmail) Update(db *database.Database) (err error) {
+	client := gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
+		g.Oauth2RefTokn, g.Oauth2Exp)
+
+	refreshed, err := client.Check()
+	if err != nil {
+		return
+	}
+
+	if refreshed {
+		coll := db.Accounts()
+
+		g.Oauth2AccTokn = client.AccessToken
+		g.Oauth2RefTokn = client.RefreshToken
+		g.Oauth2Exp = client.Expiry
+
+		fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn",
+			"oauth2_exp")
+
+		err = coll.CommitFields(g.Id, g.Account, fields)
+		if err != nil {
+			err = database.ParseError(err)
+			return
+		}
+	}
+
+	data := &struct {
+		EmailAddress string `bson:"emailAddress"`
+	}{}
+
+	err = client.GetJson(
+		"https://www.googleapis.com/gmail/v1/users/me/profile", data)
+	if err != nil {
+		return
+	}
+
+	g.Identity = data.EmailAddress
+
+	return
 }
 
 func ReqGmail(db *database.Database, userId bson.ObjectId) (
