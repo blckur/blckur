@@ -21,7 +21,7 @@ func callbackTwitterGet(c *gin.Context) {
 			return
 		}
 
-		_, err := account.NewTwitter(db, token, verifier)
+		_, err := account.AuthTwitter(db, token, verifier)
 		if err != nil {
 			panic(err)
 		}
