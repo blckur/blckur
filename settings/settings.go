@@ -23,6 +23,9 @@ func init() {
 	PapperTrail = &papperTrail{
 		Id: "paper_trail",
 	}
+	Google = &google{
+		Id: "google",
+	}
 	Twitter = &twitter{
 		Id: "twitter",
 	}
