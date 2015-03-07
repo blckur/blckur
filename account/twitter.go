@@ -1,121 +1,61 @@
 package account
 
 import (
-	"encoding/json"
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/messenger"
-	"github.com/dropbox/godropbox/errors"
-	"github.com/mrjones/oauth"
-	"io/ioutil"
+	"github.com/blckur/blckur/oauth"
 	"labix.org/v2/mgo/bson"
 )
 
 var (
-	twitterConsumer *oauth.Consumer
-	twitterCallback string
+	twitterConf *oauth.Oauth1
 )
 
 type Twitter struct {
 	*Account
 }
 
-func AuthTwitter(db *database.Database, userId bson.ObjectId) (
+func ReqTwitter(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
-	coll := db.Tokens()
-
-	reqTokn, url, err := twitterConsumer.GetRequestTokenAndUrl(
-		twitterCallback)
+	url, err = twitterConf.Request(db, userId)
 	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown twitter api error"),
-		}
-		return
-	}
-
-	tokn := &Token{
-		Id: reqTokn.Token,
-		OauthSecret: reqTokn.Secret,
-		UserId: userId,
-	}
-
-	err = coll.Insert(tokn)
-	if err != nil {
-		err = database.ParseError(err)
 		return
 	}
 
 	return
 }
 
-func NewTwitter(db *database.Database, token string, verifier string) (
-	acct *Account, err error) {
-	toknColl := db.Tokens()
-	acctColl := db.Accounts()
-	tokn := &Token{}
+func AuthTwitter(db *database.Database, token string, code string) (
+		acct *Account, err error) {
+	coll := db.Accounts()
 
-	err = toknColl.FindOneId(token, tokn)
+	client, err := twitterConf.Authorize(db, token, code)
 	if err != nil {
-		err = database.ParseError(err)
 		return
 	}
 
-	reqTokn := &oauth.RequestToken{
-		Token: tokn.Id,
-		Secret: tokn.OauthSecret,
-	}
+	data := &struct {
+		ScreenName string `json:"screen_name"`
+	}{}
 
-	accessTokn, err := twitterConsumer.AuthorizeToken(reqTokn, verifier)
+	err = client.GetJson(
+		"https://api.twitter.com/1.1/account/settings.json", nil, data)
 	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown twitter api error"),
-		}
 		return
 	}
-
-	resp, err := twitterConsumer.Get(
-		"https://api.twitter.com/1.1/account/settings.json",
-		nil, accessTokn)
-	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown twitter api error"),
-		}
-		return
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown parse error"),
-		}
-		return
-	}
-
-	data := map[string]interface{}{}
-
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown parse error"),
-		}
-		return
-	}
-
-	identity := "@" + data["screen_name"].(string)
 
 	acct = &Account{
-		UserId: tokn.UserId,
+		UserId: client.UserId,
 		Type: "twitter",
-		Identity: identity,
-		OauthToken: tokn.Id,
-		OauthSecret: tokn.OauthSecret,
-		coll: acctColl,
+		Identity: "@" + data.ScreenName,
+		OauthToken: client.Token,
+		OauthSecret: client.Secret,
+		coll: coll,
 	}
 
-	err = acctColl.Insert(acct)
+	err = coll.Insert(acct)
 	if err != nil {
 		err = database.ParseError(err)
 		return
@@ -125,16 +65,17 @@ func NewTwitter(db *database.Database, token string, verifier string) (
 }
 
 func updateTwitter() {
-	twitterConsumer = oauth.NewConsumer(
-		settings.Twitter.ConsumerKey,
-		settings.Twitter.ConsumerSecret,
-		oauth.ServiceProvider{
-			RequestTokenUrl: "https://api.twitter.com/oauth/request_token",
-			AuthorizeTokenUrl: "https://api.twitter.com/oauth/authorize",
-			AccessTokenUrl: "https://api.twitter.com/oauth/access_token",
-		},
-	)
-	twitterCallback = settings.System.Domain + "/callback/twitter"
+	conf := &oauth.Oauth1{
+		Type: "twitter",
+		ConsumerKey: settings.Twitter.ConsumerKey,
+		ConsumerSecret: settings.Twitter.ConsumerSecret,
+		ReqTokenUrl: "https://api.twitter.com/oauth/request_token",
+		AuthTokenUrl: "https://api.twitter.com/oauth/authorize",
+		AccsTokenUrl: "https://api.twitter.com/oauth/access_token",
+		CallbackUrl: settings.System.Domain + "/callback/twitter",
+	}
+	conf.Init()
+	twitterConf = conf
 }
 
 func InitTwitter() {
