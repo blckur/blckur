@@ -47,10 +47,9 @@ func callbackGoogleGet(c *gin.Context) {
 		if err != nil {
 			panic(err)
 		}
-	} else if error == "access_denied" {
-
-	} else {
-		// TODO
+	} else if error != "access_denied" {
+		c.AbortWithStatus(400)
+		return
 	}
 
 	c.Redirect(301, settings.System.AppHome)
