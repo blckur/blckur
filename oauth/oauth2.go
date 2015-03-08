@@ -86,7 +86,7 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	}
 
 	client = &Oauth2Client{
-		Token: accessTokn,
+		Token: *accessTokn,
 		UserId: tokn.UserId,
 		client: o.conf.Client(oauth2.NoContext, accessTokn),
 		conf: o,
@@ -105,7 +105,7 @@ func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
 	}
 
 	client = &Oauth2Client{
-		Token: tokn,
+		Token: *tokn,
 		UserId: userId,
 		client: o.conf.Client(oauth2.NoContext, tokn),
 		conf: o,
@@ -115,7 +115,7 @@ func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
 }
 
 type Oauth2Client struct {
-	*oauth2.Token
+	oauth2.Token
 	UserId bson.ObjectId
 	client *http.Client
 	conf *Oauth2
