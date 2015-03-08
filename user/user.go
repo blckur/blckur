@@ -13,15 +13,11 @@ import (
 	"time"
 )
 
-type Data struct {
+type User struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	Email string `bson:"email" json:"email"`
 	PasswordSalt []byte `bson:"pass_salt" json:"-"`
 	PasswordHash []byte `bson:"pass_hash" json:"-"`
-}
-
-type User struct {
-	Data `bson:",inline"`
 	coll *database.Collection
 }
 
@@ -62,20 +58,19 @@ func (u *User) SetPassword(password string) (err error) {
 }
 
 func (u *User) Commit() (err error) {
-	err = u.coll.Commit(u.Id, u.Data)
+	err = u.coll.Commit(u.Id, u)
 	return
 }
 
 func (u *User) CommitFields(fields set.Set) (err error) {
-	err = u.coll.CommitFields(u.Id, u.Data, fields)
+	err = u.coll.CommitFields(u.Id, u, fields)
 	return
 }
 
 func FindUser(db *database.Database, email string) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		Data{},
-		coll,
+		coll: coll,
 	}
 
 	err = coll.FindOne(bson.M{
@@ -87,8 +82,7 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
 func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		Data{},
-		coll,
+		coll: coll,
 	}
 
 	err = coll.FindOneId(id, usr)
@@ -99,11 +93,9 @@ func NewUser(db *database.Database, email string, password string) (
 		usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		Data{
-			Id: bson.NewObjectId(),
-			Email: email,
-		},
-		coll,
+		Id: bson.NewObjectId(),
+		Email: email,
+		coll: coll,
 	}
 
 	usr.SetPassword(password)
