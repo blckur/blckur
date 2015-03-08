@@ -9,7 +9,7 @@ import (
 )
 
 type Collection struct {
-	*mgo.Collection
+	mgo.Collection
 	Database *Database
 }
 

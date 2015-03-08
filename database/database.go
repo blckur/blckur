@@ -24,7 +24,7 @@ func (d *Database) Close() {
 
 func (d *Database) getCollection(name string) (coll *Collection) {
 	coll = &Collection{
-		d.database.C(name),
+		*d.database.C(name),
 		d,
 	}
 	return
