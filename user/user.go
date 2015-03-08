@@ -21,7 +21,7 @@ type Data struct {
 }
 
 type User struct {
-	*Data
+	Data `bson:",inline"`
 	coll *database.Collection
 }
 
