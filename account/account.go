@@ -39,7 +39,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	coll := db.Accounts()
 	accts = []*Account{}
 
-	coll.Find(bson.M{
+	err = coll.Find(bson.M{
 		"user_id": userId,
 	}).All(&accts)
 	if err != nil {
