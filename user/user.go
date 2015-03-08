@@ -69,23 +69,31 @@ func (u *User) CommitFields(fields set.Set) (err error) {
 
 func FindUser(db *database.Database, email string) (usr *User, err error) {
 	coll := db.Users()
-	usr = &User{
-		coll: coll,
-	}
+	usr = &User{}
 
 	err = coll.FindOne(bson.M{
 		"email": email,
 	}, usr)
+	if err != nil {
+		return
+	}
+
+	usr.coll = coll
+
 	return
 }
 
 func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	coll := db.Users()
-	usr = &User{
-		coll: coll,
-	}
+	usr = &User{}
 
 	err = coll.FindOneId(id, usr)
+	if err != nil {
+		return
+	}
+
+	usr.coll = coll
+
 	return
 }
 

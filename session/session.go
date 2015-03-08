@@ -27,11 +27,15 @@ func (s *Session) GetUser() (usr *user.User, err error) {
 func GetSession(db *database.Database, id bson.ObjectId) (
 		sess *Session, err error) {
 	coll := db.Sessions()
-	sess = &Session{
-		coll: coll,
-	}
+	sess = &Session{}
 
 	err = coll.FindOneId(id, sess)
+	if err != nil {
+		return
+	}
+
+	sess.coll = coll
+
 	return
 }
 
