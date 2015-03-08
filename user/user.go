@@ -74,24 +74,24 @@ func (u *User) CommitFields(fields set.Set) (err error) {
 func FindUser(db *database.Database, email string) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		&Data{},
+		Data{},
 		coll,
 	}
 
 	err = coll.FindOne(bson.M{
 		"email": email,
-	}, usr.Data)
+	}, usr)
 	return
 }
 
 func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		&Data{},
+		Data{},
 		coll,
 	}
 
-	err = coll.FindOneId(id, usr.Data)
+	err = coll.FindOneId(id, usr)
 	return
 }
 
@@ -99,7 +99,7 @@ func NewUser(db *database.Database, email string, password string) (
 		usr *User, err error) {
 	coll := db.Users()
 	usr = &User{
-		&Data{
+		Data{
 			Id: bson.NewObjectId(),
 			Email: email,
 		},
@@ -108,7 +108,7 @@ func NewUser(db *database.Database, email string, password string) (
 
 	usr.SetPassword(password)
 
-	err = coll.Insert(usr.Data)
+	err = coll.Insert(usr)
 	if err != nil {
 		err = database.ParseError(err)
 		return
