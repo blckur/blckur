@@ -18,7 +18,7 @@ type Twitter struct {
 }
 
 func (t *Twitter) Update() (err error) {
-	client := twitterConf.NewClient(t.UserId, t.OauthToken, t.OauthSecret)
+	client := twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
 
 	data := &struct {
 		ScreenName string `json:"screen_name"`
@@ -68,8 +68,8 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		UserId: client.UserId,
 		Type: "twitter",
 		Identity: "@" + data.ScreenName,
-		OauthToken: client.Token,
-		OauthSecret: client.Secret,
+		OauthTokn: client.Token,
+		OauthSec: client.Secret,
 		coll: coll,
 	}
 

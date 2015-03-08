@@ -92,9 +92,9 @@ func AuthGmail(db *database.Database, state string, code string) (
 		UserId: client.UserId,
 		Type: "gmail",
 		Identity: data.EmailAddress,
-		Oauth2AccessToken: client.AccessToken,
-		Oauth2RefreshToken: client.RefreshToken,
-		Oauth2Expiry: client.Expiry,
+		Oauth2AccTokn: client.AccessToken,
+		Oauth2RefTokn: client.RefreshToken,
+		Oauth2Exp: client.Expiry,
 		coll: coll,
 	}
 
