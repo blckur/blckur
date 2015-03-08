@@ -1,12 +1,11 @@
 library recaptcha_comp;
 
-import 'package:blckur/alert.dart' as alrt;
+import 'package:blckur/utils/utils.dart' as utils;
 
 import 'package:angular/angular.dart' show Component;
 import 'package:angular/angular.dart' as ng;
 import 'dart:html' as dom;
 import 'dart:js' as js;
-import 'dart:async' as async;
 
 @Component(
   selector: 'x-recaptcha',
@@ -18,38 +17,22 @@ class RecaptchaComp implements ng.ShadowRootAware {
   DateTime start;
 
   void _init() {
-    new async.Timer(const Duration(milliseconds: 5), () {
-      var api = js.context['grecaptcha'];
+    var api = js.context['grecaptcha'];
 
-      if (new DateTime.now().difference(this.start) > const Duration(
-          seconds: 10)) {
-        new alrt.Alert('Unable to load reCaptcha', () {
-          this.loadRecaptch();
-        });
-        return;
-      }
+    var elem = new dom.DivElement();
+    this.root.querySelector('div').append(elem);
 
-      if (api == null) {
-        this._init();
-        return;
-      }
-
-      var elem = new dom.DivElement();
-      this.root.querySelector('div').append(elem);
-
-      js.context['grecaptcha'].callMethod('render', [
-        elem,
-        new js.JsObject.jsify({
-          'sitekey': '6LeVEgMTAAAAAAdu7KTYPUZG5deiVER-84TT1OXf',
-          'theme': 'dark',
-          'type': 'image',
-          'callback': (resp) {
-            print(resp);
-          },
-        }),
-      ]);
-
-    });
+    js.context['grecaptcha'].callMethod('render', [
+      elem,
+      new js.JsObject.jsify({
+        'sitekey': '6LeVEgMTAAAAAAdu7KTYPUZG5deiVER-84TT1OXf',
+        'theme': 'dark',
+        'type': 'image',
+        'callback': (resp) {
+          print(resp);
+        },
+      }),
+    ]);
   }
 
   void loadRecaptch() {
@@ -59,13 +42,20 @@ class RecaptchaComp implements ng.ShadowRootAware {
       this.apiElem.remove();
     }
 
+    var callback = 'cb' + utils.uuid();
+
+    js.context[callback] = () {
+      this._init();
+    };
+
     this.apiElem = new dom.ScriptElement()
-      ..type = 'application/javascript'
-      ..src = '//www.google.com/recaptcha/api.js';
+      ..type = 'text/javascript'
+      ..async = true
+      ..defer = true
+      ..src = '//www.google.com/recaptcha/api.js?'
+        'onload=${callback}&render=explicit';
 
     this.root.querySelector('div').append(this.apiElem);
-
-    this._init();
   }
 
   void onShadowRoot(dom.ShadowRoot root) {
