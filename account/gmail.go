@@ -6,8 +6,8 @@ import (
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
-	"labix.org/v2/mgo/bson"
 	"github.com/dropbox/godropbox/container/set"
+	"labix.org/v2/mgo/bson"
 )
 
 var (
