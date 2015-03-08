@@ -28,7 +28,7 @@ func GetSession(db *database.Database, id bson.ObjectId) (
 		sess *Session, err error) {
 	coll := db.Sessions()
 	sess = &Session{
-		coll,
+		coll: coll,
 	}
 
 	err = coll.FindOneId(id, sess)
@@ -42,7 +42,7 @@ func NewSession(db *database.Database, userId bson.ObjectId) (
 		Id: bson.NewObjectId(),
 		UserId: userId,
 		Timestamp: time.Now(),
-		coll,
+		coll: coll,
 	}
 
 	err = coll.Insert(sess)
