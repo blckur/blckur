@@ -21,11 +21,11 @@ type User struct {
 	coll *database.Collection
 }
 
-func (u *User) hashPassword(password string) []byte {
+func (u *User) hashPassword(password string) (digest []byte) {
 	hash := sha512.New()
 	hash.Write(u.PasswordSalt)
 	hash.Write([]byte(password))
-	digest := hash.Sum(nil)
+	digest = hash.Sum(nil)
 
 	for i := 0; i < 5; i++ {
 		hash = sha512.New()
