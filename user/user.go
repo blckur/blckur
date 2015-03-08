@@ -33,7 +33,7 @@ func (u *User) hashPassword(password string) (digest []byte) {
 		digest = hash.Sum(nil)
 	}
 
-	return digest
+	return
 }
 
 func (u *User) CheckPassword(password string) bool {
