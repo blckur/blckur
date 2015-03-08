@@ -14,7 +14,6 @@ import 'dart:js' as js;
 class RecaptchaComp implements ng.ShadowRootAware {
   dom.ShadowRoot root;
   dom.ScriptElement apiElem;
-  DateTime start;
 
   void _init() {
     var api = js.context['grecaptcha'];
@@ -36,8 +35,6 @@ class RecaptchaComp implements ng.ShadowRootAware {
   }
 
   void loadRecaptch() {
-    this.start = new DateTime.now();
-
     if (this.apiElem != null) {
       this.apiElem.remove();
     }
