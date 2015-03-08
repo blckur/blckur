@@ -15,7 +15,7 @@ var (
 )
 
 type Gmail struct {
-	*Account
+	Account `bson:",inline"`
 }
 
 func (g *Gmail) Update(db *database.Database) (err error) {
@@ -37,7 +37,7 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 		fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn",
 			"oauth2_exp")
 
-		err = coll.CommitFields(g.Id, g.Account, fields)
+		err = coll.CommitFields(g.Id, g, fields)
 		if err != nil {
 			err = database.ParseError(err)
 			return
