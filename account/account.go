@@ -39,16 +39,21 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	coll := db.Accounts()
 	accts = []*Account{}
 
-	err = coll.Find(bson.M{
+	iter := coll.Find(bson.M{
 		"user_id": userId,
-	}).All(&accts)
+	}).Iter()
+
+	acct := &Account{}
+	for iter.Next(acct) {
+		acct.coll = coll
+		accts = append(accts, acct)
+		acct = &Account{}
+	}
+
+	err = iter.Err()
 	if err != nil {
 		err = database.ParseError(err)
 		return
-	}
-
-	for _, acct := range accts {
-		acct.coll = coll
 	}
 
 	return
