@@ -16,8 +16,8 @@ import (
 type Data struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	Email string `bson:"email" json:"email"`
-	PasswordSalt []byte `bson:"password_salt" json:"-"`
-	PasswordHash []byte `bson:"password_hash" json:"-"`
+	PasswordSalt []byte `bson:"pass_salt" json:"-"`
+	PasswordHash []byte `bson:"pass_hash" json:"-"`
 }
 
 type User struct {
