@@ -86,10 +86,8 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	}
 
 	client = &Oauth2Client{
+		Token: accessTokn,
 		UserId: tokn.UserId,
-		AccessToken: accessTokn.AccessToken,
-		RefreshToken: accessTokn.RefreshToken,
-		Expiry: accessTokn.Expiry,
 		client: o.conf.Client(oauth2.NoContext, accessTokn),
 		conf: o,
 	}
@@ -107,10 +105,8 @@ func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
 	}
 
 	client = &Oauth2Client{
+		Token: tokn,
 		UserId: userId,
-		AccessToken: accessToken,
-		RefreshToken: refreshToken,
-		Expiry: expiry,
 		client: o.conf.Client(oauth2.NoContext, tokn),
 		conf: o,
 	}
@@ -119,10 +115,8 @@ func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
 }
 
 type Oauth2Client struct {
+	*oauth2.Token
 	UserId bson.ObjectId
-	AccessToken string
-	RefreshToken string
-	Expiry time.Time
 	client *http.Client
 	conf *Oauth2
 }
