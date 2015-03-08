@@ -19,7 +19,7 @@ func userGet(c *gin.Context) {
 		panic(err)
 	}
 
-	c.JSON(200, usr.Data)
+	c.JSON(200, usr)
 }
 
 func userPut(c *gin.Context) {
@@ -57,5 +57,5 @@ func userPut(c *gin.Context) {
 		panic(err)
 	}
 
-	c.JSON(200, usr.Data)
+	c.JSON(200, usr)
 }
