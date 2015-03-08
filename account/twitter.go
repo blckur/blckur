@@ -14,7 +14,7 @@ var (
 )
 
 type Twitter struct {
-	*Account
+	Account `bson:",inline"`
 }
 
 func (t *Twitter) Update() (err error) {
