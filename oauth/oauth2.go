@@ -130,7 +130,7 @@ func (c *Oauth2Client) Check() (refreshed bool, err error) {
 		return
 	}
 
-	refreshed = !(tokn.AccessToken != c.AccessToken)
+	refreshed = tokn.AccessToken != c.AccessToken
 	if refreshed {
 		c.AccessToken = tokn.AccessToken
 		c.RefreshToken = tokn.RefreshToken
