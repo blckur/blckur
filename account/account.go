@@ -13,6 +13,13 @@ type Resource struct {
 	Events map[string]bool `bson:"events" json:"events"`
 }
 
+type EventType struct {
+	Type string `bson:"-" json:"type"`
+	ValueType string `bson:"-" json:"val_type"`
+	Name string `bson:"-" json:"name"`
+	State interface{} `bson:"-" json:"state"`
+}
+
 type Account struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
