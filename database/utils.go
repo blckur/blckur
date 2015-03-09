@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/dropbox/godropbox/errors"
+	"github.com/gin-gonic/gin"
 	"labix.org/v2/mgo"
 	"fmt"
 )
@@ -40,4 +41,13 @@ func ParseError(err error) (newErr error) {
 	}
 
 	return
+}
+
+func ExpectFound(c *gin.Context, err error) {
+	switch err.(type) {
+	case NotFoundError:
+		c.Fail(404, err)
+	default:
+		c.Fail(500, err)
+	}
 }
