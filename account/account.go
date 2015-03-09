@@ -36,10 +36,23 @@ type Account struct {
 	coll *database.Collection `bson:"-" json:"-"`
 }
 
-type Token struct {
-	Token string `bson:"_id"`
-	Secret string `bson:"secret"`
-	UserId bson.ObjectId `bson:"user_id"`
+func GetAccount(db *database.Database, userId bson.ObjectId,
+		acctId bson.ObjectId) (acct *Account, err error) {
+	coll := db.Accounts()
+	acct = &Account{}
+
+	err = coll.Find(bson.M{
+		"_id": acctId,
+		"user_id": userId,
+	}).One(acct)
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	acct.coll = coll
+
+	return
 }
 
 func GetAccounts(db *database.Database, userId bson.ObjectId) (
