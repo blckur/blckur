@@ -24,8 +24,8 @@ func userGet(c *gin.Context) {
 
 func userPut(c *gin.Context) {
 	sess := c.MustGet("session").(*session.Session)
-	data := &UserData{}
-	c.Bind(data)
+	data := UserData{}
+	c.Bind(&data)
 
 	usr, err := sess.GetUser()
 	if err != nil {
