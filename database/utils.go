@@ -28,11 +28,11 @@ func ParseError(err error) (newErr error) {
 	errCode := GetErrorCode(err)
 
 	switch errCode {
-		case 11000, 11001, 12582, 16460:
+	case 11000, 11001, 12582, 16460:
 		newErr = &DuplicateKeyError{
 			errors.New("database: Duplicate key"),
 		}
-		default:
+	default:
 		newErr = &UnknownError{
 			errors.Wrap(err, fmt.Sprintf(
 				"database: Unknown error %d", errCode)),
