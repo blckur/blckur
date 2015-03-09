@@ -4,6 +4,8 @@ import (
 	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
+	"github.com/dropbox/godropbox/container/set"
+	"labix.org/v2/mgo"
 	"time"
 )
 
@@ -34,6 +36,16 @@ type Account struct {
 	EventsParsed []*EventType `bson:"-" json:"events"`
 	Resources []*Resource `bson:"resources,omitempty" json:"resources"`
 	coll *database.Collection `bson:"-" json:"-"`
+}
+
+func (a *Account) Commit() (err error) {
+	err = a.coll.Commit(a.Id, a)
+	return
+}
+
+func (a *Account) CommitFields(fields set.Set) (err error) {
+	err = a.coll.CommitFields(a.Id, a, fields)
+	return
 }
 
 func GetAccount(db *database.Database, userId bson.ObjectId,
