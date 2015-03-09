@@ -4,9 +4,14 @@ core-item {
   color: #595959;
 }
 
-.content,
-core-item {
-  height: 90px;
+.item.active {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #edf3fc;
 }
 
 x-brand-logo {
