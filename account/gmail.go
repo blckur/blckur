@@ -24,7 +24,7 @@ func MarshalGmail(acct *Account) {
 		&EventType{
 			Type: "new_email",
 			ValueType: "toggle",
-			Name: "New email message",
+			Name: "New email messages",
 			State: utils.InfToBool(acct.Events["new_email"]),
 		},
 	}
