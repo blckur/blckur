@@ -5,6 +5,7 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/oauth"
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
@@ -19,20 +20,12 @@ type Gmail struct {
 }
 
 func ParseGmailAccount(acct *Account) {
-	var state bool
-	stateInf := acct.Events["new_email"]
-	if stateInf == nil {
-		state = false
-	} else {
-		state = stateInf.(bool)
-	}
-
 	acct.EventsParsed = []*EventType{
 		&EventType{
 			Type: "new_email",
 			ValueType: "toggle",
 			Name: "New email message",
-			State: state,
+			State: utils.InfToBool(acct.Events["new_email"]),
 		},
 	}
 }
