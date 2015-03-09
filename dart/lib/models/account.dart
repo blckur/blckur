@@ -27,5 +27,7 @@ class Account extends mdl.Model {
 
   Account(ng.Http http) : super(http);
 
-  String url = '/accounts';
+  String get url {
+    return '/accounts/' + this.id;
+  }
 }
