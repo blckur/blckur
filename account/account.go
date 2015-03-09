@@ -19,7 +19,7 @@ type EventType struct {
 	Type string `bson:"-" json:"type"`
 	ValueType string `bson:"-" json:"val_type"`
 	Name string `bson:"-" json:"name"`
-	State interface{} `bson:"-" json:"state"`
+	Value interface{} `bson:"-" json:"value"`
 }
 
 type Account struct {
