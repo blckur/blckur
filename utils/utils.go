@@ -71,3 +71,12 @@ func GetLocalAddress() (addr string, err error) {
 
 	return
 }
+
+func InfToBool(obj interface{}) (val bool) {
+	if obj == nil {
+		val = false
+	} else {
+		val = obj.(bool)
+	}
+	return
+}
