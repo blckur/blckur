@@ -18,6 +18,25 @@ type Gmail struct {
 	Account `bson:",inline"`
 }
 
+func ParseGmailAccount(acct *Account) {
+	var state bool
+	stateInf := acct.Events["new_email"]
+	if stateInf == nil {
+		state = false
+	} else {
+		state = stateInf.(bool)
+	}
+
+	acct.EventsParsed = []*EventType{
+		&EventType{
+			Type: "new_email",
+			ValueType: "toggle",
+			Name: "New email message",
+			State: state,
+		},
+	}
+}
+
 func (g *Gmail) Update(db *database.Database) (err error) {
 	client := gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
 		g.Oauth2RefTokn, g.Oauth2Exp)
