@@ -63,12 +63,12 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 		}
 	}
 
-	data := &struct {
+	data := struct {
 		EmailAddress string `bson:"emailAddress"`
 	}{}
 
 	err = client.GetJson(
-		"https://www.googleapis.com/gmail/v1/users/me/profile", data)
+		"https://www.googleapis.com/gmail/v1/users/me/profile", &data)
 	if err != nil {
 		return
 	}
@@ -97,12 +97,12 @@ func AuthGmail(db *database.Database, state string, code string) (
 		return
 	}
 
-	data := &struct {
+	data := struct {
 		EmailAddress string `bson:"emailAddress"`
 	}{}
 
 	err = client.GetJson(
-		"https://www.googleapis.com/gmail/v1/users/me/profile", data)
+		"https://www.googleapis.com/gmail/v1/users/me/profile", &data)
 	if err != nil {
 		return
 	}

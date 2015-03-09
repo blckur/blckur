@@ -20,12 +20,12 @@ type Twitter struct {
 func (t *Twitter) Update() (err error) {
 	client := twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
 
-	data := &struct {
+	data := struct {
 		ScreenName string `json:"screen_name"`
 	}{}
 
 	err = client.GetJson(
-		"https://api.twitter.com/1.1/account/settings.json", nil, data)
+		"https://api.twitter.com/1.1/account/settings.json", nil, &data)
 	if err != nil {
 		return
 	}
@@ -54,12 +54,12 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		return
 	}
 
-	data := &struct {
+	data := struct {
 		ScreenName string `json:"screen_name"`
 	}{}
 
 	err = client.GetJson(
-		"https://api.twitter.com/1.1/account/settings.json", nil, data)
+		"https://api.twitter.com/1.1/account/settings.json", nil, &data)
 	if err != nil {
 		return
 	}
