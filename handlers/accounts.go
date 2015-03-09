@@ -5,15 +5,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
-	"labix.org/v2/mgo/bson"
 )
-
-type Account struct {
-	Id bson.ObjectId `json:"id" binding:"required"`
-	UserId bson.ObjectId `json:"user_id" binding:"required"`
-	Type string `json:"type" binding:"required"`
-	Identity string `json:"identity" binding:"required"`
-}
 
 type AccountPostData struct {
 	Redirect string `json:"redirect" binding:"required"`
