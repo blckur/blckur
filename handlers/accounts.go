@@ -4,11 +4,17 @@ import (
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/session"
+	"github.com/dropbox/godropbox/container/set"
 	"github.com/gin-gonic/gin"
+	"labix.org/v2/mgo/bson"
 )
 
 type AccountPostData struct {
 	Redirect string `json:"redirect" binding:"required"`
+}
+
+type AccountData struct {
+	Events []*account.EventType `json:"events"`
 }
 
 func accountsPost(c *gin.Context) {
@@ -51,4 +57,32 @@ func accountsGet(c *gin.Context) {
 	}
 
 	c.JSON(200, accts)
+}
+
+func accountsPut(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	sess := c.MustGet("session").(*session.Session)
+	acctId := bson.ObjectIdHex(c.Params.ByName("id"))
+	data := AccountData{}
+
+	if !c.Bind(&data) {
+		return
+	}
+
+	acct, err := account.GetAccount(db, sess.UserId, acctId)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	acct.EventsParsed = data.Events
+	account.UnmarshalGmail(acct)
+
+	err = acct.CommitFields(set.NewSet("events"))
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	c.JSON(200, acct)
 }
