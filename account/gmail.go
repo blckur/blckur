@@ -30,6 +30,14 @@ func MarshalGmail(acct *Account) {
 	}
 }
 
+func UnmarshalGmail(acct *Account) {
+	acct.Events = map[string]interface{}{}
+
+	for _, evt := range acct.EventsParsed {
+		acct.Events[evt.Type] = evt.State
+	}
+}
+
 func (g *Gmail) Update(db *database.Database) (err error) {
 	client := gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
 		g.Oauth2RefTokn, g.Oauth2Exp)
