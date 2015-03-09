@@ -1,11 +1,27 @@
-<core-item layout horizontal flex>
-  <x-brand-logo icon="{{model.type}}"></x-brand-logo>
-  <div class="content" layout vertical flex>
-    <div class="buttons" layout horizontal>
-      <div flex></div>
-      <core-icon-button icon="settings"></core-icon-button>
-      <core-icon-button icon="delete"></core-icon-button>
+<div class="item" ng-class="settings ? 'active' : ''">
+  <div layout vertical flex>
+    <div class="row" layout horizontal>
+      <x-brand-logo icon="{{model.type}}"></x-brand-logo>
+      <div layout vertical flex>
+        <div class="buttons" layout horizontal>
+          <div flex></div>
+          <core-icon-button icon="settings"
+            ng-click="onSettings()"></core-icon-button>
+          <core-icon-button icon="delete"></core-icon-button>
+        </div>
+        <div class="info" ng-bind="model.identity" flex></div>
+      </div>
     </div>
-    <div class="info" ng-bind="model.identity" flex></div>
+    <form ng-if="settings" class="row" layout vertical>
+      <div ng-repeat="event in model.events">
+        <div ng-switch="event['val_type']">
+          <div ng-switch-when="toggle" layout horizontal flex>
+            <paper-checkbox for role="checkbox"
+              label="{{event['name']}}" no-select
+              py-checked="event['state']"></paper-checkbox>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
-</core-item>
+</div>
