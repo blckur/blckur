@@ -19,6 +19,12 @@ class Account extends mdl.Model {
   @mdl.Attribute('identity')
   String identity;
 
+  @mdl.Attribute('events')
+  List<Map<String, dynamic>> events;
+
+  @mdl.Attribute('resources')
+  List<dynamic> resources;
+
   Account(ng.Http http) : super(http);
 
   String url = '/accounts';
