@@ -30,7 +30,8 @@ type Account struct {
 	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
 	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
-	Events map[string]bool `bson:"events" json:"events"`
+	Events map[string]interface{} `bson:"events" json:"-"`
+	EventsParsed []*EventType `bson:"-" json:"events"`
 	Resources []*Resource `bson:"resources" json:"resources"`
 	coll *database.Collection `bson:"-" json:"-"`
 }
