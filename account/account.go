@@ -56,7 +56,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 		acct.coll = coll
 
 		if acct.Type == "gmail" {
-			ParseGmailAccount(acct)
+			MarshalGmail(acct)
 		}
 
 		accts = append(accts, acct)

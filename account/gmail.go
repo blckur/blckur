@@ -19,7 +19,7 @@ type Gmail struct {
 	Account `bson:",inline"`
 }
 
-func ParseGmailAccount(acct *Account) {
+func MarshalGmail(acct *Account) {
 	acct.EventsParsed = []*EventType{
 		&EventType{
 			Type: "new_email",
