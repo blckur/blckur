@@ -15,6 +15,7 @@ import 'package:angular/angular.dart' show Component, NgOneWay;
 )
 class AccountComp {
   bool settings;
+  bool addingAlert;
   acct.Account settingsModel;
 
   @NgOneWay('model')

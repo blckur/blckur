@@ -1,11 +1,53 @@
 @import 'styles/base.scss';
 
-.item {
-  color: #595959;
-  margin: 4px;
+:host {
+  display: block;
 }
 
-.item.active {
+.item.settings-active .settings-header,
+.item.settings-active .account {
+  color: #fff;
+  background-color: #f44336;
+}
+
+.settings {
+  overflow-y: auto;
+}
+
+.settings-header {
+  font-size: 22px;
+  padding: 10px 10px 0 20px;
+}
+
+.settings-header span {
+  padding-top: 9px;
+}
+
+.item.settings-active .account core-icon-button {
+  display: none;
+}
+
+.item.settings-active .account {
+  height: 50px;
+}
+
+.item.settings-active .account .info {
+  padding: 10px 5px 0 0;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.item.settings-active x-brand-logo {
+  position: relative;
+  top: -5px;
+  z-index: 5;
+}
+
+.item {
+  color: #595959;
+}
+
+.item.settings-active {
   position: absolute;
   top: 0;
   bottom: 0;
