@@ -4,9 +4,7 @@ import (
 	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/utils"
 	"github.com/dropbox/godropbox/container/set"
-	"labix.org/v2/mgo"
 	"time"
 )
 
@@ -28,6 +26,12 @@ type EventType struct {
 	Value interface{} `bson:"-" json:"value"`
 }
 
+type Alert struct {
+	Type string `bson:"type", json:"type"`
+	Value string `bson:"value", json:"value"`
+	Label string `bson:"label", json:"label"`
+}
+
 type Account struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	UserId bson.ObjectId `bson:"user_id,omitempty" json:"user_id"`
@@ -38,8 +42,7 @@ type Account struct {
 	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
 	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
-	Events map[string]interface{} `bson:"events,omitempty" json:"-"`
-	EventsParsed []*EventType `bson:"-" json:"events"`
+	Alerts []*Alert `bson:"alerts,omitempty" json:"alerts"`
 	Resources []*Resource `bson:"resources,omitempty" json:"resources"`
 	coll *database.Collection `bson:"-" json:"-"`
 }
