@@ -56,7 +56,7 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 	}
 
 	data := struct {
-		EmailAddress string `bson:"emailAddress"`
+		EmailAddress string `json:"emailAddress"`
 	}{}
 
 	err = client.GetJson(
