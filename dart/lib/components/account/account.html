@@ -13,7 +13,7 @@
       </div>
     </div>
     <form ng-if="settings" class="row" layout vertical>
-      <div ng-repeat="event in model.events">
+      <div ng-repeat="event in settingsModel.events">
         <div ng-switch="event['val_type']">
           <div ng-switch-when="toggle" layout horizontal flex>
             <paper-checkbox for role="checkbox"
