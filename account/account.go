@@ -113,10 +113,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	acct := &Account{}
 	for iter.Next(acct) {
 		acct.coll = coll
-
-		if acct.Type == "gmail" {
-			MarshalGmail(acct)
-		}
+		acct.Marshal()
 
 		accts = append(accts, acct)
 		acct = &Account{}
