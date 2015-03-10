@@ -4,9 +4,15 @@ import (
 	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/utils"
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo"
 	"time"
+)
+
+var (
+	eventTypes map[string]EventType = map[string]EventType{}
+	acctTypes map[string][]string = map[string][]string{}
 )
 
 type Resource struct {
@@ -46,6 +52,26 @@ func (a *Account) Commit() (err error) {
 func (a *Account) CommitFields(fields set.Set) (err error) {
 	err = a.coll.CommitFields(a.Id, a, fields)
 	return
+}
+
+func (a *Account) Marshal() {
+	a.EventsParsed = []*EventType{}
+
+	for _, evt := range acctTypes[a.Type] {
+		typ, ok := eventTypes[evt]
+		if !ok {
+			continue
+		}
+
+		val := a.Events[evt]
+
+		switch typ.ValueType{
+		case "toggle":
+			typ.Value = utils.InfToBool(val)
+		}
+
+		a.EventsParsed = append(a.EventsParsed, &typ)
+	}
 }
 
 func GetAccount(db *database.Database, userId bson.ObjectId,
