@@ -5,28 +5,28 @@ import (
 )
 
 var (
-	types = []*AccountType{
-		&AccountType{
+	types = []AccountType{
+		AccountType{
 			Label: "Twitter",
 			Type: "twitter",
 		},
-		&AccountType{
+		AccountType{
 			Label: "GitHub",
 			Type: "github",
 		},
-		&AccountType{
+		AccountType{
 			Label: "Gmail",
 			Type: "gmail",
 		},
-		&AccountType{
+		AccountType{
 			Label: "HipChat",
 			Type: "hipchat",
 		},
-		&AccountType{
+		AccountType{
 			Label: "Bitly",
 			Type: "bitly",
 		},
-		&AccountType{
+		AccountType{
 			Label: "DigitalOcean",
 			Type: "digitalocean",
 		},
