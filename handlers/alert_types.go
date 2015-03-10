@@ -24,7 +24,7 @@ var (
 type AlertType struct {
 	Label string `json:"label"`
 	Type string `json:"type"`
-	Value string `json:"value_type"`
+	ValueType string `json:"value_type"`
 }
 
 func alertTypesGet(c *gin.Context) {
