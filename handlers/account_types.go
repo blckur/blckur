@@ -4,13 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AccountType struct {
-	Label string `json:"label" binding:"required"`
-	Type string `json:"type" binding:"required"`
-}
-
-func accountsTypesGet(c *gin.Context) {
-	types := []*AccountType{
+var (
+	types = []*AccountType{
 		&AccountType{
 			Label: "Twitter",
 			Type: "twitter",
@@ -27,7 +22,22 @@ func accountsTypesGet(c *gin.Context) {
 			Label: "HipChat",
 			Type: "hipchat",
 		},
+		&AccountType{
+			Label: "Bitly",
+			Type: "bitly",
+		},
+		&AccountType{
+			Label: "DigitalOcean",
+			Type: "digitalocean",
+		},
 	}
+)
 
+type AccountType struct {
+	Label string `json:"label" binding:"required"`
+	Type string `json:"type" binding:"required"`
+}
+
+func accountsTypesGet(c *gin.Context) {
 	c.JSON(200, types)
 }
