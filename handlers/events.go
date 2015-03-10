@@ -26,7 +26,8 @@ type Event struct {
 func eventGet(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	go func() {
@@ -46,7 +47,8 @@ func eventGet(c *gin.Context) {
 
 		err = conn.WriteJSON(evt)
 		if err != nil {
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 
 		time.Sleep(time.Second)

@@ -27,13 +27,15 @@ func accountsPost(c *gin.Context) {
 	case "gmail":
 		url, err := account.ReqGmail(db, sess.UserId)
 		if err != nil {
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 		acct.Redirect = url
 	case "twitter":
 		url, err := account.ReqTwitter(db, sess.UserId)
 		if err != nil {
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 		acct.Redirect = url
 	default:
@@ -53,7 +55,8 @@ func accountsGet(c *gin.Context) {
 
 	accts, err := account.GetAccounts(db, sess.UserId)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.JSON(200, accts)

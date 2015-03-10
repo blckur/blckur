@@ -49,12 +49,14 @@ func loginPost(c *gin.Context) {
 
 	cook, err := session.GetCookie(c)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	sess, err = cook.NewSession(db, usr.Id, data.Remember)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.JSON(200, sess)
@@ -65,7 +67,8 @@ func sessionDelete(c *gin.Context) {
 
 	err := sess.Remove()
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.String(200, "")
@@ -95,17 +98,20 @@ func signupPost(c *gin.Context) {
 		})
 		return
 	default:
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	cook, err := session.GetCookie(c)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	_, err = cook.NewSession(db, usr.Id, true)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.JSON(200, usr)
