@@ -80,6 +80,7 @@ func Register(engine *gin.Engine) {
 	authGroup.DELETE("/session", sessionDelete)
 
 	authGroup.GET("/account_types", accountsTypesGet)
+	authGroup.GET("/alert_types", alertTypesGet)
 
 	authGroup.GET("/accounts", accountsGet)
 	authGroup.PUT("/accounts/:id", accountsPut)
