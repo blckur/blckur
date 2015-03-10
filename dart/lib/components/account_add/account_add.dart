@@ -19,41 +19,47 @@ class AccountAddComp extends lodin.Loading {
   acct_typs.AccountTypes accountTypes;
 
   @NgTwoWay('add-account')
-  bool addAccount;
+  bool active;
 
-  AccountAddComp(this.model, this.accountTypes) {
+  AccountAddComp(this.model, this.accountTypes);
+
+  void onAdd() {
+    if (!this.setLoading()) {
+      return;
+    }
+
+    this.active = true;
     this.accountTypes.fetch().catchError((err) {
       logger.severe('Failed to load account types', err);
+      new alrt.Alert('Failed to load account types');
+    }).whenComplete(() {
+      this.clearLoading();
     });
   }
 
-  void onAccountAdd() {
-    this.addAccount = true;
-  }
-
-  void onAccountCancel() {
-    this.addAccount = false;
+  void onCancel() {
+    this.active = false;
     this.clearLoading();
   }
 
-  void onAccountClick(String type) {
+  void onClick(String type) {
     if (!this.setLoading()) {
       return;
     }
 
     this.model.type = type;
     this.model.create().then((_) {
-      if (this.addAccount != true) {
+      if (this.active != true) {
         return;
       }
       dom.window.location.replace(this.model.redirect);
     }).catchError((err) {
-      if (this.addAccount != true) {
+      if (this.active != true) {
         return;
       }
       logger.severe('Failed to add account', err);
       new alrt.Alert('Unable to add account, try again later.', () {
-        this.onAccountClick(type);
+        this.onClick(type);
       });
     }).whenComplete(() {
       this.clearLoading();
