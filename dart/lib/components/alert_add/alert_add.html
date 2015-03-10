@@ -1,0 +1,26 @@
+<div ng-switch="active">
+  <div ng-switch-when="true" flex>
+    <paper-progress ng-if="loading" indeterminate></paper-progress>
+    <div class="menu scrollable ng-binding">
+      <core-item ng-repeat="alertType in alertTypes"
+          class="alert-type" layout horizontal>
+        <paper-button flex ng-click="onClick(alertType.type)">
+          <div class="content" ng-bind="alertType.label" flex></div>
+          <core-icon icon="chevron-right"></core-icon>
+        </paper-button>
+      </core-item>
+    </div>
+    <paper-button class="footer-btn" flex ng-click="onCancel()">
+      <paper-fab icon="clear" title="Cancel" role="button"
+        aria-label="Cancel"></paper-fab>
+      <div class="info" flex>Cancel</div>
+    </paper-button>
+  </div>
+  <div ng-switch-default>
+    <paper-button class="footer-btn" flex ng-click="onAdd()">
+      <paper-fab icon="add" title="Add alert" role="button"
+        aria-label="Add alert"></paper-fab>
+      <div class="info" flex>Add new alert</div>
+    </paper-button>
+  </div>
+</div>

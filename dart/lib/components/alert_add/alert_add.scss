@@ -1,0 +1,70 @@
+@import 'styles/base.scss';
+
+:host {
+  cursor: pointer;
+}
+
+core-item {
+  color: #595959;
+}
+
+.content {
+  text-align: left;
+  font-size: 13px;
+  text-transform: none !important;
+}
+
+paper-fab {
+  margin: 0 22px;
+  pointer-events: none;
+}
+
+.info {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 300;
+}
+
+x-brand-logo {
+  margin: 10px;
+}
+
+.account-type .content {
+  padding-left: 10px;
+  text-align: left;
+  font-weight: 300;
+  font-size: 20px;
+  text-transform: none;
+}
+
+.account-type core-icon {
+  width: 30px;
+  height: 30px;
+}
+
+paper-progress {
+  height: 5px;
+  position: absolute;
+  width: 100%;
+}
+
+.footer-btn {
+  position: fixed;
+  bottom: 6px;
+}
+
+.footer-btn .info {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 300;
+  opacity: 0;
+  @include transition(opacity 0.2s);
+}
+
+.footer-btn:hover .info {
+  opacity: 1;
+}
+
+.footer-btn paper-fab {
+  margin: 0 15px 0 4px;
+}
