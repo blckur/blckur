@@ -26,7 +26,6 @@ class AccountComp {
   }
 
   void onSave() {
-    print(this.settingsModel.events);
     this.settingsModel.save(['events']).then((_) {
       this.settings = false;
       this.model = this.settingsModel;
