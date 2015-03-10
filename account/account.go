@@ -74,6 +74,14 @@ func (a *Account) Marshal() {
 	}
 }
 
+func (a *Account) Unmarshal() {
+	a.Events = map[string]interface{}{}
+
+	for _, evt := range a.EventsParsed {
+		a.Events[evt.Type] = evt.Value
+	}
+}
+
 func GetAccount(db *database.Database, userId bson.ObjectId,
 		acctId bson.ObjectId) (acct *Account, err error) {
 	coll := db.Accounts()
