@@ -5,7 +5,6 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/oauth"
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
@@ -15,27 +14,19 @@ var (
 	gmailConf *oauth.Oauth2
 )
 
+func init() {
+	acctTypes["gmail"] = []string{
+		"new_email",
+	}
+	eventTypes["new_email"] = EventType{
+		Type: "new_email",
+		ValueType: "toggle",
+		Name: "New email messages",
+	}
+}
+
 type Gmail struct {
 	Account `bson:",inline"`
-}
-
-func MarshalGmail(acct *Account) {
-	acct.EventsParsed = []*EventType{
-		&EventType{
-			Type: "new_email",
-			ValueType: "toggle",
-			Name: "New email messages",
-			State: utils.InfToBool(acct.Events["new_email"]),
-		},
-	}
-}
-
-func UnmarshalGmail(acct *Account) {
-	acct.Events = map[string]interface{}{}
-
-	for _, evt := range acct.EventsParsed {
-		acct.Events[evt.Type] = evt.State
-	}
 }
 
 func (g *Gmail) Update(db *database.Database) (err error) {
