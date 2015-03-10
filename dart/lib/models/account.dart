@@ -19,8 +19,8 @@ class Account extends mdl.Model {
   @mdl.Attribute('identity')
   String identity;
 
-  @mdl.Attribute('events')
-  List<Map<String, dynamic>> events;
+  @mdl.Attribute('alerts')
+  List<Map<String, String>> alerts;
 
   @mdl.Attribute('resources')
   List<dynamic> resources;
