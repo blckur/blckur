@@ -76,7 +76,7 @@ func accountsPut(c *gin.Context) {
 	}
 
 	acct.EventsParsed = data.Events
-	account.UnmarshalGmail(acct)
+	acct.Unmarshal()
 
 	err = acct.CommitFields(set.NewSet("events"))
 	if err != nil {
