@@ -13,14 +13,12 @@
       <div class="info" ng-bind="model.email"></div>
     </div>
   </div>
-  <div ng-if="settings" class="row settings" layout vertical ng-animate>
-    <paper-input-decorator label="Email address">
-      <input is="core-input" type="email" ng-model="settingsModel.email">
-    </paper-input-decorator>
-    <paper-input-decorator label="New password">
-      <input is="core-input" type="password" ng-model="settingsModel.password">
-    </paper-input-decorator>
+  <form ng-if="settings" class="row settings" layout vertical ng-animate>
+    <x-input type="text" placeholder="Email address"
+      model="settingsModel.email"></x-input>
+    <x-input type="password" placeholder="Password"
+      model="settingsModel.password"></x-input>
     <paper-button role="button" tabindex="0"
       ng-click="onSave()">Save</paper-button>
-  </div>
+  </form>
 </div>
