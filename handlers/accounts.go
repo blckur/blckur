@@ -14,7 +14,7 @@ type AccountPostData struct {
 }
 
 type AccountData struct {
-	Events []*account.EventType `json:"events"`
+	Alerts []*account.Alert `json:"alerts"`
 }
 
 func accountsPost(c *gin.Context) {
@@ -78,7 +78,7 @@ func accountsPut(c *gin.Context) {
 		return
 	}
 
-	acct.EventsParsed = data.Events
+	acct.Alerts = data.Alerts
 	acct.Unmarshal()
 
 	err = acct.CommitFields(set.NewSet("events"))
