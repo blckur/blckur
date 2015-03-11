@@ -64,9 +64,9 @@ type AlertType struct {
 }
 
 type Alert struct {
-	Type string `bson:"type", json:"type"`
-	Value string `bson:"value", json:"value"`
-	Label string `bson:"label", json:"label"`
+	Type string `bson:"type" json:"type"`
+	Value string `bson:"value" json:"value"`
+	Label string `bson:"-" json:"label"`
 }
 
 type Account struct {
