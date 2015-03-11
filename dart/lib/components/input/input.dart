@@ -18,6 +18,9 @@ class InputComp extends all_aware.AllAware {
   @NgAttr('type')
   String type;
 
+  @NgAttr('theme')
+  String theme;
+
   var _placeholder;
   @NgAttr('placeholder')
   void set placeholder(String val) {
