@@ -1,6 +1,7 @@
 library alert_add_comp;
 
 import 'package:blckur/models/alert_type.dart' as alrt_typ;
+import 'package:blckur/models/account.dart' as acct;
 import 'package:blckur/collections/alert_types.dart' as alrt_typs;
 import 'package:blckur/loading.dart' as lodin;
 import 'package:blckur/logger.dart' as logger;
@@ -15,14 +16,15 @@ import 'package:angular/angular.dart' show Component, NgTwoWay;
 )
 class AlertAddComp extends lodin.Loading {
   bool selected;
+  dynamic typeValue;
   alrt_typ.AlertType typeModel;
   alrt_typs.AlertTypes alertTypes;
 
   @NgTwoWay('active')
   bool active;
 
-  @NgTwoWay('alerts')
-  List<Map<String, String>> alerts;
+  @NgTwoWay('model')
+  acct.Account model;
 
   AlertAddComp(this.alertTypes);
 
