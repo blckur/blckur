@@ -14,21 +14,24 @@ var (
 			AlertType{
 				Label: "New messages matching sender",
 				Type: "from",
-				ValueType: "string",
+				ValueType: "input",
 				ValueLabel: "Enter complete or partial email address " +
 					"of sender to match",
+				ValueHolder: "Email address",
 			},
 			AlertType{
 				Label: "New messages matching subject",
 				Type: "subject",
-				ValueType: "string",
+				ValueType: "input",
 				ValueLabel: "Enter search term to match in email subject",
+				ValueHolder: "Search term",
 			},
 			AlertType{
 				Label: "New messages matching message body",
 				Type: "body",
-				ValueType: "string",
+				ValueType: "input",
 				ValueLabel: "Enter search term to match in email body",
+				ValueHolder: "Search term",
 			},
 		},
 	}
@@ -39,6 +42,7 @@ type AlertType struct {
 	Type string `json:"type"`
 	ValueType string `json:"value_type"`
 	ValueLabel string `json:"value_label"`
+	ValueHolder string `json:"value_holder"`
 }
 
 func alertTypesGet(c *gin.Context) {
