@@ -76,3 +76,18 @@ x-brand-logo {
   text-align: right;
   margin-right: 12px;
 }
+
+.alert-type + .alert-type {
+  border-top: 1px solid #dbe1ef;
+}
+
+.alert-type .label {
+  font-size: 18px;
+  padding: 20px 20px 0 20px;
+}
+
+.alert-type .value {
+  font-size: 14px;
+  padding: 0 20px 20px 20px;
+  font-weight: 300;
+}

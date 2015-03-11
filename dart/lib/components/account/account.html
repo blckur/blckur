@@ -18,11 +18,11 @@
   </div>
   <div ng-if="settings" class="row settings" layout vertical flex>
     <div ng-if="!addingAlert">
-      <div ng-repeat="alert in settingsModel.alerts">
-        <span ng-bind="alert['label']"></span>
-        <span ng-bind="alert['value']"></span>
+      <div class="alert-type" ng-repeat="alert in model.alerts">
+        <div class="label" ng-bind="alert['label']"></div>
+        <div class="value" ng-bind="alert['value']"></div>
       </div>
     </div>
-    <x-alert-add active="addingAlert"></x-alert-add>
+    <x-alert-add active="addingAlert" model="model"></x-alert-add>
   </div>
 </div>
