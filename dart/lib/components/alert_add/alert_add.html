@@ -1,14 +1,19 @@
 <div ng-switch="active">
   <div ng-switch-when="true" flex>
     <paper-progress ng-if="loading" indeterminate></paper-progress>
-    <div class="menu scrollable ng-binding">
-      <core-item ng-repeat="alertType in alertTypes"
+    <div ng-switch="selected">
+      <div ng-switch-when="true">
+
+      </div>
+      <div ng-switch-default class="menu scrollable ng-binding">
+        <core-item ng-repeat="alertType in alertTypes"
           class="alert-type" layout horizontal>
-        <paper-button flex ng-click="onClick(alertType.type)">
-          <div class="content" ng-bind="alertType.label" flex></div>
-          <core-icon icon="chevron-right"></core-icon>
-        </paper-button>
-      </core-item>
+          <paper-button class="type" flex ng-click="onClick(alertType)">
+            <div class="content" ng-bind="alertType.label" flex></div>
+            <core-icon icon="chevron-right"></core-icon>
+          </paper-button>
+        </core-item>
+      </div>
     </div>
     <paper-button class="footer-btn" flex ng-click="onCancel()">
       <paper-fab icon="clear" title="Cancel" role="button"
