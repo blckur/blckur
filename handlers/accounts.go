@@ -10,7 +10,7 @@ import (
 )
 
 type AccountPostData struct {
-	Redirect string `json:"redirect" binding:"required"`
+	Redirect string `json:"redirect"`
 }
 
 type AccountData struct {

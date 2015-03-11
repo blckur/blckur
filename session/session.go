@@ -8,8 +8,8 @@ import (
 )
 
 type Session struct {
-	Id bson.ObjectId `bson:"_id,omitempty" json:"id" binding:"required"`
-	UserId bson.ObjectId `bson:"user_id" json:"user_id" binding:"required"`
+	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
 	Timestamp time.Time `bson:"timestamp" json:"-"`
 	coll *database.Collection
 }

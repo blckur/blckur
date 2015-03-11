@@ -18,8 +18,8 @@ var upgrader = websocket.Upgrader{
 }
 
 type Event struct {
-	Id bson.ObjectId `json:"id" binding:"required"`
-	Type string `json:"type" binding:"required"`
+	Id bson.ObjectId `json:"id"`
+	Type string `json:"type"`
 	Resource string `json:"resource_id"`
 }
 
