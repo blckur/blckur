@@ -1,5 +1,6 @@
 library alert_add_comp;
 
+import 'package:blckur/models/alert_type.dart' as alrt_typ;
 import 'package:blckur/collections/alert_types.dart' as alrt_typs;
 import 'package:blckur/loading.dart' as lodin;
 import 'package:blckur/logger.dart' as logger;
@@ -13,6 +14,8 @@ import 'package:angular/angular.dart' show Component, NgTwoWay;
   cssUrl: 'packages/blckur/components/alert_add/alert_add.css'
 )
 class AlertAddComp extends lodin.Loading {
+  bool selected;
+  alrt_typ.AlertType selectedModel;
   alrt_typs.AlertTypes alertTypes;
 
   @NgTwoWay('active')
@@ -40,5 +43,10 @@ class AlertAddComp extends lodin.Loading {
   void onCancel() {
     this.active = false;
     this.clearLoading();
+  }
+
+  void onClick(alrt_typ.AlertType model) {
+    this.selectedModel = model;
+    this.selected = true;
   }
 }
