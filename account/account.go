@@ -95,22 +95,8 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 }
 
 func (a *Account) Marshal() {
-	a.EventsParsed = []*EventType{}
-
-	for _, evt := range acctTypes[a.Type] {
-		typ, ok := eventTypes[evt]
-		if !ok {
-			continue
-		}
-
-		val := a.Events[evt]
-
-		switch typ.ValueType{
-		case "toggle":
-			typ.Value = utils.InfToBool(val)
-		}
-
-		a.EventsParsed = append(a.EventsParsed, &typ)
+	for _, alrt := range a.Alerts {
+		alrt.Label = AlertLabels[a.Type][alrt.Type]
 	}
 }
 
