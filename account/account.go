@@ -148,7 +148,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 
 	iter := coll.Find(bson.M{
 		"user_id": userId,
-	}).Iter()
+	}).Sort("type", "identity").Iter()
 
 	acct := &Account{}
 	for iter.Next(acct) {
