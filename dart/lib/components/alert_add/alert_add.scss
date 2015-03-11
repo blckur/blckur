@@ -20,6 +20,14 @@ paper-fab {
   pointer-events: none;
 }
 
+paper-button.type {
+  padding: 5px 2px;
+}
+
+core-item + core-item > paper-button.type {
+  border-top: 1px solid #dbe1ef;
+}
+
 .info {
   text-align: left;
   font-size: 18px;
