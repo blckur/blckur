@@ -16,5 +16,11 @@ class AlertType extends mdl.Model {
   @mdl.Attribute('value_type')
   String valueType;
 
+  @mdl.Attribute('value_label')
+  String valueLabel;
+
+  @mdl.Attribute('value_holder')
+  String valueHolder;
+
   AlertType(ng.Http http) : super(http);
 }
