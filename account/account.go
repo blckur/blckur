@@ -12,10 +12,12 @@ var (
 	AlertTypes = map[string][]AlertType{
 		"gmail": []AlertType{
 			AlertType{
+				Id: 1,
 				Label: "All new messages",
 				Type: "all",
 			},
 			AlertType{
+				Id: 2,
 				Label: "New messages matching sender",
 				Type: "from",
 				ValueType: "input",
@@ -24,6 +26,7 @@ var (
 				ValueHolder: "Email address",
 			},
 			AlertType{
+				Id: 3,
 				Label: "New messages matching subject",
 				Type: "subject",
 				ValueType: "input",
@@ -31,6 +34,7 @@ var (
 				ValueHolder: "Search term",
 			},
 			AlertType{
+				Id: 4,
 				Label: "New messages matching message body",
 				Type: "body",
 				ValueType: "input",
@@ -56,6 +60,7 @@ type Resource struct {
 }
 
 type AlertType struct {
+	Id int `json:"id"`
 	Label string `json:"label"`
 	Type string `json:"type"`
 	ValueType string `json:"value_type"`

@@ -7,26 +7,32 @@ import (
 var (
 	types = []AccountType{
 		AccountType{
+			Id: 1,
 			Label: "Twitter",
 			Type: "twitter",
 		},
 		AccountType{
+			Id: 2,
 			Label: "GitHub",
 			Type: "github",
 		},
 		AccountType{
+			Id: 3,
 			Label: "Gmail",
 			Type: "gmail",
 		},
 		AccountType{
+			Id: 4,
 			Label: "HipChat",
 			Type: "hipchat",
 		},
 		AccountType{
+			Id: 5,
 			Label: "Bitly",
 			Type: "bitly",
 		},
 		AccountType{
+			Id: 6,
 			Label: "DigitalOcean",
 			Type: "digitalocean",
 		},
@@ -34,8 +40,9 @@ var (
 )
 
 type AccountType struct {
-	Label string `json:"label" binding:"required"`
-	Type string `json:"type" binding:"required"`
+	Id int `json:"id"`
+	Label string `json:"label"`
+	Type string `json:"type"`
 }
 
 func accountsTypesGet(c *gin.Context) {
