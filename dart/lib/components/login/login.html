@@ -4,9 +4,9 @@
     <div ng-switch="mode">
       <form ng-switch-when="login">
         <x-input type="text" placeholder="Email address" error="emailError"
-          model="model.email"></x-input>
+          model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
-          model="model.password"></x-input>
+          model="model.password" theme="dark"></x-input>
         <div layout horizontal>
           <paper-checkbox for role="checkbox"
             label="Remember me" no-select
@@ -21,9 +21,9 @@
       </form>
       <form ng-switch-when="signup">
         <x-input type="text" placeholder="Email address" error="emailError"
-          model="model.email"></x-input>
+          model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
-          model="model.password"></x-input>
+          model="model.password" theme="dark"></x-input>
         <x-recaptcha></x-recaptcha>
         <paper-button role="button" tabindex="0" raised
           ng-click="onSignup()">Sign Up</paper-button>
