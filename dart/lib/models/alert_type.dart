@@ -7,6 +7,9 @@ import 'package:angular/angular.dart' as ng;
 
 @Injectable()
 class AlertType extends mdl.Model {
+  @mdl.Attribute('id')
+  int id;
+
   @mdl.Attribute('label')
   String label;
 
