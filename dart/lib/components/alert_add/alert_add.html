@@ -3,7 +3,15 @@
     <paper-progress ng-if="loading" indeterminate></paper-progress>
     <div ng-switch="selected">
       <div ng-switch-when="true">
-
+        <div class="label" ng-bind="typeModel.valueLabel"></div>
+        <div ng-switch="typeModel.valueType">
+          <div ng-switch-when="input">
+            <x-input type="text" placeholder="{{typeModel.valueHolder}}"
+              model=""></x-input>
+          </div>
+        </div>
+        <paper-button role="button" tabindex="0"
+          ng-click="onSave()">Save</paper-button>
       </div>
       <div ng-switch-default class="menu scrollable ng-binding">
         <core-item ng-repeat="alertType in alertTypes"

@@ -15,7 +15,7 @@ import 'package:angular/angular.dart' show Component, NgTwoWay;
 )
 class AlertAddComp extends lodin.Loading {
   bool selected;
-  alrt_typ.AlertType selectedModel;
+  alrt_typ.AlertType typeModel;
   alrt_typs.AlertTypes alertTypes;
 
   @NgTwoWay('active')
@@ -46,7 +46,11 @@ class AlertAddComp extends lodin.Loading {
   }
 
   void onClick(alrt_typ.AlertType model) {
-    this.selectedModel = model;
+    this.typeModel = model;
     this.selected = true;
+  }
+
+  void onSave() {
+
   }
 }
