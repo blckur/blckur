@@ -69,6 +69,7 @@ type AlertType struct {
 }
 
 type Alert struct {
+	Id string `bson:"_id" json:"id"`
 	Type string `bson:"type" json:"type"`
 	Value string `bson:"value" json:"value"`
 	Label string `bson:"-" json:"label"`
@@ -101,6 +102,9 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 
 func (a *Account) Marshal() {
 	for _, alrt := range a.Alerts {
+		if alrt.Id == nil {
+			alrt.Id = bson.NewObjectId()
+		}
 		alrt.Label = AlertLabels[a.Type][alrt.Type]
 	}
 }
