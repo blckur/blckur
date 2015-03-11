@@ -57,6 +57,10 @@
   background-color: #edf3fc;
 }
 
+paper-progress {
+  width: 100%;
+}
+
 paper-button,
 paper-checkbox {
   margin: 10px 0;
@@ -82,12 +86,16 @@ x-brand-logo {
 }
 
 .alert-type .label {
-  font-size: 18px;
-  padding: 20px 20px 0 20px;
+  font-size: 16px;
+  padding: 20px 0 0 15px;
 }
 
 .alert-type .value {
   font-size: 14px;
   padding: 0 20px 20px 20px;
   font-weight: 300;
+}
+
+.alert-del {
+  margin-right: 5px;
 }
