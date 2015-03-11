@@ -14,17 +14,6 @@ var (
 	gmailConf *oauth.Oauth2
 )
 
-func init() {
-	acctTypes["gmail"] = []string{
-		"new_email",
-	}
-	eventTypes["new_email"] = EventType{
-		Type: "new_email",
-		ValueType: "toggle",
-		Name: "New email messages",
-	}
-}
-
 type Gmail struct {
 	Account `bson:",inline"`
 }
