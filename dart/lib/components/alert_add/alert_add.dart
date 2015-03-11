@@ -53,6 +53,27 @@ class AlertAddComp extends lodin.Loading {
   }
 
   void onSave() {
+    if (!this.setLoading()) {
+      return;
+    }
 
+    if (this.model.alerts == null) {
+      this.model.alerts = [];
+    }
+
+    this.model.alerts.add({
+      'type': typeModel.type,
+      'value': this.typeValue,
+    });
+
+    this.model.save(['alerts']).catchError((err) {
+      logger.severe('Failed to add alert', err);
+      new alrt.Alert('Failed to add alert');
+    }).whenComplete(() {
+      this.active = false;
+      this.selected = false;
+      this.typeValue = null;
+      this.clearLoading();
+    });
   }
 }
