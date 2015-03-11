@@ -51,7 +51,7 @@ _buildAttrs(model) {
 }
 
 abstract class Model extends remote.Remote {
-  String id;
+  dynamic id;
   Function onLinkClear;
 
   Model(ng.Http http) : super(http) {
