@@ -79,9 +79,9 @@ func accountsPut(c *gin.Context) {
 	}
 
 	acct.Alerts = data.Alerts
-	acct.Unmarshal()
+	acct.Marshal()
 
-	err = acct.CommitFields(set.NewSet("events"))
+	err = acct.CommitFields(set.NewSet("alerts"))
 	if err != nil {
 		c.Fail(500, err)
 		return
