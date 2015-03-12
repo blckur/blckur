@@ -55,8 +55,9 @@ paper-progress {
 .footer-btn {
   width: 100%;
   margin: 0;
-  position: fixed;
+  position: absolute;
   bottom: 0;
+  padding: 2px 0;
 }
 
 .footer-btn .info {
@@ -100,7 +101,7 @@ paper-button {
 }
 
 .get-started {
-  position: fixed;
+  position: absolute;
   bottom: -20px;
   width: 320px;
 }
