@@ -1,5 +1,10 @@
 @import 'styles/base.scss';
 
+:host {
+  display: block;
+  color: #595959;
+}
+
 .main-panel,
 .side-panel {
   position: relative;

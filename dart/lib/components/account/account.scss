@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  color: #595959;
 }
 
 .item.settings-active .settings-header,
@@ -41,10 +42,6 @@
   position: relative;
   top: -5px;
   z-index: 5;
-}
-
-.item {
-  color: #595959;
 }
 
 .item.settings-active {
