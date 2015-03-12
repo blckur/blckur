@@ -96,3 +96,41 @@ x-brand-logo {
 .alert-del {
   margin-right: 5px;
 }
+
+.confirm {
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  width: 114px;
+  height: 81px;
+  display: none;
+  color: #fff;
+  background-color: #f44336;
+}
+
+.confirm .label {
+  padding-top: 14px;
+  text-align: center;
+}
+
+.confirm .buttons {
+  padding: 0 0 5px 24px;
+}
+
+.confirm.ng-enter {
+  width: 0;
+  @include transition(width .2s);
+}
+
+.confirm.ng-enter.ng-enter-active {
+  width: 114px;
+}
+
+.confirm.ng-leave {
+  width: 114px;
+  @include transition(width .2s);
+}
+
+.confirm.ng-leave.ng-leave-active {
+  width: 0;
+}
