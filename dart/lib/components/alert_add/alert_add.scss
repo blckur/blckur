@@ -94,3 +94,23 @@ paper-button {
   font-size: 18px;
   margin-top: 5px;
 }
+
+.get-started {
+  position: fixed;
+  bottom: -20px;
+  width: 320px;
+}
+
+.get-started core-icon {
+  width: 310px;
+  height: 310px;
+  color: #cfdae8;
+}
+
+.get-started div {
+  position: relative;
+  top: 96px;
+  font-size: 36px;
+  font-weight: 200;
+  color: #354861;
+}
