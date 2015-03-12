@@ -1,5 +1,9 @@
 @import 'styles/base.scss';
 
+:host {
+  pointer-events: none;
+}
+
 .content {
   position: fixed;
   bottom: -20px;
