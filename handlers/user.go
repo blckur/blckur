@@ -52,13 +52,15 @@ func userPut(c *gin.Context) {
 	if data.Password != "" {
 		err = usr.SetPassword(data.Password)
 		if err != nil {
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 	}
 
 	err = usr.Commit()
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.JSON(200, usr)
