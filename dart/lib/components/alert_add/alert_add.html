@@ -22,7 +22,7 @@
         </core-item>
       </div>
     </div>
-    <paper-button class="footer-btn" flex ng-click="onCancel()">
+    <paper-button class="footer-btn cancel" flex ng-click="onCancel()">
       <paper-fab icon="clear" title="Cancel" role="button"
         aria-label="Cancel"></paper-fab>
       <div class="info" flex>Cancel</div>
@@ -31,7 +31,7 @@
   <div ng-switch-default layout horizontal flex>
     <x-get-started
       ng-if="model.alerts == null || model.alerts.length == 0"></x-get-started>
-    <paper-button class="footer-btn" flex ng-click="onAdd()">
+    <paper-button class="footer-btn add" flex ng-click="onAdd()">
       <paper-fab icon="add" title="Add alert" role="button"
         aria-label="Add alert"></paper-fab>
       <div class="info" flex>Add new alert</div>
