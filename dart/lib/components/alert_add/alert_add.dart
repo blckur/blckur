@@ -29,6 +29,12 @@ class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
 
   AlertAddComp(this.alertTypes);
 
+  void clear() {
+    this.active = false;
+    this.selected = false;
+    this.typeValue = null;
+  }
+
   void onAdd() {
     if (!this.setLoading()) {
       return;
@@ -44,7 +50,7 @@ class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
   }
 
   void onCancel() {
-    this.active = false;
+    this.clear();
     this.clearLoading();
   }
 
@@ -82,9 +88,7 @@ class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
       logger.severe('Failed to add alert', err);
       new alrt.Alert('Failed to add alert');
     }).whenComplete(() {
-      this.active = false;
-      this.selected = false;
-      this.typeValue = null;
+      this.clear();
       this.clearLoading();
     });
   }
