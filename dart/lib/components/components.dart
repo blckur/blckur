@@ -12,6 +12,8 @@ import 'package:blckur/components/brand_logo/brand_logo.dart'
   as brand_logo;
 import 'package:blckur/components/feed/feed.dart'
   as feed;
+import 'package:blckur/components/get_started/get_started.dart'
+  as get_started;
 import 'package:blckur/components/input/input.dart'
   as input;
 import 'package:blckur/components/user/user.dart'
@@ -31,6 +33,7 @@ class ComponentsMod extends ng.Module {
     this.bind(alerts.AlertsComp);
     this.bind(brand_logo.BrandLogoComp);
     this.bind(feed.FeedComp);
+    this.bind(get_started.GetStartedComp);
     this.bind(input.InputComp);
     this.bind(user.UserComp);
     this.bind(login.LoginComp);
