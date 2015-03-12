@@ -84,6 +84,7 @@ func Register(engine *gin.Engine) {
 
 	authGroup.GET("/accounts", accountsGet)
 	authGroup.PUT("/accounts/:id", accountsPut)
+	authGroup.DELETE("/accounts/:id", accountsDel)
 	authGroup.POST("/accounts/:type", accountsPost)
 
 	dbGroup.GET("/callback/gmail", callbackGmailGet)

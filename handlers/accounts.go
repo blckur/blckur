@@ -89,3 +89,17 @@ func accountsPut(c *gin.Context) {
 
 	c.JSON(200, acct)
 }
+
+func accountsDel(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	sess := c.MustGet("session").(*session.Session)
+	acctId := bson.ObjectIdHex(c.Params.ByName("id"))
+
+	err := account.RemAccount(db, sess.UserId, acctId)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	c.JSON(200, map[string]string{})
+}
