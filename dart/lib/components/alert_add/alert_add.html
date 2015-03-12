@@ -28,12 +28,12 @@
       <div class="info" flex>Cancel</div>
     </paper-button>
   </div>
-  <div ng-if="model.alerts == null || model.alerts.length == 0"
-      class="get-started" layout vertical center>
-    <div>Click to get started</div>
-    <core-icon icon="expand-more"></core-icon>
-  </div>
   <div ng-switch-default layout horizontal flex>
+    <div ng-if="model.alerts == null || model.alerts.length == 0"
+      class="get-started" layout vertical center>
+      <div>Click to get started</div>
+      <core-icon icon="expand-more"></core-icon>
+    </div>
     <paper-button class="footer-btn" flex ng-click="onAdd()">
       <paper-fab icon="add" title="Add alert" role="button"
         aria-label="Add alert"></paper-fab>
