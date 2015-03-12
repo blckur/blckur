@@ -11,9 +11,19 @@
         <div flex></div>
         <core-icon-button icon="settings"
           ng-click="onSettings()"></core-icon-button>
-        <core-icon-button icon="delete"></core-icon-button>
+        <core-icon-button icon="delete"
+          ng-click="confirm = true"></core-icon-button>
       </div>
       <div class="info" ng-bind="model.identity" flex></div>
+    </div>
+    <div ng-if="confirm" class="confirm" layout vertical>
+      <div class="label" flex>Are you sure?</div>
+      <div class="buttons" layout horizontal center>
+        <core-icon-button icon="clear"
+          ng-click="confirm = false"></core-icon-button>
+        <core-icon-button icon="check"
+          ng-click="onDelete()"></core-icon-button>
+      </div>
     </div>
   </div>
   <paper-progress ng-if="loading" indeterminate></paper-progress>

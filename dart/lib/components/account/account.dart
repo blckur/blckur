@@ -6,6 +6,7 @@ import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alrt;
 
 import 'package:angular/angular.dart' show Component, NgOneWay;
+import 'dart:html' as dom;
 
 // Add attr new if new highlight account for init setup
 
@@ -17,12 +18,29 @@ import 'package:angular/angular.dart' show Component, NgOneWay;
 class AccountComp extends lodin.Loading {
   bool settings;
   bool addingAlert;
+  bool confirm;
+  dom.ShadowRoot root;
+
+  AccountComp(this.root);
 
   @NgOneWay('model')
   acct.Account model;
 
   void onSettings() {
     this.settings = this.settings != true;
+  }
+
+  void onDelete() {
+    if (!this.setLoading()) {
+      return;
+    }
+
+    this.model.destroy().catchError((err) {
+      logger.severe('Failed to delete account', err);
+      new alrt.Alert('Failed to delete account');
+    }).whenComplete(() {
+      this.root.host.remove();
+    });
   }
 
   void onAlertDel(Map<String, String> alert) {
