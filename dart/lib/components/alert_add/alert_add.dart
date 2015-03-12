@@ -59,6 +59,7 @@ class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
 
     if (model.valueType == "" || model.valueType == null) {
       this.onSave();
+      return;
     }
 
     this.selected = true;
