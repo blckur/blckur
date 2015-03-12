@@ -59,6 +59,10 @@ func Static(c *gin.Context) {
 		panic(err)
 	}
 
+	c.Writer.Header().Add("Cache-Control",
+		"no-cache, no-store, must-revalidate")
+	c.Writer.Header().Add("Pragma", "no-cache")
+
 	c.Data(200, resp.Header.Get("Content-Type"), body)
 }
 
