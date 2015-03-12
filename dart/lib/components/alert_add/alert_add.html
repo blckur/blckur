@@ -10,12 +10,11 @@
               model="typeValue"></x-input>
           </div>
         </div>
-        <paper-button role="button" tabindex="0"
-          ng-click="onSave()">Save</paper-button>
+        <paper-button role="button" ng-click="onSave()">Save</paper-button>
       </div>
       <div ng-switch-default class="menu scrollable ng-binding">
         <core-item ng-repeat="alertType in alertTypes"
-          class="alert-type" layout horizontal>
+            class="alert-type" layout horizontal>
           <paper-button class="type" flex ng-click="onClick(alertType)">
             <div class="content" ng-bind="alertType.label" flex></div>
             <core-icon icon="chevron-right"></core-icon>
