@@ -136,6 +136,22 @@ func GetAccount(db *database.Database, userId bson.ObjectId,
 	return
 }
 
+func RemAccount(db *database.Database, userId bson.ObjectId,
+		acctId bson.ObjectId) (err error) {
+	coll := db.Accounts()
+
+	err = coll.Remove(bson.M{
+		"_id": acctId,
+		"user_id": userId,
+	})
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
+
 func GetAccounts(db *database.Database, userId bson.ObjectId) (
 		accts []*Account, err error) {
 	coll := db.Accounts()
