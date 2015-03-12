@@ -1,18 +1,22 @@
-<div ng-switch="active">
-  <div ng-switch-when="true" flex>
+<!-- TODO ng-switch not working ios -->
+<div> <!-- ng-switch="active" -->
+  <div ng-if="active == true" flex> <!-- ng-switch-when="true" -->
     <paper-progress ng-if="loading" indeterminate></paper-progress>
-    <div ng-switch="selected">
-      <div class="form" ng-switch-when="true">
+    <div> <!-- ng-switch="selected" -->
+      <div class="form"
+          ng-if="selected == true"> <!-- ng-switch-when="true" -->
         <div class="label" ng-bind="typeModel.valueLabel"></div>
-        <div class="input" ng-switch="typeModel.valueType">
-          <div ng-switch-when="input">
+        <div class="input"> <!-- ng-switch="typeModel.valueType" -->
+          <div ng-if="typeModel.valueType == 'input'">
+              <!-- ng-switch-when="input" -->
             <x-input type="text" placeholder="{{typeModel.valueHolder}}"
               model="typeValue"></x-input>
           </div>
         </div>
         <paper-button role="button" ng-click="onSave()">Save</paper-button>
       </div>
-      <div ng-switch-default class="menu scrollable ng-binding">
+      <div ng-if="selected != true"
+          class="menu scrollable ng-binding">
         <core-item ng-repeat="alertType in alertTypes"
             class="alert-type" layout horizontal>
           <paper-button class="type" flex ng-click="onClick(alertType)">
@@ -28,7 +32,8 @@
       <div class="info" flex>Cancel</div>
     </paper-button>
   </div>
-  <div ng-switch-default layout horizontal flex>
+  <div ng-if="active != true" layout horizontal flex>
+      <!-- ng-switch-default -->
     <x-get-started
       ng-if="model.alerts == null || model.alerts.length == 0"></x-get-started>
     <paper-button class="footer-btn add" flex ng-click="onAdd()">

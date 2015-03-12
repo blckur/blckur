@@ -1,5 +1,6 @@
-<div ng-switch="active">
-  <div ng-switch-when="true" flex>
+<!-- TODO ng-switch not working ios -->
+<div> <!-- ng-switch="active" -->
+  <div ng-if="active == true" flex> <!-- ng-switch-when="true" -->
     <paper-progress ng-if="loading" indeterminate></paper-progress>
     <core-item ng-repeat="accountType in accountTypes"
         class="account-type" layout horizontal>
@@ -15,7 +16,7 @@
       <div class="info" flex>Cancel</div>
     </paper-button>
   </div>
-  <div ng-switch-default>
+  <div ng-if="active != true"> <!-- ng-switch-default -->
     <paper-button class="footer-btn add" flex ng-click="onAdd()">
       <paper-fab icon="add" title="Add account" role="button"
         aria-label="Add account"></paper-fab>

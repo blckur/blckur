@@ -1,8 +1,9 @@
 <div class="container" layout horizontal center>
   <div class="modal" flex>
     <header>blckur</header>
-    <div ng-switch="mode">
-      <form ng-switch-when="login">
+    <!-- TODO ng-switch not working ios -->
+    <div> <!-- ng-switch="mode" -->
+      <form ng-if="mode == 'login'"> <!-- ng-switch-when="login" -->
         <x-input type="text" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
@@ -19,7 +20,7 @@
         <div class="signup">Don't have an account? <span class="link"
           no-select ng-click="setMode('signup')">Sign up</span></div>
       </form>
-      <form ng-switch-when="signup">
+      <form ng-if="mode == 'signup'"> <!-- ng-switch-when="signup" -->
         <x-input type="text" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
