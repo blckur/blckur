@@ -80,6 +80,7 @@ func accountsPut(c *gin.Context) {
 
 	acct.Alerts = data.Alerts
 	acct.ParseEvents()
+	acct.SortAlerts()
 
 	err = acct.CommitFields(set.NewSet("alerts"))
 	if err != nil {
