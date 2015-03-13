@@ -42,18 +42,4 @@ class AccountComp extends lodin.Loading {
       this.root.host.remove();
     });
   }
-
-  void onAlertDel(Map<String, String> alert) {
-    if (!this.setLoading()) {
-      return;
-    }
-
-    this.model.alerts.remove(alert);
-    this.model.save(['alerts']).catchError((err) {
-      logger.severe('Failed to remove alert', err);
-      new alrt.Alert('Failed to remove alert');
-    }).whenComplete(() {
-      this.clearLoading();
-    });
-  }
 }
