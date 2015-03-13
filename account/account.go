@@ -100,7 +100,7 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
-func (a *Account) Marshal() {
+func (a *Account) ParseEvents() {
 	for _, alrt := range a.Alerts {
 		if alrt.Id == "" {
 			alrt.Id = bson.NewObjectId()
@@ -156,7 +156,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	acct := &Account{}
 	for iter.Next(acct) {
 		acct.coll = coll
-		acct.Marshal()
+		acct.ParseEvents()
 
 		accts = append(accts, acct)
 		acct = &Account{}

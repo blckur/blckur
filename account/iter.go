@@ -18,7 +18,7 @@ func (i *Iter) Iter() (out chan *Account) {
 		acct := &Account{}
 		for i.iter.Next(acct) {
 			acct.coll = i.coll
-			acct.Marshal()
+			acct.ParseEvents()
 
 			out <- acct
 			acct = &Account{}
