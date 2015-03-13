@@ -53,7 +53,7 @@ func GetNotifications(db* database.Database, userId bson.ObjectId) (
 
 	err = iter.Err()
 	if err != nil {
-		database.ParseError(err)
+		err = database.ParseError(err)
 		return
 	}
 

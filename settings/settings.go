@@ -141,7 +141,7 @@ func update(group string, data interface{}) (err error) {
 
 	err = parseFindError(coll.FindOneId(group, data))
 	if err != nil {
-		database.ParseError(err)
+		err = database.ParseError(err)
 		return
 	}
 
