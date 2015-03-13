@@ -4,6 +4,29 @@
   color: #595959;
 }
 
+.ng-hide {
+  display: none;
+}
+
+.alert-type + .alert-type {
+  border-top: 1px solid #dbe1ef;
+}
+
+.alert-type .label {
+  font-size: 16px;
+  padding: 20px 0 0 15px;
+}
+
+.alert-type .value {
+  font-size: 14px;
+  padding: 0 20px 20px 20px;
+  font-weight: 300;
+}
+
+.alert-del {
+  margin-right: 5px;
+}
+
 .content {
   text-align: left;
   font-size: 17px;
@@ -98,37 +121,4 @@ paper-button {
 .form paper-button {
   font-size: 18px;
   margin-top: 5px;
-}
-
-.get-started {
-  position: absolute;
-  bottom: -20px;
-  width: 320px;
-}
-
-.get-started core-icon {
-  width: 310px;
-  height: 310px;
-  color: #cfdae8;
-}
-
-.get-started div {
-  position: relative;
-  top: 88px;
-  font-size: 36px;
-  font-weight: 200;
-  color: #354861;
-}
-
-.add-form,
-.adding-alert .add-btn {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.add-btn,
-.adding-alert .add-form {
-  opacity: 1;
-  visibility: visible;
-  @include transition((opacity .2s, visibility .2s));
 }
