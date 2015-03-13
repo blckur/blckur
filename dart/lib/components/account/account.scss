@@ -5,6 +5,10 @@
   color: #595959;
 }
 
+.ng-hide {
+  display: none !important;
+}
+
 .item.settings-active .settings-header,
 .item.settings-active .account {
   color: #fff;
@@ -45,8 +49,8 @@
 }
 
 .item.settings-active {
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: -125px;
   bottom: 0;
   left: 0;
   right: 0;
