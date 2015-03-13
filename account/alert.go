@@ -65,7 +65,7 @@ type Alert struct {
 	Label string `bson:"-" json:"label"`
 }
 
-func (a *Account) ParseEvents() {
+func (a *Account) ParseAlerts() {
 	for _, alrt := range a.Alerts {
 		if alrt.Id == "" {
 			alrt.Id = bson.NewObjectId()
