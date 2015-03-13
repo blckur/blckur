@@ -94,7 +94,19 @@ func AddIndexes() (err error) {
 	db := GetDatabase()
 	defer db.Close()
 
-	coll := db.Users()
+	coll := db.Accounts()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"user_id"},
+		Unique: true,
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
+	coll = db.Users()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"email"},
 		Unique: true,
