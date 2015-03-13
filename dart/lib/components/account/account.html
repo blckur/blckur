@@ -28,19 +28,6 @@
   </div>
   <paper-progress ng-if="loading" indeterminate></paper-progress>
   <div ng-if="settings" class="row settings" layout vertical flex>
-    <div ng-if="!addingAlert">
-      <div class="alert-type" ng-repeat="alert in model.alerts"
-          layout horizontal>
-        <div flex>
-          <div class="label" ng-bind="alert['label']"></div>
-          <div class="value" ng-bind="alert['value']"></div>
-        </div>
-        <div layout horizontal center>
-          <core-icon-button icon="delete" class="alert-del"
-            ng-click="onAlertDel(alert)"></core-icon-button>
-        </div>
-      </div>
-    </div>
-    <x-alert-add active="addingAlert" model="model"></x-alert-add>
+    <x-account-alerts model="model"></x-account-alerts>
   </div>
 </div>
