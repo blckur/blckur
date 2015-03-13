@@ -16,16 +16,16 @@ type Resource struct {
 
 type Account struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	UserId bson.ObjectId `bson:"user_id,omitempty" json:"user_id"`
-	Type string `bson:"type,omitempty" json:"type"`
-	Identity string `bson:"identity,omitempty" json:"identity"`
+	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
+	Type string `bson:"type" json:"type"`
+	Identity string `bson:"identity" json:"identity"`
 	OauthTokn string `bson:"oauth_tokn,omitempty" json:"-"`
 	OauthSec string `bson:"oauth_sec,omitempty" json:"-"`
 	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
 	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
-	Alerts []*Alert `bson:"alerts,omitempty" json:"alerts"`
-	Resources []*Resource `bson:"resources,omitempty" json:"resources"`
+	Alerts []*Alert `bson:"alerts" json:"alerts"`
+	Resources []*Resource `bson:"resources" json:"resources"`
 	coll *database.Collection `bson:"-" json:"-"`
 }
 
