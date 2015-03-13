@@ -29,6 +29,13 @@ class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
 
   AlertAddComp(this.alertTypes);
 
+  String get activeCls {
+    if (this.active == true) {
+      return 'adding-alert';
+    }
+    return '';
+  }
+
   void clear() {
     this.active = false;
     this.selected = false;

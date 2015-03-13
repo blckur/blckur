@@ -119,3 +119,16 @@ paper-button {
   font-weight: 200;
   color: #354861;
 }
+
+.add-form,
+.adding-alert .add-btn {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.add-btn,
+.adding-alert .add-form {
+  opacity: 1;
+  visibility: visible;
+  @include transition((opacity .2s, visibility .2s));
+}
