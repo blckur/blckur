@@ -18,6 +18,12 @@ type Gmail struct {
 	Account `bson:",inline"`
 }
 
+func (g *Gmail) NewClient() (client *oauth.Oauth2Client) {
+	client = gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
+		g.Oauth2RefTokn, g.Oauth2Exp)
+	return
+}
+
 func (g *Gmail) Refresh(db *database.Database, client *oauth.Oauth2Client) (
 		err error) {
 	refreshed, err := client.Check()
@@ -47,9 +53,7 @@ func (g *Gmail) Refresh(db *database.Database, client *oauth.Oauth2Client) (
 
 
 func (g *Gmail) Update(db *database.Database) (err error) {
-	client := gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
-		g.Oauth2RefTokn, g.Oauth2Exp)
-
+	client := g.NewClient()
 	g.Refresh(db, client)
 
 	data := struct {
