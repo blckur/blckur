@@ -1,6 +1,6 @@
 <div class="item" ng-class="settings ? 'settings-active' : ''"
     layout vertical flex>
-  <div ng-if="settings" class="row settings-header" layout horizontal>
+  <div ng-show="settings" class="row settings-header" layout horizontal>
     <span flex>Manage account alerts</span>
     <core-icon-button icon="close" ng-click="onSettings()"></core-icon-button>
   </div>
