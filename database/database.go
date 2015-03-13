@@ -102,7 +102,6 @@ func AddIndexes() (err error) {
 	coll := db.Accounts()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"user_id"},
-		Unique: true,
 		Background: true,
 	})
 	if err != nil {
