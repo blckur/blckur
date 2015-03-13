@@ -11,23 +11,21 @@ import 'package:blckur/alert.dart' as alrt;
 import 'package:angular/angular.dart' show Component, NgTwoWay;
 
 @Component(
-  selector: 'x-alert-add',
-  templateUrl: 'packages/blckur/components/alert_add/alert_add.html',
-  cssUrl: 'packages/blckur/components/alert_add/alert_add.css'
+  selector: 'x-account-alerts',
+  templateUrl: 'packages/blckur/components/account_alerts/account_alerts.html',
+  cssUrl: 'packages/blckur/components/account_alerts/account_alerts.css'
 )
-class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
+class AccountAlertsComp extends ent_awr.EnterAware with lodin.Loading {
   bool selected;
+  bool active;
   dynamic typeValue;
   alrt_typ.AlertType typeModel;
   alrt_typs.AlertTypes alertTypes;
 
-  @NgTwoWay('active')
-  bool active;
-
   @NgTwoWay('model')
   acct.Account model;
 
-  AlertAddComp(this.alertTypes);
+  AccountAlertsComp(this.alertTypes);
 
   String get activeCls {
     if (this.active == true) {
@@ -76,6 +74,20 @@ class AlertAddComp extends ent_awr.EnterAware with lodin.Loading {
     if (this.selected) {
       this.onSave();
     }
+  }
+
+  void onDel(Map<String, String> alert) {
+    if (!this.setLoading()) {
+      return;
+    }
+
+    this.model.alerts.remove(alert);
+    this.model.save(['alerts']).catchError((err) {
+      logger.severe('Failed to remove alert', err);
+      new alrt.Alert('Failed to remove alert');
+    }).whenComplete(() {
+      this.clearLoading();
+    });
   }
 
   void onSave() {
