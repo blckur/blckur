@@ -18,11 +18,10 @@ type Notification struct {
 	Body string `bson:"body,omitempty" json:"body"`
 }
 
-func (n *Notification) Initialize(db *database.Database) (
-		new bool, err error) {
+func (n *Notification) Initialize(db *database.Database) (err error) {
 	coll := db.Notifications()
 
-	info, err := coll.Upsert(bson.M{
+	_, err = coll.Upsert(bson.M{
 		"user_id": n.UserId,
 		"remote_id": n.RemoteId,
 	}, n)
@@ -30,8 +29,6 @@ func (n *Notification) Initialize(db *database.Database) (
 		err = database.ParseError(err)
 		return
 	}
-
-	new = info.Updated == 0
 
 	return
 }
