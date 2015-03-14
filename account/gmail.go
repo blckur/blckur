@@ -90,97 +90,109 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 		msgCount = 10
 	}
 
-	messages := struct{
-		Messages []struct{
-			Id string `json:"id"`
-		} `json:"messages"`
-	}{}
-
-	url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
-		"/users/me/messages?labelIds=INBOX&fields=messages(id)" +
-		"&maxResults=%d&includeSpamTrash=false", msgCount)
-
-	err = client.GetJson(url, &messages)
-	if err != nil {
-		return
-	}
+	pageToken := ""
 
 	notfs := []*notification.Notification{}
 
-	for _, msg := range messages.Messages {
-		data := struct{
-			Id string `json:"id"`
-			Labels []string `json:"labelIds"`
-			Snippet string `json:"snippet"`
-			Payload struct{
-				Headers []struct{
-					Name string `json:"name"`
-					Value string `json:"value"`
-				}
-			}
-			Body struct{
-				Size int `json:"size"`
-				Data string `json:"data"`
-			}
+	Loop:
+	for i := 0; i < 10; i++ {
+		messages := struct{
+			Messages []struct{
+				Id string `json:"id"`
+			} `json:"messages"`
+			NextPageToken string `json:"nextPageToken"`
 		}{}
 
 		url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
-			"/users/me/messages/%s?format=full", msg.Id)
+			"/users/me/messages?labelIds=INBOX&maxResults=%d" +
+			"&includeSpamTrash=false", msgCount)
 
-		err = client.GetJson(url, &data)
+		if pageToken != "" {
+			url += "&pageToken=" + pageToken
+		}
+
+		err = client.GetJson(url, &messages)
 		if err != nil {
 			return
 		}
 
-		from := ""
-		subject := ""
-		var date time.Time
+		pageToken = messages.NextPageToken
 
-		for _, header := range data.Payload.Headers {
-			if header.Name == "From" {
-				from = header.Value
-			} else if header.Name == "Subject" {
-				subject = header.Value
-			} else if header.Name == "Date" {
-				date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
-					header.Value)
-			}
-		}
+		for _, msg := range messages.Messages {
+			data := struct {
+				Id string `json:"id"`
+				Labels []string `json:"labelIds"`
+				Snippet string `json:"snippet"`
+				Payload struct {
+					Headers []struct {
+						Name string `json:"name"`
+						Value string `json:"value"`
+					}
+				}
+				Body struct {
+					Size int `json:"size"`
+					Data string `json:"data"`
+				}
+			}{}
 
-		if date.IsZero() {
-			continue
-		}
+			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
+				"/users/me/messages/%s?format=full", msg.Id)
 
-		var notf *notification.Notification
-		if lastNotf == nil {
-			notf = &notification.Notification{
-				UserId: g.UserId,
-				RemoteId: data.Id,
-				Timestamp: date,
-				AccountType: g.Type,
-			}
-		} else {
-			if date.Before(lastNotf.Timestamp) ||
-					data.Id == lastNotf.RemoteId {
-				break
+			err = client.GetJson(url, &data)
+			if err != nil {
+				return
 			}
 
-			notf = &notification.Notification{
-				UserId: g.UserId,
-				RemoteId: data.Id,
-				Timestamp: date,
-				AccountType: g.Type,
-				Type: "all",
-				Origin: from,
-				Subject: subject,
-				Body: data.Snippet,
+			from := ""
+			subject := ""
+			var date time.Time
+
+			for _, header := range data.Payload.Headers {
+				if header.Name == "From" {
+					from = header.Value
+				} else if header.Name == "Subject" {
+					subject = header.Value
+				} else if header.Name == "Date" {
+					date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
+						header.Value)
+				}
 			}
-		}
 
-		notfs = append(notfs, notf)
+			if date.IsZero() {
+				continue
+			}
 
-		if lastNotf == nil {
-			break
+			var notf *notification.Notification
+			if lastNotf == nil {
+				notf = &notification.Notification{
+					UserId: g.UserId,
+					RemoteId: data.Id,
+					Timestamp: date,
+					AccountType: g.Type,
+				}
+			} else {
+				if date.Before(lastNotf.Timestamp) ||
+				data.Id == lastNotf.RemoteId {
+					break Loop
+				}
+
+				notf = &notification.Notification{
+					UserId: g.UserId,
+					RemoteId: data.Id,
+					Timestamp: date,
+					AccountType: g.Type,
+					Type: "all",
+					Origin: from,
+					Subject: subject,
+					Body: data.Snippet,
+				}
+			}
+
+			notfs = append(notfs, notf)
+
+			if lastNotf == nil {
+				break Loop
+			}
 		}
 	}
 
