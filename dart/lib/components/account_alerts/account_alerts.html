@@ -5,7 +5,7 @@
     <div class="form" ng-show="selected == true">
       <div class="label" ng-bind="typeModel.valueLabel"></div>
       <div class="input"> <!-- ng-switch="typeModel.valueType" -->
-        <div ng-if="typeModel.valueType == 'input'">
+        <div ng-show="typeModel.valueType == 'input'">
             <!-- ng-switch-when="input" -->
           <x-input type="text" placeholder="{{typeModel.valueHolder}}"
             model="typeValue"></x-input>
