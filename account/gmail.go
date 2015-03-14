@@ -21,6 +21,22 @@ type Gmail struct {
 	Account `bson:",inline"`
 }
 
+type GmailMessage struct {
+	Id string `json:"id"`
+	Labels []string `json:"labelIds"`
+	Snippet string `json:"snippet"`
+	Payload struct {
+		Headers []struct {
+			Name string `json:"name"`
+			Value string `json:"value"`
+		}
+	}
+	Body struct {
+		Size int `json:"size"`
+		Data string `json:"data"`
+	}
+}
+
 func (g *Gmail) NewClient() (client *oauth.Oauth2Client) {
 	client = gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
 		g.Oauth2RefTokn, g.Oauth2Exp)
