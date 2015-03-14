@@ -72,7 +72,6 @@ func (g *Gmail) Refresh(db *database.Database, client *oauth.Oauth2Client) (
 	return
 }
 
-
 func (g *Gmail) Update(db *database.Database) (err error) {
 	client := g.NewClient()
 	g.Refresh(db, client)
@@ -107,7 +106,7 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 			subject = header.Value
 		} else if header.Name == "Date" {
 			date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
-			header.Value)
+				header.Value)
 		}
 	}
 
