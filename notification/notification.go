@@ -14,6 +14,7 @@ type Notification struct {
 	AccountType string `bson:"account_type" json:"account_type"`
 	Type string `bson:"type,omitempty" json:"type"`
 	Label string `bson:"-" json:"label"`
+	Origin string `bson:"origin,omitempty" json:"origin"`
 	Subject string `bson:"subject,omitempty" json:"subject"`
 	Body string `bson:"body,omitempty" json:"body"`
 }
