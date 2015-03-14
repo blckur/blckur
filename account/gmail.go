@@ -118,9 +118,9 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 	if lastNotf == nil {
 		notf = &notification.Notification{
 			UserId: g.UserId,
+			AccountId: g.Id,
 			RemoteId: msg.Id,
 			Timestamp: date,
-			AccountType: g.Type,
 		}
 		done = true
 		return
@@ -181,9 +181,9 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 
 	notf = &notification.Notification{
 		UserId: g.UserId,
+		AccountId: g.Id,
 		RemoteId: msg.Id,
 		Timestamp: date,
-		AccountType: g.Type,
 		Type: matchType,
 		Origin: from,
 		Subject: subject,
@@ -197,7 +197,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 	client := g.NewClient()
 	g.Refresh(db, client)
 
-	lastNotf, err := notification.GetLastNotification(db, g.UserId, g.Type)
+	lastNotf, err := notification.GetLastNotification(db, g.UserId, g.Id)
 	if err != nil {
 		return
 	}
