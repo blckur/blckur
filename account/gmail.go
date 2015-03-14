@@ -163,7 +163,6 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 				bodyByt, err := base64.URLEncoding.DecodeString(
 					msg.Payload.Body.Data)
 				if err != nil {
-					panic(err)
 					body = "-"
 				} else {
 					body = strings.ToLower(string(bodyByt))
