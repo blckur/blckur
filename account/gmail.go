@@ -93,7 +93,7 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 }
 
 func (g *Gmail) ParseMessage(msg *GmailMessage,
-		lastNotf *notification.Notification) (
+		lastNotf *notification.Notification, force bool) (
 		notf *notification.Notification, done bool) {
 	done = false
 	from := ""
@@ -115,13 +115,16 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 		return
 	}
 
-	if lastNotf == nil {
+	if force || lastNotf == nil {
 		notf = &notification.Notification{
 			UserId: g.UserId,
 			AccountId: g.Id,
 			RemoteId: msg.Id,
 			Timestamp: date,
 		}
+	}
+
+	if lastNotf == nil {
 		done = true
 		return
 	}
@@ -238,7 +241,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 
 		pageToken = messages.NextPageToken
 
-		for _, msg := range messages.Messages {
+		for i, msg := range messages.Messages {
 			data := &GmailMessage{}
 
 			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
@@ -249,7 +252,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 				return
 			}
 
-			notf, done := g.ParseMessage(data, lastNotf)
+			notf, done := g.ParseMessage(data, lastNotf, i == 0)
 			if notf != nil {
 				notfs = append(notfs, notf)
 			}
