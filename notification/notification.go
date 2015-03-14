@@ -9,9 +9,9 @@ import (
 type Notification struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	UserId bson.ObjectId `bson:"user_id" json:"-"`
+	AccountId bson.ObjectId `bson:"account_id" json:"-"`
 	RemoteId string `bson:"remote_id" json:"-"`
 	Timestamp time.Time `bson:"timestamp" json"timestamp"`
-	AccountType string `bson:"account_type" json:"account_type"`
 	Type string `bson:"type,omitempty" json:"type"`
 	Label string `bson:"-" json:"label"`
 	Origin string `bson:"origin,omitempty" json:"origin"`
@@ -24,6 +24,7 @@ func (n *Notification) Initialize(db *database.Database) (err error) {
 
 	_, err = coll.Upsert(bson.M{
 		"user_id": n.UserId,
+		"account_id": n.AccountId,
 		"remote_id": n.RemoteId,
 	}, n)
 	if err != nil {
@@ -59,13 +60,13 @@ func GetNotifications(db* database.Database, userId bson.ObjectId) (
 }
 
 func GetLastNotification(db *database.Database, userId bson.ObjectId,
-		acctType string) (notf *Notification, err error) {
+		acctId bson.ObjectId) (notf *Notification, err error) {
 	coll := db.Notifications()
 	notf = &Notification{}
 
 	err = coll.Find(bson.M{
 		"user_id": userId,
-		"account_type": acctType,
+		"account_id": acctId,
 	}).Sort("-timestamp").One(notf)
 	if err != nil {
 		err = database.ParseError(err)
