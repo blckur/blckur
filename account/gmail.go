@@ -144,7 +144,6 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 			} else if header.Name == "Date" {
 				date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
 					header.Value)
-
 			}
 		}
 
