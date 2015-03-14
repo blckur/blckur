@@ -9,6 +9,7 @@ import (
 	"github.com/blckur/blckur/oauth"
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
+	"encoding/base64"
 	"fmt"
 	"time"
 	"strings"
@@ -132,6 +133,7 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 
 	match := false
 	matchType := ""
+	body := ""
 	for _, alrt := range g.Alerts {
 		switch (alrt.Type) {
 		case "all":
@@ -155,10 +157,17 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 				break
 			}
 		case "body":
-			// TODO
-			match = strings.Contains(
-				strings.ToLower(subject),
-				strings.ToLower(alrt.Value))
+			if body == "" {
+				bodyByt, err := base64.URLEncoding.DecodeString(
+					msg.Payload.Body.Data)
+				if err != nil {
+					panic(err)
+					body = "-"
+				} else {
+					body = strings.ToLower(string(bodyByt))
+				}
+			}
+			match = strings.Contains(body, strings.ToLower(alrt.Value))
 			if match {
 				matchType = "body"
 				break
