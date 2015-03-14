@@ -56,3 +56,25 @@ func GetNotifications(db* database.Database, userId bson.ObjectId) (
 
 	return
 }
+
+func GetLastNotification(db *database.Database, userId bson.ObjectId,
+		acctType string) (notf *Notification, err error) {
+	coll := db.Notifications()
+	notf = &Notification{}
+
+	err = coll.Find(bson.M{
+		"user_id": userId,
+		"account_type": acctType,
+	}).Sort("-timestamp").One(notf)
+	if err != nil {
+		err = database.ParseError(err)
+		switch err.(type) {
+		case *database.NotFoundError:
+			notf = nil
+			err = nil
+			return
+		}
+		return
+	}
+	return
+}
