@@ -204,8 +204,9 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 
 	notfs := []*notification.Notification{}
 
+	n := settings.Google.MaxMsg / 10
 	Loop:
-	for i := 0; i < 10; i++ {
+	for i := 0; i < n; i++ {
 		messages := struct{
 			Messages []struct{
 				Id string `json:"id"`
