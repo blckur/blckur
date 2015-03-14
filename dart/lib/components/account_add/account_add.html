@@ -4,20 +4,20 @@
     <paper-progress ng-if="loading" indeterminate></paper-progress>
     <core-item ng-repeat="accountType in accountTypes"
         class="account-type" layout horizontal>
-      <paper-button flex ng-click="onClick(accountType.type)">
+      <paper-button flex delay-click="onClick(accountType.type)">
         <x-brand-logo icon="{{accountType.type}}"></x-brand-logo>
         <div class="content" ng-bind="accountType.label" flex></div>
         <core-icon icon="chevron-right"></core-icon>
       </paper-button>
     </core-item>
-    <paper-button class="footer-btn cancel" flex ng-click="onCancel()">
+    <paper-button class="footer-btn cancel" flex delay-click="onCancel()">
       <paper-fab icon="clear" title="Cancel" role="button"
         aria-label="Cancel"></paper-fab>
       <div class="info" flex>Cancel</div>
     </paper-button>
   </div>
   <div ng-if="active != true"> <!-- ng-switch-default -->
-    <paper-button class="footer-btn add" flex ng-click="onAdd()">
+    <paper-button class="footer-btn add" flex delay-click="onAdd()">
       <paper-fab icon="add" title="Add account" role="button"
         aria-label="Add account"></paper-fab>
       <div class="info" flex>Add new account</div>
