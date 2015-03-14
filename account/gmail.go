@@ -5,9 +5,12 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
+	"fmt"
+	"time"
 )
 
 var (
@@ -67,6 +70,121 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 	}
 
 	g.Identity = data.EmailAddress
+
+	return
+}
+
+func (g *Gmail) Sync(db *database.Database) (err error) {
+	client := g.NewClient()
+	g.Refresh(db, client)
+
+	lastNotf, err := notification.GetLastNotification(db, g.UserId, g.Type)
+	if err != nil {
+		return
+	}
+
+	var msgCount int
+	if lastNotf == nil {
+		msgCount = 1
+	} else {
+		msgCount = 10
+	}
+
+	messages := struct{
+		Messages []struct{
+			Id string `json:"id"`
+		} `json:"messages"`
+	}{}
+
+	url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
+		"/users/me/messages?labelIds=INBOX&fields=messages(id)" +
+		"&maxResults=%d&includeSpamTrash=false", msgCount)
+
+	err = client.GetJson(url, &messages)
+	if err != nil {
+		return
+	}
+
+	for _, msg := range messages.Messages {
+		data := struct{
+			Id string `json:"id"`
+			Labels []string `json:"labelIds"`
+			Snippet string `json:"snippet"`
+			Payload struct{
+				Headers []struct{
+					Name string `json:"name"`
+					Value string `json:"value"`
+				}
+			}
+			Body struct{
+				Size int `json:"size"`
+				Data string `json:"data"`
+			}
+		}{}
+
+		url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
+			"/users/me/messages/%s?format=full", msg.Id)
+
+		err = client.GetJson(url, &data)
+		if err != nil {
+			return
+		}
+
+		from := ""
+		subject := ""
+		var date time.Time
+
+		for _, header := range data.Payload.Headers {
+			if header.Name == "From" {
+				from = header.Value
+			} else if header.Name == "Subject" {
+				subject = header.Value
+			} else if header.Name == "Date" {
+				date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
+					header.Value)
+
+			}
+		}
+
+		if date.IsZero() {
+			continue
+		}
+
+		var notf *notification.Notification
+		if lastNotf == nil {
+			notf = &notification.Notification{
+				UserId: g.UserId,
+				RemoteId: data.Id,
+				Timestamp: date,
+				AccountType: g.Type,
+			}
+		} else {
+			if date.Before(lastNotf.Timestamp) ||
+					data.Id == lastNotf.RemoteId {
+				break
+			}
+
+			notf = &notification.Notification{
+				UserId: g.UserId,
+				RemoteId: data.Id,
+				Timestamp: date,
+				AccountType: g.Type,
+				Type: "all",
+				Origin: from,
+				Subject: subject,
+				Body: data.Snippet,
+			}
+		}
+
+		err = notf.Initialize(db)
+		if err != nil {
+			return
+		}
+
+		if lastNotf == nil {
+			break
+		}
+	}
 
 	return
 }
