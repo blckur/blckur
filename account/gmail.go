@@ -11,6 +11,7 @@ import (
 	"labix.org/v2/mgo/bson"
 	"fmt"
 	"time"
+	"strings"
 )
 
 var (
@@ -90,6 +91,99 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 	return
 }
 
+func (g *Gmail) ParseMessage(msg *GmailMessage,
+		lastNotf *notification.Notification) (
+		notf *notification.Notification, done bool) {
+	done = false
+	from := ""
+	subject := ""
+	var date time.Time
+
+	for _, header := range msg.Payload.Headers {
+		if header.Name == "From" {
+			from = header.Value
+		} else if header.Name == "Subject" {
+			subject = header.Value
+		} else if header.Name == "Date" {
+			date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
+			header.Value)
+		}
+	}
+
+	if date.IsZero() {
+		return
+	}
+
+	if lastNotf == nil {
+		notf = &notification.Notification{
+			UserId: g.UserId,
+			RemoteId: msg.Id,
+			Timestamp: date,
+			AccountType: g.Type,
+		}
+		done = true
+		return
+	}
+
+	if date.Before(lastNotf.Timestamp) || msg.Id == lastNotf.RemoteId {
+		done = true
+		return
+	}
+
+	match := false
+	matchType := ""
+	for _, alrt := range g.Alerts {
+		switch (alrt.Type) {
+		case "all":
+			match = true
+			matchType = "all"
+			break
+		case "from":
+			match = strings.Contains(
+				strings.ToLower(from),
+				strings.ToLower(alrt.Value))
+			if match {
+				matchType = "from"
+				break
+			}
+		case "subject":
+			match = strings.Contains(
+				strings.ToLower(subject),
+				strings.ToLower(alrt.Value))
+			if match {
+				matchType = "subject"
+				break
+			}
+		case "body":
+			// TODO
+			match = strings.Contains(
+				strings.ToLower(subject),
+				strings.ToLower(alrt.Value))
+			if match {
+				matchType = "body"
+				break
+			}
+		}
+	}
+
+	if !match {
+		return
+	}
+
+	notf = &notification.Notification{
+		UserId: g.UserId,
+		RemoteId: msg.Id,
+		Timestamp: date,
+		AccountType: g.Type,
+		Type: matchType,
+		Origin: from,
+		Subject: subject,
+		Body: msg.Snippet,
+	}
+
+	return
+}
+
 func (g *Gmail) Sync(db *database.Database) (err error) {
 	client := g.NewClient()
 	g.Refresh(db, client)
@@ -145,54 +239,12 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 				return
 			}
 
-			from := ""
-			subject := ""
-			var date time.Time
-
-			for _, header := range data.Payload.Headers {
-				if header.Name == "From" {
-					from = header.Value
-				} else if header.Name == "Subject" {
-					subject = header.Value
-				} else if header.Name == "Date" {
-					date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
-						header.Value)
-				}
+			notf, done := g.ParseMessage(data, lastNotf)
+			if notf != nil {
+				notfs = append(notfs, notf)
 			}
 
-			if date.IsZero() {
-				continue
-			}
-
-			var notf *notification.Notification
-			if lastNotf == nil {
-				notf = &notification.Notification{
-					UserId: g.UserId,
-					RemoteId: data.Id,
-					Timestamp: date,
-					AccountType: g.Type,
-				}
-			} else {
-				if date.Before(lastNotf.Timestamp) ||
-				data.Id == lastNotf.RemoteId {
-					break Loop
-				}
-
-				notf = &notification.Notification{
-					UserId: g.UserId,
-					RemoteId: data.Id,
-					Timestamp: date,
-					AccountType: g.Type,
-					Type: "all",
-					Origin: from,
-					Subject: subject,
-					Body: data.Snippet,
-				}
-			}
-
-			notfs = append(notfs, notf)
-
-			if lastNotf == nil {
+			if done {
 				break Loop
 			}
 		}
