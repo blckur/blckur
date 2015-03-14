@@ -9,7 +9,9 @@ import (
 	"github.com/dropbox/godropbox/errors"
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
+	"reflect"
 	"time"
+	"strconv"
 )
 
 var (
@@ -134,6 +136,45 @@ func parseFindError(inErr error) (err error) {
 	return
 }
 
+func setDefaults(obj interface{}) {
+	val := reflect.ValueOf(obj)
+	elm := val.Elem()
+
+	n := elm.NumField()
+	for i := 0; i < n; i++ {
+		fld := elm.Field(i)
+		typ := elm.Type().Field(i)
+
+		if typ.PkgPath != "" {
+			continue
+		}
+
+		tag := typ.Tag.Get("default")
+		if tag == "" {
+			continue
+		}
+
+		switch (fld.Kind()) {
+		case reflect.Bool:
+			parVal, err := strconv.ParseBool(tag)
+			if err != nil {
+				panic(err)
+			}
+			fld.SetBool(parVal)
+		case reflect.Int:
+			parVal, err := strconv.Atoi(tag)
+			if err != nil {
+				panic(err)
+			}
+			fld.SetInt(int64(parVal))
+		case reflect.String:
+			fld.SetString(tag)
+		}
+	}
+
+	return
+}
+
 func update(group string, data interface{}) (err error) {
 	db := database.GetDatabase()
 	defer db.Close()
@@ -144,6 +185,8 @@ func update(group string, data interface{}) (err error) {
 		err = database.ParseError(err)
 		return
 	}
+
+	setDefaults(data)
 
 	return
 }
