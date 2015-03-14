@@ -135,26 +135,12 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 		pageToken = messages.NextPageToken
 
 		for _, msg := range messages.Messages {
-			data := struct {
-				Id string `json:"id"`
-				Labels []string `json:"labelIds"`
-				Snippet string `json:"snippet"`
-				Payload struct {
-					Headers []struct {
-						Name string `json:"name"`
-						Value string `json:"value"`
-					}
-				}
-				Body struct {
-					Size int `json:"size"`
-					Data string `json:"data"`
-				}
-			}{}
+			data := &GmailMessage{}
 
 			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
 				"/users/me/messages/%s?format=full", msg.Id)
 
-			err = client.GetJson(url, &data)
+			err = client.GetJson(url, data)
 			if err != nil {
 				return
 			}
