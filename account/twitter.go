@@ -17,8 +17,13 @@ type Twitter struct {
 	Account `bson:",inline"`
 }
 
+func (t *Twitter) NewClient() (client *oauth.Oauth1Client) {
+	client = twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
+	return
+}
+
 func (t *Twitter) Update() (err error) {
-	client := twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
+	client := t.NewClient()
 
 	data := struct {
 		ScreenName string `json:"screen_name"`
