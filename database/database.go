@@ -110,6 +110,17 @@ func AddIndexes() (err error) {
 		}
 	}
 
+	coll = db.Accounts()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"remote_id"},
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
 	coll = db.Users()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"email"},
