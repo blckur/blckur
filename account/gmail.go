@@ -196,6 +196,15 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 		}
 	}
 
+	for i := len(notfs) - 1; i >= 0; i-- {
+		notf := notfs[i]
+
+		err = notf.Initialize(db)
+		if err != nil {
+			return
+		}
+	}
+
 	return
 }
 
