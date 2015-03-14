@@ -31,11 +31,11 @@ type GmailMessage struct {
 			Name string `json:"name"`
 			Value string `json:"value"`
 		}
-	}
-	Body struct {
-		Size int `json:"size"`
-		Data string `json:"data"`
-	}
+		Body struct {
+			Size int `json:"size"`
+			Data string `json:"data"`
+		} `json:"body"`
+	} `json:"payload"`
 }
 
 func (g *Gmail) NewClient() (client *oauth.Oauth2Client) {
