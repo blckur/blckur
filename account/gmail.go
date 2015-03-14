@@ -158,6 +158,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 				Timestamp: date,
 				AccountType: g.Type,
 			}
+			break
 		} else {
 			if date.Before(lastNotf.Timestamp) ||
 					data.Id == lastNotf.RemoteId {
@@ -179,10 +180,6 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 		err = notf.Initialize(db)
 		if err != nil {
 			return
-		}
-
-		if lastNotf == nil {
-			break
 		}
 	}
 
