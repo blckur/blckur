@@ -112,7 +112,10 @@ func AddIndexes() (err error) {
 
 	coll = db.Notifications()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"remote_id"},
+		Key: []string{
+			"account_id",
+			"remote_id",
+		},
 		Background: true,
 	})
 	if err != nil {
