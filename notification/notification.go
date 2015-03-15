@@ -18,7 +18,6 @@ type Notification struct {
 	Origin string `bson:"origin,omitempty" json:"origin"`
 	Subject string `bson:"subject,omitempty" json:"subject"`
 	Body string `bson:"body,omitempty" json:"body"`
-	Deleted bool `bson:"deleted,omitempty" json:"-"`
 }
 
 func (n *Notification) Initialize(db *database.Database) (err error) {
