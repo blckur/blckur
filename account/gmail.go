@@ -205,7 +205,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 
 	var msgCount int
 	if lastNotf == nil {
-		msgCount = 1
+		msgCount = 3
 	} else {
 		msgCount = 10
 	}
