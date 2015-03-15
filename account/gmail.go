@@ -284,7 +284,7 @@ func ReqGmail(db *database.Database, userId bson.ObjectId) (
 }
 
 func AuthGmail(db *database.Database, state string, code string) (
-		acct *Account, err error) {
+		acct *Gmail, err error) {
 	coll := db.Accounts()
 
 	client, err := gmailConf.Authorize(db, state, code)
@@ -292,25 +292,18 @@ func AuthGmail(db *database.Database, state string, code string) (
 		return
 	}
 
-	data := struct {
-		EmailAddress string `bson:"emailAddress"`
-	}{}
-
-	err = client.GetJson(
-		"https://www.googleapis.com/gmail/v1/users/me/profile", &data)
-	if err != nil {
-		return
+	acct = &Gmail{
+		Account{
+			UserId: client.UserId,
+			Type: "gmail",
+			Oauth2AccTokn: client.AccessToken,
+			Oauth2RefTokn: client.RefreshToken,
+			Oauth2Exp: client.Expiry,
+			coll: coll,
+		},
 	}
 
-	acct = &Account{
-		UserId: client.UserId,
-		Type: "gmail",
-		Identity: data.EmailAddress,
-		Oauth2AccTokn: client.AccessToken,
-		Oauth2RefTokn: client.RefreshToken,
-		Oauth2Exp: client.Expiry,
-		coll: coll,
-	}
+	acct.Update(db)
 
 	err = coll.Insert(acct)
 	if err != nil {
