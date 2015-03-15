@@ -13,6 +13,7 @@ type Notification struct {
 	RemoteId string `bson:"remote_id" json:"-"`
 	Timestamp time.Time `bson:"timestamp" json"timestamp"`
 	Type string `bson:"type,omitempty" json:"type"`
+	Resource string `bson:"resource,omitempty" json:"-"`
 	Label string `bson:"-" json:"label"`
 	Origin string `bson:"origin,omitempty" json:"origin"`
 	Subject string `bson:"subject,omitempty" json:"subject"`
