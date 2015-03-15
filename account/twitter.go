@@ -26,16 +26,19 @@ func (t *Twitter) Update() (err error) {
 	client := t.NewClient()
 
 	data := struct {
+		IdStr string `json:"id_str"`
 		ScreenName string `json:"screen_name"`
 	}{}
 
 	err = client.GetJson(
-		"https://api.twitter.com/1.1/account/settings.json", nil, &data)
+		"https://api.twitter.com/1.1/account/verify_credentials.json",
+		nil, &data)
 	if err != nil {
 		return
 	}
 
 	t.Identity = "@" + data.ScreenName
+	t.IdentityId = data.IdStr
 
 	return
 }
