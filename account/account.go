@@ -19,7 +19,7 @@ type Account struct {
 	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
 	Type string `bson:"type" json:"type"`
 	Identity string `bson:"identity" json:"identity"`
-	IdentityId string `bson:"identity_id" json:"-"`
+	IdentityId string `bson:"identity_id,omitempty" json:"-"`
 	OauthTokn string `bson:"oauth_tokn,omitempty" json:"-"`
 	OauthSec string `bson:"oauth_sec,omitempty" json:"-"`
 	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
