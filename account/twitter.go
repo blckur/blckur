@@ -156,6 +156,12 @@ func (t *Twitter) Stream(db *database.Database) (err error) {
 	return
 }
 
+func hashEvent(id string, timestamp time.Time) (hashStr string) {
+	hash := md5.Sum([]byte(id + strconv.FormatInt(timestamp.Unix(), 10)))
+	hashStr = hex.EncodeToString(hash[:])
+	return
+}
+
 func ReqTwitter(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
 	url, err = twitterConf.Request(db, userId)
