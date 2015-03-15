@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
+	"github.com/ChimeraCoder/anaconda"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -19,6 +20,11 @@ type Twitter struct {
 
 func (t *Twitter) NewClient() (client *oauth.Oauth1Client) {
 	client = twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
+	return
+}
+
+func (t *Twitter) NewApiClient() (client *anaconda.TwitterApi) {
+	client = anaconda.NewTwitterApi(t.OauthTokn, t.OauthSec)
 	return
 }
 
@@ -94,6 +100,9 @@ func AuthTwitter(db *database.Database, token string, code string) (
 }
 
 func updateTwitter() {
+	anaconda.SetConsumerKey(settings.Twitter.ConsumerKey)
+	anaconda.SetConsumerSecret(settings.Twitter.ConsumerSecret)
+
 	conf := &oauth.Oauth1{
 		Type: "twitter",
 		ConsumerKey: settings.Twitter.ConsumerKey,
