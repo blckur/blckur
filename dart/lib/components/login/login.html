@@ -16,7 +16,7 @@
           <div class="forgot-pass link" no-select>Forgot password?</div>
         </div>
         <paper-button role="button" tabindex="0" raised
-          ng-click="onLogin()">Log In</paper-button>
+          delay-click="onLogin()">Log In</paper-button>
         <div class="signup">Don't have an account? <span class="link"
           no-select ng-click="setMode('signup')">Sign up</span></div>
       </form>
@@ -26,7 +26,7 @@
         <x-input type="password" placeholder="Password" error="passwordError"
           model="model.password" theme="dark"></x-input>
         <paper-button role="button" tabindex="0" raised
-          ng-click="onSignup()">Sign Up</paper-button>
+          delay-click="onSignup()">Sign Up</paper-button>
         <div class="signup">Already a Blckur member? <span class="link"
           no-select ng-click="setMode('login')">Log in</span></div>
       </form>
