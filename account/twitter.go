@@ -60,7 +60,7 @@ func ReqTwitter(db *database.Database, userId bson.ObjectId) (
 }
 
 func AuthTwitter(db *database.Database, token string, code string) (
-		acct *Account, err error) {
+		acct *Twitter, err error) {
 	coll := db.Accounts()
 
 	client, err := twitterConf.Authorize(db, token, code)
@@ -68,26 +68,19 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		return
 	}
 
-	data := struct {
-		IdStr string `json:"id_str"`
-		ScreenName string `json:"screen_name"`
-	}{}
-
-	err = client.GetJson(
-		"https://api.twitter.com/1.1/account/verify_credentials.json",
-		nil, &data)
-	if err != nil {
-		return
+	acct = &Twitter{
+		Account{
+			UserId: client.UserId,
+			Type: "twitter",
+			OauthTokn: client.Token,
+			OauthSec: client.Secret,
+			coll: coll,
+		},
 	}
 
-	acct = &Account{
-		UserId: client.UserId,
-		Type: "twitter",
-		Identity: "@" + data.ScreenName,
-		IdentityId: data.IdStr,
-		OauthTokn: client.Token,
-		OauthSec: client.Secret,
-		coll: coll,
+	err = acct.Update()
+	if err != nil {
+		return
 	}
 
 	err = coll.Insert(acct)
