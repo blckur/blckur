@@ -63,11 +63,13 @@ func AuthTwitter(db *database.Database, token string, code string) (
 	}
 
 	data := struct {
+		IdStr string `json:"id_str"`
 		ScreenName string `json:"screen_name"`
 	}{}
 
 	err = client.GetJson(
-		"https://api.twitter.com/1.1/account/settings.json", nil, &data)
+		"https://api.twitter.com/1.1/account/verify_credentials.json",
+		nil, &data)
 	if err != nil {
 		return
 	}
@@ -76,6 +78,7 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		UserId: client.UserId,
 		Type: "twitter",
 		Identity: "@" + data.ScreenName,
+		IdentityId: data.IdStr,
 		OauthTokn: client.Token,
 		OauthSec: client.Secret,
 		coll: coll,
