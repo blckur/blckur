@@ -2,6 +2,7 @@ package streams
 
 import (
 	"github.com/blckur/blckur/database"
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"time"
@@ -13,6 +14,19 @@ type Stream struct {
 	Type string `bson:"type"`
 	Timestamp time.Time `bson:"timestamp"`
 	db *database.Database
+}
+
+func (s *Stream) Start() {
+	switch (s.Type) {
+	case "twitter":
+		err := s.startTwitter()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+				"account_id": s.RunnerId.Hex(),
+			}).Error("streams: Failed to start twitter")
+		}
+	}
 }
 
 func (s *Stream) Update() (stop bool, err error) {
