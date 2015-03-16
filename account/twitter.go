@@ -53,7 +53,40 @@ func (t *Twitter) Update() (err error) {
 	return
 }
 
-func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
+func (t *Twitter) Stream(db *database.Database) (stream *TwitterStream) {
+	client := t.NewApiClient()
+
+	streamVals := url.Values{}
+	streamVals.Add("with", "user")
+	streamVals.Add("replies", "all")
+
+	s := client.UserStream(streamVals)
+
+	stream = &TwitterStream{
+		db: db,
+		stream: &s,
+		acct: t,
+	}
+
+	return
+}
+
+type TwitterStream struct {
+	db *database.Database
+	stream *anaconda.Stream
+	acct *Twitter
+}
+
+func (s *TwitterStream) Start() {
+	for obj := range s.stream.C {
+		_, err := s.Parse(s.db, obj)
+		if err != nil {
+			panic(err) // TODO
+		}
+	}
+}
+
+func (s *TwitterStream) Parse(db *database.Database, evtInf interface{}) (
 		notf *notification.Notification, err error) {
 	var timestamp string
 
@@ -61,19 +94,19 @@ func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
 		_ = evt
 		return
 	} else if evt, ok := evtInf.(anaconda.EventTweet); ok {
-		if evt.Target.IdStr != t.IdentityId ||
-				evt.Source.IdStr == t.IdentityId {
+		if evt.Target.IdStr != s.acct.IdentityId ||
+				evt.Source.IdStr == s.acct.IdentityId {
 			return
 		}
 
 		var subject string
 		switch (evt.Event.Event) {
-		case "favorite":
+			case "favorite":
 			subject = "Tweet favorited by "
-		case "unfavorite":
+			case "unfavorite":
 			subject = "Tweet unfavorited by "
-		default:
-				return
+			default:
+			return
 		}
 
 		origin := "@" + evt.Source.ScreenName
@@ -81,8 +114,8 @@ func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
 		subject += origin
 
 		notf = &notification.Notification{
-			UserId: t.UserId,
-			AccountId: t.Id,
+			UserId: s.acct.UserId,
+			AccountId: s.acct.Id,
 			Type: evt.Event.Event,
 			Resource: evt.TargetObject.IdStr,
 			Origin: origin,
@@ -90,15 +123,15 @@ func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
 			Body: evt.TargetObject.Text,
 		}
 	} else if evt, ok := evtInf.(anaconda.Event); ok {
-		if evt.Target.IdStr != t.IdentityId || evt.Event != "follow" {
+		if evt.Target.IdStr != s.acct.IdentityId || evt.Event != "follow" {
 			return
 		}
 
 		origin := "@" + evt.Source.ScreenName
 		timestamp = evt.CreatedAt
 		notf = &notification.Notification{
-			UserId: t.UserId,
-			AccountId: t.Id,
+			UserId: s.acct.UserId,
+			AccountId: s.acct.Id,
 			Type: evt.Event,
 			Resource: evt.Target.IdStr,
 			Origin: origin,
@@ -108,7 +141,7 @@ func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
 		coll := db.Notifications()
 
 		err = coll.Remove(bson.M{
-			"account_id": t.Id,
+			"account_id": s.acct.Id,
 			"resource": evt.IdStr,
 		})
 		if err != nil {
@@ -122,38 +155,17 @@ func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
 	}
 
 	notf.Timestamp, err = time.Parse("Mon Jan 02 15:04:05 -0700 2006",
-		timestamp)
+	timestamp)
 	if err != nil {
 		notf = nil
 		err = nil
 	}
 
-	notf.RemoteId = hashEvent(t.Id.Hex(), notf.Timestamp)
+	notf.RemoteId = hashEvent(s.acct.Id.Hex(), notf.Timestamp)
 
 	err = notf.Initialize(db)
 	if err != nil {
 		return
-	}
-
-	return
-}
-
-func (t *Twitter) Stream(db *database.Database) (err error) {
-	client := t.NewApiClient()
-
-	streamVals := url.Values{}
-	streamVals.Add("with", "user")
-	streamVals.Add("replies", "all")
-
-	stream := client.UserStream(streamVals)
-
-	for obj := range stream.C {
-		notf, err := t.Parse(db, obj)
-		if err != nil {
-			panic(err)
-		}
-
-		_ = notf
 	}
 
 	return
