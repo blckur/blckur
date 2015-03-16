@@ -180,7 +180,7 @@ func AddIndexes() (err error) {
 	coll = db.Nodes()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"timestamp"},
-		ExpireAfter: 30 * time.Second,
+		ExpireAfter: 5 * time.Minute,
 		Background: true,
 	})
 	if err != nil {
