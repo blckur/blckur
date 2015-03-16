@@ -15,6 +15,32 @@ type Stream struct {
 	db *database.Database
 }
 
+func (s *Stream) Update() (err error) {
+	coll := s.db.Streams()
+
+	change := mgo.Change{
+		Update: bson.M{
+			"$set": bson.M{
+				"timestamp": time.Now(),
+			},
+		},
+		ReturnNew: true,
+	}
+	doc := &Stream{}
+
+	_, err = coll.Find(bson.M{
+		"_id": s.Id,
+	}).Apply(change, doc)
+	if err != nil {
+		return
+	}
+
+	s.RunnerId = doc.RunnerId
+	s.Timestamp = doc.Timestamp
+
+	return
+}
+
 func (s *Stream) initialize() (err error) {
 	coll := s.db.Streams()
 
