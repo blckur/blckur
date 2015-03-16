@@ -15,6 +15,21 @@ type Stream struct {
 	db *database.Database
 }
 
+func (s *Stream) initialize() (err error) {
+	coll := s.db.Streams()
+
+	s.Timestamp = time.Now()
+	s.RunnerId = bson.NewObjectId()
+
+	_, err = coll.UpsertId(s.Id, s)
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
+
 func NewStream(acctId bson.ObjectId, typ string) (stream *Stream) {
 	db := database.GetDatabase()
 
