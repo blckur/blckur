@@ -30,6 +30,11 @@ type Account struct {
 	coll *database.Collection `bson:"-" json:"-"`
 }
 
+type Stream interface {
+	Start()
+	Stop()
+}
+
 func (a *Account) Commit() (err error) {
 	err = a.coll.Commit(a.Id, a)
 	return
