@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/settings"
+	"github.com/Sirupsen/logrus"
 	"time"
 )
 
@@ -32,7 +33,12 @@ func (s *Stream) startTwitter() (err error) {
 				settings.Stream.RefreshRate) * time.Second)
 			stop, err := s.Update()
 			if err != nil {
-				panic(err)
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+					"type": s.Type,
+					"account_id": s.Id.Hex(),
+					"runner_id": s.RunnerId.Hex(),
+				}).Error("streams.twitter: Update error")
 			} else if stop {
 				stream.Stop()
 				return
@@ -41,6 +47,11 @@ func (s *Stream) startTwitter() (err error) {
 			}
 
 			if time.Since(lastUpdate) > 2 * time.Minute {
+				logrus.WithFields(logrus.Fields{
+					"type": s.Type,
+					"account_id": s.Id.Hex(),
+					"runner_id": s.RunnerId.Hex(),
+				}).Error("streams.twitter: Update timed out")
 				stream.Stop()
 				return
 			}
