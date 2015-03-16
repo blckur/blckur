@@ -47,7 +47,6 @@ func GetAccount(db *database.Database, acctId bson.ObjectId) (
 
 	err = coll.Find(bson.M{
 		"_id": acctId,
-		"user_id": userId,
 	}).One(acct)
 	if err != nil {
 		err = database.ParseError(err)
@@ -59,13 +58,11 @@ func GetAccount(db *database.Database, acctId bson.ObjectId) (
 	return
 }
 
-func RemAccount(db *database.Database, userId bson.ObjectId,
-		acctId bson.ObjectId) (err error) {
+func RemAccount(db *database.Database, acctId bson.ObjectId) (err error) {
 	coll := db.Accounts()
 
 	err = coll.Remove(bson.M{
 		"_id": acctId,
-		"user_id": userId,
 	})
 	if err != nil {
 		err = database.ParseError(err)
