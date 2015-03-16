@@ -178,6 +178,13 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 		return
 	}
 
+	var bodySnippet string
+	if len(msg.Snippet) > 140 {
+		bodySnippet = msg.Snippet[:140]
+	} else {
+		bodySnippet = msg.Snippet
+	}
+
 	notf = &notification.Notification{
 		UserId: g.UserId,
 		AccountId: g.Id,
@@ -186,7 +193,7 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 		Type: matchType,
 		Origin: from,
 		Subject: subject,
-		Body: msg.Snippet,
+		Body: bodySnippet,
 	}
 
 	return
