@@ -19,6 +19,7 @@ var (
 	Google *google
 	Twitter *twitter
 	System *system
+	Stream *stream
 )
 
 func init() {
@@ -33,6 +34,9 @@ func init() {
 	}
 	System = &system{
 		Id: "system",
+	}
+	Stream = &stream{
+		Id: "stream",
 	}
 }
 
@@ -59,6 +63,11 @@ type system struct {
 	CookieKey []byte `bson:"cookie_key"`
 	Domain string `bson:"domain"`
 	AppHome string `bson:"app_home"`
+}
+
+type stream struct {
+	Id string `bson:"_id"`
+	RefreshRate int `bson:"refresh_rate" default:"10"`
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
