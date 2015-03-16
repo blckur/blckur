@@ -160,7 +160,7 @@ func (s *TwitterStream) Parse(db *database.Database, evtInf interface{}) (
 	}
 
 	notf.Timestamp, err = time.Parse("Mon Jan 02 15:04:05 -0700 2006",
-	timestamp)
+		timestamp)
 	if err != nil {
 		notf = nil
 		err = nil
