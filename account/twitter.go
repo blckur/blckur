@@ -20,9 +20,7 @@ var (
 	twitterConf *oauth.Oauth1
 )
 
-type Twitter struct {
-	Account `bson:",inline"`
-}
+type Twitter Account
 
 func (t *Twitter) NewClient() (client *oauth.Oauth1Client) {
 	client = twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
@@ -187,13 +185,11 @@ func AuthTwitter(db *database.Database, token string, code string) (
 	}
 
 	acct = &Twitter{
-		Account{
-			UserId: client.UserId,
-			Type: "twitter",
-			OauthTokn: client.Token,
-			OauthSec: client.Secret,
-			coll: coll,
-		},
+		UserId: client.UserId,
+		Type: "twitter",
+		OauthTokn: client.Token,
+		OauthSec: client.Secret,
+		coll: coll,
 	}
 
 	err = acct.Update()
