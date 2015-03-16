@@ -19,9 +19,7 @@ var (
 	gmailConf *oauth.Oauth2
 )
 
-type Gmail struct {
-	Account `bson:",inline"`
-}
+type Gmail Account
 
 type GmailMessage struct {
 	Id string `json:"id"`
