@@ -101,11 +101,11 @@ func (s *TwitterStream) Parse(db *database.Database, evtInf interface{}) (
 
 		var subject string
 		switch (evt.Event.Event) {
-			case "favorite":
+		case "favorite":
 			subject = "Tweet favorited by "
-			case "unfavorite":
+		case "unfavorite":
 			subject = "Tweet unfavorited by "
-			default:
+		default:
 			return
 		}
 
