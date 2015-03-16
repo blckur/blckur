@@ -60,6 +60,11 @@ func (d *Database) Sessions() (coll *Collection) {
 	return
 }
 
+func (d *Database) Streams() (coll *Collection) {
+	coll = d.getCollection("streams")
+	return
+}
+
 func (d *Database) Nodes() (coll *Collection) {
 	coll = d.getCollection("nodes")
 	return
