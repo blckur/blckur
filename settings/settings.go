@@ -16,9 +16,9 @@ import (
 
 var (
 	PapperTrail *papperTrail
-	System *system
 	Google *google
 	Twitter *twitter
+	System *system
 )
 
 func init() {
