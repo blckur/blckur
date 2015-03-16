@@ -20,6 +20,9 @@ func Beanstalkd() {
 	}
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "0"
+	}
 
 	portInt, err := strconv.Atoi(port)
 	if err != nil {
