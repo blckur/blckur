@@ -213,6 +213,8 @@ func Update(groupName string) {
 		group = Twitter
 	case "system":
 		group = System
+	case "stream":
+		group = Stream
 	}
 
 	for {
@@ -236,6 +238,7 @@ func Init() {
 	Update("google")
 	Update("twitter")
 	Update("system")
+	Update("stream")
 
 	messenger.Register("settings", "all", func(msg *messenger.Message) {
 		Update(msg.Data.(string))
