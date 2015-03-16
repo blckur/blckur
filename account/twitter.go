@@ -132,6 +132,11 @@ func (t *Twitter) Parse(db *database.Database, evtInf interface{}) (
 
 	notf.RemoteId = hashEvent(t.Id.Hex(), notf.Timestamp)
 
+	err = notf.Initialize(db)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
