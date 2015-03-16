@@ -47,7 +47,7 @@ func (b *BeanstalkdNode) Start() {
 			time.Sleep(constants.RETRY_DELAY)
 		}
 
-		cmd = exec.Command("./beanstalkd2", args...) // TODO
+		cmd = exec.Command("./bin/beanstalkd", args...) // TODO
 		cmd.Stdout = logger.NewErrorWriter()
 		cmd.Stderr = logger.NewErrorWriter()
 
