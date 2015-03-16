@@ -86,6 +86,11 @@ func (s *TwitterStream) Start() {
 	}
 }
 
+func (s *TwitterStream) Stop() {
+	s.stream.Interrupt()
+	s.stream.End()
+}
+
 func (s *TwitterStream) Parse(db *database.Database, evtInf interface{}) (
 		notf *notification.Notification, err error) {
 	var timestamp string
