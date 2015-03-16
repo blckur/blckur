@@ -15,8 +15,9 @@ type Stream struct {
 	db *database.Database
 }
 
-func (s *Stream) Update() (err error) {
+func (s *Stream) Update() (stop bool, err error) {
 	coll := s.db.Streams()
+	stop = false
 
 	change := mgo.Change{
 		Update: bson.M{
@@ -30,12 +31,20 @@ func (s *Stream) Update() (err error) {
 
 	_, err = coll.Find(bson.M{
 		"_id": s.Id,
+		"runner_id": s.RunnerId,
 	}).Apply(change, doc)
 	if err != nil {
-		return
+		err = database.ParseError(err)
+
+		switch err.(type) {
+		case *database.NotFoundError:
+			stop = true
+			err = nil
+		default:
+			return
+		}
 	}
 
-	s.RunnerId = doc.RunnerId
 	s.Timestamp = doc.Timestamp
 
 	return
