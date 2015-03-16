@@ -69,7 +69,7 @@ func main() {
 
 		logrus.WithFields(logrus.Fields{
 			"address": addr,
-		}).Info("Starting server")
+		}).Info("main: Starting server")
 
 		server.ListenAndServe()
 	}
