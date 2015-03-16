@@ -40,14 +40,20 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
-func GetAccount(db *database.Database, acctId bson.ObjectId) (
-		acct *Account, err error) {
+func GetAccount(db *database.Database, userId bson.ObjectId,
+		acctId bson.ObjectId) (acct *Account, err error) {
 	coll := db.Accounts()
 	acct = &Account{}
 
-	err = coll.Find(bson.M{
+	query := bson.M{
 		"_id": acctId,
-	}).One(acct)
+	}
+
+	if userId != "" {
+		query["user_id"] = userId
+	}
+
+	err = coll.Find(query).One(acct)
 	if err != nil {
 		err = database.ParseError(err)
 		return
@@ -58,12 +64,19 @@ func GetAccount(db *database.Database, acctId bson.ObjectId) (
 	return
 }
 
-func RemAccount(db *database.Database, acctId bson.ObjectId) (err error) {
+func RemAccount(db *database.Database, userId bson.ObjectId,
+		acctId bson.ObjectId) (err error) {
 	coll := db.Accounts()
 
-	err = coll.Remove(bson.M{
+	query := bson.M{
 		"_id": acctId,
-	})
+	}
+
+	if userId != "" {
+		query["user_id"] = userId
+	}
+
+	err = coll.Remove(query)
 	if err != nil {
 		err = database.ParseError(err)
 		return
