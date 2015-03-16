@@ -40,8 +40,8 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
-func GetAccount(db *database.Database, userId bson.ObjectId,
-		acctId bson.ObjectId) (acct *Account, err error) {
+func GetAccount(db *database.Database, acctId bson.ObjectId) (
+		acct *Account, err error) {
 	coll := db.Accounts()
 	acct = &Account{}
 
