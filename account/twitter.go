@@ -79,7 +79,7 @@ type TwitterStream struct {
 
 func (s *TwitterStream) Start() {
 	for obj := range s.stream.C {
-		_, err := s.Parse(s.db, obj)
+		_, err := s.Handle(s.db, obj)
 		if err != nil {
 			panic(err) // TODO
 		}
@@ -91,7 +91,7 @@ func (s *TwitterStream) Stop() {
 	s.stream.End()
 }
 
-func (s *TwitterStream) Parse(db *database.Database, evtInf interface{}) (
+func (s *TwitterStream) Handle(db *database.Database, evtInf interface{}) (
 		notf *notification.Notification, err error) {
 	var timestamp string
 
