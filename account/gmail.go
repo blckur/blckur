@@ -291,14 +291,12 @@ func AuthGmail(db *database.Database, state string, code string) (
 	}
 
 	acct = &Gmail{
-		Account{
-			UserId: client.UserId,
-			Type: "gmail",
-			Oauth2AccTokn: client.AccessToken,
-			Oauth2RefTokn: client.RefreshToken,
-			Oauth2Exp: client.Expiry,
-			coll: coll,
-		},
+		UserId: client.UserId,
+		Type: "gmail",
+		Oauth2AccTokn: client.AccessToken,
+		Oauth2RefTokn: client.RefreshToken,
+		Oauth2Exp: client.Expiry,
+		coll: coll,
 	}
 
 	acct.Update(db)
