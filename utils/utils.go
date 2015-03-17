@@ -98,6 +98,20 @@ func RotateStrings(data []string, d int) {
 	ReverseStrings(data, d, n)
 }
 
+func MinInt(x int, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func MaxInt(x int, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
+
 func isEscapable(b byte) bool {
 	return !('A' <= b && b <= 'Z' || 'a' <= b && b <= 'z' ||
 		'0' <= b && b <= '9' || b == '-' || b == '.' || b == '_' || b == '~')
