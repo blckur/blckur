@@ -1,23 +1,30 @@
 library models;
 
-import 'package:blckur/models/account.dart' as acct;
-import 'package:blckur/models/account_add.dart' as acct_ad;
-import 'package:blckur/models/account_type.dart' as acct_typ;
-import 'package:blckur/models/alert_type.dart' as alrt_typ;
-import 'package:blckur/models/auth.dart' as ath;
-import 'package:blckur/models/event.dart' as evnt;
-import 'package:blckur/models/user.dart' as usr;
+import 'package:blckur/models/account.dart' as account;
+export 'package:blckur/models/account.dart' show Account;
+import 'package:blckur/models/account_add.dart' as account_add;
+export 'package:blckur/models/account_add.dart' show AccountAdd;
+import 'package:blckur/models/account_type.dart' as account_type;
+export 'package:blckur/models/account_type.dart' show AccountType;
+import 'package:blckur/models/alert_type.dart' as alert_type;
+export 'package:blckur/models/alert_type.dart' show AlertType;
+import 'package:blckur/models/auth.dart' as auth;
+export 'package:blckur/models/auth.dart' show Auth;
+import 'package:blckur/models/event.dart' as event;
+export 'package:blckur/models/event.dart' show Event;
+import 'package:blckur/models/user.dart' as user;
+export 'package:blckur/models/user.dart' show User;
 
 import 'package:angular/angular.dart' as ng;
 
 class ModelsMod extends ng.Module {
   ModelsMod() {
-    this.bind(acct.Account);
-    this.bind(acct_ad.AccountAdd);
-    this.bind(acct_typ.AccountType);
-    this.bind(alrt_typ.AlertType);
-    this.bind(ath.Auth);
-    this.bind(evnt.Event);
-    this.bind(usr.User);
+    this.bind(account.Account);
+    this.bind(account_add.AccountAdd);
+    this.bind(account_type.AccountType);
+    this.bind(alert_type.AlertType);
+    this.bind(auth.Auth);
+    this.bind(event.Event);
+    this.bind(user.User);
   }
 }

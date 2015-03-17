@@ -1,19 +1,19 @@
 library user_mod;
 
-import 'package:blckur/model.dart' as mdl;
+import 'package:blckur/model.dart' as model;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 
 @Injectable()
-class User extends mdl.Model {
-  @mdl.Attribute('id')
+class User extends model.Model {
+  @model.Attribute('id')
   String id;
 
-  @mdl.Attribute('email')
+  @model.Attribute('email')
   String email;
 
-  @mdl.Attribute('password')
+  @model.Attribute('password')
   String password;
 
   User(ng.Http http) : super(http);

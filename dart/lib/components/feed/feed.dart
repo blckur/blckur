@@ -1,8 +1,8 @@
 library feed_comp;
 
-import 'package:blckur/collections/accounts.dart' as accts;
+import 'package:blckur/collections/collections.dart' as collections;
 import 'package:blckur/logger.dart' as logger;
-import 'package:blckur/alert.dart' as alrt;
+import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component;
 
@@ -13,7 +13,7 @@ import 'package:angular/angular.dart' show Component;
 )
 class FeedComp {
   bool addAccount;
-  accts.Accounts accounts;
+  collections.Accounts accounts;
 
   FeedComp(this.accounts) {
     this.update();
@@ -22,7 +22,7 @@ class FeedComp {
   void update() {
     this.accounts.fetch().catchError((err) {
       logger.severe('Failed to load accounts', err);
-      new alrt.Alert('Error loading accounts', () {
+      new alert.Alert('Error loading accounts', () {
         this.update();
       });
     });

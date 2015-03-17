@@ -1,14 +1,14 @@
 library account_types_col;
 
-import 'package:blckur/collection.dart' as collec;
-import 'package:blckur/models/account_type.dart' as acct_typ;
+import 'package:blckur/collection.dart' as collection;
+import 'package:blckur/models/models.dart' as models;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 
 @Injectable()
-class AccountTypes extends collec.Collection {
-  Type model = acct_typ.AccountType;
+class AccountTypes extends collection.Collection {
+  Type model = models.AccountType;
 
   AccountTypes(ng.Http http) : super(http);
 

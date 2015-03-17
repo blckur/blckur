@@ -2,7 +2,7 @@ library polymer_dec;
 
 import 'package:angular/angular.dart' show Decorator;
 import 'package:angular/angular.dart' as ng;
-import 'package:observe/observe.dart' as obsrv;
+import 'package:observe/observe.dart' as observe;
 import 'package:template_binding/template_binding.dart' as tmpl_bnd;
 import 'dart:html' as dom;
 
@@ -200,7 +200,7 @@ class PolymerDec {
   }
 }
 
-class ValueBindable implements obsrv.Bindable {
+class ValueBindable implements observe.Bindable {
   Function callback;
   Function onChange;
 

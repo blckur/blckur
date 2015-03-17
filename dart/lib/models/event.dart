@@ -1,22 +1,22 @@
 library event_mod;
 
-import 'package:blckur/model.dart' as mdl;
+import 'package:blckur/model.dart' as model;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 
 @Injectable()
-class Event extends mdl.Model {
-  @mdl.Attribute('id')
+class Event extends model.Model {
+  @model.Attribute('id')
   String id;
 
-  @mdl.Attribute('type')
+  @model.Attribute('type')
   String type;
 
-  @mdl.Attribute('resource_id')
+  @model.Attribute('resource_id')
   String resourceId;
 
-  @mdl.Attribute('timestamp')
+  @model.Attribute('timestamp')
   double timestamp;
 
   Event(ng.Http http) : super(http);

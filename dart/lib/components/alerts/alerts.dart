@@ -1,6 +1,6 @@
 library alerts_comp;
 
-import 'package:blckur/alert.dart' as alrt;
+import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component;
 import 'dart:collection' as collection;
@@ -15,7 +15,7 @@ import 'dart:collection' as collection;
   cssUrl: 'packages/blckur/components/alerts/alerts.css'
 )
 class AlertsComp {
-  collection.Queue<alrt.Alert> alerts = alrt.alerts;
+  collection.Queue<alert.Alert> alerts = alert.alerts;
 
   String getClass(int index) {
     return 'alert${index}';

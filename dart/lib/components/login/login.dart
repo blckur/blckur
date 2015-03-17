@@ -1,7 +1,7 @@
 library login_comp;
 
 import 'package:blckur/exceptions.dart';
-import 'package:blckur/models/auth.dart' as ath;
+import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
@@ -14,7 +14,7 @@ import 'dart:html' as dom;
   cssUrl: 'packages/blckur/components/login/login.css'
 )
 class LoginComp implements ng.ShadowRootAware {
-  ath.Auth model;
+  models.Auth model;
   String emailError;
   String passwordError;
   String mode;

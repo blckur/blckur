@@ -1,28 +1,28 @@
 library alert_type_mod;
 
-import 'package:blckur/model.dart' as mdl;
+import 'package:blckur/model.dart' as model;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 
 @Injectable()
-class AlertType extends mdl.Model {
-  @mdl.Attribute('id')
+class AlertType extends model.Model {
+  @model.Attribute('id')
   int id;
 
-  @mdl.Attribute('label')
+  @model.Attribute('label')
   String label;
 
-  @mdl.Attribute('type')
+  @model.Attribute('type')
   String type;
 
-  @mdl.Attribute('value_type')
+  @model.Attribute('value_type')
   String valueType;
 
-  @mdl.Attribute('value_label')
+  @model.Attribute('value_label')
   String valueLabel;
 
-  @mdl.Attribute('value_holder')
+  @model.Attribute('value_holder')
   String valueHolder;
 
   AlertType(ng.Http http) : super(http);

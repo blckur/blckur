@@ -1,7 +1,7 @@
 library events_col;
 
-import 'package:blckur/collection.dart' as collec;
-import 'package:blckur/models/event.dart' as evnt;
+import 'package:blckur/collection.dart' as collection;
+import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Injectable;
@@ -11,8 +11,8 @@ import 'dart:html' as dom;
 import 'dart:convert' as convert;
 
 @Injectable()
-class Events extends collec.Collection {
-  Type model = evnt.Event;
+class Events extends collection.Collection {
+  Type model = models.Event;
   String cursor;
   ng.RootScope rootScope;
   dom.WebSocket socket;
@@ -22,7 +22,7 @@ class Events extends collec.Collection {
   String url = '/events';
 
   void onEvent(dom.MessageEvent evt) {
-    var event = new evnt.Event(this.http);
+    var event = new models.Event(this.http);
     event.init();
 
     event.import(convert.JSON.decode(evt.data));

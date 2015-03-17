@@ -1,7 +1,6 @@
 library user_comp;
 
-import 'package:blckur/models/auth.dart' as ath;
-import 'package:blckur/models/user.dart' as usr;
+import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
@@ -14,9 +13,9 @@ import 'package:angular/angular.dart'as ng;
 )
 class UserComp {
   bool settings;
-  usr.User model;
-  usr.User settingsModel;
-  ath.Auth authModel;
+  models.User model;
+  models.User settingsModel;
+  models.Auth authModel;
   ng.Router router;
 
   UserComp(this.model, this.authModel, this.router) {

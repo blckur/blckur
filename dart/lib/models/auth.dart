@@ -1,36 +1,36 @@
 library auth_mod;
 
-import 'package:blckur/model.dart' as mdl;
+import 'package:blckur/model.dart' as model;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 import 'dart:async' as async;
 
 @Injectable()
-class Auth extends mdl.Model {
+class Auth extends model.Model {
   String url = '/auth';
 
-  @mdl.Attribute('email')
+  @model.Attribute('email')
   String email;
 
-  @mdl.Validator('email')
+  @model.Validator('email')
   void emailValidator(val) {
     if (val == null || val == '') {
-      throw new mdl.Invalid('empty', 'Email cannot be empty');
+      throw new model.Invalid('empty', 'Email cannot be empty');
     }
   }
 
-  @mdl.Attribute('password')
+  @model.Attribute('password')
   String password;
 
-  @mdl.Validator('password')
+  @model.Validator('password')
   void passwordValidator(val) {
     if (val == null || val == '') {
-      throw new mdl.Invalid('empty', 'Password cannot be empty');
+      throw new model.Invalid('empty', 'Password cannot be empty');
     }
   }
 
-  @mdl.Attribute('remember')
+  @model.Attribute('remember')
   bool remember;
 
   Auth(ng.Http http) : super(http);

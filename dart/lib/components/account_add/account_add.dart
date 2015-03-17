@@ -1,10 +1,10 @@
 library account_add_comp;
 
-import 'package:blckur/models/account_add.dart' as acct_ad;
-import 'package:blckur/collections/account_types.dart' as acct_typs;
-import 'package:blckur/loading.dart' as lodin;
+import 'package:blckur/models/models.dart' as models;
+import 'package:blckur/collections/collections.dart' as collections;
+import 'package:blckur/loading.dart' as loading;
 import 'package:blckur/logger.dart' as logger;
-import 'package:blckur/alert.dart' as alrt;
+import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgTwoWay;
 import 'dart:html' as dom;
@@ -14,9 +14,9 @@ import 'dart:html' as dom;
   templateUrl: 'packages/blckur/components/account_add/account_add.html',
   cssUrl: 'packages/blckur/components/account_add/account_add.css'
 )
-class AccountAddComp extends lodin.Loading {
-  acct_ad.AccountAdd model;
-  acct_typs.AccountTypes accountTypes;
+class AccountAddComp extends loading.Loading {
+  models.AccountAdd model;
+  collections.AccountTypes accountTypes;
 
   @NgTwoWay('add-account')
   bool active;
@@ -31,7 +31,7 @@ class AccountAddComp extends lodin.Loading {
     this.active = true;
     this.accountTypes.fetch().catchError((err) {
       logger.severe('Failed to load account types', err);
-      new alrt.Alert('Failed to load account types');
+      new alert.Alert('Failed to load account types');
     }).whenComplete(() {
       this.clearLoading();
     });
@@ -58,7 +58,7 @@ class AccountAddComp extends lodin.Loading {
         return;
       }
       logger.severe('Failed to add account', err);
-      new alrt.Alert('Unable to add account, try again later.', () {
+      new alert.Alert('Unable to add account, try again later.', () {
         this.onClick(type);
       });
     }).whenComplete(() {

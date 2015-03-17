@@ -1,12 +1,11 @@
 library alert_add_comp;
 
-import 'package:blckur/models/alert_type.dart' as alrt_typ;
-import 'package:blckur/models/account.dart' as acct;
-import 'package:blckur/collections/alert_types.dart' as alrt_typs;
-import 'package:blckur/loading.dart' as lodin;
-import 'package:blckur/enter_aware.dart' as ent_awr;
+import 'package:blckur/models/models.dart' as models;
+import 'package:blckur/collections/collections.dart' as collections;
+import 'package:blckur/loading.dart' as loading;
+import 'package:blckur/enter_aware.dart' as enter_aware;
 import 'package:blckur/logger.dart' as logger;
-import 'package:blckur/alert.dart' as alrt;
+import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgTwoWay;
 
@@ -15,15 +14,15 @@ import 'package:angular/angular.dart' show Component, NgTwoWay;
   templateUrl: 'packages/blckur/components/account_alerts/account_alerts.html',
   cssUrl: 'packages/blckur/components/account_alerts/account_alerts.css'
 )
-class AccountAlertsComp extends ent_awr.EnterAware with lodin.Loading {
+class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
   bool selected;
   bool active;
   dynamic typeValue;
-  alrt_typ.AlertType typeModel;
-  alrt_typs.AlertTypes alertTypes;
+  models.AlertType typeModel;
+  collections.AlertTypes alertTypes;
 
   @NgTwoWay('model')
-  acct.Account model;
+  models.Account model;
 
   AccountAlertsComp(this.alertTypes);
 
@@ -48,7 +47,7 @@ class AccountAlertsComp extends ent_awr.EnterAware with lodin.Loading {
     this.active = true;
     this.alertTypes.fetch().catchError((err) {
       logger.severe('Failed to load alert types', err);
-      new alrt.Alert('Failed to load alert types');
+      new alert.Alert('Failed to load alert types');
     }).whenComplete(() {
       this.clearLoading();
     });
@@ -59,7 +58,7 @@ class AccountAlertsComp extends ent_awr.EnterAware with lodin.Loading {
     this.clearLoading();
   }
 
-  void onClick(alrt_typ.AlertType model) {
+  void onClick(models.AlertType model) {
     this.typeModel = model;
 
     if (model.valueType == "" || model.valueType == null) {
@@ -84,7 +83,7 @@ class AccountAlertsComp extends ent_awr.EnterAware with lodin.Loading {
     this.model.alerts.remove(alert);
     this.model.save(['alerts']).catchError((err) {
       logger.severe('Failed to remove alert', err);
-      new alrt.Alert('Failed to remove alert');
+      new alert.Alert('Failed to remove alert');
     }).whenComplete(() {
       this.clearLoading();
     });
@@ -106,7 +105,7 @@ class AccountAlertsComp extends ent_awr.EnterAware with lodin.Loading {
 
     this.model.save(['alerts']).catchError((err) {
       logger.severe('Failed to add alert', err);
-      new alrt.Alert('Failed to add alert');
+      new alert.Alert('Failed to add alert');
     }).whenComplete(() {
       this.clear();
       this.clearLoading();
