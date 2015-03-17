@@ -81,6 +81,23 @@ func InfToBool(obj interface{}) (val bool) {
 	return
 }
 
+func ReverseStrings(data []string, start int, end int) {
+	for start < end {
+		tmp := data[start]
+		data[start] = data[end]
+		data[end] = tmp
+		start += 1
+		end -= 1
+	}
+}
+
+func RotateStrings(data []string, d int) {
+	n := len(data) - 1
+	ReverseStrings(data, 0, n)
+	ReverseStrings(data, 0, d - 1)
+	ReverseStrings(data, d, n)
+}
+
 func isEscapable(b byte) bool {
 	return !('A' <= b && b <= 'Z' || 'a' <= b && b <= 'z' ||
 		'0' <= b && b <= '9' || b == '-' || b == '.' || b == '_' || b == '~')
