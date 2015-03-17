@@ -15,5 +15,7 @@ func main() {
 		cmd.Server()
 	case "beanstalkd":
 		cmd.Beanstalkd()
+	case "redis":
+		cmd.Redis()
 	}
 }
