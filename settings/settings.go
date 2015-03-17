@@ -20,6 +20,7 @@ var (
 	Twitter *twitter
 	System *system
 	Stream *stream
+	Redis *redis
 )
 
 func init() {
@@ -37,6 +38,9 @@ func init() {
 	}
 	Stream = &stream{
 		Id: "stream",
+	}
+	Redis = &redis{
+		Id: "redis",
 	}
 }
 
@@ -67,7 +71,12 @@ type system struct {
 
 type stream struct {
 	Id string `bson:"_id"`
-	RefreshRate int `bson:"refresh_rate" default:"10"`
+	RefreshRate int `bson:"refresh_rate" default:"5"`
+}
+
+type redis struct {
+	Id string `bson:"_id"`
+	Consistency int `bson:"consistency" default:"2"`
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
