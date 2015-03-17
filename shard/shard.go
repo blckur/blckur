@@ -17,17 +17,10 @@ func (s *Shard) Select(key string) (servers []string) {
 	return
 }
 
-func New(servers map[string]string, consistency int) (shd *Shard) {
-	consistency = utils.MinInt(consistency, len(servers))
-	keys := make([]string, len(servers))
+func New(keys []string, consistency int) (shd *Shard) {
+	consistency = utils.MinInt(consistency, len(keys))
 	shd = &Shard{
-		servers: make([][]string, len(servers)),
-	}
-
-	i := 0
-	for key, _ := range servers {
-		keys[i] = key
-		i += 1
+		servers: make([][]string, len(keys)),
 	}
 
 	sort.Strings(keys)
@@ -37,7 +30,7 @@ func New(servers map[string]string, consistency int) (shd *Shard) {
 			utils.RotateStrings(keys, 1)
 		}
 		for i, key := range keys {
-			shd.servers[i] = append(shd.servers[i], servers[key])
+			shd.servers[i] = append(shd.servers[i], key)
 		}
 	}
 
