@@ -1,4 +1,4 @@
-package distribute
+package shard
 
 import (
 	"github.com/blckur/blckur/utils"
@@ -6,21 +6,21 @@ import (
 	"sort"
 )
 
-type Distribute struct {
+type Shard struct {
 	servers [][]string
 }
 
-func (d *Distribute) Select(key string) (servers []string) {
+func (s *Shard) Select(key string) (servers []string) {
 	hash := fnv.New32a()
 	hash.Write([]byte(key))
-	servers = d.servers[hash.Sum32() % uint32(len(d.servers))]
+	servers = s.servers[hash.Sum32() % uint32(len(s.servers))]
 	return
 }
 
-func New(servers map[string]string, consistency int) (dist *Distribute) {
+func New(servers map[string]string, consistency int) (shd *Shard) {
 	consistency = utils.MinInt(consistency, len(servers))
 	keys := make([]string, len(servers))
-	dist = &Distribute{
+	shd = &Shard{
 		servers: make([][]string, len(servers)),
 	}
 
@@ -37,7 +37,7 @@ func New(servers map[string]string, consistency int) (dist *Distribute) {
 			utils.RotateStrings(keys, 1)
 		}
 		for i, key := range keys {
-			dist.servers[i] = append(dist.servers[i], servers[key])
+			shd.servers[i] = append(shd.servers[i], servers[key])
 		}
 	}
 
