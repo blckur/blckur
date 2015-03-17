@@ -19,22 +19,26 @@ func (d *Distribute) Select(key string) (servers []string) {
 
 func New(servers map[string]string, consistency int) (dist *Distribute) {
 	consistency = utils.MinInt(consistency, len(servers))
-	keys := []string{}
+	keys := make([]string, len(servers))
 	dist = &Distribute{
 		servers: make([][]string, len(servers)),
 	}
 
+	i := 0
 	for key, _ := range servers {
-		keys = append(keys, key)
+		keys[i] = key
+		i += 1
 	}
 
 	sort.Strings(keys)
 
 	for j := 0; j < consistency; j++ {
+		if j != 0 {
+			utils.RotateStrings(keys, 1)
+		}
 		for i, key := range keys {
 			dist.servers[i] = append(dist.servers[i], servers[key])
 		}
-		utils.RotateStrings(keys, 1)
 	}
 
 	return
