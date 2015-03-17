@@ -224,6 +224,8 @@ func Update(groupName string) {
 		group = System
 	case "stream":
 		group = Stream
+	case "redis":
+		group = Redis
 	}
 
 	for {
@@ -248,6 +250,7 @@ func Init() {
 	Update("twitter")
 	Update("system")
 	Update("stream")
+	Update("redis")
 
 	messenger.Register("settings", "all", func(msg *messenger.Message) {
 		Update(msg.Data.(string))
