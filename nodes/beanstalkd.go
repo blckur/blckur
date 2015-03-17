@@ -42,7 +42,9 @@ func (b *BeanstalkdNode) Start() {
 	var cmd *exec.Cmd
 	for {
 		if cmd != nil {
-			cmd.Process.Kill()
+			if cmd.Process != nil {
+				cmd.Process.Kill()
+			}
 			cmd.Wait()
 			time.Sleep(constants.RETRY_DELAY)
 		}
