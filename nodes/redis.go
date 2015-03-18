@@ -6,7 +6,6 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/utils"
-	"labix.org/v2/mgo/bson"
 	"os/exec"
 	"time"
 	"strconv"
