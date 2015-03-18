@@ -38,7 +38,7 @@ func getCursorId(coll *database.Collection, channels []string) (
 	} else {
 		query = &bson.M{
 			"channel": &bson.M{
-				"$in": channels[0],
+				"$in": channels,
 			},
 		}
 	}
