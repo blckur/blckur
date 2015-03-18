@@ -24,7 +24,9 @@ type cluster struct {
 }
 
 func dial(node *nodes.Node) (conn redis.Conn, err error) {
-	conn, err = redis.Dial("tcp", node.Address)
+	timeout := time.Duration(settings.Redis.TimeoutMilli) * time.Millisecond
+	conn, err = redis.DialTimeout("tcp", node.Address, timeout, timeout,
+		timeout)
 	return
 }
 
