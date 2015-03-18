@@ -12,6 +12,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 	"time"
+	"github.com/blckur/blckur/gdefer"
 )
 
 var (
@@ -104,4 +105,10 @@ func Init() {
 	update()
 
 	requires.Register("cache")
+
+	gdefer.Defer(func() {
+		for _, pool := range clst.serverMap {
+			pool.Close()
+		}
+	})
 }
