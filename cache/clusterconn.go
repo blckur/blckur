@@ -4,7 +4,6 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/blckur/blckur/utils"
-	"sync"
 )
 
 type ClusterConn struct {
