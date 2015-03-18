@@ -4,6 +4,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/blckur/blckur/utils"
+	"sync"
 )
 
 type ClusterConn struct {
@@ -37,6 +38,41 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 			val = v
 			success = true
 			wait.Cancel()
+		}(server)
+	}
+
+	wait.Wait()
+	if !success {
+		err = er
+	}
+	return
+}
+
+func (c *ClusterConn) SetString(key string, val string) (err error) {
+	wait := sync.WaitGroup{}
+	success := false
+	var er error
+
+	for _, server := range c.clst.shrd.Select(key) {
+		wait.Add(1)
+		go func(server string) {
+			conn, ok := c.conns[server]
+			if !ok {
+				c.conns[server] = clst.serverMap[server].Get()
+			}
+
+			v, e := redis.String(conn.Do("SET", key, val))
+			if e != nil {
+				er = &CacheError{
+					errors.Wrap(e, "cache: Set error"),
+				}
+				wait.Done()
+				return
+			}
+
+			val = v
+			success = true
+			wait.Done()
 		}(server)
 	}
 
