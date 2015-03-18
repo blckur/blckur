@@ -85,3 +85,11 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 	}
 	return
 }
+
+func (c *ClusterConn) Close() {
+	cns := c.conns
+	c.conns = map[string]redis.Conn{}
+	for _, conn := range cns {
+		conn.Close()
+	}
+}
