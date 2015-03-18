@@ -80,6 +80,7 @@ func (r *RedisNode) Start() {
 			}
 
 			_, err := coll.UpsertId(r.Id, &Node{
+				Id: r.Id,
 				Type: "redis",
 				Address: address,
 				Timestamp: time.Now(),
