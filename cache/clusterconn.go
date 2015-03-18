@@ -49,7 +49,7 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 }
 
 func (c *ClusterConn) SetString(key string, val string) (err error) {
-	wait := sync.WaitGroup{}
+	wait := utils.WaitCancel{}
 	success := false
 	var er error
 
