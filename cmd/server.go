@@ -31,6 +31,7 @@ func Server() {
 	addr := host + ":" + port
 
 	account.Init()
+	cache.Init()
 	messenger.Init()
 	session.Init()
 
