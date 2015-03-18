@@ -21,7 +21,7 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 		go func(server string) {
 			conn, ok := c.conns[server]
 			if !ok {
-				conn = clst.serverMap[server].Get()
+				conn = c.clst.serverMap[server].Get()
 				c.conns[server] = conn
 			}
 
@@ -61,7 +61,8 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 		go func(server string) {
 			conn, ok := c.conns[server]
 			if !ok {
-				c.conns[server] = clst.serverMap[server].Get()
+				conn = c.clst.serverMap[server].Get()
+				c.conns[server] = conn
 			}
 
 			v, e := redis.String(conn.Do("SET", key, val))
