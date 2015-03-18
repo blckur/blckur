@@ -76,10 +76,10 @@ func (b *BeanstalkdNode) Start() {
 				break
 			}
 
-			_, err := coll.UpsertId(b.Id, &bson.M{
-				"type": "beanstalkd",
-				"address": address,
-				"timestamp": time.Now(),
+			_, err := coll.UpsertId(b.Id, &Node{
+				Type: "beanstalkd",
+				Adress: address,
+				Timestamp: time.Now(),
 			})
 			if err != nil {
 				err = database.ParseError(err)
