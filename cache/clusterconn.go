@@ -36,7 +36,11 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 
 			val = v
 			success = true
-			wait.Cancel()
+			if e == redis.ErrNil {
+				wait.Done()
+			} else {
+				wait.Cancel()
+			}
 		}(server)
 	}
 
