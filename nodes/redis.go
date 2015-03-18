@@ -80,10 +80,10 @@ func (r *RedisNode) Start() {
 				break
 			}
 
-			_, err := coll.UpsertId(r.Id, &bson.M{
-				"type": "redis",
-				"address": address,
-				"timestamp": time.Now(),
+			_, err := coll.UpsertId(r.Id, &Node{
+				Type: "redis",
+				Address: address,
+				Timestamp: time.Now(),
 			})
 			if err != nil {
 				err = database.ParseError(err)
