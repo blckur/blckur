@@ -30,13 +30,13 @@ func dial(address string) (conn redis.Conn, err error) {
 	return
 }
 
-func newPool(node *nodes.Node) (pool *redis.Pool) {
+func newPool(address string) (pool *redis.Pool) {
 	pool = &redis.Pool{
 		MaxIdle: settings.Redis.MaxIdle,
 		MaxActive: settings.Redis.MaxActive,
 		IdleTimeout: time.Duration(settings.Redis.IdleTimeout) * time.Second,
 		Dial: func() (conn redis.Conn, err error) {
-			conn, err = dial(node.Address)
+			conn, err = dial(address)
 			return
 		},
 		TestOnBorrow: func(conn redis.Conn, _ time.Time) (err error) {
@@ -80,7 +80,7 @@ func update() {
 
 		for _, node := range nodes {
 			svrKeys = append(svrKeys, node.Id)
-			cls.serverMap[node.Id] = newPool(node)
+			cls.serverMap[node.Id] = newPool(node.Address)
 		}
 
 		cls.shrd = shard.New(svrKeys, settings.Redis.Consistency)
