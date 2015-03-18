@@ -65,7 +65,7 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 				c.conns[server] = conn
 			}
 
-			v, e := redis.String(conn.Do("SET", key, val))
+			_, e := conn.Do("SET", key, val)
 			if e != nil {
 				er = &CacheError{
 					errors.Wrap(e, "cache: Set error"),
@@ -74,7 +74,6 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 				return
 			}
 
-			val = v
 			success = true
 			wait.Done()
 		}(server)
