@@ -24,10 +24,9 @@ type cluster struct {
 	shrd *shard.Shard
 }
 
-func dial(node *nodes.Node) (conn redis.Conn, err error) {
+func dial(address string) (conn redis.Conn, err error) {
 	timeout := time.Duration(settings.Redis.TimeoutMilli) * time.Millisecond
-	conn, err = redis.DialTimeout("tcp", node.Address, timeout, timeout,
-		timeout)
+	conn, err = redis.DialTimeout("tcp", address, timeout, timeout, timeout)
 	return
 }
 
@@ -37,7 +36,7 @@ func newPool(node *nodes.Node) (pool *redis.Pool) {
 		MaxActive: settings.Redis.MaxActive,
 		IdleTimeout: time.Duration(settings.Redis.IdleTimeout) * time.Second,
 		Dial: func() (conn redis.Conn, err error) {
-			conn, err = dial(node)
+			conn, err = dial(node.Address)
 			return
 		},
 		TestOnBorrow: func(conn redis.Conn, _ time.Time) (err error) {
