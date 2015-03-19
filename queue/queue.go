@@ -250,7 +250,7 @@ func (q *QueueStream) Reserve(timeout time.Duration) (job *Job) {
 			Data: jobData.Data,
 		}
 
-		return
+		break
 	}
 
 	return
