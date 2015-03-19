@@ -86,12 +86,12 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 	return
 }
 
-func (c *ClusterConn) Publish(key string, val string) (err error) {
+func (c *ClusterConn) Publish(channel string, val string) (err error) {
 	wait := utils.WaitCancel{}
 	success := false
 	var er error
 
-	for _, server := range c.clst.shrd.Select(key) {
+	for _, server := range c.clst.shrd.Select(channel) {
 		wait.Add(1)
 		go func(server string) {
 			conn, ok := c.conns[server]
@@ -100,7 +100,7 @@ func (c *ClusterConn) Publish(key string, val string) (err error) {
 				c.conns[server] = conn
 			}
 
-			_, e := conn.Do("PUBLISH", key, val)
+			_, e := conn.Do("PUBLISH", channel, val)
 			if e != nil {
 				er = &CacheError{
 					errors.Wrap(e, "cache: Publish error"),
