@@ -158,8 +158,6 @@ func Subscribe(db *database.Database, channels []string,
 		}
 		iter = coll.Find(query).Sort("$natural").Tail(duration)
 	}
-
-	return
 }
 
 func Register(channel string, event string, callback func(*Message)) {
