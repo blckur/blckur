@@ -27,7 +27,7 @@ type Account struct {
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
 	Alerts []*Alert `bson:"alerts" json:"alerts"`
 	Resources []*Resource `bson:"resources" json:"resources"`
-	coll *database.Collection `bson:"-" json:"-"`
+	coll *database.Collection
 }
 
 type Stream interface {
