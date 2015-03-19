@@ -120,7 +120,7 @@ func Init() {
 	messenger.Register("settings", "redis", func(_ *messenger.Message) {
 		go update()
 	})
-	messenger.Register("redis", "redis", func(_ *messenger.Message) {
+	messenger.Register("redis", "update", func(_ *messenger.Message) {
 		go update()
 	})
 	update()
