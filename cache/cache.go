@@ -33,6 +33,13 @@ func dial(address string) (conn redis.Conn, err error) {
 	return
 }
 
+func dialLong(address string) (conn redis.Conn, err error) {
+	timeout := time.Duration(settings.Redis.TimeoutMilli) * time.Millisecond
+	timeout2 := time.Duration(0)
+	conn, err = redis.DialTimeout("tcp", address, timeout, timeout2, timeout2)
+	return
+}
+
 func newPool(address string) (pool *redis.Pool) {
 	pool = &redis.Pool{
 		MaxIdle: settings.Redis.MaxIdle,
