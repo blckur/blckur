@@ -10,42 +10,32 @@ import (
 	"time"
 )
 
-const (
-	MESSAGE = 1
-	RESHARD = 2
-)
-
-type Event struct {
-	Type int
-	Data string
-}
-
-type PubSubConn struct {
+type pubSubConn struct {
 	address string
 	addMutex *sync.Mutex
 	remMutex *sync.Mutex
-	psConn *redis.PubSubConn
+	addQueue *list.List
+	remQueue *list.List
+	conn *redis.PubSubConn
 	listeners map[string]func(evt *Event)
-	addListeners *list.List
-	remListeners *list.List
 	closed bool
 }
 
-func (p *PubSubConn) subscribe(key string, handler func(evt *Event)) {
+func (p *pubSubConn) Subscribe(key string, handler func(evt *Event)) {
 	p.addMutex.Lock()
 	p.listeners[key] = handler
-	p.addListeners.PushBack(key)
+	p.addQueue.PushBack(key)
 	p.addMutex.Unlock()
 }
 
-func (p *PubSubConn) unsubsribe(key string) {
+func (p *pubSubConn) Unsubsribe(key string) {
 	p.remMutex.Lock()
-	p.remListeners.PushBack(key)
+	p.remQueue.PushBack(key)
 	delete(p.listeners, key)
 	p.remMutex.Unlock()
 }
 
-func (p *PubSubConn) reshard() {
+func (p *pubSubConn) reshard() {
 	p.addMutex.Lock()
 	p.remMutex.Lock()
 
@@ -63,15 +53,15 @@ func (p *PubSubConn) reshard() {
 	p.remMutex.Unlock()
 }
 
-func (p *PubSubConn) parseAddQueue() {
+func (p *pubSubConn) parseAddQueue() {
 	for {
 		if p.closed {
 			return
 		}
 
 		p.addMutex.Lock()
-		elem := p.addListeners.Front()
-		conn := p.psConn
+		elem := p.addQueue.Front()
+		conn := p.conn
 		p.addMutex.Unlock()
 
 		if elem == nil || conn.Conn == nil {
@@ -88,20 +78,20 @@ func (p *PubSubConn) parseAddQueue() {
 		}
 
 		p.addMutex.Lock()
-		p.addListeners.Remove(elem)
+		p.addQueue.Remove(elem)
 		p.addMutex.Unlock()
 	}
 }
 
-func (p *PubSubConn) parseRemQueue() {
+func (p *pubSubConn) parseRemQueue() {
 	for {
 		if p.closed {
 			return
 		}
 
 		p.remMutex.Lock()
-		elem := p.remListeners.Front()
-		conn := p.psConn
+		elem := p.remQueue.Front()
+		conn := p.conn
 		p.remMutex.Unlock()
 
 		if elem == nil || conn.Conn == nil {
@@ -118,12 +108,12 @@ func (p *PubSubConn) parseRemQueue() {
 		}
 
 		p.remMutex.Lock()
-		p.remListeners.Remove(elem)
+		p.remQueue.Remove(elem)
 		p.remMutex.Unlock()
 	}
 }
 
-func (p *PubSubConn) listen() {
+func (p *pubSubConn) listen() {
 	go func() {
 		for {
 			p.parseAddQueue()
@@ -138,10 +128,10 @@ func (p *PubSubConn) listen() {
 	}()
 
 	for {
-		if p.psConn.Conn != nil {
+		if p.conn.Conn != nil {
 			Loop:
 			for {
-				switch obj := p.psConn.Receive().(type) {
+				switch obj := p.conn.Receive().(type) {
 				case redis.Message:
 					if listener, ok := p.listeners[obj.Channel]; ok {
 						listener(&Event{
@@ -184,15 +174,15 @@ func (p *PubSubConn) listen() {
 			p.addMutex.Lock()
 			p.remMutex.Lock()
 
-			p.psConn = &redis.PubSubConn{
+			p.conn = &redis.PubSubConn{
 				Conn: conn,
 			}
 
-			p.addListeners = list.New()
-			p.remListeners = list.New()
+			p.addQueue = list.New()
+			p.remQueue = list.New()
 
 			for key, _ := range p.listeners {
-				p.addListeners.PushBack(key)
+				p.addQueue.PushBack(key)
 			}
 
 			p.addMutex.Unlock()
@@ -203,20 +193,20 @@ func (p *PubSubConn) listen() {
 	}
 }
 
-func (p *PubSubConn) close() {
+func (p *pubSubConn) close() {
 	p.closed = true
-	p.psConn.Close()
-	p.psConn = nil
+	p.conn.Close()
+	p.conn = nil
 }
 
-func newPubSubConn(address string) (psc *PubSubConn) {
-	psc = &PubSubConn{
+func newPubSubConn(address string) (psc *pubSubConn) {
+	psc = &pubSubConn{
 		address: address,
 		addMutex: &sync.Mutex{},
 		remMutex: &sync.Mutex{},
+		addQueue: list.New(),
+		remQueue: list.New(),
 		listeners: map[string]func(evt *Event){},
-		addListeners: list.New(),
-		remListeners: list.New(),
 		closed: false,
 	}
 
@@ -229,7 +219,8 @@ func newPubSubConn(address string) (psc *PubSubConn) {
 			"error": err,
 		}).Error("cache: Connection error")
 	}
-	psc.psConn = &redis.PubSubConn{
+
+	psc.conn = &redis.PubSubConn{
 		Conn: conn,
 	}
 
