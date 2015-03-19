@@ -7,20 +7,23 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/gdefer"
 	"github.com/blckur/blckur/nodes"
 	"github.com/garyburd/redigo/redis"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
+	"sync"
 	"time"
-	"github.com/blckur/blckur/gdefer"
 )
 
 var (
 	clst *cluster
+	clstMutex = sync.RWMutex{}
 )
 
 type cluster struct {
 	serverMap map[string]*redis.Pool
+	pubsubConns map[string]*PubSubConn
 	shrd *shard.Shard
 }
 
@@ -62,6 +65,7 @@ func update() {
 		nodes := []*nodes.Node{}
 		cls := &cluster{
 			serverMap: map[string]*redis.Pool{},
+			pubsubConns: map[string]*PubSubConn{},
 		}
 
 		err := coll.Find(bson.M{
@@ -81,11 +85,29 @@ func update() {
 		for _, node := range nodes {
 			svrKeys = append(svrKeys, node.Id)
 			cls.serverMap[node.Id] = newPool(node.Address)
+			cls.pubsubConns[node.Id] = newPubSubConn(node.Address)
 		}
 
 		cls.shrd = shard.New(svrKeys, settings.Redis.Consistency)
 
+		clstMutex.Lock()
+
+		curClst := clst
 		clst = cls
+
+		if curClst != nil {
+			for _, psc := range curClst.pubsubConns {
+				psc.reshard()
+			}
+		}
+
+		for _, psc := range clst.pubsubConns {
+			go func(psc *PubSubConn) {
+				psc.listen()
+			}(psc)
+		}
+
+		clstMutex.Unlock()
 
 		break
 	}
