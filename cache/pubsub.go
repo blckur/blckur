@@ -17,11 +17,11 @@ type pubSubConn struct {
 	addQueue *list.List
 	remQueue *list.List
 	conn *redis.PubSubConn
-	listeners map[string]func(evt *Event)
+	listeners map[string]func(evt *event)
 	closed bool
 }
 
-func (p *pubSubConn) Subscribe(key string, handler func(evt *Event)) {
+func (p *pubSubConn) Subscribe(key string, handler func(evt *event)) {
 	p.addMutex.Lock()
 	p.listeners[key] = handler
 	p.addQueue.PushBack(key)
@@ -35,11 +35,11 @@ func (p *pubSubConn) Unsubsribe(key string) {
 	p.remMutex.Unlock()
 }
 
-func (p *pubSubConn) reshard() {
+func (p *pubSubConn) Reshard() {
 	p.addMutex.Lock()
 	p.remMutex.Lock()
 
-	evt := &Event{
+	evt := &event{
 		Type: RESHARD,
 	}
 
@@ -47,7 +47,7 @@ func (p *pubSubConn) reshard() {
 		handler(evt)
 	}
 
-	p.close()
+	p.Close()
 
 	p.addMutex.Unlock()
 	p.remMutex.Unlock()
@@ -113,7 +113,7 @@ func (p *pubSubConn) parseRemQueue() {
 	}
 }
 
-func (p *pubSubConn) listen() {
+func (p *pubSubConn) Listen() {
 	go func() {
 		for {
 			p.parseAddQueue()
@@ -193,7 +193,7 @@ func (p *pubSubConn) listen() {
 	}
 }
 
-func (p *pubSubConn) close() {
+func (p *pubSubConn) Close() {
 	p.closed = true
 	p.conn.Close()
 	p.conn = nil
