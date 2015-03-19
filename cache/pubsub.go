@@ -206,7 +206,6 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 		remMutex: &sync.Mutex{},
 		addQueue: list.New(),
 		remQueue: list.New(),
-
 		listeners: map[string]func(evt *event){},
 		closed: false,
 	}
