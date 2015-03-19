@@ -48,12 +48,10 @@ func (l *Listener) Close() {
 
 func (l *Listener) sub() {
 	cst := clst
-	servers := []string{}
+	servers := cst.shrd.Select(l.channel)
 	handlers := []*handler{}
 
-	for _, server := range cst.shrd.Select(l.channel) {
-		servers = append(servers, server)
-
+	for _, server := range servers {
 		handler := &handler{
 			listener: l,
 			State: true,
