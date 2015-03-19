@@ -23,7 +23,7 @@ var (
 
 type cluster struct {
 	serverMap map[string]*redis.Pool
-	pubsubConns map[string]*PubSubConn
+	pubsubConns map[string]*pubSubConn
 	shrd *shard.Shard
 }
 
@@ -72,7 +72,7 @@ func update() {
 		nodes := []*nodes.Node{}
 		cls := &cluster{
 			serverMap: map[string]*redis.Pool{},
-			pubsubConns: map[string]*PubSubConn{},
+			pubsubConns: map[string]*pubSubConn{},
 		}
 
 		err := coll.Find(bson.M{
@@ -104,13 +104,13 @@ func update() {
 
 		if curClst != nil {
 			for _, psc := range curClst.pubsubConns {
-				psc.reshard()
+				psc.Reshard()
 			}
 		}
 
 		for _, psc := range clst.pubsubConns {
-			go func(psc *PubSubConn) {
-				psc.listen()
+			go func(psc *pubSubConn) {
+				psc.Listen()
 			}(psc)
 		}
 
@@ -137,6 +137,10 @@ func Init() {
 	gdefer.Defer(func() {
 		for _, pool := range clst.serverMap {
 			pool.Close()
+		}
+
+		for _, psc := range clst.pubsubConns {
+			psc.Close()
 		}
 	})
 }
