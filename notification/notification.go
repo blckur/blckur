@@ -11,7 +11,7 @@ type Notification struct {
 	UserId bson.ObjectId `bson:"user_id" json:"-"`
 	AccountId bson.ObjectId `bson:"account_id" json:"-"`
 	RemoteId string `bson:"remote_id" json:"-"`
-	Timestamp time.Time `bson:"timestamp" json"timestamp"`
+	Timestamp time.Time `bson:"timestamp" json:"timestamp"`
 	Type string `bson:"type,omitempty" json:"type"`
 	Resource string `bson:"resource,omitempty" json:"-"`
 	Label string `bson:"-" json:"label"`
