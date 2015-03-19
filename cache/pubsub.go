@@ -134,7 +134,7 @@ func (p *pubSubConn) Listen() {
 				switch obj := p.conn.Receive().(type) {
 				case redis.Message:
 					if listener, ok := p.listeners[obj.Channel]; ok {
-						listener(&Event{
+						listener(&event{
 							Type: MESSAGE,
 							Data: string(obj.Data),
 						})
@@ -206,7 +206,8 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 		remMutex: &sync.Mutex{},
 		addQueue: list.New(),
 		remQueue: list.New(),
-		listeners: map[string]func(evt *Event){},
+
+		listeners: map[string]func(evt *event){},
 		closed: false,
 	}
 
