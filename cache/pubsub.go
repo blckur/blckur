@@ -134,10 +134,12 @@ func (p *pubSubConn) Listen() {
 				switch obj := p.conn.Receive().(type) {
 				case redis.Message:
 					if listener, ok := p.listeners[obj.Channel]; ok {
-						listener(&event{
-							Type: MESSAGE,
-							Data: string(obj.Data),
-						})
+						go func() {
+							listener(&event{
+								Type: MESSAGE,
+								Data: string(obj.Data),
+							})
+						}()
 					}
 				case error:
 					if p.closed {
