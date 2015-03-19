@@ -5,6 +5,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/logger"
+	"github.com/blckur/blckur/messenger"
 	"os"
 	"strconv"
 )
@@ -13,6 +14,7 @@ func Beanstalkd() {
 	logger.Init()
 	database.Init()
 	settings.Init()
+	messenger.Init()
 
 	id := os.Getenv("ID")
 	if id == "" {
