@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/blckur/blckur/cmd"
+	"github.com/blckur/blckur/gdefer"
 	"flag"
 )
 
