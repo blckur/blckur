@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	defer gdefer.End()
 	flag.Parse()
 
 	switch flag.Arg(0) {
