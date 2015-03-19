@@ -126,6 +126,8 @@ func Subscribe(db *database.Database, channels []string,
 	for {
 		msg := &Message{}
 		for iter.Next(msg) {
+			cursorId = msg.Id
+
 			if msg.Data == nil {
 				// Blank msg for cursor
 				continue
@@ -148,6 +150,12 @@ func Subscribe(db *database.Database, channels []string,
 			continue
 		}
 
+		query := &bson.M{
+			"_id": &bson.M{
+				"$gt": cursorId,
+			},
+			"channel": channelBson,
+		}
 		iter = coll.Find(query).Sort("$natural").Tail(duration)
 	}
 
