@@ -63,63 +63,74 @@ func (p *PubSubConn) reshard() {
 	p.remMutex.Unlock()
 }
 
+func (p *PubSubConn) parseAddQueue() {
+	for {
+		if p.closed {
+			return
+		}
+
+		p.addMutex.Lock()
+		elem := p.addListeners.Front()
+		conn := p.psConn
+		p.addMutex.Unlock()
+
+		if elem == nil || conn.Conn == nil {
+			break
+		}
+
+		err := conn.Subscribe(elem.Value.(string))
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("cache: Subscribe error")
+			time.Sleep(constants.RETRY_DELAY)
+			continue
+		}
+
+		p.addMutex.Lock()
+		p.addListeners.Remove(elem)
+		p.addMutex.Unlock()
+	}
+}
+
+func (p *PubSubConn) parseRemQueue() {
+	for {
+		if p.closed {
+			return
+		}
+
+		p.remMutex.Lock()
+		elem := p.remListeners.Front()
+		conn := p.psConn
+		p.remMutex.Unlock()
+
+		if elem == nil || conn.Conn == nil {
+			break
+		}
+
+		err := conn.Unsubscribe(elem.Value.(string))
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("cache: Unsubscribe error")
+			time.Sleep(constants.RETRY_DELAY)
+			continue
+		}
+
+		p.remMutex.Lock()
+		p.remListeners.Remove(elem)
+		p.remMutex.Unlock()
+	}
+}
+
 func (p *PubSubConn) listen() {
 	go func() {
 		for {
-			for {
-				if p.closed {
-					return
-				}
+			p.parseAddQueue()
+			p.parseRemQueue()
 
-				p.addMutex.Lock()
-				elem := p.addListeners.Front()
-				conn := p.psConn
-				p.addMutex.Unlock()
-
-				if elem == nil || conn.Conn == nil {
-					break
-				}
-
-				err := conn.Subscribe(elem.Value.(string))
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error": err,
-					}).Error("cache: Subscribe error")
-					time.Sleep(constants.RETRY_DELAY)
-					continue
-				}
-
-				p.addMutex.Lock()
-				p.addListeners.Remove(elem)
-				p.addMutex.Unlock()
-			}
-
-			for {
-				if p.closed {
-					return
-				}
-
-				p.remMutex.Lock()
-				elem := p.remListeners.Front()
-				conn := p.psConn
-				p.remMutex.Unlock()
-
-				if elem == nil || conn.Conn == nil {
-					break
-				}
-
-				err := conn.Unsubscribe(elem.Value.(string))
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error": err,
-					}).Error("cache: Unsubscribe error")
-					time.Sleep(constants.RETRY_DELAY)
-					continue
-				}
-
-				p.remMutex.Lock()
-				p.remListeners.Remove(elem)
-				p.remMutex.Unlock()
+			if p.closed {
+				return
 			}
 
 			time.Sleep(100 * time.Millisecond)
