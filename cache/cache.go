@@ -16,6 +16,41 @@ import (
 	"time"
 )
 
+// Get set example
+// 	conn := cache.Get()
+// 	err := conn.SetString("key", "val")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+//
+// 	val, err := conn.GetString("key")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+//	println(val)
+//
+//	conn.Close()
+
+// Pub sub example
+//	lst := cache.Subscribe("channel")
+//
+//	go func() {
+//		for msg := range lst.Listen() {
+//			println(msg)
+//			lst.Close()
+//		}
+//	}()
+//
+//	time.Sleep(50 * time.Millisecond)
+//
+//	conn := cache.Get()
+//	err := conn.Publish("channel", "message")
+//	if err != nil {
+//		panic(err)
+//	}
+//
+// conn.Close()
+
 var (
 	clst *cluster
 	clstMutex = sync.RWMutex{}
