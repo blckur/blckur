@@ -10,9 +10,9 @@ import (
 )
 
 func Beanstalkd() {
+	logger.Init()
 	database.Init()
 	settings.Init()
-	logger.Init()
 
 	id := os.Getenv("ID")
 	if id == "" {
