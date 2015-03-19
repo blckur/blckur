@@ -6,11 +6,11 @@ import (
 
 type Listener struct {
 	mutex *sync.Mutex
-	clst *cluster
-	key string
+	cluster *cluster
+	channel string
 	servers []string
 	handlers []*handler
-	Stream chan string
+	stream chan string
 }
 
 func (l *Listener) reshard(hnd *handler) {
@@ -28,6 +28,10 @@ func (l *Listener) reshard(hnd *handler) {
 	l.mutex.Unlock()
 }
 
+func (l *Listener) Listen() (stream chan string) {
+	return l.stream
+}
+
 func (l *Listener) Close() {
 	l.mutex.Lock()
 	for _, handler := range l.handlers {
@@ -35,10 +39,10 @@ func (l *Listener) Close() {
 	}
 
 	for _, server := range l.servers {
-		l.clst.pubsubConns[server].unsubsribe(l.key)
+		l.cluster.pubsubConns[server].Unsubsribe(l.channel)
 	}
 
-	close(l.Stream)
+	close(l.stream)
 	l.mutex.Unlock()
 }
 
@@ -47,7 +51,7 @@ func (l *Listener) sub() {
 	servers := []string{}
 	handlers := []*handler{}
 
-	for _, server := range cst.shrd.Select(l.key) {
+	for _, server := range cst.shrd.Select(l.channel) {
 		servers = append(servers, server)
 
 		handler := &handler{
@@ -56,10 +60,10 @@ func (l *Listener) sub() {
 		}
 		handlers = append(handlers, handler)
 
-		cst.pubsubConns[server].subscribe(l.key, handler.Handle)
+		cst.pubsubConns[server].Subscribe(l.channel, handler.Handle)
 	}
 
-	l.clst = cst
+	l.cluster = cst
 	l.servers = servers
 	l.handlers = handlers
 }
@@ -72,11 +76,11 @@ func (l *Listener) init() {
 	clstMutex.RUnlock()
 }
 
-func Subscribe(key string) (lst *Listener) {
+func Subscribe(channel string) (lst *Listener) {
 	lst = &Listener{
 		mutex: &sync.Mutex{},
-		key: key,
-		Stream: make(chan string),
+		channel: channel,
+		stream: make(chan string),
 	}
 
 	lst.init()
