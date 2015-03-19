@@ -86,6 +86,41 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 	return
 }
 
+func (c *ClusterConn) Publish(key string, val string) (err error) {
+	wait := utils.WaitCancel{}
+	success := false
+	var er error
+
+	for _, server := range c.clst.shrd.Select(key) {
+		wait.Add(1)
+		go func(server string) {
+			conn, ok := c.conns[server]
+			if !ok {
+				conn = c.clst.serverMap[server].Get()
+				c.conns[server] = conn
+			}
+
+			_, e := conn.Do("PUBLISH", key, val)
+			if e != nil {
+				er = &CacheError{
+					errors.Wrap(e, "cache: Publish error"),
+				}
+				wait.Done()
+				return
+			}
+
+			success = true
+			wait.Done()
+		}(server)
+	}
+
+	wait.Wait()
+	if !success {
+		err = er
+	}
+	return
+}
+
 func (c *ClusterConn) Close() {
 	cns := c.conns
 	c.conns = map[string]redis.Conn{}
