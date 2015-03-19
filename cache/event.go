@@ -5,7 +5,7 @@ const (
 	RESHARD = 2
 )
 
-type Event struct {
+type event struct {
 	Type int
 	Data string
 }
