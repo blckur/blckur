@@ -134,19 +134,21 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 	match := false
 	matchType := ""
 	body := ""
+
+	Loop:
 	for _, alrt := range g.Alerts {
 		switch (alrt.Type) {
 		case "all":
 			match = true
 			matchType = "all"
-			break
+			break Loop
 		case "from":
 			match = strings.Contains(
 				strings.ToLower(from),
 				strings.ToLower(alrt.Value))
 			if match {
 				matchType = "from"
-				break
+				break Loop
 			}
 		case "subject":
 			match = strings.Contains(
@@ -154,7 +156,7 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 				strings.ToLower(alrt.Value))
 			if match {
 				matchType = "subject"
-				break
+				break Loop
 			}
 		case "body":
 			if body == "" {
@@ -169,7 +171,7 @@ func (g *Gmail) ParseMessage(msg *GmailMessage,
 			match = strings.Contains(body, strings.ToLower(alrt.Value))
 			if match {
 				matchType = "body"
-				break
+				break Loop
 			}
 		}
 	}
