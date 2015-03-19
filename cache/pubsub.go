@@ -66,6 +66,10 @@ func (p *PubSubConn) reshard() {
 func (p *PubSubConn) listen() {
 	go func() {
 		for {
+			if p.closed {
+				return
+			}
+
 			for {
 				p.addMutex.Lock()
 				elem := p.addListeners.Front()
