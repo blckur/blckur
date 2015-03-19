@@ -123,7 +123,7 @@ func (p *pubSubConn) Listen() {
 				return
 			}
 
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(50 * time.Millisecond)
 		}
 	}()
 
