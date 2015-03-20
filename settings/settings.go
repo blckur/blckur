@@ -71,7 +71,7 @@ type system struct {
 
 type stream struct {
 	Id string `bson:"_id"`
-	RefreshRate int `bson:"refresh_rate" default:"5"`
+	RefreshRate int `bson:"refresh_rate" default:"30"`
 }
 
 type redis struct {
