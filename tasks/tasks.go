@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"github.com/blckur/blckur/database"
 	"time"
 )
 
@@ -9,7 +10,8 @@ var (
 )
 
 type Task interface {
-	Run()
+	Type() string
+	Run(db *database.Database)
 }
 
 func register(hour int, min int, task Task) {
