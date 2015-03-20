@@ -174,7 +174,7 @@ func AddIndexes() (err error) {
 	coll = db.Tasks()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"timestamp"},
-		ExpireAfter: 30 * time.Minute,
+		ExpireAfter: 6 * time.Hour,
 		Background: true,
 	})
 	if err != nil {
