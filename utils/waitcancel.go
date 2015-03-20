@@ -5,6 +5,7 @@ import (
 )
 
 // Warning: Add() can not be called after Wait()
+// Warning: Done() can not be called greater then total from Add()
 type WaitCancel struct {
 	count int32
 	wait chan int
