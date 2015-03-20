@@ -149,9 +149,9 @@ func Set(db *database.Database, group string, key string, val interface{}) (
 func parseFindError(inErr error) (err error) {
 	if inErr != nil {
 		switch inErr.(type) {
-			case *database.NotFoundError:
+		case *database.NotFoundError:
 			err = nil
-			default:
+		default:
 			err = inErr
 		}
 	}
