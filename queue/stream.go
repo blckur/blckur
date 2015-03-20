@@ -2,8 +2,8 @@ package queue
 
 import (
 	"encoding/json"
+	"github.com/Sirupsen/logrus"
 	"time"
-	"log"
 )
 
 type QueueStream struct {
@@ -15,7 +15,9 @@ func (q *QueueStream) Reserve(timeout time.Duration) (job *Job) {
 	for {
 		conn, err := q.queue.conn(q.server)
 		if err != nil {
-			log.Printf("ERROR: queue: %s", err.Error())
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("queue.stream: Connection error")
 			continue
 		}
 
@@ -24,7 +26,9 @@ func (q *QueueStream) Reserve(timeout time.Duration) (job *Job) {
 			if err.Error() == "reserve-with-timeout: timeout" {
 				continue
 			}
-			log.Printf("ERROR: queue: %s", err.Error())
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("queue.stream: Reserve error")
 			q.queue.close(q.server)
 			continue
 		}
@@ -32,7 +36,9 @@ func (q *QueueStream) Reserve(timeout time.Duration) (job *Job) {
 		jobData := &JobData{}
 		err = json.Unmarshal(body, jobData)
 		if err != nil {
-			log.Printf("ERROR: queue: %s", err.Error())
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("queue.stream: Parse error")
 			continue
 		}
 
