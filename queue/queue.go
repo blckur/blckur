@@ -135,7 +135,7 @@ func (q *Queue) Put(data interface{}, priority uint32,
 	waiters := &sync.WaitGroup{}
 	waiters.Add(q.consistency)
 	sent := 0
-	sentMutex := &sync.Mutex{}
+	sentMutex := sync.Mutex{}
 
 	for i := 0; i < q.consistency; i++ {
 		go func(normal bool) {
