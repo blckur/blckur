@@ -9,7 +9,6 @@ import (
 	"github.com/blckur/blckur/utils"
 	"labix.org/v2/mgo/bson"
 	"time"
-	"log"
 	"sync"
 	"fmt"
 )
