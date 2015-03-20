@@ -27,6 +27,20 @@ func (s *Shard) SelectX(key string, consistency int) (servers []string) {
 	return
 }
 
+func (s *Shard) SelectAll(key string) (servers []string) {
+	n := len(s.servers)
+	if n == 0 {
+		servers = []string{}
+		return
+	}
+
+	hash := fnv.New32a()
+	hash.Write([]byte(key))
+	servers = s.servers[s.maxConsistency][hash.Sum32() % uint32(n)]
+
+	return
+}
+
 func (s *Shard) Select(key string) (servers []string) {
 	n := len(s.servers)
 	if n == 0 {
