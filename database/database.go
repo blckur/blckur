@@ -60,6 +60,11 @@ func (d *Database) Sessions() (coll *Collection) {
 	return
 }
 
+func (d *Database) Tasks() (coll *Collection) {
+	coll = d.getCollection("tasks")
+	return
+}
+
 func (d *Database) Streams() (coll *Collection) {
 	coll = d.getCollection("streams")
 	return
@@ -158,6 +163,18 @@ func AddIndexes() (err error) {
 	coll = db.Messages()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"channel"},
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
+	coll = db.Tasks()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"timestamp"},
+		ExpireAfter: 30 * time.Minute,
 		Background: true,
 	})
 	if err != nil {
