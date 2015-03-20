@@ -117,7 +117,6 @@ func Subscribe(db *database.Database, channels []string,
 		},
 		"channel": channelBson,
 	}
-
 	iter := coll.Find(query).Sort("$natural").Tail(duration)
 	defer func() {
 		iter.Close()
