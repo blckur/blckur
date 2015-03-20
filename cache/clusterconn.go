@@ -4,6 +4,8 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/blckur/blckur/utils"
+	"time"
+	"strconv"
 )
 
 type ClusterConn struct {
@@ -51,7 +53,8 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 	return
 }
 
-func (c *ClusterConn) SetString(key string, val string) (err error) {
+func (c *ClusterConn) SetString(key string, val string,
+		ttl time.Duration) (err error) {
 	wait := utils.WaitCancel{}
 	success := false
 	var er error
@@ -65,7 +68,8 @@ func (c *ClusterConn) SetString(key string, val string) (err error) {
 				c.conns[server] = conn
 			}
 
-			_, e := conn.Do("SET", key, val)
+			_, e := conn.Do("SETEX", key,
+				strconv.FormatInt(int64(ttl.Seconds()), 10), val)
 			if e != nil {
 				er = &CacheError{
 					errors.Wrap(e, "cache: Set error"),
