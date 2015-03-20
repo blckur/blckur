@@ -21,6 +21,7 @@ var (
 	System *system
 	Stream *stream
 	Redis *redis
+	Queue *queue
 )
 
 func init() {
@@ -41,6 +42,9 @@ func init() {
 	}
 	Redis = &redis{
 		Id: "redis",
+	}
+	Queue = &queue{
+		Id: "queue",
 	}
 }
 
@@ -81,6 +85,11 @@ type redis struct {
 	MaxIdle int `bson:"max_idle" default:"3"`
 	MaxActive int `bson:"max_active" default:"0"`
 	IdleTimeout int `bson:"idle_timeout" default:"300"`
+}
+
+type queue struct {
+	Id string `bson:"_id"`
+	Consistency int `bson:"consistency" default:"2"`
 }
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
@@ -230,6 +239,8 @@ func Update(groupName string) {
 		group = Stream
 	case "redis":
 		group = Redis
+	case "queue":
+		group = Queue
 	}
 
 	for {
