@@ -29,6 +29,14 @@ func register(hour int, min int, task Task) {
 		task)
 }
 
+func registerMulti(hours []int, mins int, task Task) {
+	for hour := range hours {
+		for min := range mins {
+			register(hour, min, task)
+		}
+	}
+}
+
 func GetTasks(tme time.Time) (tasks []Task) {
 	tasks = []Task{}
 
