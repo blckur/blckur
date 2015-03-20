@@ -192,11 +192,11 @@ func (q *Queue) Put(data interface{}, priority uint32,
 	return
 }
 
-func (q *Queue) GetStreams() (streams []*QueueStream) {
-	streams = make([]*QueueStream, len(q.servers))
+func (q *Queue) GetStreams() (streams []*Stream) {
+	streams = make([]*Stream, len(q.servers))
 
 	for i, server := range q.servers {
-		streams[i] = &QueueStream{
+		streams[i] = &Stream{
 			server: server,
 			queue: q,
 		}
