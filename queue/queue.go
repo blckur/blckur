@@ -11,7 +11,6 @@ import (
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 	"time"
-	"sync"
 )
 
 var (
@@ -25,9 +24,7 @@ func Put(data interface{}, priority int,
 }
 
 func GetStreams() (streams []*Stream) {
-	mutex.RLock()
 	streams = clst.GetStreams()
-	mutex.RUnlock()
 	return
 }
 
