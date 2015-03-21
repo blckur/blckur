@@ -16,6 +16,17 @@ var (
 	clst *cluster
 )
 
+func Put(data interface{}, priority int,
+		delay time.Duration, ttr time.Duration) (err error) {
+	err = clst.Put(data, priority, delay, ttr)
+	return
+}
+
+func GetStreams() (streams []*stream) {
+	streams = clst.GetStreams()
+	return
+}
+
 func update() {
 	for {
 		db := database.GetDatabase()
