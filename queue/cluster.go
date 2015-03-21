@@ -197,7 +197,7 @@ func (q *cluster) GetStreams() (streams []*stream) {
 	for i, server := range q.servers {
 		streams[i] = &stream{
 			server: server,
-			queue: q,
+			cluster: q,
 		}
 	}
 

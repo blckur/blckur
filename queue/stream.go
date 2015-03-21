@@ -8,12 +8,12 @@ import (
 
 type stream struct {
 	server string
-	queue *Queue
+	cluster *cluster
 }
 
 func (q *stream) Reserve(timeout time.Duration) (job *Job) {
 	for {
-		conn, err := q.queue.conn(q.server)
+		conn, err := q.cluster.conn(q.server)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
@@ -29,7 +29,7 @@ func (q *stream) Reserve(timeout time.Duration) (job *Job) {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
 			}).Error("queue.stream: Reserve error")
-			q.queue.close(q.server)
+			q.cluster.close(q.server)
 			continue
 		}
 
