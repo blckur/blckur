@@ -18,6 +18,7 @@ func (q *stream) Reserve(timeout time.Duration) (job *Job) {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
 			}).Error("queue.stream: Connection error")
+			time.Sleep(constants.RETRY_DELAY)
 			continue
 		}
 
