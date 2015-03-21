@@ -117,7 +117,7 @@ func update() {
 			err = database.ParseError(err)
 			logrus.WithFields(logrus.Fields{
 				"error": err,
-			}).Error("cache: Database error")
+			}).Error("cache: Update error")
 			time.Sleep(constants.RETRY_DELAY)
 			continue
 		}
