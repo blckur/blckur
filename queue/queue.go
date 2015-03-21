@@ -8,8 +8,10 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/gdefer"
+	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 	"time"
+	"sync"
 )
 
 var (
@@ -22,18 +24,26 @@ func Put(data interface{}, priority int,
 	return
 }
 
-func GetStreams() (streams []*stream) {
+func GetStreams() (streams []*Stream) {
+	mutex.RLock()
 	streams = clst.GetStreams()
+	mutex.RUnlock()
 	return
 }
 
 func update() {
+}
+
+func Init() {
+	requires.After("settings")
+	requires.Before("messenger")
+
 	for {
 		db := database.GetDatabase()
 		coll := db.Nodes()
 		nodes := []*nodes.Node{}
-		cst := &cluster{
-			servers: []string{},
+		clst := &cluster{
+			servers: set.NewSet(),
 			defaultConsistency: settings.Queue.Consistency,
 		}
 
@@ -47,16 +57,9 @@ func update() {
 		}
 
 		for _, node := range nodes {
-			cst.servers = append(cst.servers, node.Id)
+			clst.servers.Add(node.Id)
 		}
-
-		clst = cst
 	}
-}
-
-func Init() {
-	requires.After("settings")
-	requires.Before("messenger")
 
 	messenger.Register("beanstalkd", "update", func(_ *messenger.Message) {
 		go update()
