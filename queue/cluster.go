@@ -100,7 +100,7 @@ func (c *cluster) marhsalJobs(data interface{}) (
 	return
 }
 
-func (c *cluster) putRetry(server string, data []byte, priority uint32,
+func (c *cluster) putRetry(server string, data []byte, priority int,
 		delay time.Duration, ttr time.Duration) (err error) {
 	for i := 0; i < 2; i++ {
 		conn, e := c.conn(server)
@@ -109,7 +109,7 @@ func (c *cluster) putRetry(server string, data []byte, priority uint32,
 			return
 		}
 
-		_, err = conn.Put(data, priority, delay, ttr)
+		_, err = conn.Put(data, uint32(priority), delay, ttr)
 		if err != nil {
 			c.close(server)
 		} else {
@@ -120,7 +120,7 @@ func (c *cluster) putRetry(server string, data []byte, priority uint32,
 	return
 }
 
-func (c *cluster) Put(data interface{}, priority uint32,
+func (c *cluster) Put(data interface{}, priority int,
 		delay time.Duration, ttr time.Duration) (err error) {
 	normalJob, checkJob, err := c.marhsalJobs(data)
 	if err != nil {
@@ -172,7 +172,7 @@ func (c *cluster) Put(data interface{}, priority uint32,
 
 	if sent < c.consistency {
 		msg := fmt.Sprintf("queue: Job consistency unmet %d/%d",
-		sent, c.consistency)
+			sent, c.consistency)
 
 		if err != nil {
 			err = &JobFailed{
