@@ -25,7 +25,7 @@ type JobData struct {
 }
 
 type cluster struct {
-	consistency int
+	defaultConsistency int
 	servers []string
 	pool map[string]*beanstalk.Conn
 }
@@ -133,11 +133,11 @@ func (c *cluster) Put(data interface{}, priority int,
 	servers := stack.NewStringStack(utils.ShuffleStringsNew(c.servers))
 
 	waiters := &sync.WaitGroup{}
-	waiters.Add(c.consistency)
+	waiters.Add(c.defaultConsistency)
 	sent := 0
 	sentMutex := sync.Mutex{}
 
-	for i := 0; i < c.consistency; i++ {
+	for i := 0; i < c.defaultConsistency; i++ {
 		go func(normal bool) {
 			var err error
 
@@ -170,9 +170,9 @@ func (c *cluster) Put(data interface{}, priority int,
 
 	waiters.Wait()
 
-	if sent < c.consistency {
+	if sent < c.defaultConsistency {
 		msg := fmt.Sprintf("queue: Job consistency unmet %d/%d",
-			sent, c.consistency)
+			sent, c.defaultConsistency)
 
 		if err != nil {
 			err = &JobFailed{
