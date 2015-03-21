@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-type Stream struct {
+type stream struct {
 	server string
 	queue *Queue
 }
 
-func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
+func (q *stream) Reserve(timeout time.Duration) (job *Job) {
 	for {
 		conn, err := q.queue.conn(q.server)
 		if err != nil {

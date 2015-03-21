@@ -24,13 +24,13 @@ type JobData struct {
 	Data interface{} `json:"data"`
 }
 
-type Queue struct {
+type cluster struct {
 	consistency int
 	servers []string
 	pool map[string]*beanstalk.Conn
 }
 
-func (q *Queue) conn(server string) (conn *beanstalk.Conn, err error) {
+func (q *cluster) conn(server string) (conn *beanstalk.Conn, err error) {
 	conn = q.pool[server]
 	if conn != nil {
 		return
@@ -46,7 +46,7 @@ func (q *Queue) conn(server string) (conn *beanstalk.Conn, err error) {
 	return
 }
 
-func (q *Queue) close(server string) (err error) {
+func (q *cluster) close(server string) (err error) {
 	err = q.pool[server].Close()
 	if err != nil {
 		return
@@ -57,13 +57,13 @@ func (q *Queue) close(server string) (err error) {
 	return
 }
 
-func (q *Queue) Conn() {
+func (q *cluster) Conn() {
 	for _, server := range q.servers {
 		q.conn(server)
 	}
 }
 
-func (q *Queue) Close() (err error) {
+func (q *cluster) Close() (err error) {
 	for _, server := range q.servers {
 		err = q.close(server)
 		if err != nil {
@@ -77,7 +77,7 @@ func (q *Queue) Close() (err error) {
 	return
 }
 
-func (q *Queue) marhsalJobs(data interface{}) (
+func (q *cluster) marhsalJobs(data interface{}) (
 		normalJob []byte, checkJob []byte, err error) {
 	jobData := &JobData{
 		Id: bson.NewObjectId(),
@@ -100,7 +100,7 @@ func (q *Queue) marhsalJobs(data interface{}) (
 	return
 }
 
-func (q *Queue) putRetry(server string, data []byte, priority uint32,
+func (q *cluster) putRetry(server string, data []byte, priority uint32,
 		delay time.Duration, ttr time.Duration) (err error) {
 	for i := 0; i < 2; i++ {
 		conn, e := q.conn(server)
@@ -120,7 +120,7 @@ func (q *Queue) putRetry(server string, data []byte, priority uint32,
 	return
 }
 
-func (q *Queue) Put(data interface{}, priority uint32,
+func (q *cluster) Put(data interface{}, priority uint32,
 		delay time.Duration, ttr time.Duration) (err error) {
 	normalJob, checkJob, err := q.marhsalJobs(data)
 	if err != nil {
@@ -191,7 +191,7 @@ func (q *Queue) Put(data interface{}, priority uint32,
 	return
 }
 
-func (q *Queue) GetStreams() (streams []*stream) {
+func (q *cluster) GetStreams() (streams []*stream) {
 	streams = make([]*stream, len(q.servers))
 
 	for i, server := range q.servers {
