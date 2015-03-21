@@ -151,7 +151,7 @@ func (c *cluster) Put(data interface{}, priority int,
 					err = c.putRetry(server, normalJob, priority, delay, ttr)
 				} else {
 					err = c.putRetry(server, checkJob, priority,
-					time.Duration(2) * ttr + delay, ttr)
+						time.Duration(2) * ttr + delay, ttr)
 				}
 				if err != nil {
 					continue
