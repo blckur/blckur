@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/gdefer"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -55,4 +56,8 @@ func Init() {
 	update()
 
 	requires.Register("queue")
+
+	gdefer.Defer(func() {
+		clst.Close()
+	})
 }
