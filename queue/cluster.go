@@ -30,8 +30,8 @@ type cluster struct {
 	pool map[string]*beanstalk.Conn
 }
 
-func (q *cluster) conn(server string) (conn *beanstalk.Conn, err error) {
-	conn = q.pool[server]
+func (c *cluster) conn(server string) (conn *beanstalk.Conn, err error) {
+	conn = c.pool[server]
 	if conn != nil {
 		return
 	}
@@ -41,31 +41,31 @@ func (q *cluster) conn(server string) (conn *beanstalk.Conn, err error) {
 		return
 	}
 
-	q.pool[server] = conn
+	c.pool[server] = conn
 
 	return
 }
 
-func (q *cluster) close(server string) (err error) {
-	err = q.pool[server].Close()
+func (c *cluster) close(server string) (err error) {
+	err = c.pool[server].Close()
 	if err != nil {
 		return
 	}
 
-	q.pool[server] = nil
+	c.pool[server] = nil
 
 	return
 }
 
-func (q *cluster) Conn() {
-	for _, server := range q.servers {
-		q.conn(server)
+func (c *cluster) Conn() {
+	for _, server := range c.servers {
+		c.conn(server)
 	}
 }
 
-func (q *cluster) Close() (err error) {
-	for _, server := range q.servers {
-		err = q.close(server)
+func (c *cluster) Close() (err error) {
+	for _, server := range c.servers {
+		err = c.close(server)
 		if err != nil {
 			err = &errortypes.UnknownError{
 				errors.Wrap(err, "queue: Unknown error"),
@@ -77,7 +77,7 @@ func (q *cluster) Close() (err error) {
 	return
 }
 
-func (q *cluster) marhsalJobs(data interface{}) (
+func (c *cluster) marhsalJobs(data interface{}) (
 		normalJob []byte, checkJob []byte, err error) {
 	jobData := &JobData{
 		Id: bson.NewObjectId(),
@@ -100,10 +100,10 @@ func (q *cluster) marhsalJobs(data interface{}) (
 	return
 }
 
-func (q *cluster) putRetry(server string, data []byte, priority uint32,
+func (c *cluster) putRetry(server string, data []byte, priority uint32,
 		delay time.Duration, ttr time.Duration) (err error) {
 	for i := 0; i < 2; i++ {
-		conn, e := q.conn(server)
+		conn, e := c.conn(server)
 		if e != nil {
 			err = e
 			return
@@ -111,7 +111,7 @@ func (q *cluster) putRetry(server string, data []byte, priority uint32,
 
 		_, err = conn.Put(data, priority, delay, ttr)
 		if err != nil {
-			q.close(server)
+			c.close(server)
 		} else {
 			break
 		}
@@ -120,9 +120,9 @@ func (q *cluster) putRetry(server string, data []byte, priority uint32,
 	return
 }
 
-func (q *cluster) Put(data interface{}, priority uint32,
+func (c *cluster) Put(data interface{}, priority uint32,
 		delay time.Duration, ttr time.Duration) (err error) {
-	normalJob, checkJob, err := q.marhsalJobs(data)
+	normalJob, checkJob, err := c.marhsalJobs(data)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "queue: Unknown parse error"),
@@ -130,14 +130,14 @@ func (q *cluster) Put(data interface{}, priority uint32,
 		return
 	}
 
-	servers := stack.NewStringStack(utils.ShuffleStringsNew(q.servers))
+	servers := stack.NewStringStack(utils.ShuffleStringsNew(c.servers))
 
 	waiters := &sync.WaitGroup{}
-	waiters.Add(q.consistency)
+	waiters.Add(c.consistency)
 	sent := 0
 	sentMutex := sync.Mutex{}
 
-	for i := 0; i < q.consistency; i++ {
+	for i := 0; i < c.consistency; i++ {
 		go func(normal bool) {
 			var err error
 
@@ -148,9 +148,9 @@ func (q *cluster) Put(data interface{}, priority uint32,
 				}
 
 				if normal {
-					err = q.putRetry(server, normalJob, priority, delay, ttr)
+					err = c.putRetry(server, normalJob, priority, delay, ttr)
 				} else {
-					err = q.putRetry(server, checkJob, priority,
+					err = c.putRetry(server, checkJob, priority,
 					time.Duration(2) * ttr + delay, ttr)
 				}
 				if err != nil {
@@ -170,9 +170,9 @@ func (q *cluster) Put(data interface{}, priority uint32,
 
 	waiters.Wait()
 
-	if sent < q.consistency {
+	if sent < c.consistency {
 		msg := fmt.Sprintf("queue: Job consistency unmet %d/%d",
-		sent, q.consistency)
+		sent, c.consistency)
 
 		if err != nil {
 			err = &JobFailed{
@@ -191,13 +191,13 @@ func (q *cluster) Put(data interface{}, priority uint32,
 	return
 }
 
-func (q *cluster) GetStreams() (streams []*stream) {
-	streams = make([]*stream, len(q.servers))
+func (c *cluster) GetStreams() (streams []*stream) {
+	streams = make([]*stream, len(c.servers))
 
-	for i, server := range q.servers {
+	for i, server := range c.servers {
 		streams[i] = &stream{
 			server: server,
-			cluster: q,
+			cluster: c,
 		}
 	}
 
