@@ -12,10 +12,10 @@ type Listener struct {
 }
 
 func (l *Listener) updateStreams(servers set.Set) {
-	add := l.servers.Copy()
-	add.Subtract(servers)
+	add := servers.Copy()
+	add.Subtract(l.servers)
 	rem := l.servers.Copy()
-	rem.Intersect(servers)
+	rem.Subtract(servers)
 
 	for serverInf := range add.Iter() {
 		server := serverInf.(string)
