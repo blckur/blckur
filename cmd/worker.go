@@ -4,7 +4,6 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/queue"
 	"github.com/blckur/blckur/messenger"
 	"github.com/Sirupsen/logrus"
@@ -12,8 +11,6 @@ import (
 )
 
 func Worker() {
-	utils.SeedRand()
-
 	logger.Init()
 	database.Init()
 	settings.Init()

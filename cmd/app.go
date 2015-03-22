@@ -7,7 +7,6 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/account"
 	"github.com/Sirupsen/logrus"
@@ -18,8 +17,6 @@ import (
 )
 
 func App() {
-	utils.SeedRand()
-
 	logger.Init()
 	database.Init()
 	settings.Init()

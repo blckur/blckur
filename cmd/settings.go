@@ -4,14 +4,11 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/messenger"
 	"flag"
 )
 
 func Settings() {
-	utils.SeedRand()
-
 	logger.Init()
 	database.Init()
 	settings.Init()
