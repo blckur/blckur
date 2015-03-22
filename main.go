@@ -21,5 +21,7 @@ func main() {
 		cmd.Cache()
 	case "scheduler":
 		cmd.Scheduler()
+	case "worker":
+		cmd.Worker()
 	}
 }
