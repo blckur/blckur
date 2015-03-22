@@ -191,16 +191,3 @@ func (c *cluster) Put(data interface{}, priority int,
 
 	return
 }
-
-func (c *cluster) GetStreams() (streams []*stream) {
-	streams = make([]*stream, len(c.servers))
-
-	for i, server := range c.servers {
-		streams[i] = &stream{
-			server: server,
-			cluster: c,
-		}
-	}
-
-	return
-}
