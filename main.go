@@ -15,8 +15,8 @@ func main() {
 		cmd.Settings()
 	case "start":
 		cmd.Server()
-	case "beanstalkd":
-		cmd.Beanstalkd()
+	case "queue":
+		cmd.Queue()
 	case "redis":
 		cmd.Redis()
 	case "scheduler":

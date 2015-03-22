@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func Beanstalkd() {
+func Queue() {
 	logger.Init()
 	database.Init()
 	settings.Init()
@@ -31,7 +31,7 @@ func Beanstalkd() {
 		panic(err)
 	}
 
-	node := nodes.BeanstalkdNode{
+	node := nodes.QueueNode{
 		Id: id,
 		Host: host,
 		Port: portInt,
