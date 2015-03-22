@@ -28,6 +28,7 @@ type JobData struct {
 type cluster struct {
 	defaultConsistency int
 	servers set.Set
+	serversSlc []string
 	pool map[string]*beanstalk.Conn
 }
 
@@ -131,7 +132,7 @@ func (c *cluster) Put(data interface{}, priority int,
 		return
 	}
 
-	servers := stack.NewStringStack(utils.ShuffleStringsNew(c.servers))
+	servers := stack.NewStringStack(utils.ShuffleStringsNew(c.serversSlc))
 
 	waiters := &sync.WaitGroup{}
 	waiters.Add(c.defaultConsistency)
