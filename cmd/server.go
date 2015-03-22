@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/handlers"
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/session"
