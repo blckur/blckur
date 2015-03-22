@@ -46,7 +46,7 @@ func App() {
 
 	logrus.WithFields(logrus.Fields{
 		"address": addr,
-	}).Info("app: Starting server")
+	}).Info("nodes.app: Starting app node")
 
 	server.ListenAndServe()
 }
