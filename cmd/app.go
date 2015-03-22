@@ -17,7 +17,7 @@ import (
 	"os"
 )
 
-func Server() {
+func App() {
 	utils.SeedRand()
 
 	logger.Init()
@@ -49,7 +49,7 @@ func Server() {
 
 	logrus.WithFields(logrus.Fields{
 		"address": addr,
-	}).Info("main: Starting server")
+	}).Info("app: Starting server")
 
 	server.ListenAndServe()
 }

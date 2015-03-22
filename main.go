@@ -13,8 +13,8 @@ func main() {
 	switch flag.Arg(0) {
 	case "set":
 		cmd.Settings()
-	case "start":
-		cmd.Server()
+	case "app":
+		cmd.App()
 	case "queue":
 		cmd.Queue()
 	case "cache":
