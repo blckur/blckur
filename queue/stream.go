@@ -9,6 +9,7 @@ import (
 
 type Stream struct {
 	server string
+	Stop bool
 }
 
 func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
