@@ -8,7 +8,7 @@ import (
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/gdefer"
-	"github.com/blckur/blckur/nodes"
+	"github.com/blckur/blckur/node"
 	"github.com/garyburd/redigo/redis"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
@@ -104,7 +104,7 @@ func update() {
 	for {
 		db := database.GetDatabase()
 		coll := db.Nodes()
-		nodes := []*nodes.Node{}
+		nodes := []*node.Node{}
 		cls := &cluster{
 			serverMap: map[string]*redis.Pool{},
 			pubsubConns: map[string]*pubSubConn{},
