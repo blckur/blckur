@@ -77,7 +77,7 @@ func (b *BeanstalkdNode) Start() {
 
 			_, err := coll.UpsertId(b.Id, &Node{
 				Id: b.Id,
-				Type: "beanstalkd",
+				Type: "queue",
 				Address: address,
 				Timestamp: time.Now(),
 			})
