@@ -17,8 +17,8 @@ import (
 
 var (
 	clst *cluster
-	mutex sync.Mutex
-	listeners []*Listener
+	listeners = []*Listener{}
+	mutex = sync.Mutex{}
 )
 
 func Put(data interface{}, priority int,
@@ -43,15 +43,19 @@ func update() {
 		}
 
 		mutex.Lock()
+		servers := set.NewSet()
+		serversSlc := []string{}
+
 		for _, node := range nodes {
-			clst.servers.Add(node.Address)
+			servers.Add(node.Address)
 		}
 
-		servers := []string{}
-		for server := range clst.servers.Iter() {
-			servers = append(servers, server.(string))
+		for server := range servers.Iter() {
+			serversSlc = append(serversSlc, server.(string))
 		}
-		clst.serversSlc = servers
+
+		clst.servers = servers
+		clst.serversSlc = serversSlc
 
 		for _, lstnr := range listeners {
 			lstnr.updateStreams(clst.servers)
