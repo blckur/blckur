@@ -34,7 +34,7 @@ func (q *QueueNode) Start() {
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"error": err,
-		}).Error("beanstalkd: Failed to get ip")
+		}).Error("queue: Failed to get ip")
 		panic(err)
 	}
 	address = address + ":" + port
@@ -72,7 +72,7 @@ func (q *QueueNode) Start() {
 			if cmdErr != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": cmd.ProcessState.String(),
-				}).Error("beanstalkd: Unexpected exit")
+				}).Error("queue: Unexpected exit")
 				break
 			}
 
@@ -86,7 +86,7 @@ func (q *QueueNode) Start() {
 				err = database.ParseError(err)
 				logrus.WithFields(logrus.Fields{
 					"error": err,
-				}).Error("beanstalkd: Database upsert")
+				}).Error("queue: Database upsert")
 				continue
 			}
 
