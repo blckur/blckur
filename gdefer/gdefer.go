@@ -1,7 +1,7 @@
 package gdefer
 
 var (
-	handlers []func()
+	handlers = []func(){}
 )
 
 func Defer(handler func()) {
@@ -12,8 +12,4 @@ func End() {
 	for _, handler := range handlers {
 		handler()
 	}
-}
-
-func init() {
-	handlers = []func(){}
 }
