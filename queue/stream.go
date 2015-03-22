@@ -2,18 +2,18 @@ package queue
 
 import (
 	"encoding/json"
+	"github.com/blckur/blckur/constants"
 	"github.com/Sirupsen/logrus"
 	"time"
 )
 
-type stream struct {
+type Stream struct {
 	server string
-	cluster *cluster
 }
 
-func (q *stream) Reserve(timeout time.Duration) (job *Job) {
+func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 	for {
-		conn, err := q.cluster.conn(q.server)
+		conn, err := clst.conn(q.server)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
@@ -30,7 +30,7 @@ func (q *stream) Reserve(timeout time.Duration) (job *Job) {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
 			}).Error("queue.stream: Reserve error")
-			q.cluster.close(q.server)
+			clst.close(q.server)
 			continue
 		}
 
