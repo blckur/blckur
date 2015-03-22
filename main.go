@@ -19,5 +19,7 @@ func main() {
 		cmd.Beanstalkd()
 	case "redis":
 		cmd.Redis()
+	case "scheduler":
+		cmd.Scheduler()
 	}
 }
