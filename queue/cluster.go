@@ -14,7 +14,7 @@ import (
 	"fmt"
 )
 
-var (
+const (
 	NORMAL = "normal"
 	CHECK = "check"
 )
