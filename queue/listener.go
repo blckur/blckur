@@ -20,7 +20,7 @@ func (l *Listener) updateStreams(servers set.Set) {
 		server := serverInf.(string)
 		stream := newStream(server)
 
-		l.onStream(stream)
+		go l.onStream(stream)
 		l.streams[server] = stream
 	}
 
