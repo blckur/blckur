@@ -11,10 +11,13 @@ import (
 	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 	"time"
+	"sync"
 )
 
 var (
 	clst *cluster
+	mutex sync.Mutex
+	listeners []*Listener
 )
 
 func Put(data interface{}, priority int,
@@ -23,26 +26,11 @@ func Put(data interface{}, priority int,
 	return
 }
 
-func GetStreams() (streams []*Stream) {
-	streams = clst.GetStreams()
-	return
-}
-
 func update() {
-}
-
-func Init() {
-	requires.After("settings")
-	requires.Before("messenger")
-
 	for {
 		db := database.GetDatabase()
 		coll := db.Nodes()
 		nodes := []*nodes.Node{}
-		clst := &cluster{
-			servers: set.NewSet(),
-			defaultConsistency: settings.Queue.Consistency,
-		}
 
 		err := coll.Find(bson.M{
 			"type": "queue",
@@ -53,10 +41,29 @@ func Init() {
 			continue
 		}
 
+		mutex.Lock()
 		for _, node := range nodes {
-			clst.servers.Add(node.Id)
+			clst.servers.Add(node.Address)
 		}
+
+		for _, lstnr := range listeners {
+			lstnr.updateStreams(clst.servers)
+		}
+		mutex.Unlock()
+
+		break
 	}
+}
+
+func Init() {
+	requires.After("settings")
+	requires.Before("messenger")
+
+	clst = &cluster{
+		servers: set.NewSet(),
+		defaultConsistency: settings.Queue.Consistency,
+	}
+	update()
 
 	messenger.Register("beanstalkd", "update", func(_ *messenger.Message) {
 		go update()
