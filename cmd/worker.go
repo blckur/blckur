@@ -6,6 +6,8 @@ import (
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/queue"
+	"github.com/blckur/blckur/messenger"
+	"github.com/Sirupsen/logrus"
 	"time"
 )
 
@@ -16,6 +18,7 @@ func Worker() {
 	database.Init()
 	settings.Init()
 	queue.Init()
+	messenger.Init()
 
 	queue.NewListener(func (stream *queue.Stream) {
 		for {
@@ -24,7 +27,15 @@ func Worker() {
 				return
 			}
 
-			job.Delete()
+			err := job.Delete()
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("worker: Job delete error")
+			}
 		}
 	})
+
+	block := make(chan int)
+	<-block
 }
