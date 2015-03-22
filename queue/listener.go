@@ -5,30 +5,38 @@ import (
 )
 
 type Listener struct {
-	streams set.Set
+	servers set.Set
+	streams map[string]*Stream
 	onStream func(*Stream)
 }
 
-func (l *Listener) setStreams(streams set.Set) {
-	add := l.streams.Copy()
-	add.Subtract(streams)
-	rem := l.streams.Copy()
-	rem.Intersect(streams)
+func (l *Listener) updateStreams(servers set.Set) {
+	add := l.servers.Copy()
+	add.Subtract(servers)
+	rem := l.servers.Copy()
+	rem.Intersect(servers)
 
-	for stream := range add.Iter() {
-		l.onStream(stream.(*Stream))
+	for serverInf := range add.Iter() {
+		server := serverInf.(string)
+		stream := newStream(server)
+
+		l.onStream(stream)
+		l.streams[server] = stream
 	}
 
-	for stream := range rem.Iter() {
-		stream.(*Stream).Stop = true
+	for serverInf := range rem.Iter() {
+		server := serverInf.(string)
+		l.streams[server].Stop = true
+		delete(l.streams, server)
 	}
 
-	l.streams = streams
+	l.servers = servers
 }
 
 func NewListener(onStream func(*Stream)) (lstnr *Listener) {
 	lstnr = &Listener{
-		streams: set.NewSet(),
+		servers: set.NewSet(),
+		streams: map[string]*Stream{},
 		onStream: onStream,
 	}
 
