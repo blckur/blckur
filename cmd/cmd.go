@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/blckur/blckur/utils"
 	"os"
 	"strconv"
 	"math/rand"
@@ -15,8 +16,9 @@ type ServiceOptions struct {
 func GetServiceOptions() (opts *ServiceOptions) {
 	id := os.Getenv("ID")
 	if id == "" {
-		panic("Node ID is required")
+		id = utils.RandName()
 	}
+
 	host := os.Getenv("HOST")
 
 	var port int
