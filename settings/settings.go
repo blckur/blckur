@@ -15,82 +15,8 @@ import (
 )
 
 var (
-	PapperTrail *papperTrail
-	Google *google
-	Twitter *twitter
-	System *system
-	Stream *stream
-	Cache *cache
-	Queue *queue
+	registry = map[string]interface{}{}
 )
-
-func init() {
-	PapperTrail = &papperTrail{
-		Id: "paper_trail",
-	}
-	Google = &google{
-		Id: "google",
-	}
-	Twitter = &twitter{
-		Id: "twitter",
-	}
-	System = &system{
-		Id: "system",
-	}
-	Stream = &stream{
-		Id: "stream",
-	}
-	Cache = &cache{
-		Id: "cache",
-	}
-	Queue = &queue{
-		Id: "queue",
-	}
-}
-
-type papperTrail struct {
-	Id string `bson:"_id"`
-	Address string `bson:"address"`
-}
-
-type google struct {
-	Id string `bson:"_id"`
-	ClientId string `bson:"client_id"`
-	ClientSecret string  `bson:"client_secret"`
-	MaxMsg int `bson:"max_msg" default:"100"`
-}
-
-type twitter struct {
-	Id string `bson:"_id"`
-	ConsumerKey string `bson:"consumer_key"`
-	ConsumerSecret string  `bson:"consumer_secret"`
-}
-
-type system struct {
-	Id string `bson:"_id"`
-	CookieKey []byte `bson:"cookie_key"`
-	Domain string `bson:"domain"`
-	AppHome string `bson:"app_home"`
-}
-
-type stream struct {
-	Id string `bson:"_id"`
-	RefreshRate int `bson:"refresh_rate" default:"30"`
-}
-
-type cache struct {
-	Id string `bson:"_id"`
-	Consistency int `bson:"consistency" default:"2"`
-	TimeoutMilli int `bson:"timeout_milli" default:"2500"`
-	MaxIdle int `bson:"max_idle" default:"3"`
-	MaxActive int `bson:"max_active" default:"0"`
-	IdleTimeout int `bson:"idle_timeout" default:"300"`
-}
-
-type queue struct {
-	Id string `bson:"_id"`
-	Consistency int `bson:"consistency" default:"2"`
-}
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
 		err error) {
@@ -223,28 +149,11 @@ func update(group string, data interface{}) (err error) {
 	return
 }
 
-func Update(groupName string) {
-	var group interface{}
-
-	switch groupName {
-	case "paper_trail":
-		group = PapperTrail
-	case "google":
-		group = Google
-	case "twitter":
-		group = Twitter
-	case "system":
-		group = System
-	case "stream":
-		group = Stream
-	case "cache":
-		group = Cache
-	case "queue":
-		group = Queue
-	}
+func Update(name string) {
+	group := registry[name]
 
 	for {
-		err := update(groupName, group)
+		err := update(name, group)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
@@ -257,15 +166,16 @@ func Update(groupName string) {
 	}
 }
 
+func register(name string, group interface{}) {
+	registry[name] = group
+}
+
 func Init() {
 	requires.After("database")
 
-	Update("paper_trail")
-	Update("google")
-	Update("twitter")
-	Update("system")
-	Update("stream")
-	Update("redis")
+	for name, _ := range registry {
+		Update(name)
+	}
 
 	messenger.Register("settings", "all", func(msg *messenger.Message) {
 		Update(msg.Data.(string))
