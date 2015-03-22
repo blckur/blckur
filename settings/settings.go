@@ -20,7 +20,7 @@ var (
 	Twitter *twitter
 	System *system
 	Stream *stream
-	Redis *redis
+	Cache *cache
 	Queue *queue
 )
 
@@ -40,8 +40,8 @@ func init() {
 	Stream = &stream{
 		Id: "stream",
 	}
-	Redis = &redis{
-		Id: "redis",
+	Cache = &cache{
+		Id: "cache",
 	}
 	Queue = &queue{
 		Id: "queue",
@@ -78,7 +78,7 @@ type stream struct {
 	RefreshRate int `bson:"refresh_rate" default:"30"`
 }
 
-type redis struct {
+type cache struct {
 	Id string `bson:"_id"`
 	Consistency int `bson:"consistency" default:"2"`
 	TimeoutMilli int `bson:"timeout_milli" default:"2500"`
@@ -237,8 +237,8 @@ func Update(groupName string) {
 		group = System
 	case "stream":
 		group = Stream
-	case "redis":
-		group = Redis
+	case "cache":
+		group = Cache
 	case "queue":
 		group = Queue
 	}

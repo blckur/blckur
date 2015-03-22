@@ -63,13 +63,13 @@ type cluster struct {
 }
 
 func dial(address string) (conn redis.Conn, err error) {
-	timeout := time.Duration(settings.Redis.TimeoutMilli) * time.Millisecond
+	timeout := time.Duration(settings.Cache.TimeoutMilli) * time.Millisecond
 	conn, err = redis.DialTimeout("tcp", address, timeout, timeout, timeout)
 	return
 }
 
 func dialLong(address string) (conn redis.Conn, err error) {
-	timeout := time.Duration(settings.Redis.TimeoutMilli) * time.Millisecond
+	timeout := time.Duration(settings.Cache.TimeoutMilli) * time.Millisecond
 	timeout2 := time.Duration(0)
 	conn, err = redis.DialTimeout("tcp", address, timeout, timeout2, timeout2)
 	return
@@ -77,9 +77,9 @@ func dialLong(address string) (conn redis.Conn, err error) {
 
 func newPool(address string) (pool *redis.Pool) {
 	pool = &redis.Pool{
-		MaxIdle: settings.Redis.MaxIdle,
-		MaxActive: settings.Redis.MaxActive,
-		IdleTimeout: time.Duration(settings.Redis.IdleTimeout) * time.Second,
+		MaxIdle: settings.Cache.MaxIdle,
+		MaxActive: settings.Cache.MaxActive,
+		IdleTimeout: time.Duration(settings.Cache.IdleTimeout) * time.Second,
 		Dial: func() (conn redis.Conn, err error) {
 			conn, err = dial(address)
 			return
@@ -130,7 +130,7 @@ func update() {
 			cls.pubsubConns[node.Id] = newPubSubConn(node.Address)
 		}
 
-		cls.shrd = shard.New(svrKeys, settings.Redis.Consistency)
+		cls.shrd = shard.New(svrKeys, settings.Cache.Consistency)
 
 		clstMutex.Lock()
 
@@ -159,7 +159,7 @@ func Init() {
 	requires.After("settings")
 	requires.Before("messenger")
 
-	messenger.Register("settings", "redis", func(_ *messenger.Message) {
+	messenger.Register("settings", "cache", func(_ *messenger.Message) {
 		go update()
 	})
 	messenger.Register("cache", "update", func(_ *messenger.Message) {
