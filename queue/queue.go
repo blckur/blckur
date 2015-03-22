@@ -9,6 +9,7 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/gdefer"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/kr/beanstalk"
 	"labix.org/v2/mgo/bson"
 	"time"
 	"sync"
@@ -66,8 +67,10 @@ func Init() {
 	requires.Before("messenger")
 
 	clst = &cluster{
-		servers: set.NewSet(),
 		defaultConsistency: settings.Queue.Consistency,
+		servers: set.NewSet(),
+		serversSlc: []string{},
+		pool: map[string]*beanstalk.Conn{},
 	}
 	update()
 
