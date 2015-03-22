@@ -12,22 +12,22 @@ import (
 	"strconv"
 )
 
-type BeanstalkdNode struct {
+type QueueNode struct {
 	Id string
 	Host string
 	Port int
 }
 
-func (b *BeanstalkdNode) Start() {
-	portInt := b.Port
+func (q *QueueNode) Start() {
+	portInt := q.Port
 	if portInt == 0 {
 		portInt = 11300
 	}
 	port := strconv.Itoa(portInt)
 
 	args := []string{"-p", port}
-	if b.Host != "" {
-		args = append(args, "-l", b.Host)
+	if q.Host != "" {
+		args = append(args, "-l", q.Host)
 	}
 
 	address, err := utils.GetLocalAddress()
@@ -76,8 +76,8 @@ func (b *BeanstalkdNode) Start() {
 				break
 			}
 
-			stat, err := coll.UpsertId(b.Id, &Node{
-				Id: b.Id,
+			stat, err := coll.UpsertId(q.Id, &Node{
+				Id: q.Id,
 				Type: "queue",
 				Address: address,
 				Timestamp: time.Now(),
