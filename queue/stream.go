@@ -14,6 +14,10 @@ type Stream struct {
 
 func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 	for {
+		if q.Stop {
+			return
+		}
+
 		conn, err := clst.conn(q.server)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
