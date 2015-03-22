@@ -33,7 +33,7 @@ func update() {
 		nodes := []*nodes.Node{}
 
 		err := coll.Find(bson.M{
-			"type": "queue",
+			"type": "beanstalkd",
 		}).All(&nodes)
 		if err != nil {
 			err = database.ParseError(err)
