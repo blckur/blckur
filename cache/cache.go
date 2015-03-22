@@ -111,7 +111,7 @@ func update() {
 		}
 
 		err := coll.Find(bson.M{
-			"type": "redis",
+			"type": "cache",
 		}).All(&nodes)
 		if err != nil {
 			err = database.ParseError(err)
@@ -162,7 +162,7 @@ func Init() {
 	messenger.Register("settings", "redis", func(_ *messenger.Message) {
 		go update()
 	})
-	messenger.Register("redis", "update", func(_ *messenger.Message) {
+	messenger.Register("cache", "update", func(_ *messenger.Message) {
 		go update()
 	})
 	update()
