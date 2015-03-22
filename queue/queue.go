@@ -78,11 +78,11 @@ func Init() {
 	}
 	update()
 
-	messenger.Register("beanstalkd", "update", func(_ *messenger.Message) {
+	messenger.Register("queue", "update", func(_ *messenger.Message) {
 		go update()
 	})
 	messenger.Register("settings", "queue", func(_ *messenger.Message) {
-		go update()
+		clst.defaultConsistency = settings.Queue.Consistency
 	})
 
 	requires.Register("queue")
