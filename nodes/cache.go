@@ -6,19 +6,20 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/messenger"
 	"os/exec"
 	"time"
 	"strconv"
 )
 
-type RedisNode struct {
+type CacheNode struct {
 	Id string
 	Host string
 	Port int
 }
 
-func (r *RedisNode) Start() {
-	portInt := r.Port
+func (c *CacheNode) Start() {
+	portInt := c.Port
 	if portInt == 0 {
 		portInt = 6379
 	}
@@ -29,15 +30,15 @@ func (r *RedisNode) Start() {
 		"--port", port,
 	}
 
-	if r.Host != "" {
-		args = append(args, "--host", r.Host)
+	if c.Host != "" {
+		args = append(args, "--host", c.Host)
 	}
 
 	address, err := utils.GetLocalAddress()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"error": err,
-		}).Error("redis: Failed to get ip")
+		}).Error("cache: Failed to get ip")
 		panic(err)
 	}
 	address = address + ":" + port
@@ -75,13 +76,13 @@ func (r *RedisNode) Start() {
 			if cmdErr != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": cmd.ProcessState.String(),
-				}).Error("redis: Unexpected exit")
+				}).Error("cache: Unexpected exit")
 				break
 			}
 
-			_, err := coll.UpsertId(r.Id, &Node{
-				Id: r.Id,
-				Type: "redis",
+			stat, err := coll.UpsertId(c.Id, &Node{
+				Id: c.Id,
+				Type: "cache",
 				Address: address,
 				Timestamp: time.Now(),
 			})
@@ -89,11 +90,15 @@ func (r *RedisNode) Start() {
 				err = database.ParseError(err)
 				logrus.WithFields(logrus.Fields{
 					"error": err,
-				}).Error("redis: Database upsert")
+				}).Error("cache: Database upsert")
 				continue
 			}
 
 			time.Sleep(5 * time.Second)
+
+			if stat.Updated == 0 {
+				messenger.Publish(db, "cache", "update")
+			}
 		}
 	}
 }
