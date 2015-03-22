@@ -12,12 +12,8 @@ import (
 )
 
 var (
-	listeners map[string][]func(*Message)
-)
-
-func init() {
 	listeners = map[string][]func(*Message){}
-}
+)
 
 type Message struct {
 	Id bson.ObjectId `bson:"_id,omitempty"`
