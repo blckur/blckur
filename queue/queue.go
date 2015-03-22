@@ -77,7 +77,6 @@ func Init() {
 	messenger.Register("settings", "queue", func(_ *messenger.Message) {
 		go update()
 	})
-	update()
 
 	requires.Register("queue")
 
