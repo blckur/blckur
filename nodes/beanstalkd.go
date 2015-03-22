@@ -4,8 +4,9 @@ import (
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
-	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/utils"
+	"github.com/Sirupsen/logrus"
 	"os/exec"
 	"time"
 	"strconv"
@@ -75,7 +76,7 @@ func (b *BeanstalkdNode) Start() {
 				break
 			}
 
-			_, err := coll.UpsertId(b.Id, &Node{
+			stat, err := coll.UpsertId(b.Id, &Node{
 				Id: b.Id,
 				Type: "queue",
 				Address: address,
@@ -90,6 +91,10 @@ func (b *BeanstalkdNode) Start() {
 			}
 
 			time.Sleep(5 * time.Second)
+
+			if stat.Updated == 0 {
+				messenger.Publish(db, "queue", "update")
+			}
 		}
 	}
 }
