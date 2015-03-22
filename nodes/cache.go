@@ -4,9 +4,10 @@ import (
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
-	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/node"
 	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/messenger"
+	"github.com/Sirupsen/logrus"
 	"os/exec"
 	"time"
 	"strconv"
@@ -53,6 +54,11 @@ func (c *CacheNode) Start() {
 			time.Sleep(constants.RETRY_DELAY)
 		}
 
+		logrus.WithFields(logrus.Fields{
+			"id": c.Id,
+			"address": address,
+		}).Info("nodes.cache: Starting cache node")
+
 		cmd = exec.Command("redis-server", args...)
 		cmd.Stdout = logger.NewErrorWriter()
 		cmd.Stderr = logger.NewErrorWriter()
@@ -80,7 +86,7 @@ func (c *CacheNode) Start() {
 				break
 			}
 
-			stat, err := coll.UpsertId(c.Id, &Node{
+			stat, err := coll.UpsertId(c.Id, &node.Node{
 				Id: c.Id,
 				Type: "cache",
 				Address: address,

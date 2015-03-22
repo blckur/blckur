@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/utils"
+	"github.com/blckur/blckur/node"
 	"github.com/Sirupsen/logrus"
 	"os/exec"
 	"time"
@@ -49,6 +50,11 @@ func (q *QueueNode) Start() {
 			time.Sleep(constants.RETRY_DELAY)
 		}
 
+		logrus.WithFields(logrus.Fields{
+			"id": q.Id,
+			"address": address,
+		}).Info("nodes.queue: Starting queue node")
+
 		cmd = exec.Command("./bin/beanstalkd", args...) // TODO
 		cmd.Stdout = logger.NewErrorWriter()
 		cmd.Stderr = logger.NewErrorWriter()
@@ -76,7 +82,7 @@ func (q *QueueNode) Start() {
 				break
 			}
 
-			stat, err := coll.UpsertId(q.Id, &Node{
+			stat, err := coll.UpsertId(q.Id, &node.Node{
 				Id: q.Id,
 				Type: "queue",
 				Address: address,
