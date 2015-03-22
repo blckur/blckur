@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func Redis() {
+func Cache() {
 	logger.Init()
 	database.Init()
 	settings.Init()
@@ -31,7 +31,7 @@ func Redis() {
 		panic(err)
 	}
 
-	node := nodes.RedisNode{
+	node := nodes.CacheNode{
 		Id: id,
 		Host: host,
 		Port: portInt,

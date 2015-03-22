@@ -17,8 +17,8 @@ func main() {
 		cmd.Server()
 	case "queue":
 		cmd.Queue()
-	case "redis":
-		cmd.Redis()
+	case "cache":
+		cmd.Cache()
 	case "scheduler":
 		cmd.Scheduler()
 	}
