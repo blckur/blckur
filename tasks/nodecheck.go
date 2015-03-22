@@ -3,7 +3,7 @@ package tasks
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/nodes"
+	"github.com/blckur/blckur/node"
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
@@ -20,7 +20,7 @@ func (n *nodeCheck) Type() string {
 func (n *nodeCheck) Run(db *database.Database) {
 	coll := db.Nodes()
 
-	nds := []nodes.Node{}
+	nds := []node.Node{}
 	err := coll.Find(bson.M{
 		"timestamp": bson.M{
 			"$lt": time.Now().Add(-5 * time.Minute),
