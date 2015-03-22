@@ -46,6 +46,12 @@ func update() {
 			clst.servers.Add(node.Address)
 		}
 
+		servers := []string{}
+		for server := range clst.servers.Iter() {
+			servers = append(servers, server.(string))
+		}
+		clst.serversSlc = servers
+
 		for _, lstnr := range listeners {
 			lstnr.updateStreams(clst.servers)
 		}
