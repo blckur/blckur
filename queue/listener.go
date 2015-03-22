@@ -42,6 +42,7 @@ func NewListener(onStream func(*Stream)) (lstnr *Listener) {
 
 	mutex.Lock()
 	listeners = append(listeners, lstnr)
+	lstnr.updateStreams(clst.servers)
 	mutex.Unlock()
 
 	return
