@@ -56,3 +56,11 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 
 	return
 }
+
+func newStream(server string) (stream *Stream) {
+	stream = &Stream{
+		server: server,
+		Stop: false,
+	}
+	return
+}
