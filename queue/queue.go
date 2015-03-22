@@ -2,7 +2,7 @@ package queue
 
 import (
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/nodes"
+	"github.com/blckur/blckur/node"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/messenger"
@@ -31,7 +31,7 @@ func update() {
 	for {
 		db := database.GetDatabase()
 		coll := db.Nodes()
-		nodes := []*nodes.Node{}
+		nodes := []*node.Node{}
 
 		err := coll.Find(bson.M{
 			"type": "queue",
