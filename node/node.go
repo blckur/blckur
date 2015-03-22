@@ -1,4 +1,4 @@
-package nodes
+package node
 
 import (
 	"time"
