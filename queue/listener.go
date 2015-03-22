@@ -8,6 +8,7 @@ type Listener struct {
 	servers set.Set
 	streams map[string]*Stream
 	onStream func(*Stream)
+	Stop bool
 }
 
 func (l *Listener) updateStreams(servers set.Set) {
