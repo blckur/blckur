@@ -5,6 +5,7 @@ import (
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/stack"
 	"github.com/blckur/blckur/utils"
+	"github.com/dropbox/godropbox/container/set"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/kr/beanstalk"
 	"labix.org/v2/mgo/bson"
@@ -26,7 +27,7 @@ type JobData struct {
 
 type cluster struct {
 	defaultConsistency int
-	servers []string
+	servers set.Set
 	pool map[string]*beanstalk.Conn
 }
 
@@ -58,14 +59,14 @@ func (c *cluster) close(server string) (err error) {
 }
 
 func (c *cluster) Conn() {
-	for _, server := range c.servers {
-		c.conn(server)
+	for server := range c.servers.Iter() {
+		c.conn(server.(string))
 	}
 }
 
 func (c *cluster) Close() (err error) {
-	for _, server := range c.servers {
-		err = c.close(server)
+	for server := range c.servers.Iter() {
+		err = c.close(server.(string))
 		if err != nil {
 			err = &errortypes.UnknownError{
 				errors.Wrap(err, "queue: Unknown error"),
