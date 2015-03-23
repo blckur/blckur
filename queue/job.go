@@ -18,7 +18,8 @@ type Job struct {
 	Type string `json:"type"`
 	Ttl time.Duration `json:"ttl"`
 	Timestamp time.Time `json:"timestamp"`
-	Data interface{} `json:"data"`
+	Resource bson.ObjectId `json:"resource"`
+	Data map[string]string `json:"data"`
 }
 
 func (j *Job) Put(priority int, delay time.Duration,
