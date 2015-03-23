@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/nodes"
 )
 
 func Scheduler() {
@@ -14,6 +15,11 @@ func Scheduler() {
 	settings.Init()
 	scheduler.Init()
 	messenger.Init()
+	opts := GetServiceOptions()
 
-	scheduler.Run()
+	node := nodes.SchedulerNode{
+		Id: opts.Id,
+	}
+
+	node.Start()
 }
