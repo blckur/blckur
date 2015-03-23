@@ -3,6 +3,7 @@ package queue
 import (
 	"encoding/json"
 	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/cache"
 	"github.com/Sirupsen/logrus"
 	"time"
 )
@@ -13,6 +14,8 @@ type Stream struct {
 }
 
 func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
+	cacheConn := cache.Get()
+
 	for {
 		if q.Stop {
 			return
@@ -39,8 +42,8 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 			continue
 		}
 
-		jobData := &JobData{}
-		err = json.Unmarshal(body, jobData)
+		job = &Job{}
+		err = json.Unmarshal(body, job)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
@@ -48,12 +51,22 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 			continue
 		}
 
-		job = &Job{
-			beanId: id,
-			conn: conn,
-			Id: jobData.Id,
-			Type: jobData.Type,
-			Data: jobData.Data,
+		job.beanId = id
+		job.conn = conn
+		job.cacheConn = cacheConn
+
+		val, err := cacheConn.GetString(job.Id.Hex())
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("queue.stream: Cache get error")
+			cacheConn = cache.Get()
+			continue
+		}
+
+		if val == "t" {
+			job.Delete()
+			continue
 		}
 
 		break
