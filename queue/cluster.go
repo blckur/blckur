@@ -8,7 +8,6 @@ import (
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/kr/beanstalk"
-	"labix.org/v2/mgo/bson"
 	"time"
 	"sync"
 	"fmt"
@@ -18,12 +17,6 @@ const (
 	NORMAL = "normal"
 	CHECK = "check"
 )
-
-type JobData struct {
-	Id bson.ObjectId `json:"id"`
-	Type string `json:"type"`
-	Data interface{} `json:"data"`
-}
 
 type cluster struct {
 	defaultConsistency int
@@ -79,22 +72,18 @@ func (c *cluster) Close() (err error) {
 	return
 }
 
-func (c *cluster) marhsalJobs(data interface{}) (
+func (c *cluster) marhsalJob(job *Job) (
 		normalJob []byte, checkJob []byte, err error) {
-	jobData := &JobData{
-		Id: bson.NewObjectId(),
-		Type: NORMAL,
-		Data: data,
-	}
+	job.Type = NORMAL
 
-	normalJob, err = json.Marshal(jobData)
+	normalJob, err = json.Marshal(job)
 	if err != nil {
 		return
 	}
 
-	jobData.Type = CHECK
+	job.Type = CHECK
 
-	checkJob, err = json.Marshal(jobData)
+	checkJob, err = json.Marshal(job)
 	if err != nil {
 		return
 	}
@@ -122,9 +111,9 @@ func (c *cluster) putRetry(server string, data []byte, priority int,
 	return
 }
 
-func (c *cluster) Put(data interface{}, priority int,
+func (c *cluster) Put(job *Job, priority int,
 		delay time.Duration, ttr time.Duration) (err error) {
-	normalJob, checkJob, err := c.marhsalJobs(data)
+	normalJob, checkJob, err := c.marhsalJob(job)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "queue: Unknown parse error"),
