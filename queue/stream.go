@@ -18,6 +18,7 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 
 	for {
 		if q.Stop {
+			job = nil
 			return
 		}
 
