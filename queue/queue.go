@@ -21,9 +21,9 @@ var (
 	mutex = sync.Mutex{}
 )
 
-func Put(data interface{}, priority int,
-		delay time.Duration, ttr time.Duration) (err error) {
-	err = clst.Put(data, priority, delay, ttr)
+func put(job *Job, priority int, delay time.Duration,
+		ttr time.Duration) (err error) {
+	err = clst.Put(job, priority, delay, ttr)
 	return
 }
 
