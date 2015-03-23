@@ -13,6 +13,7 @@ type Job struct {
 	beanId uint64
 	conn *beanstalk.Conn
 	cacheConn *cache.ClusterConn
+	queueType string `json:"queue_type"`
 	Id bson.ObjectId `json:"id"`
 	Type string `json:"type"`
 	Ttl time.Duration `json:"ttl"`
