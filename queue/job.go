@@ -48,12 +48,11 @@ func (j *Job) Delete() (err error) {
 	return
 }
 
-func NewJob(data interface{}, ttl time.Duration) (job *Job) {
+func NewJob(ttl time.Duration) (job *Job) {
 	job = &Job{
 		Id: bson.NewObjectId(),
 		Ttl: ttl,
 		Timestamp: time.Now(),
-		Data: data,
 	}
 	return
 }
