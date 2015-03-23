@@ -72,25 +72,6 @@ func (c *cluster) Close() (err error) {
 	return
 }
 
-func (c *cluster) marhsalJob(job *Job) (
-		normalJob []byte, checkJob []byte, err error) {
-	job.queueType = NORMAL
-
-	normalJob, err = json.Marshal(job)
-	if err != nil {
-		return
-	}
-
-	job.queueType = CHECK
-
-	checkJob, err = json.Marshal(job)
-	if err != nil {
-		return
-	}
-
-	return
-}
-
 func (c *cluster) putRetry(server string, data []byte, priority int,
 		delay time.Duration, ttr time.Duration) (err error) {
 	for i := 0; i < 2; i++ {
@@ -113,7 +94,7 @@ func (c *cluster) putRetry(server string, data []byte, priority int,
 
 func (c *cluster) Put(job *Job, priority int,
 		delay time.Duration, ttr time.Duration) (err error) {
-	normalJob, checkJob, err := c.marhsalJob(job)
+	jsonJob, err := json.Marshal(job)
 	if err != nil {
 		err = &errortypes.UnknownError{
 			errors.Wrap(err, "queue: Unknown parse error"),
@@ -139,9 +120,9 @@ func (c *cluster) Put(job *Job, priority int,
 				}
 
 				if normal {
-					err = c.putRetry(server, normalJob, priority, delay, ttr)
+					err = c.putRetry(server, jsonJob, priority, delay, ttr)
 				} else {
-					err = c.putRetry(server, checkJob, priority,
+					err = c.putRetry(server, jsonJob, priority,
 						time.Duration(2) * ttr + delay, ttr)
 				}
 				if err != nil {
