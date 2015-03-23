@@ -74,14 +74,14 @@ func (c *cluster) Close() (err error) {
 
 func (c *cluster) marhsalJob(job *Job) (
 		normalJob []byte, checkJob []byte, err error) {
-	job.Type = NORMAL
+	job.queueType = NORMAL
 
 	normalJob, err = json.Marshal(job)
 	if err != nil {
 		return
 	}
 
-	job.Type = CHECK
+	job.queueType = CHECK
 
 	checkJob, err = json.Marshal(job)
 	if err != nil {
