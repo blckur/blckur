@@ -52,7 +52,6 @@ func (q *QueueNode) Start() {
 		}).Info("nodes.queue: Starting queue node")
 
 		cmd = exec.Command("./bin/beanstalkd", args...) // TODO
-		cmd.Stdout = logger.NewErrorWriter()
 		cmd.Stderr = logger.NewErrorWriter()
 
 		var cmdErr error

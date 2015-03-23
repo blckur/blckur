@@ -60,7 +60,6 @@ func (c *CacheNode) Start() {
 		}).Info("nodes.cache: Starting cache node")
 
 		cmd = exec.Command("redis-server", args...)
-		cmd.Stdout = logger.NewErrorWriter()
 		cmd.Stderr = logger.NewErrorWriter()
 
 		var cmdErr error
