@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/queue"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/nodes"
+	"github.com/blckur/blckur/cache"
 )
 
 func Worker() {
@@ -14,6 +15,7 @@ func Worker() {
 	database.Init()
 	settings.Init()
 	queue.Init()
+	cache.Init()
 	messenger.Init()
 	opts := GetServiceOptions()
 
