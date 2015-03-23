@@ -1,4 +1,5 @@
 package utils
+
 import (
 	"fmt"
 	"math/rand"
