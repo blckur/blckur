@@ -20,11 +20,7 @@ type QueueNode struct {
 }
 
 func (q *QueueNode) Start() {
-	portInt := q.Port
-	if portInt == 0 {
-		portInt = 11300
-	}
-	port := strconv.Itoa(portInt)
+	port := strconv.Itoa(q.Port)
 
 	args := []string{"-p", port}
 	if q.Host != "" {
