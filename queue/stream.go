@@ -64,7 +64,7 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 			continue
 		}
 
-		if val == "t" {
+		if val == "t" || time.Now().After(job.Timestamp.Add(job.Ttl)) {
 			job.Delete()
 			continue
 		}
