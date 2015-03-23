@@ -11,7 +11,7 @@ var (
 
 type Task interface {
 	Type() string
-	Run(db *database.Database)
+	Run(*database.Database) error
 }
 
 func register(hour int, min int, task Task) {

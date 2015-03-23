@@ -5,7 +5,6 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/node"
 	"github.com/dropbox/godropbox/container/set"
-	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -17,31 +16,27 @@ func (n *nodeCheck) Type() string {
 	return "nodes"
 }
 
-func (n *nodeCheck) Run(db *database.Database) {
+func (n *nodeCheck) Run(db *database.Database) (err error) {
 	coll := db.Nodes()
 
 	nds := []node.Node{}
-	err := coll.Find(bson.M{
+	err = coll.Find(bson.M{
 		"timestamp": bson.M{
 			"$lt": time.Now().Add(-5 * time.Minute),
 		},
 	}).All(&nds)
 	if err != nil {
 		err = database.ParseError(err)
-		logrus.WithFields(logrus.Fields{
-			"error": err,
-		}).Error("tasks.nodecheck: Distinct error")
+		return
 	}
 
 	updated := set.NewSet()
 
 	for _, node := range nds {
-		err := coll.RemoveId(node.Id)
+		err = coll.RemoveId(node.Id)
 		if err != nil {
 			err = database.ParseError(err)
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("tasks.nodecheck: Remove error")
+			return
 		}
 
 		updated.Add(node.Type)
@@ -50,6 +45,8 @@ func (n *nodeCheck) Run(db *database.Database) {
 	for nodeType := range updated.Iter() {
 		messenger.Publish(db, nodeType.(string), "update")
 	}
+
+	return
 }
 
 func init() {
