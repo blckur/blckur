@@ -21,15 +21,15 @@ var (
 	twitterConf *oauth.Oauth1
 )
 
-type Twitter Account
+type twitter Account
 
-func (t *Twitter) NewClient() (client *oauth.Oauth1Client) {
+func (t *twitter) newClient() (client *oauth.Oauth1Client) {
 	client = twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
 	return
 }
 
-func (t *Twitter) Update() (err error) {
-	client := t.NewClient()
+func (t *twitter) Update(db *database.Database) (err error) {
+	client := t.newClient()
 
 	data := struct {
 		IdStr string `json:"id_str"`
@@ -49,7 +49,7 @@ func (t *Twitter) Update() (err error) {
 	return
 }
 
-func (t *Twitter) Sync(db *database.Database) (err error) {
+func (t *twitter) Sync(db *database.Database) (err error) {
 	backend := &twitterBackend{
 		db: db,
 		acct: t,
@@ -67,7 +67,7 @@ func (t *Twitter) Sync(db *database.Database) (err error) {
 type twitterBackend struct {
 	db *database.Database
 	stream *anaconda.Stream
-	acct *Twitter
+	acct *twitter
 }
 
 func (b *twitterBackend) newClient() (client *anaconda.TwitterApi) {
@@ -202,7 +202,7 @@ func ReqTwitter(db *database.Database, userId bson.ObjectId) (
 }
 
 func AuthTwitter(db *database.Database, token string, code string) (
-		acct *Twitter, err error) {
+		acct *Account, err error) {
 	coll := db.Accounts()
 
 	client, err := twitterConf.Authorize(db, token, code)
@@ -210,7 +210,7 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		return
 	}
 
-	acct = &Twitter{
+	acct = &Account{
 		UserId: client.UserId,
 		Type: "twitter",
 		OauthTokn: client.Token,
@@ -218,7 +218,7 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		coll: coll,
 	}
 
-	err = acct.Update()
+	err = acct.Update(db)
 	if err != nil {
 		return
 	}
