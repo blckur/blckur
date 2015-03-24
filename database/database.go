@@ -183,6 +183,18 @@ func AddIndexes() (err error) {
 		}
 	}
 
+	coll = db.Streams()
+	err = coll.EnsureIndex(mgo.Index{
+		Key: []string{"timestamp"},
+		ExpireAfter: 1 * time.Minute,
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
 	coll = db.Nodes()
 	err = coll.EnsureIndex(mgo.Index{
 		Key: []string{"type"},
