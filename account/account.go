@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+type SyncInterface interface {
+	Sync(*database.Database) error
+}
+
 type Resource struct {
 	Type string `bson:"type" json:"type"`
 	Resource string `bson:"resource" json:"resource"`
@@ -30,11 +34,6 @@ type Account struct {
 	coll *database.Collection
 }
 
-type Stream interface {
-	Start()
-	Stop()
-}
-
 func (a *Account) Commit() (err error) {
 	err = a.coll.Commit(a.Id, a)
 	return
@@ -42,6 +41,18 @@ func (a *Account) Commit() (err error) {
 
 func (a *Account) CommitFields(fields set.Set) (err error) {
 	err = a.coll.CommitFields(a.Id, a, fields)
+	return
+}
+
+func (a *Account) GetSyncInterface() (syncIntf SyncInterface) {
+	if a.Type == "twitter" {
+		a := Twitter(*a)
+		syncIntf = &a
+	} else if a.Type == "gmail" {
+		a := Gmail(*a)
+		syncIntf = &a
+	}
+
 	return
 }
 
