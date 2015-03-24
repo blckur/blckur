@@ -8,7 +8,8 @@ import (
 	"time"
 )
 
-type SyncInterface interface {
+type clientInterface interface {
+	Update(*database.Database) error
 	Sync(*database.Database) error
 }
 
@@ -44,13 +45,35 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
-func (a *Account) GetSyncInterface() (syncIntf SyncInterface) {
+func (a *Account) Update(db *database.Database) (err error) {
+	client := a.getClientInterface()
+
+	err = client.Update(db)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (a *Account) Sync(db *database.Database) (err error) {
+	client := a.getClientInterface()
+
+	err = client.Sync(db)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (a *Account) getClientInterface() (clientIntf clientInterface) {
 	if a.Type == "twitter" {
-		a := Twitter(*a)
-		syncIntf = &a
+		a := twitter(*a)
+		clientIntf = &a
 	} else if a.Type == "gmail" {
-		a := Gmail(*a)
-		syncIntf = &a
+		a := gmail(*a)
+		clientIntf = &a
 	}
 
 	return
