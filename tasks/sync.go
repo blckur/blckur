@@ -27,7 +27,7 @@ func (s *sync) Run(db *database.Database) (err error) {
 
 	for _, acctId := range acctIds {
 		job := queue.NewJob(time.Duration(settings.Task.Timeout) * time.Second)
-		job.Type = "account"
+		job.Type = s.Type()
 		job.Resource = acctId
 
 		err = job.Put(0, 0,
