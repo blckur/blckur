@@ -3,9 +3,9 @@ package tasks
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/queue"
+	"github.com/blckur/blckur/settings"
 	"labix.org/v2/mgo/bson"
 	"time"
-	"github.com/blckur/blckur/settings"
 )
 
 type sync struct {
