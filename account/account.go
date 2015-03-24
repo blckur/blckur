@@ -151,12 +151,13 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	return
 }
 
-func Init() {
-	requires.After("settings")
-	requires.Before("messenger")
+func init() {
+	module := requires.New("account")
+	module.After("settings")
+	module.Before("messenger")
 
-	InitGmail()
-	InitTwitter()
-
-	requires.Register("account")
+	module.Handler = func() {
+		initGmail()
+		initTwitter()
+	}
 }

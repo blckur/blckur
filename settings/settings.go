@@ -170,16 +170,19 @@ func register(name string, group interface{}) {
 	registry[name] = group
 }
 
-func Init() {
-	requires.After("database")
 
-	for name, _ := range registry {
-		Update(name)
+func init() {
+	module := requires.New("settings")
+	module.Before("logger")
+	module.After("database")
+
+	module.Handler = func() {
+		for name, _ := range registry {
+			Update(name)
+		}
+
+		messenger.Register("settings", "all", func(msg *messenger.Message) {
+			Update(msg.Data.(string))
+		})
 	}
-
-	messenger.Register("settings", "all", func(msg *messenger.Message) {
-		Update(msg.Data.(string))
-	})
-
-	requires.Register("settings")
 }

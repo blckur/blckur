@@ -169,52 +169,53 @@ func Register(channel string, event string, callback func(*Message)) {
 	listeners[key] = append(callbacks, callback)
 }
 
-func Init() {
-	requires.After("settings")
+func init() {
+	module := requires.New("messenger")
+	module.After("settings")
 
-	go func() {
-		channelsSet := set.NewSet()
+	module.Handler = func() {
+		go func() {
+			channelsSet := set.NewSet()
 
-		for key, _ := range listeners {
-			channelsSet.Add(strings.Split(key, ":")[0])
-		}
-
-		channels := []string{}
-
-		for channel := range channelsSet.Iter() {
-			channels = append(channels, channel.(string))
-		}
-
-		for {
-			db := database.GetDatabase()
-
-			err := Subscribe(db, channels, 10 * time.Second,
-					func(msg *Message) bool {
-				if msg == nil {
-					return false
-				}
-
-				key := msg.Channel + ":all"
-				for _, listener := range listeners[key] {
-					listener(msg)
-				}
-
-				key = msg.Channel + ":" + msg.Data.(string)
-				for _, listener := range listeners[key] {
-					listener(msg)
-				}
-
-				return false
-			})
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("messenger: Listener")
+			for key, _ := range listeners {
+				channelsSet.Add(strings.Split(key, ":")[0])
 			}
 
-			time.Sleep(constants.RETRY_DELAY)
-		}
-	}()
+			channels := []string{}
 
-	requires.Register("messenger")
+			for channel := range channelsSet.Iter() {
+				channels = append(channels, channel.(string))
+			}
+
+			for {
+				db := database.GetDatabase()
+
+				err := Subscribe(db, channels, 10 * time.Second,
+				func(msg *Message) bool {
+					if msg == nil {
+						return false
+					}
+
+					key := msg.Channel + ":all"
+					for _, listener := range listeners[key] {
+						listener(msg)
+					}
+
+					key = msg.Channel + ":" + msg.Data.(string)
+					for _, listener := range listeners[key] {
+						listener(msg)
+					}
+
+					return false
+				})
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"error": err,
+					}).Error("messenger: Listener")
+				}
+
+				time.Sleep(constants.RETRY_DELAY)
+			}
+		}()
+	}
 }

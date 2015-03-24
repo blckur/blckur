@@ -2,7 +2,6 @@ package account
 
 import (
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/notification"
@@ -334,14 +333,9 @@ func updateGmail() {
 	gmailConf.Config()
 }
 
-func InitGmail() {
-	requires.After("settings")
-	requires.Before("messenger")
-
+func initGmail() {
 	messenger.Register("settings", "google", func(_ *messenger.Message) {
 		updateGmail()
 	})
 	updateGmail()
-
-	requires.Register("account")
 }

@@ -110,13 +110,16 @@ func initSender() {
 	})
 }
 
-func Init() {
-	initSender()
+func init() {
+	module := requires.New("logger")
+	module.Before("database")
 
-	logrus.SetFormatter(&Formatter{})
-	logrus.AddHook(&logHook{})
-	logrus.SetOutput(os.Stderr)
-	logrus.SetLevel(logrus.InfoLevel)
+	module.Handler = func() {
+		initSender()
 
-	requires.Register("logger")
+		logrus.SetFormatter(&Formatter{})
+		logrus.AddHook(&logHook{})
+		logrus.SetOutput(os.Stderr)
+		logrus.SetLevel(logrus.InfoLevel)
+	}
 }

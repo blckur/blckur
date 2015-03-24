@@ -3,7 +3,6 @@ package account
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/notification"
@@ -251,14 +250,9 @@ func updateTwitter() {
 	twitterConf = conf
 }
 
-func InitTwitter() {
-	requires.After("settings")
-	requires.Before("messenger")
-
+func initTwitter() {
 	messenger.Register("settings", "twitter", func(_ *messenger.Message) {
 		updateTwitter()
 	})
 	updateTwitter()
-
-	requires.Register("account")
 }

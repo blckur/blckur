@@ -196,11 +196,11 @@ func update() {
 	}
 }
 
-func Init() {
-	requires.After("database")
-	requires.After("settings")
+func init() {
+	module := requires.New("session")
+	module.After("settings")
 
-	update()
-
-	requires.Register("session")
+	module.Handler = func() {
+		update()
+	}
 }

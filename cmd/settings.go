@@ -2,16 +2,14 @@ package cmd
 
 import (
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/logger"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
 	"flag"
 )
 
 func Settings() {
-	logger.Init()
-	database.Init()
-	settings.Init()
+	requires.Init()
 
 	group := flag.Arg(1)
 	key := flag.Arg(2)

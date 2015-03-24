@@ -155,27 +155,28 @@ func update() {
 	}
 }
 
-func Init() {
-	requires.After("settings")
-	requires.Before("messenger")
+func init() {
+	module := requires.New("cache")
+	module.After("settings")
+	module.Before("messenger")
 
-	messenger.Register("settings", "cache", func(_ *messenger.Message) {
-		go update()
-	})
-	messenger.Register("cache", "update", func(_ *messenger.Message) {
-		go update()
-	})
-	update()
+	module.Handler = func() {
+		messenger.Register("settings", "cache", func(_ *messenger.Message) {
+			go update()
+		})
+		messenger.Register("cache", "update", func(_ *messenger.Message) {
+			go update()
+		})
+		update()
 
-	requires.Register("cache")
+		gdefer.Defer(func() {
+			for _, pool := range clst.serverMap {
+				pool.Close()
+			}
 
-	gdefer.Defer(func() {
-		for _, pool := range clst.serverMap {
-			pool.Close()
-		}
-
-		for _, psc := range clst.pubsubConns {
-			psc.Close()
-		}
-	})
+			for _, psc := range clst.pubsubConns {
+				psc.Close()
+			}
+		})
+	}
 }

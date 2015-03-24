@@ -2,17 +2,11 @@ package cmd
 
 import (
 	"github.com/blckur/blckur/nodes"
-	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/logger"
-	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/requires"
 )
 
 func Queue() {
-	logger.Init()
-	database.Init()
-	settings.Init()
-	messenger.Init()
+	requires.Init()
 	opts := GetServiceOptions()
 
 	node := nodes.QueueNode{

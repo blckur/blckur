@@ -3,7 +3,6 @@ package scheduler
 import (
 	"github.com/blckur/blckur/tasks"
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/requires"
 	"github.com/Sirupsen/logrus"
 	"hash/fnv"
 	"time"
@@ -78,9 +77,4 @@ func Run() {
 
 		time.Sleep(1 * time.Second)
 	}
-}
-
-func Init() {
-	requires.After("settings")
-	requires.Register("scheduler")
 }

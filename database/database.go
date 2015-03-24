@@ -250,45 +250,47 @@ func AddCollections() (err error) {
 	return
 }
 
-func Init() {
-	for {
-		err := Connect()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("database: Connection")
-		} else {
-			break
+func init() {
+	module := requires.New("database")
+
+	module.Handler = func() {
+		for {
+			err := Connect()
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("database: Connection")
+			} else {
+				break
+			}
+
+			time.Sleep(constants.RETRY_DELAY)
 		}
 
-		time.Sleep(constants.RETRY_DELAY)
-	}
+		for {
+			err := AddCollections()
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("database: Add collections")
+			} else {
+				break
+			}
 
-	for {
-		err := AddCollections()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("database: Add collections")
-		} else {
-			break
+			time.Sleep(constants.RETRY_DELAY)
 		}
 
-		time.Sleep(constants.RETRY_DELAY)
-	}
+		for {
+			err := AddIndexes()
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("database: Add indexes")
+			} else {
+				break
+			}
 
-	for {
-		err := AddIndexes()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("database: Add indexes")
-		} else {
-			break
+			time.Sleep(constants.RETRY_DELAY)
 		}
-
-		time.Sleep(constants.RETRY_DELAY)
 	}
-
-	requires.Register("database")
 }
