@@ -200,9 +200,9 @@ func (g *gmail) parseMessage(msg *gmailMessage,
 	return
 }
 
-func (g *Gmail) Sync(db *database.Database) (err error) {
-	client := g.NewClient()
-	g.Refresh(db, client)
+func (g *gmail) Sync(db *database.Database) (err error) {
+	client := g.newClient()
+	g.refresh(db, client)
 
 	lastNotf, err := notification.GetLastNotification(db, g.UserId, g.Id)
 	if err != nil {
