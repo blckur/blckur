@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/notification"
+	"github.com/blckur/blckur/streams"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
@@ -25,11 +26,6 @@ type Twitter Account
 
 func (t *Twitter) NewClient() (client *oauth.Oauth1Client) {
 	client = twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
-	return
-}
-
-func (t *Twitter) NewApiClient() (client *anaconda.TwitterApi) {
-	client = anaconda.NewTwitterApi(t.OauthTokn, t.OauthSec)
 	return
 }
 
@@ -54,33 +50,44 @@ func (t *Twitter) Update() (err error) {
 	return
 }
 
-func (t *Twitter) Stream(db *database.Database) (stream *TwitterStream) {
-	client := t.NewApiClient()
+func (t *Twitter) Sync(db *database.Database) (err error) {
+	backend := &twitterBackend{
+		db: db,
+		acct: t,
+	}
+	stream := streams.NewStream(db, t.Id, backend)
+
+	err = stream.Start()
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+type twitterBackend struct {
+	db *database.Database
+	stream *anaconda.Stream
+	acct *Twitter
+}
+
+func (b *twitterBackend) NewClient() (client *anaconda.TwitterApi) {
+	client = anaconda.NewTwitterApi(b.acct.OauthTokn, b.acct.OauthSec)
+	return
+}
+
+func (b *twitterBackend) Run() {
+	client := b.NewClient()
 
 	streamVals := url.Values{}
 	streamVals.Add("with", "user")
 	streamVals.Add("replies", "all")
 
 	s := client.UserStream(streamVals)
+	b.stream = &s
 
-	stream = &TwitterStream{
-		db: db,
-		stream: &s,
-		acct: t,
-	}
-
-	return
-}
-
-type TwitterStream struct {
-	db *database.Database
-	stream *anaconda.Stream
-	acct *Twitter
-}
-
-func (s *TwitterStream) Start() {
-	for obj := range s.stream.C {
-		_, err := s.Handle(s.db, obj)
+	for obj := range b.stream.C {
+		_, err := b.handle(obj)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
@@ -89,12 +96,12 @@ func (s *TwitterStream) Start() {
 	}
 }
 
-func (s *TwitterStream) Stop() {
-	s.stream.Interrupt()
-	s.stream.End()
+func (b *twitterBackend) Stop() {
+	b.stream.Interrupt()
+	b.stream.End()
 }
 
-func (s *TwitterStream) Handle(db *database.Database, evtInf interface{}) (
+func (b *twitterBackend) handle(evtInf interface{}) (
 		notf *notification.Notification, err error) {
 	var timestamp string
 
@@ -102,8 +109,8 @@ func (s *TwitterStream) Handle(db *database.Database, evtInf interface{}) (
 		_ = evt
 		return
 	} else if evt, ok := evtInf.(anaconda.EventTweet); ok {
-		if evt.Target.IdStr != s.acct.IdentityId ||
-				evt.Source.IdStr == s.acct.IdentityId {
+		if evt.Target.IdStr != b.acct.IdentityId ||
+				evt.Source.IdStr == b.acct.IdentityId {
 			return
 		}
 
@@ -122,8 +129,8 @@ func (s *TwitterStream) Handle(db *database.Database, evtInf interface{}) (
 		subject += origin
 
 		notf = &notification.Notification{
-			UserId: s.acct.UserId,
-			AccountId: s.acct.Id,
+			UserId: b.acct.UserId,
+			AccountId: b.acct.Id,
 			Type: evt.Event.Event,
 			Resource: evt.TargetObject.IdStr,
 			Origin: origin,
@@ -131,25 +138,25 @@ func (s *TwitterStream) Handle(db *database.Database, evtInf interface{}) (
 			Body: evt.TargetObject.Text,
 		}
 	} else if evt, ok := evtInf.(anaconda.Event); ok {
-		if evt.Target.IdStr != s.acct.IdentityId || evt.Event != "follow" {
+		if evt.Target.IdStr != b.acct.IdentityId || evt.Event != "follow" {
 			return
 		}
 
 		origin := "@" + evt.Source.ScreenName
 		timestamp = evt.CreatedAt
 		notf = &notification.Notification{
-			UserId: s.acct.UserId,
-			AccountId: s.acct.Id,
+			UserId: b.acct.UserId,
+			AccountId: b.acct.Id,
 			Type: evt.Event,
 			Resource: evt.Target.IdStr,
 			Origin: origin,
 			Subject: "New follower " + origin,
 		}
 	} else if evt, ok := evtInf.(anaconda.StatusDeletionNotice); ok {
-		coll := db.Notifications()
+		coll := b.db.Notifications()
 
 		err = coll.Remove(bson.M{
-			"account_id": s.acct.Id,
+			"account_id": b.acct.Id,
 			"resource": evt.IdStr,
 		})
 		if err != nil {
@@ -162,16 +169,16 @@ func (s *TwitterStream) Handle(db *database.Database, evtInf interface{}) (
 		return
 	}
 
-	notf.Timestamp, err = time.Parse("Mon Jan 02 15:04:05 -0700 2006",
-		timestamp)
+	notf.Timestamp, err = time.Parse(
+		"Mon Jan 02 15:04:05 -0700 2006", timestamp)
 	if err != nil {
 		notf = nil
 		err = nil
 	}
 
-	notf.RemoteId = hashEvent(s.acct.Id.Hex(), notf.Timestamp)
+	notf.RemoteId = hashEvent(b.acct.Id.Hex(), notf.Timestamp)
 
-	err = notf.Initialize(db)
+	err = notf.Initialize(b.db)
 	if err != nil {
 		return
 	}
