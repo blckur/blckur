@@ -8,7 +8,6 @@ import (
 func App() {
 	requires.Init()
 
-
 	opts := GetServiceOptions()
 
 	node := nodes.AppNode{
