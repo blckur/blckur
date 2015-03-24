@@ -71,13 +71,13 @@ type twitterBackend struct {
 	acct *Twitter
 }
 
-func (b *twitterBackend) NewClient() (client *anaconda.TwitterApi) {
+func (b *twitterBackend) newClient() (client *anaconda.TwitterApi) {
 	client = anaconda.NewTwitterApi(b.acct.OauthTokn, b.acct.OauthSec)
 	return
 }
 
 func (b *twitterBackend) Run() {
-	client := b.NewClient()
+	client := b.newClient()
 
 	streamVals := url.Values{}
 	streamVals.Add("with", "user")
