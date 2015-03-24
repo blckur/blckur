@@ -110,7 +110,7 @@ func (c *cluster) Put(job *Job, priority int,
 	sentMutex := sync.Mutex{}
 
 	for i := 0; i < c.defaultConsistency; i++ {
-		go func(normal bool) {
+		go func(first bool) {
 			var err error
 
 			for {
@@ -119,7 +119,7 @@ func (c *cluster) Put(job *Job, priority int,
 					break
 				}
 
-				if normal {
+				if first {
 					err = c.putRetry(server, jsonJob, priority, delay, ttr)
 				} else {
 					err = c.putRetry(server, jsonJob, priority,
