@@ -21,7 +21,7 @@ var (
 
 type Gmail Account
 
-type GmailMessage struct {
+type gmailMessage struct {
 	Id string `json:"id"`
 	Labels []string `json:"labelIds"`
 	Snippet string `json:"snippet"`
@@ -37,13 +37,13 @@ type GmailMessage struct {
 	} `json:"payload"`
 }
 
-func (g *Gmail) NewClient() (client *oauth.Oauth2Client) {
+func (g *Gmail) newClient() (client *oauth.Oauth2Client) {
 	client = gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
 		g.Oauth2RefTokn, g.Oauth2Exp)
 	return
 }
 
-func (g *Gmail) Refresh(db *database.Database, client *oauth.Oauth2Client) (
+func (g *Gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
 		err error) {
 	refreshed, err := client.Check()
 	if err != nil {
@@ -71,8 +71,8 @@ func (g *Gmail) Refresh(db *database.Database, client *oauth.Oauth2Client) (
 }
 
 func (g *Gmail) Update(db *database.Database) (err error) {
-	client := g.NewClient()
-	g.Refresh(db, client)
+	client := g.newClient()
+	g.refresh(db, client)
 
 	data := struct {
 		EmailAddress string `json:"emailAddress"`
@@ -89,7 +89,7 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 	return
 }
 
-func (g *Gmail) ParseMessage(msg *GmailMessage,
+func (g *Gmail) parseMessage(msg *gmailMessage,
 		lastNotf *notification.Notification, force bool) (
 		notf *notification.Notification, done bool) {
 	done = false
@@ -247,7 +247,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 		pageToken = messages.NextPageToken
 
 		for i, msg := range messages.Messages {
-			data := &GmailMessage{}
+			data := &gmailMessage{}
 
 			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
 				"/users/me/messages/%s?format=full", msg.Id)
@@ -257,7 +257,7 @@ func (g *Gmail) Sync(db *database.Database) (err error) {
 				return
 			}
 
-			notf, done := g.ParseMessage(data, lastNotf, i == 0)
+			notf, done := g.parseMessage(data, lastNotf, i == 0)
 			if notf != nil {
 				notfs = append(notfs, notf)
 			}
