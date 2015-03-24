@@ -34,8 +34,7 @@ func (w *WorkerNode) Start() {
 					}).Error("worker: Sync job error")
 				}
 
-				sync := acct.GetSyncInterface()
-				err = sync.Sync(db)
+				err = acct.Sync(db)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"error": err,
