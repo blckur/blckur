@@ -8,6 +8,7 @@ import (
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/notification"
 	"github.com/ChimeraCoder/anaconda"
+	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 	"crypto/md5"
 	"net/url"
@@ -81,7 +82,9 @@ func (s *TwitterStream) Start() {
 	for obj := range s.stream.C {
 		_, err := s.Handle(s.db, obj)
 		if err != nil {
-			panic(err) // TODO
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("account.twitter: Stream handle error")
 		}
 	}
 }
