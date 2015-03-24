@@ -66,28 +66,29 @@ func update() {
 	}
 }
 
-func Init() {
-	requires.After("settings")
-	requires.Before("messenger")
+func init() {
+	module := requires.New("queue")
+	module.After("settings")
+	module.Before("messenger")
 
-	clst = &cluster{
-		defaultConsistency: settings.Queue.Consistency,
-		servers: set.NewSet(),
-		serversSlc: []string{},
-		pool: map[string]*beanstalk.Conn{},
+	module.Handler = func() {
+		clst = &cluster{
+			defaultConsistency: settings.Queue.Consistency,
+			servers: set.NewSet(),
+			serversSlc: []string{},
+			pool: map[string]*beanstalk.Conn{},
+		}
+		update()
+
+		messenger.Register("queue", "update", func(_ *messenger.Message) {
+			go update()
+		})
+		messenger.Register("settings", "queue", func(_ *messenger.Message) {
+			clst.defaultConsistency = settings.Queue.Consistency
+		})
+
+		gdefer.Defer(func() {
+			clst.Close()
+		})
 	}
-	update()
-
-	messenger.Register("queue", "update", func(_ *messenger.Message) {
-		go update()
-	})
-	messenger.Register("settings", "queue", func(_ *messenger.Message) {
-		clst.defaultConsistency = settings.Queue.Consistency
-	})
-
-	requires.Register("queue")
-
-	gdefer.Defer(func() {
-		clst.Close()
-	})
 }
