@@ -18,7 +18,7 @@ var (
 	gmailConf *oauth.Oauth2
 )
 
-type Gmail Account
+type gmail Account
 
 type gmailMessage struct {
 	Id string `json:"id"`
@@ -36,13 +36,13 @@ type gmailMessage struct {
 	} `json:"payload"`
 }
 
-func (g *Gmail) newClient() (client *oauth.Oauth2Client) {
+func (g *gmail) newClient() (client *oauth.Oauth2Client) {
 	client = gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
 		g.Oauth2RefTokn, g.Oauth2Exp)
 	return
 }
 
-func (g *Gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
+func (g *gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
 		err error) {
 	refreshed, err := client.Check()
 	if err != nil {
@@ -69,7 +69,7 @@ func (g *Gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
 	return
 }
 
-func (g *Gmail) Update(db *database.Database) (err error) {
+func (g *gmail) Update(db *database.Database) (err error) {
 	client := g.newClient()
 	g.refresh(db, client)
 
@@ -88,7 +88,7 @@ func (g *Gmail) Update(db *database.Database) (err error) {
 	return
 }
 
-func (g *Gmail) parseMessage(msg *gmailMessage,
+func (g *gmail) parseMessage(msg *gmailMessage,
 		lastNotf *notification.Notification, force bool) (
 		notf *notification.Notification, done bool) {
 	done = false
@@ -290,7 +290,7 @@ func ReqGmail(db *database.Database, userId bson.ObjectId) (
 }
 
 func AuthGmail(db *database.Database, state string, code string) (
-		acct *Gmail, err error) {
+		acct *Account, err error) {
 	coll := db.Accounts()
 
 	client, err := gmailConf.Authorize(db, state, code)
@@ -298,7 +298,7 @@ func AuthGmail(db *database.Database, state string, code string) (
 		return
 	}
 
-	acct = &Gmail{
+	acct = &Account{
 		UserId: client.UserId,
 		Type: "gmail",
 		Oauth2AccTokn: client.AccessToken,
