@@ -63,7 +63,7 @@ func (c *cluster) Close() (err error) {
 		err = c.close(server.(string))
 		if err != nil {
 			err = &errortypes.UnknownError{
-				errors.Wrap(err, "queue: Unknown error"),
+				errors.Wrap(err, "queue.cluster: Unknown error"),
 			}
 			return
 		}
@@ -97,7 +97,7 @@ func (c *cluster) Put(job *Job, priority int,
 	jsonJob, err := json.Marshal(job)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "queue: Unknown parse error"),
+			errors.Wrap(err, "queue.cluster: Unknown parse error"),
 		}
 		return
 	}
@@ -143,7 +143,7 @@ func (c *cluster) Put(job *Job, priority int,
 	waiters.Wait()
 
 	if sent < c.defaultConsistency {
-		msg := fmt.Sprintf("queue: Job consistency unmet %d/%d",
+		msg := fmt.Sprintf("queue.cluster: Job consistency unmet %d/%d",
 			sent, c.defaultConsistency)
 
 		if err != nil {
