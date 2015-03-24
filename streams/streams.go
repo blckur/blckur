@@ -2,31 +2,86 @@ package streams
 
 import (
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/settings"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
 
+type Backend interface {
+	Run()
+	Stop()
+}
+
 type Stream struct {
 	Id bson.ObjectId `bson:"_id"`
 	RunnerId bson.ObjectId `bson:"runner_id"`
-	Type string `bson:"type"`
 	Timestamp time.Time `bson:"timestamp"`
+	backend Backend
 	db *database.Database
 }
 
-func (s *Stream) Start() {
-	switch (s.Type) {
-	case "twitter":
-		err := s.startTwitter()
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-				"account_id": s.RunnerId.Hex(),
-			}).Error("streams: Failed to start twitter")
-		}
+func (s *Stream) Start() (err error) {
+	coll := s.db.Streams()
+
+	count, err := coll.FindId(s.Id).Count()
+	if err != nil {
+		err = database.ParseError(err)
+		return
 	}
+
+	if count > 0 {
+		return
+	}
+
+	stop := false
+
+	err = s.initialize()
+	if err != nil {
+		return
+	}
+
+	go func() {
+		s.backend.Run()
+		stop = true
+	}()
+
+	go func() {
+		lastUpdate := time.Now()
+		for {
+			if stop {
+				break
+			}
+
+			time.Sleep(time.Duration(
+			settings.Stream.RefreshRate) * time.Second)
+			stop, err := s.Update()
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+					"account_id": s.Id.Hex(),
+					"runner_id": s.RunnerId.Hex(),
+				}).Error("streams: Update error")
+			} else if stop {
+				s.backend.Stop()
+				break
+			} else {
+				lastUpdate = time.Now()
+			}
+
+			if time.Since(lastUpdate) > 2 * time.Minute {
+				logrus.WithFields(logrus.Fields{
+					"account_id": s.Id.Hex(),
+					"runner_id": s.RunnerId.Hex(),
+				}).Error("streams: Update timed out")
+				s.backend.Stop()
+				break
+			}
+		}
+	}()
+
+	return
 }
 
 func (s *Stream) Update() (stop bool, err error) {
@@ -79,13 +134,12 @@ func (s *Stream) initialize() (err error) {
 	return
 }
 
-func NewStream(acctId bson.ObjectId, typ string) (stream *Stream) {
-	db := database.GetDatabase()
-
+func NewStream(db *database.Database, acctId bson.ObjectId,
+		backend Backend) (stream *Stream) {
 	stream = &Stream{
-		Id: acctId,
-		Type: typ,
+		backend: backend,
 		db: db,
+		Id: acctId,
 	}
 
 	return
