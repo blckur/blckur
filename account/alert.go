@@ -72,4 +72,6 @@ func (a *Account) ParseAlerts() {
 		}
 		alrt.Label = AlertLabels[a.Type][alrt.Type]
 	}
+
+	a.sortAlerts()
 }
