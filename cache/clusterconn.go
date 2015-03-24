@@ -30,7 +30,7 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 			v, e := redis.String(conn.Do("GET", key))
 			if e != nil && e != redis.ErrNil {
 				er = &CacheError{
-					errors.Wrap(e, "cache: Get error"),
+					errors.Wrap(e, "cache.cluster: Get error"),
 				}
 				wait.Done()
 				return
@@ -72,7 +72,7 @@ func (c *ClusterConn) SetString(key string, val string,
 				strconv.FormatInt(int64(ttl.Seconds()), 10), val)
 			if e != nil {
 				er = &CacheError{
-					errors.Wrap(e, "cache: Set error"),
+					errors.Wrap(e, "cache.cluster: Set error"),
 				}
 				wait.Done()
 				return
@@ -107,7 +107,7 @@ func (c *ClusterConn) Publish(channel string, val string) (err error) {
 			_, e := conn.Do("PUBLISH", channel, val)
 			if e != nil {
 				er = &CacheError{
-					errors.Wrap(e, "cache: Publish error"),
+					errors.Wrap(e, "cache.cluster: Publish error"),
 				}
 				wait.Done()
 				return

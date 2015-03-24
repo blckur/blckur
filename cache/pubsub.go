@@ -72,7 +72,7 @@ func (p *pubSubConn) parseAddQueue() {
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
-			}).Error("cache: Subscribe error")
+			}).Error("cache.pubsub: Subscribe error")
 			time.Sleep(constants.RETRY_DELAY)
 			continue
 		}
@@ -102,7 +102,7 @@ func (p *pubSubConn) parseRemQueue() {
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
-			}).Error("cache: Unsubscribe error")
+			}).Error("cache.pubsub: Unsubscribe error")
 			time.Sleep(constants.RETRY_DELAY)
 			continue
 		}
@@ -148,7 +148,7 @@ func (p *pubSubConn) Listen() {
 
 					logrus.WithFields(logrus.Fields{
 						"error": obj,
-					}).Error("cache: Listen error")
+					}).Error("cache.pubsub: Listen error")
 
 					break Loop
 				}
@@ -165,11 +165,11 @@ func (p *pubSubConn) Listen() {
 			conn, err := dialLong(p.address)
 			if err != nil {
 				err = &CacheError{
-					errors.Wrap(err, "cache: Dial error"),
+					errors.Wrap(err, "cache.pubsub: Dial error"),
 				}
 				logrus.WithFields(logrus.Fields{
 					"error": err,
-				}).Error("cache: Dial error")
+				}).Error("cache.pubsub: Dial error")
 				continue
 			}
 
@@ -215,11 +215,11 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 	conn, err := dialLong(address)
 	if err != nil {
 		err = &CacheError{
-			errors.Wrap(err, "cache: Connection error"),
+			errors.Wrap(err, "cache.pubsub: Connection error"),
 		}
 		logrus.WithFields(logrus.Fields{
 			"error": err,
-		}).Error("cache: Connection error")
+		}).Error("cache.pubsub: Connection error")
 	}
 
 	psc.conn = &redis.PubSubConn{
