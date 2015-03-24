@@ -15,8 +15,8 @@
         <div ng-if="addAccount != true">
           <x-account ng-repeat="account in accounts"
             model="account"></x-account>
+          <x-get-started ng-if="accounts.length == 0"></x-get-started>
         </div>
-        <x-get-started ng-if="accounts.length == 0"></x-get-started>
         <x-account-add add-account="addAccount"></x-account-add>
       </div>
     </div>
