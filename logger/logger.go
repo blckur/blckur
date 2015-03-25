@@ -117,7 +117,7 @@ func init() {
 	module.Handler = func() {
 		initSender()
 
-		logrus.SetFormatter(&Formatter{})
+		logrus.SetFormatter(&formatter{})
 		logrus.AddHook(&logHook{})
 		logrus.SetOutput(os.Stderr)
 		logrus.SetLevel(logrus.InfoLevel)

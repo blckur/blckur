@@ -11,9 +11,9 @@ var (
 	whiteDiamond = colorize.ColorString("◆", colorize.WhiteBold, colorize.None)
 )
 
-type Formatter struct {}
+type formatter struct {}
 
-func (f *Formatter) Format(entry *logrus.Entry) (output []byte, err error) {
+func (f *formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 	msg := fmt.Sprintf("%s %s %s", formatLevel(entry.Level), blueArrow,
 		entry.Message)
 
