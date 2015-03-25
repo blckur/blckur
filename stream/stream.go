@@ -1,5 +1,5 @@
 // Data stream for streaming apis.
-package streams
+package stream
 
 import (
 	"github.com/blckur/blckur/database"
