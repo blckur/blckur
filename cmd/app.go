@@ -5,7 +5,7 @@ import (
 )
 
 func App() {
-	opts := GetServiceOptions()
+	opts := getServiceOptions()
 
 	node := nodes.AppNode{
 		Id: opts.Id,

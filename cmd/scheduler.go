@@ -5,7 +5,7 @@ import (
 )
 
 func Scheduler() {
-	opts := GetServiceOptions()
+	opts := getServiceOptions()
 
 	node := nodes.SchedulerNode{
 		Id: opts.Id,

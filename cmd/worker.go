@@ -5,7 +5,7 @@ import (
 )
 
 func Worker() {
-	opts := GetServiceOptions()
+	opts := getServiceOptions()
 
 	node := nodes.WorkerNode{
 		Id: opts.Id,

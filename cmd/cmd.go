@@ -7,13 +7,13 @@ import (
 	"math/rand"
 )
 
-type ServiceOptions struct {
+type serviceOptions struct {
 	Id string
 	Host string
 	Port int
 }
 
-func GetServiceOptions() (opts *ServiceOptions) {
+func getServiceOptions() (opts *serviceOptions) {
 	id := os.Getenv("ID")
 	if id == "" {
 		id = utils.RandName()
@@ -33,7 +33,7 @@ func GetServiceOptions() (opts *ServiceOptions) {
 		port = rand.Intn(55000) + 10000
 	}
 
-	opts = &ServiceOptions{
+	opts = &serviceOptions{
 		Id: id,
 		Host: host,
 		Port: port,

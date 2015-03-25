@@ -5,7 +5,7 @@ import (
 )
 
 func Cache() {
-	opts := GetServiceOptions()
+	opts := getServiceOptions()
 
 	node := nodes.CacheNode{
 		Id: opts.Id,

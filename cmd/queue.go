@@ -5,7 +5,7 @@ import (
 )
 
 func Queue() {
-	opts := GetServiceOptions()
+	opts := getServiceOptions()
 
 	node := nodes.QueueNode{
 		Id: opts.Id,
