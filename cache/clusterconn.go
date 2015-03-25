@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// Connection to shared cluster
+// Connection to redis cluster
 type ClusterConn struct {
 	clst *cluster
 	conns map[string]redis.Conn
