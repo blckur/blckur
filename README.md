@@ -4,6 +4,8 @@
 
 Copyright (c) 2015 Zachary Huff
 
+[![godoc](https://godoc.org/github.com/blckur/blckur?status.png)](https://godoc.org/github.com/blckur/blckur)
+
 ## Node types
 
 * app - web server
