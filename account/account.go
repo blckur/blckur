@@ -13,12 +13,6 @@ type clientInterface interface {
 	Sync(*database.Database) error
 }
 
-type Resource struct {
-	Type string `bson:"type" json:"type"`
-	Resource string `bson:"resource" json:"resource"`
-	Events map[string]bool `bson:"events" json:"events"`
-}
-
 type Account struct {
 	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
@@ -31,7 +25,6 @@ type Account struct {
 	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
 	Alerts []*Alert `bson:"alerts" json:"alerts"`
-	Resources []*Resource `bson:"resources" json:"resources"`
 	coll *database.Collection
 }
 
