@@ -7,9 +7,11 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/dropbox/godropbox/container/set"
 	"time"
+	"reflect"
 )
 
 type Client interface {
+	setAccount(acct *Account)
 	Update(*database.Database) error
 	Sync(*database.Database) error
 }
@@ -40,15 +42,11 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 }
 
 func (a *Account) GetClient() (client Client) {
-	if a.Type == "twitter" {
-		client = &TwitterClient{
-			acct: a,
-		}
-	} else if a.Type == "gmail" {
-		client = &GmailClient{
-			acct: a,
-		}
-	}
+	typ := registry[a.Type]
+	val := reflect.New(typ).Elem()
+
+	client = val.Addr().Interface().(Client)
+	client.setAccount(a)
 
 	return
 }
