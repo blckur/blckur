@@ -1,3 +1,4 @@
+// Interface to accounts collection in database
 package account
 
 import (
@@ -38,6 +39,7 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
+// Update account info
 func (a *Account) Update(db *database.Database) (err error) {
 	client := a.getClientInterface()
 
@@ -49,6 +51,7 @@ func (a *Account) Update(db *database.Database) (err error) {
 	return
 }
 
+// Get new notifications for account
 func (a *Account) Sync(db *database.Database) (err error) {
 	client := a.getClientInterface()
 
