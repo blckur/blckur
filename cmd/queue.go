@@ -2,11 +2,9 @@ package cmd
 
 import (
 	"github.com/blckur/blckur/nodes"
-	"github.com/blckur/blckur/requires"
 )
 
 func Queue() {
-	requires.Init()
 	opts := GetServiceOptions()
 
 	node := nodes.QueueNode{
