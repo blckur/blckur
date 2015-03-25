@@ -174,7 +174,6 @@ func register(name string, group interface{}) {
 
 func init() {
 	module := requires.New("settings")
-	module.Before("logger")
 	module.After("database")
 
 	module.Handler = func() {
