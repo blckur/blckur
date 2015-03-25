@@ -14,6 +14,5 @@ func getAddress() (address string) {
 		}).Error("queue: Failed to get ip")
 		panic(err)
 	}
-	address = address
 	return
 }
