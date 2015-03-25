@@ -23,28 +23,20 @@ func accountsPost(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
 
-	switch acctType {
-	case "gmail":
-		url, err := account.ReqGmail(db, sess.UserId)
-		if err != nil {
-			c.Fail(500, err)
-			return
-		}
-		acct.Redirect = url
-	case "twitter":
-		url, err := account.ReqTwitter(db, sess.UserId)
-		if err != nil {
-			c.Fail(500, err)
-			return
-		}
-		acct.Redirect = url
-	default:
+	auth, _, err := account.GetAuth(acctType)
+	if err != nil {
 		c.JSON(400, &errorData{
 			Error: "unknown_type",
 			Message: "Unknown account type",
 		})
+	}
+
+	url, err := auth.Request(db, sess.UserId)
+	if err != nil {
+		c.Fail(500, err)
 		return
 	}
+	acct.Redirect = url
 
 	c.JSON(200, acct)
 }
