@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/nodes"
 )
 
+// Starts task scheduler node
 func Scheduler() {
 	opts := getServiceOptions()
 

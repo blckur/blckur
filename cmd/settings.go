@@ -7,6 +7,7 @@ import (
 	"flag"
 )
 
+// Manages system settigs stored in database
 func Settings() {
 	group := flag.Arg(1)
 	key := flag.Arg(2)

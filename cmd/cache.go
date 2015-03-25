@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/nodes"
 )
 
+// Starts clustered redis cache node
 func Cache() {
 	opts := getServiceOptions()
 

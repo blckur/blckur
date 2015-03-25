@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/nodes"
 )
 
+// Starts clustered beanstalkd server and registers with database
 func Queue() {
 	opts := getServiceOptions()
 
