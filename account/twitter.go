@@ -25,6 +25,14 @@ type TwitterClient struct {
 	acct *Account
 }
 
+func init() {
+	register("twitter", TwitterClient{})
+}
+
+func (t *TwitterClient) setAccount(acct *Account) {
+	t.acct = acct
+}
+
 func (t *TwitterClient) newClient() (client *oauth.Oauth1Client) {
 	client = twitterConf.NewClient(t.acct.UserId, t.acct.OauthTokn,
 		t.acct.OauthSec)

@@ -18,6 +18,10 @@ var (
 	gmailConf *oauth.Oauth2
 )
 
+func init() {
+	register("gmail", GmailClient{})
+}
+
 type GmailClient struct {
 	acct *Account
 }
@@ -36,6 +40,10 @@ type gmailMessage struct {
 			Data string `json:"data"`
 		} `json:"body"`
 	} `json:"payload"`
+}
+
+func (g *GmailClient) setAccount(acct *Account) {
+	g.acct = acct
 }
 
 func (g *GmailClient) newClient() (client *oauth.Oauth2Client) {
