@@ -237,7 +237,11 @@ func (t *TwitterAuth) Authorize(db *database.Database, token string,
 		coll: coll,
 	}
 
-	client := acct.GetClient()
+	client, err := acct.GetClient()
+	if err != nil {
+		return
+	}
+
 	err = client.Update(db)
 	if err != nil {
 		return

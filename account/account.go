@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/dropbox/godropbox/errors"
 	"time"
 	"reflect"
 )
@@ -46,8 +47,15 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
-func (a *Account) GetClient() (client Client) {
-	typ := clientRegistry[a.Type]
+func (a *Account) GetClient() (client Client, err error) {
+	typ, ok := clientRegistry[a.Type]
+	if !ok {
+		err = &InvalidTypeError{
+			errors.New("Invalid account type"),
+		}
+		return
+	}
+
 	val := reflect.New(typ).Elem()
 
 	client = val.Addr().Interface().(Client)
@@ -56,8 +64,15 @@ func (a *Account) GetClient() (client Client) {
 	return
 }
 
-func GetAuth(acctType string) (auth Auth, authTyp string) {
-	typ := authRegistry[acctType]
+func GetAuth(acctType string) (auth Auth, authTyp int, err error) {
+	typ, ok := authRegistry[acctType]
+	if !ok {
+		err = &InvalidTypeError{
+			errors.New("Invalid account type"),
+		}
+		return
+	}
+
 	authTyp = authTypes[acctType]
 	val := reflect.New(typ).Elem()
 
@@ -125,7 +140,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 		acct.coll = coll
 		acct.ParseAlerts()
 
-		client := acct.GetClient()
+		client, _ := acct.GetClient()
 		err = client.Update(db)
 		if err != nil {
 			return
