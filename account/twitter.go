@@ -26,7 +26,7 @@ type TwitterClient struct {
 }
 
 func init() {
-	register("twitter", TwitterClient{}, func() {
+	register("twitter", TwitterClient{}, TwitterAuth{}, func() {
 		messenger.Register("settings", "twitter", func(_ *messenger.Message) {
 			updateTwitter()
 		})
@@ -207,7 +207,10 @@ func hashEvent(id string, timestamp time.Time) (hashStr string) {
 	return
 }
 
-func ReqTwitter(db *database.Database, userId bson.ObjectId) (
+type TwitterAuth struct {
+}
+
+func (t *TwitterAuth) Request(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
 	url, err = twitterConf.Request(db, userId)
 	if err != nil {
@@ -217,8 +220,8 @@ func ReqTwitter(db *database.Database, userId bson.ObjectId) (
 	return
 }
 
-func AuthTwitter(db *database.Database, token string, code string) (
-		acct *Account, err error) {
+func (t *TwitterAuth) Authorize(db *database.Database, token string,
+		code string) (acct *Account, err error) {
 	coll := db.Accounts()
 
 	auth, err := twitterConf.Authorize(db, token, code)

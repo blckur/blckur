@@ -19,7 +19,7 @@ var (
 )
 
 func init() {
-	register("gmail", GmailClient{}, func() {
+	register("gmail", GmailClient{}, GmailAuth{}, func() {
 		messenger.Register("settings", "google", func(_ *messenger.Message) {
 			updateGmail()
 		})
@@ -295,7 +295,10 @@ func (g *GmailClient) Sync(db *database.Database) (err error) {
 	return
 }
 
-func ReqGmail(db *database.Database, userId bson.ObjectId) (
+type GmailAuth struct {
+}
+
+func (g *GmailAuth) Request(db *database.Database, userId bson.ObjectId) (
 		url string, err error) {
 	url, err = gmailConf.Request(db, userId)
 	if err != nil {
@@ -305,8 +308,8 @@ func ReqGmail(db *database.Database, userId bson.ObjectId) (
 	return
 }
 
-func AuthGmail(db *database.Database, state string, code string) (
-		acct *Account, err error) {
+func (g *GmailAuth) Authorize(db *database.Database, state string,
+		code string) (acct *Account, err error) {
 	coll := db.Accounts()
 
 	auth, err := gmailConf.Authorize(db, state, code)

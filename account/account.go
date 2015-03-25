@@ -11,9 +11,14 @@ import (
 )
 
 type Client interface {
-	setAccount(acct *Account)
 	Update(*database.Database) error
 	Sync(*database.Database) error
+	setAccount(acct *Account)
+}
+
+type Auth interface {
+	Request(*database.Database, bson.ObjectId) (string, error)
+	Authorize(*database.Database, string, string) (*Account, error)
 }
 
 type Account struct {
@@ -42,11 +47,20 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 }
 
 func (a *Account) GetClient() (client Client) {
-	typ := registry[a.Type]
+	typ := clientRegistry[a.Type]
 	val := reflect.New(typ).Elem()
 
 	client = val.Addr().Interface().(Client)
 	client.setAccount(a)
+
+	return
+}
+
+func GetAuth(acctType string) (auth Auth) {
+	typ := authRegistry[acctType]
+	val := reflect.New(typ).Elem()
+
+	auth = val.Addr().Interface().(Auth)
 
 	return
 }
@@ -109,6 +123,12 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	for iter.Next(acct) {
 		acct.coll = coll
 		acct.ParseAlerts()
+
+		client := acct.GetClient()
+		err = client.Update(db)
+		if err != nil {
+			return
+		}
 
 		accts = append(accts, acct)
 		acct = &Account{}

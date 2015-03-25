@@ -5,11 +5,14 @@ import (
 )
 
 var (
-	registry = map[string]reflect.Type{}
+	authRegistry = map[string]reflect.Type{}
+	clientRegistry = map[string]reflect.Type{}
 	handlers = []func(){}
 )
 
-func register(name string, obj interface{}, handler func()) {
-	registry[name] = reflect.TypeOf(obj)
+func register(name string, auth interface{}, client interface{},
+		handler func()) {
+	authRegistry[name] = reflect.TypeOf(auth)
+	clientRegistry[name] = reflect.TypeOf(client)
 	handlers = append(handlers, handler)
 }
