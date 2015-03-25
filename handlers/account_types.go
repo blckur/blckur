@@ -5,33 +5,33 @@ import (
 )
 
 var (
-	types = []AccountType{
-		AccountType{
+	types = []accountType{
+		accountType{
 			Id: 1,
 			Label: "Twitter",
 			Type: "twitter",
 		},
-		AccountType{
+		accountType{
 			Id: 2,
 			Label: "GitHub",
 			Type: "github",
 		},
-		AccountType{
+		accountType{
 			Id: 3,
 			Label: "Gmail",
 			Type: "gmail",
 		},
-		AccountType{
+		accountType{
 			Id: 4,
 			Label: "HipChat",
 			Type: "hipchat",
 		},
-		AccountType{
+		accountType{
 			Id: 5,
 			Label: "Bitly",
 			Type: "bitly",
 		},
-		AccountType{
+		accountType{
 			Id: 6,
 			Label: "DigitalOcean",
 			Type: "digitalocean",
@@ -39,7 +39,7 @@ var (
 	}
 )
 
-type AccountType struct {
+type accountType struct {
 	Id int `json:"id"`
 	Label string `json:"label"`
 	Type string `json:"type"`

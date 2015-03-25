@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserData struct {
+type userData struct {
 	Email string `json:"email"`
 	Password string `json:"password"`
 }
@@ -24,7 +24,7 @@ func userGet(c *gin.Context) {
 
 func userPut(c *gin.Context) {
 	sess := c.MustGet("session").(*session.Session)
-	data := UserData{}
+	data := userData{}
 
 	if !c.Bind(&data) {
 		return
@@ -39,7 +39,7 @@ func userPut(c *gin.Context) {
 	if data.Email != "" {
 		email, err := utils.ParseEmail(data.Email)
 		if err != nil {
-			c.JSON(400, &ErrorData{
+			c.JSON(400, &errorData{
 				Error: "email_invalid",
 				Message: "Email is invalid",
 			})

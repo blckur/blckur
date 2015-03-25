@@ -1,6 +1,6 @@
 package handlers
 
-type ErrorData struct {
+type errorData struct {
 	Error string `json:"error"`
 	Message string `json:"error_msg"`
 }

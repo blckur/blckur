@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthData struct {
+type authData struct {
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Remember bool `json:"remember"`
@@ -17,7 +17,7 @@ type AuthData struct {
 func loginPost(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
-	data := AuthData{}
+	data := &authData{}
 
 	if !c.Bind(&data) {
 		return
@@ -32,7 +32,7 @@ func loginPost(c *gin.Context) {
 	if err != nil {
 		switch err.(type) {
 		case *database.NotFoundError:
-			c.JSON(401, &ErrorData{
+			c.JSON(401, &errorData{
 				Error: "email_invalid",
 				Message: "Email is invalid",
 			})
@@ -43,7 +43,7 @@ func loginPost(c *gin.Context) {
 	}
 
 	if auth := usr.CheckPassword(data.Password); auth != true {
-		c.JSON(401, &ErrorData{
+		c.JSON(401, &errorData{
 			Error: "password_invalid",
 			Message: "Password is invalid",
 		})
@@ -79,12 +79,12 @@ func sessionDelete(c *gin.Context) {
 
 func signupPost(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
-	data := &AuthData{}
+	data := &authData{}
 	c.Bind(data)
 
 	email, err := utils.ParseEmail(data.Email)
 	if err != nil {
-		c.JSON(400, &ErrorData{
+		c.JSON(400, &errorData{
 			Error: "email_invalid",
 			Message: "Email is invalid",
 		})
@@ -95,7 +95,7 @@ func signupPost(c *gin.Context) {
 	switch err.(type) {
 	case nil:
 	case *database.DuplicateKeyError:
-		c.JSON(400, &ErrorData{
+		c.JSON(400, &errorData{
 			Error: "email_exists",
 			Message: "Email is already signed up",
 		})

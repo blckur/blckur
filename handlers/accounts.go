@@ -9,16 +9,16 @@ import (
 	"labix.org/v2/mgo/bson"
 )
 
-type AccountPostData struct {
+type accountPostData struct {
 	Redirect string `json:"redirect"`
 }
 
-type AccountData struct {
+type accountData struct {
 	Alerts []*account.Alert `json:"alerts"`
 }
 
 func accountsPost(c *gin.Context) {
-	acct := &AccountPostData{}
+	acct := &accountPostData{}
 	acctType := c.Params.ByName("type")
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
@@ -39,7 +39,7 @@ func accountsPost(c *gin.Context) {
 		}
 		acct.Redirect = url
 	default:
-		c.JSON(400, &ErrorData{
+		c.JSON(400, &errorData{
 			Error: "unknown_type",
 			Message: "Unknown account type",
 		})
@@ -66,7 +66,7 @@ func accountsPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
 	acctId := bson.ObjectIdHex(c.Params.ByName("id"))
-	data := AccountData{}
+	data := accountData{}
 
 	if !c.Bind(&data) {
 		return

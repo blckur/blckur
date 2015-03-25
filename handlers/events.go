@@ -17,7 +17,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-type Event struct {
+type event struct {
 	Id bson.ObjectId `json:"id"`
 	Type string `json:"type"`
 	Resource string `json:"resource_id"`
@@ -40,7 +40,7 @@ func eventGet(c *gin.Context) {
 	}()
 
 	for {
-		evt := &Event{
+		evt := &event{
 			Id: bson.NewObjectId(),
 			Type: "test_event",
 		}
