@@ -33,6 +33,9 @@ func (s *Stream) Start() (err error) {
 	}
 
 	if count > 0 {
+		println("***************************************************")
+		println("skip")
+		println("***************************************************")
 		return
 	}
 
@@ -54,6 +57,10 @@ func (s *Stream) Start() (err error) {
 			if stop {
 				break
 			}
+
+			println("***************************************************")
+			println("update stream")
+			println("***************************************************")
 
 			time.Sleep(time.Duration(
 			settings.Stream.RefreshRate) * time.Second)
@@ -80,6 +87,10 @@ func (s *Stream) Start() (err error) {
 				break
 			}
 		}
+
+		println("***************************************************")
+		println("exit stream")
+		println("***************************************************")
 	}()
 
 	return
