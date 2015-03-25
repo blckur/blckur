@@ -42,12 +42,3 @@ func ParseError(err error) (newErr error) {
 
 	return
 }
-
-func ExpectFound(c *gin.Context, err error) {
-	switch err.(type) {
-	case NotFoundError:
-		c.Fail(404, err)
-	default:
-		c.Fail(500, err)
-	}
-}
