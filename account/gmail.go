@@ -19,7 +19,7 @@ var (
 )
 
 func init() {
-	register("gmail", GmailClient{}, GmailAuth{}, func() {
+	register("gmail", OAUTH2, GmailClient{}, GmailAuth{}, func() {
 		messenger.Register("settings", "google", func(_ *messenger.Message) {
 			updateGmail()
 		})

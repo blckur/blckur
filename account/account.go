@@ -56,8 +56,9 @@ func (a *Account) GetClient() (client Client) {
 	return
 }
 
-func GetAuth(acctType string) (auth Auth) {
+func GetAuth(acctType string) (auth Auth, authTyp string) {
 	typ := authRegistry[acctType]
+	authTyp = authTypes[acctType]
 	val := reflect.New(typ).Elem()
 
 	auth = val.Addr().Interface().(Auth)
