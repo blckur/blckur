@@ -22,9 +22,6 @@ class Account extends model.Model {
   @model.Attribute('alerts')
   List<Map<String, String>> alerts;
 
-  @model.Attribute('resources')
-  List<dynamic> resources;
-
   Account(ng.Http http) : super(http);
 
   String get url {
