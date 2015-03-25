@@ -10,8 +10,8 @@ const (
 )
 
 var (
-	authRegistry = map[string]reflect.Type{}
 	authTypes = map[string]int{}
+	authRegistry = map[string]reflect.Type{}
 	clientRegistry = map[string]reflect.Type{}
 	handlers = []func(){}
 )
