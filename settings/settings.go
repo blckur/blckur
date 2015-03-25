@@ -171,7 +171,6 @@ func register(name string, group interface{}) {
 	registry[name] = group
 }
 
-
 func init() {
 	module := requires.New("settings")
 	module.After("database")
