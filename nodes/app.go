@@ -16,12 +16,14 @@ type AppNode struct {
 }
 
 func (a *AppNode) Start() {
+	port := strconv.Itoa(a.Port)
+	address := getAddress() + ":" + port
+
 	router := gin.Default()
 	handlers.Register(router)
-	address := a.Host + ":" + strconv.Itoa(a.Port)
 
 	server := &http.Server{
-		Addr: address,
+		Addr: a.Host + ":" + port,
 		Handler: router,
 		ReadTimeout: 10 * time.Second,
 		WriteTimeout: 10 * time.Second,

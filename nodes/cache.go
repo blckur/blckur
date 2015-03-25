@@ -5,7 +5,6 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/node"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/messenger"
 	"github.com/Sirupsen/logrus"
 	"os/exec"
@@ -20,11 +19,8 @@ type CacheNode struct {
 }
 
 func (c *CacheNode) Start() {
-	portInt := c.Port
-	if portInt == 0 {
-		portInt = 6379
-	}
-	port := strconv.Itoa(portInt)
+	port := strconv.Itoa(c.Port)
+	address := getAddress() + ":" + port
 
 	args := []string{
 		"--save", "",
@@ -34,15 +30,6 @@ func (c *CacheNode) Start() {
 	if c.Host != "" {
 		args = append(args, "--host", c.Host)
 	}
-
-	address, err := utils.GetLocalAddress()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"error": err,
-		}).Error("cache: Failed to get ip")
-		panic(err)
-	}
-	address = address + ":" + port
 
 	var cmd *exec.Cmd
 	for {

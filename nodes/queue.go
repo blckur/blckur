@@ -5,7 +5,6 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/node"
 	"github.com/Sirupsen/logrus"
 	"os/exec"
@@ -21,20 +20,12 @@ type QueueNode struct {
 
 func (q *QueueNode) Start() {
 	port := strconv.Itoa(q.Port)
+	address := getAddress() + ":" + port
 
 	args := []string{"-p", port}
 	if q.Host != "" {
 		args = append(args, "-l", q.Host)
 	}
-
-	address, err := utils.GetLocalAddress()
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"error": err,
-		}).Error("queue: Failed to get ip")
-		panic(err)
-	}
-	address = address + ":" + port
 
 	var cmd *exec.Cmd
 	for {
