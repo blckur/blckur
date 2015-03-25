@@ -18,7 +18,9 @@ var (
 	gmailConf *oauth.Oauth2
 )
 
-type gmail Account
+type GmailClient struct {
+	acct *Account
+}
 
 type gmailMessage struct {
 	Id string `json:"id"`
@@ -36,14 +38,14 @@ type gmailMessage struct {
 	} `json:"payload"`
 }
 
-func (g *gmail) newClient() (client *oauth.Oauth2Client) {
-	client = gmailConf.NewClient(g.UserId, g.Oauth2AccTokn,
-		g.Oauth2RefTokn, g.Oauth2Exp)
+func (g *GmailClient) newClient() (client *oauth.Oauth2Client) {
+	client = gmailConf.NewClient(g.acct.UserId, g.acct.Oauth2AccTokn,
+		g.acct.Oauth2RefTokn, g.acct.Oauth2Exp)
 	return
 }
 
-func (g *gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
-		err error) {
+func (g *GmailClient) refresh(db *database.Database,
+		client *oauth.Oauth2Client) (err error) {
 	refreshed, err := client.Check()
 	if err != nil {
 		return
@@ -52,14 +54,14 @@ func (g *gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
 	if refreshed {
 		coll := db.Accounts()
 
-		g.Oauth2AccTokn = client.AccessToken
-		g.Oauth2RefTokn = client.RefreshToken
-		g.Oauth2Exp = client.Expiry
+		g.acct.Oauth2AccTokn = client.AccessToken
+		g.acct.Oauth2RefTokn = client.RefreshToken
+		g.acct.Oauth2Exp = client.Expiry
 
 		fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn",
 			"oauth2_exp")
 
-		err = coll.CommitFields(g.Id, g, fields)
+		err = coll.CommitFields(g.acct.Id, g, fields)
 		if err != nil {
 			err = database.ParseError(err)
 			return
@@ -69,7 +71,7 @@ func (g *gmail) refresh(db *database.Database, client *oauth.Oauth2Client) (
 	return
 }
 
-func (g *gmail) Update(db *database.Database) (err error) {
+func (g *GmailClient) Update(db *database.Database) (err error) {
 	client := g.newClient()
 	g.refresh(db, client)
 
@@ -83,12 +85,12 @@ func (g *gmail) Update(db *database.Database) (err error) {
 		return
 	}
 
-	g.Identity = data.EmailAddress
+	g.acct.Identity = data.EmailAddress
 
 	return
 }
 
-func (g *gmail) parseMessage(msg *gmailMessage,
+func (g *GmailClient) parseMessage(msg *gmailMessage,
 		lastNotf *notification.Notification, force bool) (
 		notf *notification.Notification, done bool) {
 	done = false
@@ -113,8 +115,8 @@ func (g *gmail) parseMessage(msg *gmailMessage,
 
 	if force || lastNotf == nil {
 		notf = &notification.Notification{
-			UserId: g.UserId,
-			AccountId: g.Id,
+			UserId: g.acct.UserId,
+			AccountId: g.acct.Id,
 			RemoteId: msg.Id,
 			Timestamp: date,
 		}
@@ -135,7 +137,7 @@ func (g *gmail) parseMessage(msg *gmailMessage,
 	body := ""
 
 	Loop:
-	for _, alrt := range g.Alerts {
+	for _, alrt := range g.acct.Alerts {
 		switch (alrt.Type) {
 		case "all":
 			match = true
@@ -187,8 +189,8 @@ func (g *gmail) parseMessage(msg *gmailMessage,
 	}
 
 	notf = &notification.Notification{
-		UserId: g.UserId,
-		AccountId: g.Id,
+		UserId: g.acct.UserId,
+		AccountId: g.acct.Id,
 		RemoteId: msg.Id,
 		Timestamp: date,
 		Type: matchType,
@@ -200,11 +202,12 @@ func (g *gmail) parseMessage(msg *gmailMessage,
 	return
 }
 
-func (g *gmail) Sync(db *database.Database) (err error) {
+func (g *GmailClient) Sync(db *database.Database) (err error) {
 	client := g.newClient()
 	g.refresh(db, client)
 
-	lastNotf, err := notification.GetLastNotification(db, g.UserId, g.Id)
+	lastNotf, err := notification.GetLastNotification(db,
+		g.acct.UserId, g.acct.Id)
 	if err != nil {
 		return
 	}
@@ -293,21 +296,25 @@ func AuthGmail(db *database.Database, state string, code string) (
 		acct *Account, err error) {
 	coll := db.Accounts()
 
-	client, err := gmailConf.Authorize(db, state, code)
+	auth, err := gmailConf.Authorize(db, state, code)
 	if err != nil {
 		return
 	}
 
 	acct = &Account{
-		UserId: client.UserId,
+		UserId: auth.UserId,
 		Type: "gmail",
-		Oauth2AccTokn: client.AccessToken,
-		Oauth2RefTokn: client.RefreshToken,
-		Oauth2Exp: client.Expiry,
+		Oauth2AccTokn: auth.AccessToken,
+		Oauth2RefTokn: auth.RefreshToken,
+		Oauth2Exp: auth.Expiry,
 		coll: coll,
 	}
 
-	acct.Update(db)
+	client := acct.GetClient()
+	err = client.Update(db)
+	if err != nil {
+		return
+	}
 
 	err = coll.Insert(acct)
 	if err != nil {
