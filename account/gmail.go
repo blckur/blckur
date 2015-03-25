@@ -19,7 +19,12 @@ var (
 )
 
 func init() {
-	register("gmail", GmailClient{})
+	register("gmail", GmailClient{}, func() {
+		messenger.Register("settings", "google", func(_ *messenger.Message) {
+			updateGmail()
+		})
+		updateGmail()
+	})
 }
 
 type GmailClient struct {
@@ -346,11 +351,4 @@ func updateGmail() {
 		},
 	}
 	gmailConf.Config()
-}
-
-func initGmail() {
-	messenger.Register("settings", "google", func(_ *messenger.Message) {
-		updateGmail()
-	})
-	updateGmail()
 }

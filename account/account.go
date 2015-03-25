@@ -129,7 +129,8 @@ func init() {
 	module.Before("messenger")
 
 	module.Handler = func() {
-		initGmail()
-		initTwitter()
+		for _, handler := range handlers {
+			handler()
+		}
 	}
 }

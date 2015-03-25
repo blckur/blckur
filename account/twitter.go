@@ -26,7 +26,12 @@ type TwitterClient struct {
 }
 
 func init() {
-	register("twitter", TwitterClient{})
+	register("twitter", TwitterClient{}, func() {
+		messenger.Register("settings", "twitter", func(_ *messenger.Message) {
+			updateTwitter()
+		})
+		updateTwitter()
+	})
 }
 
 func (t *TwitterClient) setAccount(acct *Account) {
@@ -260,11 +265,4 @@ func updateTwitter() {
 	conf.Config()
 
 	twitterConf = conf
-}
-
-func initTwitter() {
-	messenger.Register("settings", "twitter", func(_ *messenger.Message) {
-		updateTwitter()
-	})
-	updateTwitter()
 }
