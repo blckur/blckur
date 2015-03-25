@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type clientInterface interface {
+type Client interface {
 	Update(*database.Database) error
 	Sync(*database.Database) error
 }
@@ -39,37 +39,15 @@ func (a *Account) CommitFields(fields set.Set) (err error) {
 	return
 }
 
-// Update account info
-func (a *Account) Update(db *database.Database) (err error) {
-	client := a.getClientInterface()
-
-	err = client.Update(db)
-	if err != nil {
-		return
-	}
-
-	return
-}
-
-// Get new notifications for account
-func (a *Account) Sync(db *database.Database) (err error) {
-	client := a.getClientInterface()
-
-	err = client.Sync(db)
-	if err != nil {
-		return
-	}
-
-	return
-}
-
-func (a *Account) getClientInterface() (clientIntf clientInterface) {
+func (a *Account) GetClient() (client Client) {
 	if a.Type == "twitter" {
-		a := twitter(*a)
-		clientIntf = &a
+		client = &TwitterClient{
+			acct: a,
+		}
 	} else if a.Type == "gmail" {
-		a := gmail(*a)
-		clientIntf = &a
+		client = &GmailClient{
+			acct: a,
+		}
 	}
 
 	return
