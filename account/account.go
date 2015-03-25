@@ -1,4 +1,4 @@
-// Interface to accounts collection in database
+// Interface to accounts collection in database.
 package account
 
 import (

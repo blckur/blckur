@@ -1,21 +1,5 @@
-package cache
-
-import (
-	"github.com/blckur/blckur/constants"
-	"github.com/blckur/blckur/shard"
-	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/gdefer"
-	"github.com/blckur/blckur/node"
-	"github.com/garyburd/redigo/redis"
-	"github.com/Sirupsen/logrus"
-	"labix.org/v2/mgo/bson"
-	"sync"
-	"time"
-)
-
+// Redis cluster with client side sharding/replication.
+//
 // Get set example
 // 	conn := cache.Get()
 // 	err := conn.SetString("key", "val")
@@ -30,7 +14,7 @@ import (
 //	println(val)
 //
 //	conn.Close()
-
+//
 // Pub sub example
 //	lst := cache.Subscribe("channel")
 //
@@ -49,7 +33,24 @@ import (
 //		panic(err)
 //	}
 //
-// conn.Close()
+//	conn.Close()
+package cache
+
+import (
+	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/shard"
+	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/gdefer"
+	"github.com/blckur/blckur/node"
+	"github.com/garyburd/redigo/redis"
+	"github.com/Sirupsen/logrus"
+	"labix.org/v2/mgo/bson"
+	"sync"
+	"time"
+)
 
 var (
 	clst *cluster
