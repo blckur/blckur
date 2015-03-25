@@ -105,7 +105,7 @@ func GetDatabase() (db *Database) {
 	return
 }
 
-func AddIndexes() (err error) {
+func addIndexes() (err error) {
 	db := GetDatabase()
 	defer db.Close()
 
@@ -220,7 +220,7 @@ func AddIndexes() (err error) {
 	return
 }
 
-func AddCollections() (err error) {
+func addCollections() (err error) {
 	db := GetDatabase()
 	defer db.Close()
 	coll := db.Messages()
@@ -268,7 +268,7 @@ func init() {
 		}
 
 		for {
-			err := AddCollections()
+			err := addCollections()
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
@@ -281,7 +281,7 @@ func init() {
 		}
 
 		for {
-			err := AddIndexes()
+			err := addIndexes()
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
