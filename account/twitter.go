@@ -6,7 +6,7 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/notification"
-	"github.com/blckur/blckur/streams"
+	"github.com/blckur/blckur/stream"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
@@ -21,14 +21,17 @@ var (
 	twitterConf *oauth.Oauth1
 )
 
-type twitter Account
+type TwitterClient struct {
+	acct *Account
+}
 
-func (t *twitter) newClient() (client *oauth.Oauth1Client) {
-	client = twitterConf.NewClient(t.UserId, t.OauthTokn, t.OauthSec)
+func (t *TwitterClient) newClient() (client *oauth.Oauth1Client) {
+	client = twitterConf.NewClient(t.acct.UserId, t.acct.OauthTokn,
+		t.acct.OauthSec)
 	return
 }
 
-func (t *twitter) Update(db *database.Database) (err error) {
+func (t *TwitterClient) Update(db *database.Database) (err error) {
 	client := t.newClient()
 
 	data := struct {
@@ -43,18 +46,18 @@ func (t *twitter) Update(db *database.Database) (err error) {
 		return
 	}
 
-	t.Identity = "@" + data.ScreenName
-	t.IdentityId = data.IdStr
+	t.acct.Identity = "@" + data.ScreenName
+	t.acct.IdentityId = data.IdStr
 
 	return
 }
 
-func (t *twitter) Sync(db *database.Database) (err error) {
+func (t *TwitterClient) Sync(db *database.Database) (err error) {
 	backend := &twitterBackend{
 		db: db,
-		acct: t,
+		acct: t.acct,
 	}
-	stream := streams.NewStream(db, t.Id, backend)
+	stream := stream.NewStream(db, t.acct.Id, backend)
 
 	err = stream.Start()
 	if err != nil {
@@ -67,7 +70,7 @@ func (t *twitter) Sync(db *database.Database) (err error) {
 type twitterBackend struct {
 	db *database.Database
 	stream *anaconda.Stream
-	acct *twitter
+	acct *Account
 }
 
 func (b *twitterBackend) newClient() (client *anaconda.TwitterApi) {
@@ -205,20 +208,21 @@ func AuthTwitter(db *database.Database, token string, code string) (
 		acct *Account, err error) {
 	coll := db.Accounts()
 
-	client, err := twitterConf.Authorize(db, token, code)
+	auth, err := twitterConf.Authorize(db, token, code)
 	if err != nil {
 		return
 	}
 
 	acct = &Account{
-		UserId: client.UserId,
+		UserId: auth.UserId,
 		Type: "twitter",
-		OauthTokn: client.Token,
-		OauthSec: client.Secret,
+		OauthTokn: auth.Token,
+		OauthSec: auth.Secret,
 		coll: coll,
 	}
 
-	err = acct.Update(db)
+	client := acct.GetClient()
+	err = client.Update(db)
 	if err != nil {
 		return
 	}
