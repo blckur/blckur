@@ -1,3 +1,4 @@
+// Data stream for streaming apis.
 package streams
 
 import (

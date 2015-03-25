@@ -1,3 +1,4 @@
+// Auto updating settings stored on mongodb
 package settings
 
 import (

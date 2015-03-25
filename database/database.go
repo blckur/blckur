@@ -1,3 +1,4 @@
+// Interface to mongodb database.
 package database
 
 import (

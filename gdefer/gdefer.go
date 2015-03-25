@@ -1,3 +1,4 @@
+// Defer calls to exit.
 package gdefer
 
 var (

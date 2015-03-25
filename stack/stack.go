@@ -1,3 +1,4 @@
+// Simple stack with push and pop.
 package stack
 
 import (

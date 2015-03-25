@@ -1,3 +1,4 @@
+// Oauth1 and oauth2 clients.
 package oauth
 
 import (

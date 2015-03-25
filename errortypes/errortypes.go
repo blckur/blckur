@@ -1,3 +1,4 @@
+// Global error types.
 package errortypes
 
 import (

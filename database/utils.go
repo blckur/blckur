@@ -7,6 +7,7 @@ import (
 	"fmt"
 )
 
+// Get mongodb error code from error
 func GetErrorCode(err error) (errCode int) {
 	switch err := err.(type) {
 	case *mgo.LastError:
@@ -18,6 +19,7 @@ func GetErrorCode(err error) (errCode int) {
 	return
 }
 
+// Parse database error data and return error type
 func ParseError(err error) (newErr error) {
 	if err == mgo.ErrNotFound {
 		newErr = &NotFoundError{

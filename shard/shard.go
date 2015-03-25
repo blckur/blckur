@@ -1,3 +1,4 @@
+// Hash based sharding algorithm with customizable consistency.
 package shard
 
 import (

@@ -1,3 +1,4 @@
+// Cluster node document.
 package node
 
 import (

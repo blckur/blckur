@@ -1,3 +1,4 @@
+// Web api endpoint handlers.
 package handlers
 
 import (
@@ -8,10 +9,12 @@ import (
 	"net/http"
 )
 
+// Limit size of request body
 func Limiter(c *gin.Context) {
 	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 4096)
 }
 
+// Get database from session
 func Database(c *gin.Context) {
 	db := database.GetDatabase()
 	c.Set("db", db)
@@ -19,6 +22,7 @@ func Database(c *gin.Context) {
 	db.Close()
 }
 
+// Create new session and store in cookies
 func Session(required bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := c.MustGet("db").(*database.Database)
@@ -66,6 +70,7 @@ func Static(c *gin.Context) {
 	c.Data(200, resp.Header.Get("Content-Type"), body)
 }
 
+// Register all endpoint handlers
 func Register(engine *gin.Engine) {
 	engine.Use(Limiter)
 	engine.Use(gin.Recovery())

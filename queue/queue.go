@@ -1,3 +1,4 @@
+// Beanstalkd cluster with client side sharding/replication.
 package queue
 
 import (

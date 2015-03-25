@@ -1,3 +1,4 @@
+// Create color string for bash output.
 package colorize
 
 type Color string

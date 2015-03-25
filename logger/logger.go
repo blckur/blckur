@@ -1,3 +1,4 @@
+// Logger with output to stderr and papertrail.
 package logger
 
 import (

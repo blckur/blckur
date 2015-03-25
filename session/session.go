@@ -1,3 +1,4 @@
+// Stores sessions in cookies.
 package session
 
 import (

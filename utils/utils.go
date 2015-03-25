@@ -1,3 +1,4 @@
+// Miscellaneous utilities.
 package utils
 
 import (

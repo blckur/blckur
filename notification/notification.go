@@ -1,3 +1,4 @@
+// Interface to notifications collection in database.
 package notification
 
 import (

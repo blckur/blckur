@@ -1,3 +1,4 @@
+// Interface to users collection in database.
 package user
 
 import (
