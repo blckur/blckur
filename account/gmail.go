@@ -27,10 +27,6 @@ func init() {
 	})
 }
 
-type GmailClient struct {
-	acct *Account
-}
-
 type gmailMessage struct {
 	Id string `json:"id"`
 	Labels []string `json:"labelIds"`
@@ -45,6 +41,10 @@ type gmailMessage struct {
 			Data string `json:"data"`
 		} `json:"body"`
 	} `json:"payload"`
+}
+
+type GmailClient struct {
+	acct *Account
 }
 
 func (g *GmailClient) setAccount(acct *Account) {
