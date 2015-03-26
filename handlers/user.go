@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ func userGet(c *gin.Context) {
 }
 
 func userPut(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
 	data := userData{}
 
@@ -57,7 +59,7 @@ func userPut(c *gin.Context) {
 		}
 	}
 
-	err = usr.Commit()
+	err = usr.Commit(db)
 	if err != nil {
 		c.Fail(500, err)
 		return
