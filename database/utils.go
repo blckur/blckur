@@ -2,7 +2,6 @@ package database
 
 import (
 	"github.com/dropbox/godropbox/errors"
-	"github.com/gin-gonic/gin"
 	"labix.org/v2/mgo"
 	"fmt"
 )
