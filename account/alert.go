@@ -70,7 +70,7 @@ func (a *Account) ParseAlerts() {
 		if alrt.Id == "" {
 			alrt.Id = bson.NewObjectId()
 		}
-		alrt.Label = AlertLabels[a.Type][alrt.Type]
+		alrt.Label = alertLabels[a.Type][alrt.Type]
 	}
 
 	a.sortAlerts()
