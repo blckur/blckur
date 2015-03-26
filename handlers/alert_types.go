@@ -6,5 +6,6 @@ import (
 )
 
 func alertTypesGet(c *gin.Context) {
-	c.JSON(200, account.AlertTypes["gmail"])
+	acctType := c.Params.ByName("type")
+	c.JSON(200, account.AlertTypes[acctType])
 }
