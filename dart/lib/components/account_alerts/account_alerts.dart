@@ -45,6 +45,7 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
     }
 
     this.active = true;
+    this.alertTypes.acctType = this.model.type;
     this.alertTypes.fetch().catchError((err) {
       logger.severe('Failed to load alert types', err);
       new alert.Alert('Failed to load alert types');
