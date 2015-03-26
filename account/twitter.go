@@ -26,8 +26,29 @@ type TwitterClient struct {
 }
 
 func init() {
-	register("twitter", "Twitter", OAUTH1, TwitterAuth{},
-			TwitterClient{}, func() {
+	register("twitter", "Twitter", OAUTH1, TwitterAuth{}, TwitterClient{},
+	[]*AlertType{
+		&AlertType{
+			Label: "All new followers",
+			Type: "follower_all",
+		},
+		&AlertType{
+			Label: "All new favorited tweets",
+			Type: "favorite_all",
+		},
+		&AlertType{
+			Label: "All new unfavorited tweets",
+			Type: "unfavorite_all",
+		},
+		&AlertType{
+			Label: "All new retweets",
+			Type: "retweet_all",
+		},
+		&AlertType{
+			Label: "All new tweet replies",
+			Type: "reply_all",
+		},
+	}, func() {
 		messenger.Register("settings", "twitter", func(_ *messenger.Message) {
 			updateTwitter()
 		})
