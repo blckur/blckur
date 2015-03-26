@@ -143,8 +143,36 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 	var timestamp string
 
 	if evt, ok := evtInf.(anaconda.Tweet); ok {
-		_ = evt
-		return
+		var evtType string
+		var subject string
+		if evt.RetweetedStatus != nil {
+			evtType = "retweet"
+			subject = "Tweet retweeted by "
+		} else if evt.InReplyToUserIdStr == b.acct.IdentityId {
+			if evt.InReplyToStatusIdStr == "" {
+				evtType = "mention"
+				subject = "Mentioned by "
+			} else {
+				evtType = "reply"
+				subject = "Tweet reply by "
+			}
+		} else {
+			return
+		}
+
+		origin := "@" + evt.User.ScreenName
+		timestamp = evt.CreatedAt
+		subject += fmt.Sprintf("%s (%s)", evt.User.Name, origin)
+
+		notf = &notification.Notification{
+			UserId: b.acct.UserId,
+			AccountId: b.acct.Id,
+			Type: evtType,
+			Resource: evt.IdStr,
+			Origin: origin,
+			Subject: subject,
+			Body: evt.Text,
+		}
 	} else if evt, ok := evtInf.(anaconda.EventTweet); ok {
 		if evt.Target.IdStr != b.acct.IdentityId ||
 				evt.Source.IdStr == b.acct.IdentityId {
