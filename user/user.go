@@ -19,7 +19,6 @@ type User struct {
 	Email string `bson:"email" json:"email"`
 	PasswordSalt []byte `bson:"pass_salt" json:"-"`
 	PasswordHash []byte `bson:"pass_hash" json:"-"`
-	coll *database.Collection
 }
 
 func (u *User) hashPassword(password string) (digest []byte) {
@@ -58,13 +57,16 @@ func (u *User) SetPassword(password string) (err error) {
 	return
 }
 
-func (u *User) Commit() (err error) {
-	err = u.coll.Commit(u.Id, u)
+func (u *User) Commit(db *database.Database) (err error) {
+	coll := db.Users()
+	err = coll.Commit(u.Id, u)
 	return
 }
 
-func (u *User) CommitFields(fields set.Set) (err error) {
-	err = u.coll.CommitFields(u.Id, u, fields)
+func (u *User) CommitFields(db *database.Database, fields set.Set) (
+		err error) {
+	coll := db.Users()
+	err = coll.CommitFields(u.Id, u, fields)
 	return
 }
 
@@ -79,8 +81,6 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
 		return
 	}
 
-	usr.coll = coll
-
 	return
 }
 
@@ -92,8 +92,6 @@ func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	if err != nil {
 		return
 	}
-
-	usr.coll = coll
 
 	return
 }
