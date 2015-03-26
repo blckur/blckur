@@ -96,8 +96,7 @@ func Register(engine *gin.Engine) {
 	authGroup.DELETE("/accounts/:id", accountsDel)
 	authGroup.POST("/accounts/:type", accountsPost)
 
-	dbGroup.GET("/callback/gmail", callbackGmailGet)
-	dbGroup.GET("/callback/twitter", callbackTwitterGet)
+	dbGroup.GET("/callback/:type", callbackGet)
 
 	authGroup.GET("/user", userGet)
 	authGroup.PUT("/user", userPut)
