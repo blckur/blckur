@@ -96,17 +96,11 @@ func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	return
 }
 
-func NewUser(db *database.Database, email string, password string) (
-		usr *User, err error) {
+func (u *User) Initialize(db *database.Database, password string) (err error) {
 	coll := db.Users()
-	usr = &User{
-		Id: bson.NewObjectId(),
-		Email: email,
-	}
+	u.SetPassword(password)
 
-	usr.SetPassword(password)
-
-	err = coll.Insert(usr)
+	err = coll.Insert(u)
 	if err != nil {
 		err = database.ParseError(err)
 		return
