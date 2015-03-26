@@ -17,7 +17,6 @@ func (i *Iter) Iter() (out chan *Account) {
 	go func() {
 		acct := &Account{}
 		for i.iter.Next(acct) {
-			acct.coll = i.coll
 			acct.ParseAlerts()
 
 			out <- acct

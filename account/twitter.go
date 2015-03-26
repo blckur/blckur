@@ -284,7 +284,6 @@ func (t *TwitterAuth) Authorize(db *database.Database, token string,
 		Type: "twitter",
 		OauthTokn: auth.Token,
 		OauthSec: auth.Secret,
-		coll: coll,
 	}
 
 	client, err := acct.GetClient()

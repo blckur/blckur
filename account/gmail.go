@@ -351,7 +351,6 @@ func (g *GmailAuth) Authorize(db *database.Database, state string,
 		Oauth2AccTokn: auth.AccessToken,
 		Oauth2RefTokn: auth.RefreshToken,
 		Oauth2Exp: auth.Expiry,
-		coll: coll,
 	}
 
 	client, err := acct.GetClient()
