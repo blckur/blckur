@@ -73,7 +73,7 @@ func accountsPut(c *gin.Context) {
 	acct.Alerts = data.Alerts
 	acct.ParseAlerts()
 
-	err = acct.CommitFields(set.NewSet("alerts"))
+	err = acct.CommitFields(db, set.NewSet("alerts"))
 	if err != nil {
 		c.Fail(500, err)
 		return
