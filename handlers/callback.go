@@ -8,48 +8,54 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func callbackTwitterGet(c *gin.Context) {
+func callbackGet(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
-	params := utils.ParseParams(c.Request)
-	token := params.GetByName("oauth_token")
-	verifier := params.GetByName("oauth_verifier")
-	denied := params.GetByName("denied")
+	acctType := c.Params.ByName("type")
 
-	if denied == "" {
-		if token == "" || verifier == "" {
+	auth, authType, err := account.GetAuth(acctType)
+	if err != nil {
+		c.JSON(400, &errorData{
+			Error: "unknown_type",
+			Message: "Unknown account type",
+		})
+	}
+
+	params := utils.ParseParams(c.Request)
+	var x string
+	var y string
+	var denied bool
+
+	if authType == account.OAUTH1 {
+		x = params.GetByName("oauth_token")
+		y = params.GetByName("oauth_verifier")
+		denied = params.GetByName("denied") != ""
+	} else {
+		x = params.GetByName("state")
+		y = params.GetByName("code")
+
+		error := params.GetByName("error")
+
+		switch error {
+		case "":
+			denied = false
+		case "access_denied":
+			denied = true
+		default:
 			c.AbortWithStatus(400)
 			return
-		}
-
-		_, err := account.AuthTwitter(db, token, verifier)
-		if err != nil {
-			panic(err)
 		}
 	}
 
-	c.Redirect(301, settings.System.AppHome)
-}
+	if x == "" || y == "" {
+		c.AbortWithStatus(400)
+		return
+	}
 
-func callbackGmailGet(c *gin.Context) {
-	db := c.MustGet("db").(*database.Database)
-	params := utils.ParseParams(c.Request)
-	state := params.GetByName("state")
-	code := params.GetByName("code")
-	error := params.GetByName("error")
-
-	if error == "" {
-		if state == "" || code == "" {
-			c.AbortWithStatus(400)
-			return
-		}
-
-		_, err := account.AuthGmail(db, state, code)
+	if !denied {
+		_, err = auth.Authorize(db, x, y)
 		if err != nil {
 			panic(err)
 		}
-	} else if error != "access_denied" {
-		c.AbortWithStatus(400)
-		return
 	}
 
 	c.Redirect(301, settings.System.AppHome)
