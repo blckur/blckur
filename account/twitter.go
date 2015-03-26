@@ -26,7 +26,8 @@ type TwitterClient struct {
 }
 
 func init() {
-	register("twitter", OAUTH1, TwitterAuth{}, TwitterClient{}, func() {
+	register("twitter", "Twitter", OAUTH1, TwitterAuth{},
+			TwitterClient{}, func() {
 		messenger.Register("settings", "twitter", func(_ *messenger.Message) {
 			updateTwitter()
 		})
