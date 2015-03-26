@@ -191,7 +191,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 
 		origin := "@" + evt.Source.ScreenName
 		timestamp = evt.CreatedAt
-		subject += origin
+		subject += fmt.Sprintf("%s (%s)", evt.Source.Name, origin)
 
 		notf = &notification.Notification{
 			UserId: b.acct.UserId,
