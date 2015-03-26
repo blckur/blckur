@@ -91,7 +91,11 @@ func signupPost(c *gin.Context) {
 		return
 	}
 
-	usr, err := user.NewUser(db, email, data.Password)
+	usr := user.User{
+		Email: email,
+	}
+
+	err = usr.Initialize(db, data.Password)
 	switch err.(type) {
 	case nil:
 	case *database.DuplicateKeyError:
