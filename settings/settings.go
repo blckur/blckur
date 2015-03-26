@@ -151,7 +151,10 @@ func update(group string, data interface{}) (err error) {
 }
 
 func Update(name string) {
-	group := registry[name]
+	group, ok := registry[name]
+	if !ok {
+		return
+	}
 
 	for {
 		err := update(name, group)
