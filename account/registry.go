@@ -35,7 +35,7 @@ func register(name string, label string, typ int, auth interface{},
 		Label: label,
 		Type: name,
 	})
-
+	sortAccountAlerts()
 	for i, acctType := range accountTypes {
 		acctType.Id = i
 	}
