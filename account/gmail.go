@@ -19,7 +19,35 @@ var (
 )
 
 func init() {
-	register("gmail", "Gmail", OAUTH2, GmailAuth{}, GmailClient{}, func() {
+	register("gmail", "Gmail", OAUTH2, GmailAuth{}, GmailClient{},
+	[]*AlertType{
+		&AlertType{
+			Label: "All new messages",
+			Type: "all",
+		},
+		&AlertType{
+			Label: "New messages matching sender",
+			Type: "from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial email address " +
+			"of sender to match",
+			ValueHolder: "Email address",
+		},
+		&AlertType{
+			Label: "New messages matching subject",
+			Type: "subject",
+			ValueType: "input",
+			ValueLabel: "Enter search term to match in email subject",
+			ValueHolder: "Search term",
+		},
+		&AlertType{
+			Label: "New messages matching message body",
+			Type: "body",
+			ValueType: "input",
+			ValueLabel: "Enter search term to match in email body",
+			ValueHolder: "Search term",
+		},
+	}, func() {
 		messenger.Register("settings", "google", func(_ *messenger.Message) {
 			updateGmail()
 		})
