@@ -8,9 +8,12 @@ import 'package:angular/angular.dart' as ng;
 
 @Injectable()
 class AlertTypes extends collection.Collection {
+  String acctType;
   Type model = models.AlertType;
 
   AlertTypes(ng.Http http) : super(http);
 
-  String url = '/alert_types';
+  String get url {
+    return '/alert_types/${this.acctType}';
+  }
 }
