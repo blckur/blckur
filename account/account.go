@@ -34,16 +34,18 @@ type Account struct {
 	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
 	Alerts []*Alert `bson:"alerts" json:"alerts"`
-	coll *database.Collection
 }
 
-func (a *Account) Commit() (err error) {
-	err = a.coll.Commit(a.Id, a)
+func (a *Account) Commit(db *database.Database) (err error) {
+	coll := db.Accounts()
+	err = coll.Commit(a.Id, a)
 	return
 }
 
-func (a *Account) CommitFields(fields set.Set) (err error) {
-	err = a.coll.CommitFields(a.Id, a, fields)
+func (a *Account) CommitFields(db *database.Database,
+		fields set.Set) (err error) {
+	coll := db.Accounts()
+	err = coll.CommitFields(a.Id, a, fields)
 	return
 }
 
@@ -100,8 +102,6 @@ func GetAccount(db *database.Database, userId bson.ObjectId,
 		return
 	}
 
-	acct.coll = coll
-
 	return
 }
 
@@ -137,7 +137,6 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 
 	acct := &Account{}
 	for iter.Next(acct) {
-		acct.coll = coll
 		acct.ParseAlerts()
 
 		client, _ := acct.GetClient()
