@@ -12,6 +12,25 @@ type WorkerNode struct {
 	Id string
 }
 
+func (w *WorkerNode) sync(db *database.Database, job *queue.Job) (err error) {
+	acct, err := account.GetAccount(db, "", job.Resource)
+	if err != nil {
+		return
+	}
+
+	client, err := acct.GetClient()
+	if err != nil {
+		return
+	}
+
+	err = client.Sync(db)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func (w *WorkerNode) Start() {
 	logrus.WithFields(logrus.Fields{
 		"id": w.Id,
@@ -27,15 +46,7 @@ func (w *WorkerNode) Start() {
 			}
 
 			if job.Type == "sync" {
-				acct, err := account.GetAccount(db, "", job.Resource)
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error": err,
-					}).Error("worker: Sync job error")
-				}
-
-				client := acct.GetClient()
-				err = client.Sync(db)
+				err := w.sync(db, job)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"error": err,
