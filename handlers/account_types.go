@@ -6,5 +6,5 @@ import (
 )
 
 func accountsTypesGet(c *gin.Context) {
-	c.JSON(200, account.GetAccountTypes())
+	c.JSON(200, account.AccountTypes)
 }
