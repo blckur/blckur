@@ -94,6 +94,24 @@ func (d *DigitalOceanClient) refresh(db *database.Database,
 }
 
 func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
+	client := d.newClient()
+	d.refresh(db, client)
+
+	data := struct {
+		Account struct {
+			Id string `json:"uuid"`
+			Email string `json:"email"`
+		}`json:"account"`
+	}{}
+
+	err = client.GetJson(
+		"https://api.digitalocean.com/v2/account", &data)
+	if err != nil {
+		return
+	}
+
+	d.acct.Identity = data.Account.Email
+
 	return
 }
 
