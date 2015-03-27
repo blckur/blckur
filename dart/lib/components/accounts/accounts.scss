@@ -8,3 +8,84 @@
   margin: 0;
   overflow-y: auto;
 }
+
+.accounts.ng-enter,
+.account-add.ng-enter {
+  transform: translate(0, -100%);
+  @include transition(transform 0.3s);
+}
+
+.accounts.ng-enter-active,
+.account-add.ng-enter-active {
+  transform: translate(0,0);
+}
+
+.accounts.ng-leave,
+.account-add.ng-leave {
+  transform: translate(0,0);
+  @include transition(transform 0.3s);
+}
+
+.accounts.ng-leave-active,
+.account-add.ng-leave-active {
+  transform: translate(0, -100%);
+}
+
+core-item {
+  color: #595959;
+}
+
+paper-fab {
+  pointer-events: none;
+}
+
+x-brand-logo {
+  width: 80px;
+  text-align: center;
+  margin: 10px;
+}
+
+.account-type .content {
+  padding-left: 10px;
+  text-align: left;
+  font-weight: 300;
+  font-size: 20px;
+  text-transform: none;
+}
+
+.account-type core-icon {
+  width: 30px;
+  height: 30px;
+}
+
+paper-progress {
+  height: 5px;
+  position: absolute;
+  width: 100%;
+}
+
+.footer-btn {
+  width: 100%;
+  margin: 0;
+  padding: 2px 0;
+}
+
+.footer-btn .info {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 300;
+  opacity: 0;
+  @include transition(opacity 0.2s);
+}
+
+.footer-btn:hover .info {
+  opacity: 1;
+}
+
+.footer-btn paper-fab {
+  margin: 0 15px 0 4px;
+}
+
+.footer-btn.add paper-fab {
+  background-color: #2196f3;
+}
