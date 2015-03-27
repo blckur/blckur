@@ -15,20 +15,20 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
 
   Collection(ng.Http http) : super(http), _collection = [];
 
-  Iterator get iterator {
-    return this._collection.iterator;
-  }
-
-  dynamic operator [](int index) {
-    return this._collection[index];
-  }
-
   model.Model newModel() {
     throw new UnimplementedError('Model new not implemented.');
   }
 
   Collection newCollection() {
     throw new UnimplementedError('Collection new not implemented.');
+  }
+
+  Iterator get iterator {
+    return this._collection.iterator;
+  }
+
+  dynamic operator [](int index) {
+    return this._collection[index];
   }
 
   void add(Map<String, dynamic> attrs) {
