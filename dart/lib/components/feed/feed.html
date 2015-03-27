@@ -10,16 +10,7 @@
   </core-header-panel>
   <core-header-panel mode="cover" drawer layout vertical>
     <x-user></x-user>
-    <div class="side-panel" layout vertical flex>
-      <div class="menu scrollable" flex>
-        <div ng-if="addAccount != true">
-          <x-account ng-repeat="account in accounts"
-            model="account"></x-account>
-          <x-get-started ng-if="accounts.length == 0"></x-get-started>
-        </div>
-        <x-account-add add-account="addAccount"></x-account-add>
-      </div>
-    </div>
+    <x-accounts layout vertical flex></x-accounts>
   </core-header-panel>
 </core-drawer-panel>
 <x-alerts></x-alerts>

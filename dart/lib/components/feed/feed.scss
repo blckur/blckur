@@ -6,11 +6,11 @@
 }
 
 .main-panel,
-.side-panel {
+x-accounts {
   position: relative;
 }
 
-.side-panel {
+x-accounts {
   background-color: #edf3fc;
 }
 
@@ -54,9 +54,4 @@ core-drawer-panel:not([narrow]) .toolbar .logo {
 
 core-drawer-panel:not([narrow]) .menu-toggle {
   display: none;
-}
-
-.menu {
-  margin: 0;
-  overflow-y: auto;
 }
