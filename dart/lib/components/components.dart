@@ -2,8 +2,6 @@ library components;
 
 import 'package:blckur/components/account/account.dart'
   as account;
-import 'package:blckur/components/account_add/account_add.dart'
-  as account_add;
 import 'package:blckur/components/account_alerts/account_alerts.dart'
   as account_alerts;
 import 'package:blckur/components/accounts/accounts.dart'
@@ -30,7 +28,6 @@ import 'package:angular/angular.dart' as ng;
 class ComponentsMod extends ng.Module {
   ComponentsMod() {
     this.bind(account.AccountComp);
-    this.bind(account_add.AccountAddComp);
     this.bind(account_alerts.AccountAlertsComp);
     this.bind(accounts.AccountsComp);
     this.bind(alerts.AlertsComp);
