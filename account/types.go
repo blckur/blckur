@@ -21,7 +21,3 @@ func (a *accountTypesSort) Less(i int, j int) bool {
 func (a *accountTypesSort) Swap(i int, j int) {
 	a.AccountTypes[i], a.AccountTypes[j] = a.AccountTypes[j], a.AccountTypes[i]
 }
-
-func GetAccountTypes() []*AccountType {
-	return accountTypes
-}
