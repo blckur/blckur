@@ -9,31 +9,48 @@ import 'dart:async' as async;
 @Injectable()
 class Auth extends model.Model {
   String url = '/auth';
-
-  @model.Attribute('email')
   String email;
-
-  @model.Validator('email')
   void emailValidator(val) {
     if (val == null || val == '') {
       throw new model.Invalid('empty', 'Email cannot be empty');
     }
   }
-
-  @model.Attribute('password')
   String password;
-
-  @model.Validator('password')
   void passwordValidator(val) {
     if (val == null || val == '') {
       throw new model.Invalid('empty', 'Password cannot be empty');
     }
   }
-
-  @model.Attribute('remember')
   bool remember;
 
   Auth(ng.Http http) : super(http);
+
+  model.Model newModel() {
+    return new Auth(this.http);
+  }
+
+  Map<String, Function> get getters {
+    return {
+      'email': () => this.email,
+      'password': () => this.password,
+      'remember': () => this.remember,
+    };
+  }
+
+  Map<String, Function> get setters {
+    return {
+      'email': (x) => this.email = x,
+      'password': (x) => this.password = x,
+      'remember': (x) => this.remember = x,
+    };
+  }
+
+  Map<String, Function> get validators {
+    return {
+      'email': this.emailValidator,
+      'password': this.passwordValidator,
+    };
+  }
 
   async.Future login([List<String> fields]) {
     this.url = '/login';
