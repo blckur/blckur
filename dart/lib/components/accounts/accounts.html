@@ -1,0 +1,8 @@
+<div class="menu scrollable" flex>
+  <div class="accounts" ng-if="addAccount != true" ng-animate>
+    <x-account ng-repeat="account in accounts"
+      model="account"></x-account>
+    <x-get-started ng-if="accounts.length == 0"></x-get-started>
+  </div>
+  <x-account-add add-account="addAccount"></x-account-add>
+</div>

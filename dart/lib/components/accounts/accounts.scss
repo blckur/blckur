@@ -1,0 +1,10 @@
+@import 'styles/base.scss';
+
+:host {
+  display: block;
+}
+
+.menu {
+  margin: 0;
+  overflow-y: auto;
+}
