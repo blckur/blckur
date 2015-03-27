@@ -5,19 +5,6 @@ import 'package:blckur/remote.dart' as remote;
 import 'package:angular/angular.dart' as ng;
 import 'dart:async' as async;
 
-Map<Type, Map<String, Symbol>> _attrSymbols = {};
-Map<Type, Map<String, Function>> _attrValidators = {};
-
-class Attribute {
-  final String name;
-  const Attribute(this.name);
-}
-
-class Validator {
-  final String name;
-  const Validator(this.name);
-}
-
 class Invalid extends Error {
   String type;
   String message;
@@ -31,38 +18,41 @@ abstract class Model extends remote.Remote {
   dynamic id;
   Function onLinkClear;
 
-  Map<String, Function> get mapSet {
-    throw new UnimplementedError('Setter map not implemented.');
+  Model(ng.Http http) : super(http) {
+    this.init();
   }
-  Map<String, Function> get mapGet {
-    throw new UnimplementedError('Getter map not implemented.');
-  }
-  Map<String, Function> get validators {
-    return {};
-  }
-  Model modelNew() {
+
+  Model newModel() {
     throw new UnimplementedError('Model new not implemented.');
   }
 
-  Model(ng.Http http) : super(http) {
-    this.init();
+  Map<String, Function> get getters {
+    throw new UnimplementedError('Getter map not implemented.');
+  }
+
+  Map<String, Function> get setters {
+    throw new UnimplementedError('Setter map not implemented.');
+  }
+
+  Map<String, Function> get validators {
+    return {};
   }
 
   void validate(String name) {
     var validator = this.validators[name];
 
     if (validator != null) {
-      validator(this.mapGet[name]());
+      validator(this.getters[name]());
     }
   }
 
   Model clone() {
-    var mdl = this.modelNew();
-    var mapGet = this.mapGet;
-    var mapSet = mdl.mapSet;
+    var mdl = this.newModel();
+    var getters = this.getters;
+    var setters = mdl.setters;
 
-    mapSet.forEach((name, setter) {
-      setter(mapGet[name]());
+    setters.forEach((name, setter) {
+      setter(getters[name]());
     });
 
     return mdl;
@@ -70,11 +60,11 @@ abstract class Model extends remote.Remote {
 
   void import(dynamic responseData) {
     var data = this.parse(responseData);
-    var mapSet = this.mapSet;
+    var setters = this.setters;
 
     if (data != null && data != '') {
       data.forEach((key, value) {
-        var setter = mapSet[key];
+        var setter = setters[key];
 
         if (setter != null) {
           setter(value);
@@ -90,9 +80,9 @@ abstract class Model extends remote.Remote {
 
   Map<String, dynamic> export([List<String> fields]) {
     var data = {};
-    var mapGet = this.mapGet;
+    var getters = this.getters;
 
-    mapGet.forEach((name, getter) {
+    getters.forEach((name, getter) {
       data[name] = getter();
     });
 
@@ -149,9 +139,9 @@ abstract class Model extends remote.Remote {
   }
 
   void clear() {
-    var mapSet = this.mapSet;
+    var setters = this.setters;
 
-    mapSet.forEach((_, setter) {
+    setters.forEach((_, setter) {
       setter(null);
     });
   }
