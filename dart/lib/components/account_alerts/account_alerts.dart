@@ -76,12 +76,12 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
     }
   }
 
-  void onDel(Map<String, String> alert) {
+  void onDel(Map<String, String> alrt) {
     if (!this.setLoading()) {
       return;
     }
 
-    this.model.alerts.remove(alert);
+    this.model.alerts.remove(alrt);
     this.model.save(['alerts']).catchError((err) {
       logger.severe('Failed to remove alert', err);
       new alert.Alert('Failed to remove alert');
