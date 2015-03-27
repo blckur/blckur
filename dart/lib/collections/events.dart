@@ -1,5 +1,6 @@
 library events_col;
 
+import 'package:blckur/model.dart' as model;
 import 'package:blckur/collection.dart' as collection;
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
@@ -12,7 +13,6 @@ import 'dart:convert' as convert;
 
 @Injectable()
 class Events extends collection.Collection {
-  Type model = models.Event;
   String cursor;
   ng.RootScope rootScope;
   dom.WebSocket socket;
@@ -20,6 +20,14 @@ class Events extends collection.Collection {
   Events(ng.Http http, this.rootScope) : super(http);
 
   String url = '/events';
+
+  model.Model newModel() {
+    return new models.Event(this.http);
+  }
+
+  collection.Collection newCollection() {
+    return new Events(this.http, this.rootScope);
+  }
 
   void onEvent(dom.MessageEvent evt) {
     var event = new models.Event(this.http);
