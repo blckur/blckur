@@ -27,6 +27,28 @@
   margin-right: 8px;
 }
 
+.alerts.ng-enter,
+.add-alert.ng-enter {
+  transform: translate(0, -100%);
+  @include transition(transform 0.3s);
+}
+
+.alerts.ng-enter-active,
+.add-alert.ng-enter-active {
+  transform: translate(0,0);
+}
+
+.alerts.ng-leave,
+.add-alert.ng-leave {
+  transform: translate(0,0);
+  @include transition(transform 0.3s);
+}
+
+.alerts.ng-leave-active,
+.add-alert.ng-leave-active {
+  transform: translate(0, -100%);
+}
+
 .content {
   text-align: left;
   font-size: 17px;
