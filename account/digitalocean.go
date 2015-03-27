@@ -21,6 +21,18 @@ func init() {
 			Label: "All new events",
 			Type: "all",
 		},
+		&AlertType{
+			Label: "Droplet created",
+			Type: "create",
+		},
+		&AlertType{
+			Label: "Droplet destroyed",
+			Type: "destroy",
+		},
+		&AlertType{
+			Label: "Droplet password reset",
+			Type: "password_reset",
+		},
 	}, func() {
 		messenger.Register("settings", "digitalocean",
 				func(_ *messenger.Message) {
