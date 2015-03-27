@@ -1,8 +1,28 @@
 <div class="menu scrollable" flex>
-  <div class="accounts" ng-if="addAccount != true" ng-animate>
+  <paper-progress ng-if="loading" indeterminate></paper-progress>
+  <div class="accounts" ng-if="showAccounts == true" ng-animate>
     <x-account ng-repeat="account in accounts"
       model="account"></x-account>
     <x-get-started ng-if="accounts.length == 0"></x-get-started>
+    <paper-button class="footer-btn add" flex delay-click="onAdd()">
+      <paper-fab icon="add" title="Add account" role="button"
+        aria-label="Add account"></paper-fab>
+      <div class="info" flex>Add new account</div>
+    </paper-button>
   </div>
-  <x-account-add add-account="addAccount"></x-account-add>
+  <div class="account-add" ng-if="showAddAcount == true" ng-animate>
+    <core-item ng-repeat="accountType in accountTypes"
+      class="account-type" layout horizontal>
+      <paper-button flex delay-click="onClick(accountType.type)" noink>
+        <x-brand-logo icon="{{accountType.type}}"></x-brand-logo>
+        <div class="content" ng-bind="accountType.label" flex></div>
+        <core-icon icon="chevron-right"></core-icon>
+      </paper-button>
+    </core-item>
+    <paper-button class="footer-btn cancel" flex delay-click="onCancel()">
+      <paper-fab icon="clear" title="Cancel" role="button"
+        aria-label="Cancel"></paper-fab>
+      <div class="info" flex>Cancel</div>
+    </paper-button>
+  </div>
 </div>
