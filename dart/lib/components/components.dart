@@ -6,6 +6,8 @@ import 'package:blckur/components/account_add/account_add.dart'
   as account_add;
 import 'package:blckur/components/account_alerts/account_alerts.dart'
   as account_alerts;
+import 'package:blckur/components/accounts/accounts.dart'
+  as accounts;
 import 'package:blckur/components/alerts/alerts.dart'
   as alerts;
 import 'package:blckur/components/brand_logo/brand_logo.dart'
@@ -30,6 +32,7 @@ class ComponentsMod extends ng.Module {
     this.bind(account.AccountComp);
     this.bind(account_add.AccountAddComp);
     this.bind(account_alerts.AccountAlertsComp);
+    this.bind(accounts.AccountsComp);
     this.bind(alerts.AlertsComp);
     this.bind(brand_logo.BrandLogoComp);
     this.bind(feed.FeedComp);
