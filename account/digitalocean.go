@@ -101,7 +101,7 @@ func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
 		Account struct {
 			Id string `json:"uuid"`
 			Email string `json:"email"`
-		}`json:"account"`
+		} `json:"account"`
 	}{}
 
 	err = client.GetJson(
