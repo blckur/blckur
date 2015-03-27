@@ -3,7 +3,6 @@ library events_col;
 import 'package:blckur/model.dart' as model;
 import 'package:blckur/collection.dart' as collection;
 import 'package:blckur/models/models.dart' as models;
-import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
