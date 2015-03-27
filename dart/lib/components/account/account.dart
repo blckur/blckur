@@ -1,7 +1,7 @@
 library account_comp;
 
 import 'package:blckur/models/models.dart' as models;
-import 'package:blckur/loading.dart' as loading;
+import 'package:blckur/injectables/injectables.dart' as injectables;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
@@ -15,13 +15,14 @@ import 'dart:html' as dom;
   templateUrl: 'packages/blckur/components/account/account.html',
   cssUrl: 'packages/blckur/components/account/account.css'
 )
-class AccountComp extends loading.Loading {
+class AccountComp {
   bool settings;
   bool addingAlert;
   bool confirm;
   dom.ShadowRoot root;
+  injectables.Loading loading;
 
-  AccountComp(this.root);
+  AccountComp(this.root, this.loading);
 
   @NgOneWay('model')
   models.Account model;
@@ -31,7 +32,7 @@ class AccountComp extends loading.Loading {
   }
 
   void onDelete() {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
 

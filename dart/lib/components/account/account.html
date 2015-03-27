@@ -27,7 +27,7 @@
       </div>
     </div>
   </div>
-  <paper-progress ng-if="loading" indeterminate></paper-progress>
+  <paper-progress ng-if="loading.state" indeterminate></paper-progress>
   <div ng-if="settings" class="row settings" layout vertical flex>
     <x-account-alerts model="model"></x-account-alerts>
   </div>

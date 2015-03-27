@@ -2,7 +2,7 @@ library accounts_comp;
 
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/collections/collections.dart' as collections;
-import 'package:blckur/loading.dart' as loading;
+import 'package:blckur/injectables/injectables.dart' as injectables;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
@@ -19,7 +19,7 @@ const ADD_ACCOUNT = 2;
   templateUrl: 'packages/blckur/components/accounts/accounts.html',
   cssUrl: 'packages/blckur/components/accounts/accounts.css'
 )
-class AccountsComp extends loading.Loading {
+class AccountsComp {
   int _mode;
   async.Future _modeWait;
   bool showAccounts;
@@ -27,8 +27,9 @@ class AccountsComp extends loading.Loading {
   collections.Accounts accounts;
   models.AccountAdd model;
   collections.AccountTypes accountTypes;
+  injectables.Loading loading;
 
-  AccountsComp(this.accounts, this.accountTypes) {
+  AccountsComp(this.accounts, this.accountTypes, this.loading) {
     this.update(true);
   }
 
@@ -86,7 +87,7 @@ class AccountsComp extends loading.Loading {
   }
 
   void update([bool initMode]) {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
 
@@ -99,12 +100,12 @@ class AccountsComp extends loading.Loading {
       if (initMode == true) {
         this.mode = ACCOUNTS;
       }
-      this.clearLoading();
+      this.loading.clear();
     });
   }
 
   void onAdd() {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
     this.mode = NONE;
@@ -113,18 +114,18 @@ class AccountsComp extends loading.Loading {
       logger.severe('Failed to load account types', err);
       new alert.Alert('Failed to load account types');
     }).whenComplete(() {
-      this.clearLoading();
+      this.loading.clear();
       this.mode = ADD_ACCOUNT;
     });
   }
 
   void onCancel() {
     this.mode = ACCOUNTS;
-    this.clearLoading();
+    this.loading.clear();
   }
 
   void onClick(String type) {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
 
@@ -143,7 +144,7 @@ class AccountsComp extends loading.Loading {
         this.onClick(type);
       });
     }).whenComplete(() {
-      this.clearLoading();
+      this.loading.clear();
     });
   }
 }

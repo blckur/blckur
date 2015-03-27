@@ -2,7 +2,7 @@ library alert_add_comp;
 
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/collections/collections.dart' as collections;
-import 'package:blckur/loading.dart' as loading;
+import 'package:blckur/injectables/injectables.dart' as injectables;
 import 'package:blckur/enter_aware.dart' as enter_aware;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
@@ -19,7 +19,7 @@ const ADD_ALERT = 2;
   templateUrl: 'packages/blckur/components/account_alerts/account_alerts.html',
   cssUrl: 'packages/blckur/components/account_alerts/account_alerts.css'
 )
-class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
+class AccountAlertsComp extends enter_aware.EnterAware {
   int _mode;
   async.Future _modeWait;
   bool showAlerts;
@@ -28,11 +28,12 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
   dynamic typeValue;
   models.AlertType typeModel;
   collections.AlertTypes alertTypes;
+  injectables.Loading loading;
 
   @NgTwoWay('model')
   models.Account model;
 
-  AccountAlertsComp(this.alertTypes) {
+  AccountAlertsComp(this.alertTypes, this.loading) {
     this.mode = ALERTS;
   }
 
@@ -96,7 +97,7 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
   }
 
   void onAdd() {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
     this.mode = NONE;
@@ -107,14 +108,14 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
       new alert.Alert('Failed to load alert types');
     }).whenComplete(() {
       this.mode = ADD_ALERT;
-      this.clearLoading();
+      this.loading.clear();
     });
   }
 
   void onCancel() {
     this.mode = ALERTS;
     this.clear();
-    this.clearLoading();
+    this.loading.clear();
   }
 
   void onClick(models.AlertType model) {
@@ -135,7 +136,7 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
   }
 
   void onDel(Map<String, String> alrt) {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
 
@@ -144,12 +145,12 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
       logger.severe('Failed to remove alert', err);
       new alert.Alert('Failed to remove alert');
     }).whenComplete(() {
-      this.clearLoading();
+      this.loading.clear();
     });
   }
 
   void onSave() {
-    if (!this.setLoading()) {
+    if (!this.loading.set()) {
       return;
     }
     this.mode = NONE;
@@ -169,7 +170,7 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
     }).whenComplete(() {
       this.mode = ALERTS;
       this.clear();
-      this.clearLoading();
+      this.loading.clear();
     });
   }
 }

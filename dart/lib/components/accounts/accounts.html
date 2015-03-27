@@ -1,6 +1,6 @@
 <div class="menu scrollable" flex>
-  <paper-progress ng-if="loading" indeterminate></paper-progress>
-  <div class="accounts" ng-if="showAccounts == true" ng-animate>
+  <paper-progress ng-if="loading.state" indeterminate></paper-progress>
+  <div ng-if="showAccounts == true" class="accounts" ng-animate>
     <x-account ng-repeat="account in accounts"
       model="account"></x-account>
     <x-get-started ng-if="accounts.length == 0"></x-get-started>
@@ -10,7 +10,7 @@
       <div class="info" flex>Add new account</div>
     </paper-button>
   </div>
-  <div class="account-add" ng-if="showAddAcount == true" ng-animate>
+  <div ng-if="showAddAcount == true" class="add-account" ng-animate>
     <core-item ng-repeat="accountType in accountTypes"
       class="account-type" layout horizontal>
       <paper-button flex delay-click="onClick(accountType.type)" noink>

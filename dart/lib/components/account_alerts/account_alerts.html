@@ -1,5 +1,5 @@
 <div flex>
-  <paper-progress ng-if="loading" indeterminate></paper-progress>
+  <paper-progress ng-if="loading.state" indeterminate></paper-progress>
   <div ng-if="showAddAlert == true" class="add-alert" ng-animate flex>
     <div class="form" ng-show="selected == true">
       <div class="label" ng-bind="typeModel.valueLabel"></div>
