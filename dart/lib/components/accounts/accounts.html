@@ -14,7 +14,8 @@
     <core-item ng-repeat="accountType in accountTypes"
       class="account-type" layout horizontal>
       <paper-button flex delay-click="onClick(accountType.type)" noink>
-        <x-brand-logo icon="{{accountType.type}}"></x-brand-logo>
+        <x-brand-logo icon="{{accountType.type}}" horizontal layout
+          center></x-brand-logo>
         <div class="content" ng-bind="accountType.label" flex></div>
         <core-icon icon="chevron-right"></core-icon>
       </paper-button>
