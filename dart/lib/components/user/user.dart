@@ -22,6 +22,10 @@ class UserComp {
     this.update();
   }
 
+  String get avatar {
+    return 'https://avatars0.githubusercontent.com/u/1305774?v=3&s=460';
+  }
+
   void update() {
     this.model.fetch().catchError((err) {
       logger.severe('Failed to load user', err);
