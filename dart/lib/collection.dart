@@ -2,18 +2,16 @@ library collection;
 
 import 'package:blckur/exceptions.dart';
 import 'package:blckur/remote.dart' as remote;
-import 'package:blckur/model.dart' as mdl;
+import 'package:blckur/model.dart' as model;
 
 import 'package:angular/angular.dart' as ng;
-import 'dart:mirrors' as mirrors;
 import 'dart:collection' as collection;
 
 abstract class Collection extends remote.Remote with collection.IterableMixin {
-  List<mdl.Model> _collection;
+  List<model.Model> _collection;
   Function onAdd;
   Function onChange;
   Function onRemove;
-  Type model;
 
   Collection(ng.Http http) : super(http), _collection = [];
 
@@ -25,14 +23,18 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     return this._collection[index];
   }
 
+  Collection collectionNew() {
+    throw new UnimplementedError('Collection new not implemented.');
+  }
+
+  model.Model modelNew() {
+    throw new UnimplementedError('Model new not implemented.');
+  }
+
   void add(Map<String, dynamic> attrs) {
-    var modelCls = mirrors.reflectClass(this.model);
-    var initSym = const Symbol('');
-    var model = modelCls.newInstance(initSym, [this.http]).reflectee;
-
-    model.import(attrs);
-
-    this._collection.add(model);
+    var mdl = this.modelNew();
+    mdl.import(attrs);
+    this._collection.add(mdl);
   }
 
   void validate(String name) {
@@ -42,12 +44,10 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
   }
 
   Collection clone() {
-    var mirror = mirrors.reflect(this);
-    var clone = mirror.type.newInstance(
-      const Symbol(''), [this.http]).reflectee;
+    var clone = this.collectionNew();
 
-    for (var model in this) {
-      clone._collection.add(model.clone());
+    for (var mdl in this) {
+      clone._collection.add(mdl.clone());
     }
 
     return clone;
@@ -55,11 +55,11 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
 
   void imported() {}
 
-  void added(mdl.Model model) {}
+  void added(model.Model mdl) {}
 
-  void changed(mdl.Model model) {}
+  void changed(model.Model mdl) {}
 
-  void removed(mdl.Model model) {}
+  void removed(model.Model mdl) {}
 
   void import(dynamic responseData) {
     var data;
@@ -69,9 +69,6 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     } on IgnoreResponse {
       return;
     }
-
-    var modelCls = mirrors.reflectClass(this.model);
-    var initSym = const Symbol('');
 
     var curIds = [];
     var newIds = new Set();
@@ -111,7 +108,7 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
           model = recModels.removeFirst();
         }
         else {
-          model = modelCls.newInstance(initSym, [this.http]).reflectee;
+          model = this.modelNew();
         }
         model.init();
       }
