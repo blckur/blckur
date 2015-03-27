@@ -42,7 +42,12 @@ func (c *cluster) conn(server string) (conn *beanstalk.Conn, err error) {
 }
 
 func (c *cluster) close(server string) (err error) {
-	err = c.pool[server].Close()
+	srv, ok := c.pool[server]
+	if !ok {
+		return
+	}
+
+	err = srv.Close()
 	if err != nil {
 		return
 	}
