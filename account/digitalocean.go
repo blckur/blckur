@@ -89,7 +89,6 @@ func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
 
 	data := struct {
 		Account struct {
-			Id string `json:"uuid"`
 			Email string `json:"email"`
 		} `json:"account"`
 	}{}
