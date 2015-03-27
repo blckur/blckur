@@ -23,16 +23,16 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     return this._collection[index];
   }
 
-  Collection collectionNew() {
-    throw new UnimplementedError('Collection new not implemented.');
-  }
-
-  model.Model modelNew() {
+  model.Model newModel() {
     throw new UnimplementedError('Model new not implemented.');
   }
 
+  Collection newCollection() {
+    throw new UnimplementedError('Collection new not implemented.');
+  }
+
   void add(Map<String, dynamic> attrs) {
-    var mdl = this.modelNew();
+    var mdl = this.newModel();
     mdl.import(attrs);
     this._collection.add(mdl);
   }
@@ -44,7 +44,7 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
   }
 
   Collection clone() {
-    var clone = this.collectionNew();
+    var clone = this.newCollection();
 
     for (var mdl in this) {
       clone._collection.add(mdl.clone());
@@ -108,7 +108,7 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
           model = recModels.removeFirst();
         }
         else {
-          model = this.modelNew();
+          model = this.newModel();
         }
         model.init();
       }
