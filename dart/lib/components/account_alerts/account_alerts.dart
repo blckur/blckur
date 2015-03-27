@@ -8,6 +8,11 @@ import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgTwoWay;
+import 'dart:async' as async;
+
+const NONE = 0;
+const ALERTS = 1;
+const ADD_ALERT = 2;
 
 @Component(
   selector: 'x-account-alerts',
@@ -15,8 +20,11 @@ import 'package:angular/angular.dart' show Component, NgTwoWay;
   cssUrl: 'packages/blckur/components/account_alerts/account_alerts.css'
 )
 class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
+  int _mode;
+  async.Future _modeWait;
+  bool showAlerts;
+  bool showAddAlert;
   bool selected;
-  bool active;
   dynamic typeValue;
   models.AlertType typeModel;
   collections.AlertTypes alertTypes;
@@ -24,19 +32,68 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
   @NgTwoWay('model')
   models.Account model;
 
-  AccountAlertsComp(this.alertTypes);
+  AccountAlertsComp(this.alertTypes) {
+    this.mode = ALERTS;
+  }
 
-  String get activeCls {
-    if (this.active == true) {
-      return 'adding-alert';
+  void set mode (int mode) {
+    if (this._modeWait != null) {
+      this._modeWait.then((_) {
+        this._modeWait = null;
+        this.mode = mode;
+      });
+      return;
     }
-    return '';
+
+    if (this._mode == mode) {
+      return;
+    }
+    this._mode = mode;
+
+    switch (mode) {
+      case ALERTS:
+        this.showAddAlert = false;
+        break;
+      case ADD_ALERT:
+        this.showAlerts = false;
+        break;
+      default:
+        this.showAlerts = false;
+        this.showAddAlert = false;
+
+        this._modeWait = new async.Future.delayed(
+          const Duration(milliseconds: 400), () {
+            this._modeWait = null;
+          });
+
+        return;
+    }
+
+    this._modeWait = new async.Future.delayed(
+      const Duration(milliseconds: 800), () {});
+
+    new async.Timer(const Duration(milliseconds: 400), () {
+      switch (mode) {
+        case ALERTS:
+          this.showAlerts = true;
+          break;
+        case ADD_ALERT:
+          this.showAddAlert = true;
+          break;
+      }
+      this.mode = mode;
+      this._modeWait = null;
+    });
+  }
+
+  int get mode {
+    return this._mode;
   }
 
   void clear() {
-    this.active = false;
     this.selected = false;
     this.typeValue = null;
+    this.mode = ALERTS;
   }
 
   void onAdd() {
@@ -44,13 +101,13 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
       return;
     }
 
-    this.active = true;
     this.alertTypes.acctType = this.model.type;
     this.alertTypes.fetch().catchError((err) {
       logger.severe('Failed to load alert types', err);
       new alert.Alert('Failed to load alert types');
     }).whenComplete(() {
       this.clearLoading();
+      this.mode = ADD_ALERT;
     });
   }
 

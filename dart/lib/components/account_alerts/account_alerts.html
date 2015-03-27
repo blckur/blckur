@@ -1,7 +1,6 @@
-<!-- TODO ng-switch not working ios -->
-<div flex ng-show="active == true">
+<div flex>
   <paper-progress ng-if="loading" indeterminate></paper-progress>
-  <div>
+  <div ng-if="showAddAlert == true" class="add-alert" ng-animate flex>
     <div class="form" ng-show="selected == true">
       <div class="label" ng-bind="typeModel.valueLabel"></div>
       <div class="input"> <!-- ng-switch="typeModel.valueType" -->
@@ -23,30 +22,30 @@
         </paper-button>
       </core-item>
     </div>
+    <paper-button class="footer-btn cancel" flex delay-click="onCancel()">
+      <paper-fab icon="clear" title="Cancel" role="button"
+        aria-label="Cancel"></paper-fab>
+      <div class="info" flex>Cancel</div>
+    </paper-button>
   </div>
-  <paper-button class="footer-btn cancel" flex delay-click="onCancel()">
-    <paper-fab icon="clear" title="Cancel" role="button"
-      aria-label="Cancel"></paper-fab>
-    <div class="info" flex>Cancel</div>
-  </paper-button>
-</div>
-<div ng-show="active != true"> <!-- ng-switch-default -->
-  <div class="alert-type" ng-repeat="alert in model.alerts"
-    layout horizontal>
-    <div flex>
-      <div class="label" ng-bind="alert['label']"></div>
-      <div class="value" ng-bind="alert['value']"></div>
+  <div ng-if="showAlerts == true" class="alerts" ng-animate flex>
+    <div class="alert-type" ng-repeat="alert in model.alerts"
+      layout horizontal>
+      <div flex>
+        <div class="label" ng-bind="alert['label']"></div>
+        <div class="value" ng-bind="alert['value']"></div>
+      </div>
+      <div layout horizontal center>
+        <core-icon-button icon="delete" class="alert-del"
+          ng-click="onDel(alert)"></core-icon-button>
+      </div>
     </div>
-    <div layout horizontal center>
-      <core-icon-button icon="delete" class="alert-del"
-        ng-click="onDel(alert)"></core-icon-button>
-    </div>
+    <x-get-started
+      ng-if="model.alerts == null || model.alerts.length == 0"></x-get-started>
+    <paper-button class="footer-btn add" flex delay-click="onAdd()">
+      <paper-fab icon="add" title="Add alert" role="button"
+        aria-label="Add alert"></paper-fab>
+      <div class="info" flex>Add new alert</div>
+    </paper-button>
   </div>
-  <x-get-started
-    ng-if="model.alerts == null || model.alerts.length == 0"></x-get-started>
-  <paper-button class="footer-btn add" flex delay-click="onAdd()">
-    <paper-fab icon="add" title="Add alert" role="button"
-      aria-label="Add alert"></paper-fab>
-    <div class="info" flex>Add new alert</div>
-  </paper-button>
 </div>
