@@ -93,25 +93,26 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
   void clear() {
     this.selected = false;
     this.typeValue = null;
-    this.mode = ALERTS;
   }
 
   void onAdd() {
     if (!this.setLoading()) {
       return;
     }
+    this.mode = NONE;
 
     this.alertTypes.acctType = this.model.type;
     this.alertTypes.fetch().catchError((err) {
       logger.severe('Failed to load alert types', err);
       new alert.Alert('Failed to load alert types');
     }).whenComplete(() {
-      this.clearLoading();
       this.mode = ADD_ALERT;
+      this.clearLoading();
     });
   }
 
   void onCancel() {
+    this.mode = ALERTS;
     this.clear();
     this.clearLoading();
   }
@@ -151,6 +152,7 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
     if (!this.setLoading()) {
       return;
     }
+    this.mode = NONE;
 
     if (this.model.alerts == null) {
       this.model.alerts = [];
@@ -165,6 +167,7 @@ class AccountAlertsComp extends enter_aware.EnterAware with loading.Loading {
       logger.severe('Failed to add alert', err);
       new alert.Alert('Failed to add alert');
     }).whenComplete(() {
+      this.mode = ALERTS;
       this.clear();
       this.clearLoading();
     });
