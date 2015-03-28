@@ -8,7 +8,6 @@ import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgOneWay;
 import 'dart:html' as dom;
-import 'dart:async' as async;
 
 const NONE = 0;
 const ACCOUNTS = 1;
@@ -20,70 +19,15 @@ const ADD_ACCOUNT = 2;
   cssUrl: 'packages/blckur/components/accounts/accounts.css'
 )
 class AccountsComp {
-  int _mode;
-  async.Future _modeWait;
-  bool showAccounts;
-  bool showAddAcount;
   collections.Accounts accounts;
   models.AccountAdd model;
   collections.AccountTypes accountTypes;
   injectables.Loading loading;
+  injectables.ModeSwitch modeswitch;
 
-  AccountsComp(this.accounts, this.accountTypes, this.loading) {
+  AccountsComp(this.accounts, this.accountTypes, this.loading,
+      this.modeswitch) {
     this.update(true);
-  }
-
-  void set mode (int mode) {
-    if (this._modeWait != null) {
-      this._modeWait.then((_) {
-        this._modeWait = null;
-        this.mode = mode;
-      });
-      return;
-    }
-
-    if (this._mode == mode) {
-      return;
-    }
-    this._mode = mode;
-
-    switch (mode) {
-      case ACCOUNTS:
-        this.showAddAcount = false;
-        break;
-      case ADD_ACCOUNT:
-        this.showAccounts = false;
-        break;
-      default:
-        this.showAccounts = false;
-        this.showAddAcount = false;
-
-        this._modeWait = new async.Future.delayed(
-          const Duration(milliseconds: 400), () {
-            this._modeWait = null;
-          });
-
-        return;
-    }
-
-    this._modeWait = new async.Future.delayed(
-      const Duration(milliseconds: 800), () {});
-
-    new async.Timer(const Duration(milliseconds: 400), () {
-      switch (mode) {
-        case ACCOUNTS:
-          this.showAccounts = true;
-          break;
-        case ADD_ACCOUNT:
-          this.showAddAcount = true;
-          break;
-      }
-      this.mode = mode;
-      this._modeWait = null;
-    });
-  }
-  int get mode {
-    return this._mode;
   }
 
   void update([bool initMode]) {
@@ -98,7 +42,7 @@ class AccountsComp {
       });
     }).whenComplete(() {
       if (initMode == true) {
-        this.mode = ACCOUNTS;
+        this.modeswitch.mode = ACCOUNTS;
       }
       this.loading.clear();
     });
@@ -108,19 +52,19 @@ class AccountsComp {
     if (!this.loading.set()) {
       return;
     }
-    this.mode = NONE;
+    this.modeswitch.mode = NONE;
 
     this.accountTypes.fetch().catchError((err) {
       logger.severe('Failed to load account types', err);
       new alert.Alert('Failed to load account types');
     }).whenComplete(() {
       this.loading.clear();
-      this.mode = ADD_ACCOUNT;
+      this.modeswitch.mode = ADD_ACCOUNT;
     });
   }
 
   void onCancel() {
-    this.mode = ACCOUNTS;
+    this.modeswitch.mode = ACCOUNTS;
     this.loading.clear();
   }
 
@@ -131,12 +75,12 @@ class AccountsComp {
 
     this.model.type = type;
     this.model.create().then((_) {
-      if (this.mode != ADD_ACCOUNT) {
+      if (this.modeswitch.mode != ADD_ACCOUNT) {
         return;
       }
       dom.window.location.replace(this.model.redirect);
     }).catchError((err) {
-      if (this.mode != ADD_ACCOUNT) {
+      if (this.modeswitch.mode != ADD_ACCOUNT) {
         return;
       }
       logger.severe('Failed to add account', err);
