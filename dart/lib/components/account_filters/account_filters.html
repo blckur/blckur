@@ -1,5 +1,26 @@
 <div flex>
   <paper-progress ng-if="loading.state" indeterminate></paper-progress>
+  <div ng-if="modeswitch.state[1]" class="filters" ng-animate flex>
+    <div class="filter-type" ng-repeat="filter in model.filters"
+      layout horizontal>
+      <div flex>
+        <div class="label" ng-bind="filter['label']"></div>
+        <div class="value" ng-bind="filter['value']"></div>
+      </div>
+      <div layout horizontal center>
+        <core-icon-button icon="delete" class="filter-del"
+          ng-click="onDel(filter)"></core-icon-button>
+      </div>
+    </div>
+    <x-get-started
+      ng-if="model.filters == null || model.filters.length == 0"
+      ></x-get-started>
+    <paper-button class="footer-btn add" flex delay-click="onAdd()">
+      <paper-fab icon="add" title="Add filter" role="button"
+        aria-label="Add filter"></paper-fab>
+      <div class="info" flex>Add new filter</div>
+    </paper-button>
+  </div>
   <div ng-if="modeswitch.state[2]" class="add-filter" ng-animate flex>
     <div class="form" ng-show="selected == true">
       <div class="label" ng-bind="typeModel.valueLabel"></div>
@@ -26,27 +47,6 @@
       <paper-fab icon="clear" title="Cancel" role="button"
         aria-label="Cancel"></paper-fab>
       <div class="info" flex>Cancel</div>
-    </paper-button>
-  </div>
-  <div ng-if="modeswitch.state[1]" class="filters" ng-animate flex>
-    <div class="filter-type" ng-repeat="filter in model.filters"
-        layout horizontal>
-      <div flex>
-        <div class="label" ng-bind="filter['label']"></div>
-        <div class="value" ng-bind="filter['value']"></div>
-      </div>
-      <div layout horizontal center>
-        <core-icon-button icon="delete" class="filter-del"
-          ng-click="onDel(filter)"></core-icon-button>
-      </div>
-    </div>
-    <x-get-started
-      ng-if="model.filters == null || model.filters.length == 0"
-      ></x-get-started>
-    <paper-button class="footer-btn add" flex delay-click="onAdd()">
-      <paper-fab icon="add" title="Add filter" role="button"
-        aria-label="Add filter"></paper-fab>
-      <div class="info" flex>Add new filter</div>
     </paper-button>
   </div>
 </div>
