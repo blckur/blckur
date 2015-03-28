@@ -139,12 +139,6 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	for iter.Next(acct) {
 		acct.ParseAlerts()
 
-		client, _ := acct.GetClient()
-		err = client.Update(db)
-		if err != nil {
-			return
-		}
-
 		accts = append(accts, acct)
 		acct = &Account{}
 	}
