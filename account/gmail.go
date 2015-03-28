@@ -26,7 +26,7 @@ func init() {
 			Type: "all",
 		},
 		&FilterType{
-			Label: "Mmessages matching sender",
+			Label: "Messages matching sender",
 			Type: "from",
 			ValueType: "input",
 			ValueLabel: "Enter complete or partial email address " +
