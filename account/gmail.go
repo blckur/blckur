@@ -26,7 +26,7 @@ func init() {
 			Type: "all",
 		},
 		&AlertType{
-			Label: "New messages matching sender",
+			Label: "Mmessages matching sender",
 			Type: "from",
 			ValueType: "input",
 			ValueLabel: "Enter complete or partial email address " +
@@ -34,14 +34,14 @@ func init() {
 			ValueHolder: "Email address",
 		},
 		&AlertType{
-			Label: "New messages matching subject",
+			Label: "Messages matching subject",
 			Type: "subject",
 			ValueType: "input",
 			ValueLabel: "Enter search term to match in email subject",
 			ValueHolder: "Search term",
 		},
 		&AlertType{
-			Label: "New messages matching message body",
+			Label: "Messages matching message body",
 			Type: "body",
 			ValueType: "input",
 			ValueLabel: "Enter search term to match in email body",
