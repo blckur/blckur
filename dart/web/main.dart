@@ -6,6 +6,7 @@ import 'package:blckur/collections/events.dart' as evnts;
 import 'package:blckur/components/components.dart' as components;
 import 'package:blckur/decorators/decorators.dart' as decorators;
 import 'package:blckur/formatters/formatters.dart' as formatters;
+import 'package:blckur/injectables/injectables.dart' as injectables;
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
 
@@ -20,6 +21,7 @@ void main() {
     .addModule(new components.ComponentsMod())
     .addModule(new decorators.DecoratorsMod())
     .addModule(new formatters.FormattersMod())
+    .addModule(new injectables.InjectablesMod())
     .addModule(new models.ModelsMod())
     .addModule(new animate.AnimationModule())
     .run();
