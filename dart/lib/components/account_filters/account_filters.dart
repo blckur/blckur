@@ -1,4 +1,4 @@
-library alert_add_comp;
+library account_filters_comp;
 
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/collections/collections.dart' as collections;
@@ -11,30 +11,31 @@ import 'package:angular/angular.dart' show Component, NgTwoWay;
 import 'dart:async' as async;
 
 const NONE = 0;
-const ALERTS = 1;
-const ADD_ALERT = 2;
+const FILTERS = 1;
+const ADD_FILTER = 2;
 
 @Component(
-  selector: 'x-account-alerts',
-  templateUrl: 'packages/blckur/components/account_alerts/account_alerts.html',
-  cssUrl: 'packages/blckur/components/account_alerts/account_alerts.css'
+  selector: 'x-account-filters',
+  templateUrl:
+    'packages/blckur/components/account_filters/account_filters.html',
+  cssUrl: 'packages/blckur/components/account_filters/account_filters.css'
 )
-class AccountAlertsComp extends enter_aware.EnterAware {
+class AccountFiltersComp extends enter_aware.EnterAware {
   int _mode;
   async.Future _modeWait;
-  bool showAlerts;
-  bool showAddAlert;
+  bool showFilters;
+  bool showAddFilter;
   bool selected;
   dynamic typeValue;
-  models.AlertType typeModel;
-  collections.AlertTypes alertTypes;
+  models.FilterType typeModel;
+  collections.FilterTypes filterTypes;
   injectables.Loading loading;
 
   @NgTwoWay('model')
   models.Account model;
 
-  AccountAlertsComp(this.alertTypes, this.loading) {
-    this.mode = ALERTS;
+  AccountFiltersComp(this.filterTypes, this.loading) {
+    this.mode = FILTERS;
   }
 
   void set mode (int mode) {
@@ -52,15 +53,15 @@ class AccountAlertsComp extends enter_aware.EnterAware {
     this._mode = mode;
 
     switch (mode) {
-      case ALERTS:
-        this.showAddAlert = false;
+      case FILTERS:
+        this.showAddFilter = false;
         break;
-      case ADD_ALERT:
-        this.showAlerts = false;
+      case ADD_FILTER:
+        this.showFilters = false;
         break;
       default:
-        this.showAlerts = false;
-        this.showAddAlert = false;
+        this.showFilters = false;
+        this.showAddFilter = false;
 
         this._modeWait = new async.Future.delayed(
           const Duration(milliseconds: 400), () {
@@ -75,11 +76,11 @@ class AccountAlertsComp extends enter_aware.EnterAware {
 
     new async.Timer(const Duration(milliseconds: 400), () {
       switch (mode) {
-        case ALERTS:
-          this.showAlerts = true;
+        case FILTERS:
+          this.showFilters = true;
           break;
-        case ADD_ALERT:
-          this.showAddAlert = true;
+        case ADD_FILTER:
+          this.showAddFilter = true;
           break;
       }
       this.mode = mode;
@@ -102,23 +103,23 @@ class AccountAlertsComp extends enter_aware.EnterAware {
     }
     this.mode = NONE;
 
-    this.alertTypes.acctType = this.model.type;
-    this.alertTypes.fetch().catchError((err) {
-      logger.severe('Failed to load alert types', err);
-      new alert.Alert('Failed to load alert types');
+    this.filterTypes.acctType = this.model.type;
+    this.filterTypes.fetch().catchError((err) {
+      logger.severe('Failed to load filter types', err);
+      new alert.Alert('Failed to load filter types');
     }).whenComplete(() {
-      this.mode = ADD_ALERT;
+      this.mode = ADD_FILTER;
       this.loading.clear();
     });
   }
 
   void onCancel() {
-    this.mode = ALERTS;
+    this.mode = FILTERS;
     this.clear();
     this.loading.clear();
   }
 
-  void onClick(models.AlertType model) {
+  void onClick(models.FilterType model) {
     this.typeModel = model;
 
     if (model.valueType == "" || model.valueType == null) {
@@ -140,10 +141,10 @@ class AccountAlertsComp extends enter_aware.EnterAware {
       return;
     }
 
-    this.model.alerts.remove(alrt);
-    this.model.save(['alerts']).catchError((err) {
-      logger.severe('Failed to remove alert', err);
-      new alert.Alert('Failed to remove alert');
+    this.model.filters.remove(alrt);
+    this.model.save(['filters']).catchError((err) {
+      logger.severe('Failed to remove filter', err);
+      new alert.Alert('Failed to remove filter');
     }).whenComplete(() {
       this.loading.clear();
     });
@@ -155,20 +156,20 @@ class AccountAlertsComp extends enter_aware.EnterAware {
     }
     this.mode = NONE;
 
-    if (this.model.alerts == null) {
-      this.model.alerts = [];
+    if (this.model.filters == null) {
+      this.model.filters = [];
     }
 
-    this.model.alerts.add({
+    this.model.filters.add({
       'type': typeModel.type,
       'value': this.typeValue,
     });
 
-    this.model.save(['alerts']).catchError((err) {
-      logger.severe('Failed to add alert', err);
-      new alert.Alert('Failed to add alert');
+    this.model.save(['filters']).catchError((err) {
+      logger.severe('Failed to add filter', err);
+      new alert.Alert('Failed to add filter');
     }).whenComplete(() {
-      this.mode = ALERTS;
+      this.mode = FILTERS;
       this.clear();
       this.loading.clear();
     });

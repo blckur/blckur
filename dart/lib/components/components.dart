@@ -2,8 +2,8 @@ library components;
 
 import 'package:blckur/components/account/account.dart'
   as account;
-import 'package:blckur/components/account_alerts/account_alerts.dart'
-  as account_alerts;
+import 'package:blckur/components/account_filters/account_filters.dart'
+  as account_filters;
 import 'package:blckur/components/accounts/accounts.dart'
   as accounts;
 import 'package:blckur/components/alerts/alerts.dart'
@@ -28,7 +28,7 @@ import 'package:angular/angular.dart' as ng;
 class ComponentsMod extends ng.Module {
   ComponentsMod() {
     this.bind(account.AccountComp);
-    this.bind(account_alerts.AccountAlertsComp);
+    this.bind(account_filters.AccountFiltersComp);
     this.bind(accounts.AccountsComp);
     this.bind(alerts.AlertsComp);
     this.bind(brand_logo.BrandLogoComp);

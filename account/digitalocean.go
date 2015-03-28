@@ -16,20 +16,20 @@ var (
 func init() {
 	register("digitalocean", "DigitalOcean", OAUTH2,
 	DigitalOceanAuth{}, DigitalOceanClient{},
-	[]*AlertType{
-		&AlertType{
+	[]*FilterType{
+		&FilterType{
 			Label: "All new events",
 			Type: "all",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "Droplet created",
 			Type: "create",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "Droplet destroyed",
 			Type: "destroy",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "Droplet password reset",
 			Type: "password_reset",
 		},

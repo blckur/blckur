@@ -1,6 +1,6 @@
 <div flex>
   <paper-progress ng-if="loading.state" indeterminate></paper-progress>
-  <div ng-if="showAddAlert == true" class="add-alert" ng-animate flex>
+  <div ng-if="showAddFilter == true" class="add-filter" ng-animate flex>
     <div class="form" ng-show="selected == true">
       <div class="label" ng-bind="typeModel.valueLabel"></div>
       <div class="input"> <!-- ng-switch="typeModel.valueType" -->
@@ -14,10 +14,10 @@
     </div>
     <div ng-show="selected != true"
         class="menu scrollable ng-binding">
-      <core-item ng-repeat="alertType in alertTypes"
-          class="alert-type" layout horizontal>
-        <paper-button class="type" flex delay-click="onClick(alertType)">
-          <div class="content" ng-bind="alertType.label" flex></div>
+      <core-item ng-repeat="filterType in filterTypes"
+          class="filter-type" layout horizontal>
+        <paper-button class="type" flex delay-click="onClick(filterType)">
+          <div class="content" ng-bind="filterType.label" flex></div>
           <core-icon icon="chevron-right"></core-icon>
         </paper-button>
       </core-item>
@@ -28,24 +28,25 @@
       <div class="info" flex>Cancel</div>
     </paper-button>
   </div>
-  <div ng-if="showAlerts == true" class="alerts" ng-animate flex>
-    <div class="alert-type" ng-repeat="alert in model.alerts"
-      layout horizontal>
+  <div ng-if="showFilters == true" class="filters" ng-animate flex>
+    <div class="filter-type" ng-repeat="filter in model.filters"
+        layout horizontal>
       <div flex>
-        <div class="label" ng-bind="alert['label']"></div>
-        <div class="value" ng-bind="alert['value']"></div>
+        <div class="label" ng-bind="filter['label']"></div>
+        <div class="value" ng-bind="filter['value']"></div>
       </div>
       <div layout horizontal center>
-        <core-icon-button icon="delete" class="alert-del"
-          ng-click="onDel(alert)"></core-icon-button>
+        <core-icon-button icon="delete" class="filter-del"
+          ng-click="onDel(filter)"></core-icon-button>
       </div>
     </div>
     <x-get-started
-      ng-if="model.alerts == null || model.alerts.length == 0"></x-get-started>
+      ng-if="model.filters == null || model.filters.length == 0"
+      ></x-get-started>
     <paper-button class="footer-btn add" flex delay-click="onAdd()">
-      <paper-fab icon="add" title="Add alert" role="button"
-        aria-label="Add alert"></paper-fab>
-      <div class="info" flex>Add new alert</div>
+      <paper-fab icon="add" title="Add filter" role="button"
+        aria-label="Add filter"></paper-fab>
+      <div class="info" flex>Add new filter</div>
     </paper-button>
   </div>
 </div>

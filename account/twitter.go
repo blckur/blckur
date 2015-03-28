@@ -27,24 +27,24 @@ type TwitterClient struct {
 
 func init() {
 	register("twitter", "Twitter", OAUTH1, TwitterAuth{}, TwitterClient{},
-	[]*AlertType{
-		&AlertType{
+	[]*FilterType{
+		&FilterType{
 			Label: "All new followers",
 			Type: "follower_all",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "All new favorited tweets",
 			Type: "favorite_all",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "All new unfavorited tweets",
 			Type: "unfavorite_all",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "All new retweets",
 			Type: "retweet_all",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "All new tweet replies",
 			Type: "reply_all",
 		},

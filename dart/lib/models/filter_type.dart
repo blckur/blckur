@@ -1,4 +1,4 @@
-library alert_type_mod;
+library filter_type_mod;
 
 import 'package:blckur/model.dart' as model;
 
@@ -6,7 +6,7 @@ import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 
 @Injectable()
-class AlertType extends model.Model {
+class FilterType extends model.Model {
   int id;
   String label;
   String type;
@@ -14,10 +14,10 @@ class AlertType extends model.Model {
   String valueLabel;
   String valueHolder;
 
-  AlertType(ng.Http http) : super(http);
+  FilterType(ng.Http http) : super(http);
 
   model.Model newModel() {
-    return new AlertType(this.http);
+    return new FilterType(this.http);
   }
 
   Map<String, Function> get getters {

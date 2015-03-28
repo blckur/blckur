@@ -8,44 +8,44 @@
   display: none;
 }
 
-.alert-type + .alert-type {
+.filter-type + .filter-type {
   border-top: 1px solid #dbe1ef;
 }
 
-.alert-type .label {
+.filter-type .label {
   font-size: 16px;
   padding: 20px 0 0 15px;
 }
 
-.alert-type .value {
+.filter-type .value {
   font-size: 14px;
   padding: 0 20px 20px 20px;
   font-weight: 300;
 }
 
-.alert-del {
+.filter-del {
   margin-right: 8px;
 }
 
-.alerts.ng-enter,
-.add-alert.ng-enter {
+.filters.ng-enter,
+.add-filter.ng-enter {
   transform: translate(0, -100%);
   @include transition(transform 0.3s);
 }
 
-.alerts.ng-enter-active,
-.add-alert.ng-enter-active {
+.filters.ng-enter-active,
+.add-filter.ng-enter-active {
   transform: translate(0,0);
 }
 
-.alerts.ng-leave,
-.add-alert.ng-leave {
+.filters.ng-leave,
+.add-filter.ng-leave {
   transform: translate(0,0);
   @include transition(transform 0.3s);
 }
 
-.alerts.ng-leave-active,
-.add-alert.ng-leave-active {
+.filters.ng-leave-active,
+.add-filter.ng-leave-active {
   transform: translate(0, -100%);
 }
 

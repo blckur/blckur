@@ -5,7 +5,7 @@ import (
 	"labix.org/v2/mgo/bson"
 )
 
-type AlertType struct {
+type FilterType struct {
 	Id int `json:"id"`
 	Label string `json:"label"`
 	Type string `json:"type"`
@@ -14,30 +14,30 @@ type AlertType struct {
 	ValueHolder string `json:"value_holder"`
 }
 
-type Alert struct {
+type Filter struct {
 	Id bson.ObjectId `bson:"_id" json:"id"`
 	Type string `bson:"type" json:"type"`
 	Value string `bson:"value" json:"value"`
 	Label string `bson:"-" json:"label"`
 }
 
-func (a *Account) ParseAlerts() {
-	alerts := set.NewSet()
+func (a *Account) ParseFilters() {
+	filters := set.NewSet()
 
-	for i, alrt := range a.Alerts {
+	for i, alrt := range a.Filters {
 		key := alrt.Type + alrt.Value
 
-		if alerts.Contains(key) {
-			a.Alerts = append(a.Alerts[:i], a.Alerts[i + 1:]...)
+		if filters.Contains(key) {
+			a.Filters = append(a.Filters[:i], a.Filters[i + 1:]...)
 			continue
 		}
-		alerts.Add(key)
+		filters.Add(key)
 
 		if alrt.Id == "" {
 			alrt.Id = bson.NewObjectId()
 		}
-		alrt.Label = alertLabels[a.Type][alrt.Type]
+		alrt.Label = filterLabels[a.Type][alrt.Type]
 	}
 
-	a.sortAlerts()
+	a.sortFilters()
 }

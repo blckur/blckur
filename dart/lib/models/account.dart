@@ -11,7 +11,7 @@ class Account extends model.Model {
   String userId;
   String type;
   String identity;
-  List<Map<String, String>> alerts;
+  List<Map<String, String>> filters;
 
   Account(ng.Http http) : super(http);
 
@@ -25,7 +25,7 @@ class Account extends model.Model {
       'user_id': () => this.userId,
       'type': () => this.type,
       'identity': () => this.identity,
-      'alerts': () => this.alerts,
+      'filters': () => this.filters,
     };
   }
 
@@ -35,7 +35,7 @@ class Account extends model.Model {
       'user_id': (x) => this.userId = x,
       'type': (x) => this.type = x,
       'identity': (x) => this.identity = x,
-      'alerts': (x) => this.alerts = x,
+      'filters': (x) => this.filters = x,
     };
   }
 

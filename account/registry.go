@@ -15,12 +15,12 @@ var (
 	authRegistry = map[string]reflect.Type{}
 	clientRegistry = map[string]reflect.Type{}
 	AccountTypes = []*AccountType{}
-	AlertTypes = map[string][]*AlertType{}
-	alertLabels = map[string]map[string]string{}
+	FilterTypes = map[string][]*FilterType{}
+	filterLabels = map[string]map[string]string{}
 	handlers = []func(){}
 )
 
-func sortAccountAlerts() {
+func sortAccountTypes() {
 	srt := &accountTypesSort{
 		AccountTypes: AccountTypes,
 	}
@@ -28,7 +28,7 @@ func sortAccountAlerts() {
 }
 
 func register(name string, label string, typ int, auth interface{},
-		client interface{}, types []*AlertType, handler func()) {
+		client interface{}, types []*FilterType, handler func()) {
 	authTypes[name] = typ
 	authRegistry[name] = reflect.TypeOf(auth)
 	clientRegistry[name] = reflect.TypeOf(client)
@@ -37,7 +37,7 @@ func register(name string, label string, typ int, auth interface{},
 		Label: label,
 		Type: name,
 	})
-	sortAccountAlerts()
+	sortAccountTypes()
 	for i, acctType := range AccountTypes {
 		acctType.Id = i
 	}
@@ -47,8 +47,8 @@ func register(name string, label string, typ int, auth interface{},
 		typ.Id = i
 		labels[typ.Type] = typ.Label
 	}
-	AlertTypes[name] = types
-	alertLabels[name] = labels
+	FilterTypes[name] = types
+	filterLabels[name] = labels
 
 	handlers = append(handlers, handler)
 }

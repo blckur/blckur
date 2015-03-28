@@ -1,7 +1,7 @@
 <div class="item" ng-class="settings ? 'settings-active' : ''"
     layout vertical flex>
   <div ng-show="settings" class="row settings-header" layout horizontal>
-    <span flex>Manage account alerts</span>
+    <span flex>Manage account filters</span>
     <core-icon-button icon="close" ng-click="onSettings()"></core-icon-button>
   </div>
   <div class="row account" layout horizontal>
@@ -29,6 +29,6 @@
   </div>
   <paper-progress ng-if="loading.state" indeterminate></paper-progress>
   <div ng-if="settings" class="row settings" layout vertical flex>
-    <x-account-alerts model="model"></x-account-alerts>
+    <x-account-filters model="model"></x-account-filters>
   </div>
 </div>

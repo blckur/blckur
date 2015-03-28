@@ -14,7 +14,7 @@ type accountPostData struct {
 }
 
 type accountData struct {
-	Alerts []*account.Alert `json:"alerts"`
+	Filters []*account.Filter `json:"filters"`
 }
 
 func accountsPost(c *gin.Context) {
@@ -70,10 +70,10 @@ func accountsPut(c *gin.Context) {
 		return
 	}
 
-	acct.Alerts = data.Alerts
-	acct.ParseAlerts()
+	acct.Filters = data.Filters
+	acct.ParseFilters()
 
-	err = acct.CommitFields(db, set.NewSet("alerts"))
+	err = acct.CommitFields(db, set.NewSet("filters"))
 	if err != nil {
 		c.Fail(500, err)
 		return

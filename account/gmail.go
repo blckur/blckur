@@ -20,12 +20,12 @@ var (
 
 func init() {
 	register("gmail", "Gmail", OAUTH2, GmailAuth{}, GmailClient{},
-	[]*AlertType{
-		&AlertType{
+	[]*FilterType{
+		&FilterType{
 			Label: "All new messages",
 			Type: "all",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "Mmessages matching sender",
 			Type: "from",
 			ValueType: "input",
@@ -33,14 +33,14 @@ func init() {
 			"of sender to match",
 			ValueHolder: "Email address",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "Messages matching subject",
 			Type: "subject",
 			ValueType: "input",
 			ValueLabel: "Enter search term to match in email subject",
 			ValueHolder: "Search term",
 		},
-		&AlertType{
+		&FilterType{
 			Label: "Messages matching message body",
 			Type: "body",
 			ValueType: "input",
@@ -178,8 +178,8 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	body := ""
 
 	Loop:
-	for _, alrt := range g.acct.Alerts {
-		switch (alrt.Type) {
+	for _, filter := range g.acct.Filters {
+		switch (filter.Type) {
 		case "all":
 			match = true
 			matchType = "all"
@@ -187,7 +187,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		case "from":
 			match = strings.Contains(
 				strings.ToLower(from),
-				strings.ToLower(alrt.Value))
+				strings.ToLower(filter.Value))
 			if match {
 				matchType = "from"
 				break Loop
@@ -195,7 +195,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		case "subject":
 			match = strings.Contains(
 				strings.ToLower(subject),
-				strings.ToLower(alrt.Value))
+				strings.ToLower(filter.Value))
 			if match {
 				matchType = "subject"
 				break Loop
@@ -210,7 +210,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 					body = strings.ToLower(string(bodyByt))
 				}
 			}
-			match = strings.Contains(body, strings.ToLower(alrt.Value))
+			match = strings.Contains(body, strings.ToLower(filter.Value))
 			if match {
 				matchType = "body"
 				break Loop

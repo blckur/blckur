@@ -4,27 +4,27 @@ import (
 	"sort"
 )
 
-type alertsSort struct {
-	Alerts []*Alert
+type filtersSort struct {
+	Filters []*Filter
 }
 
-func (a *alertsSort) Len() (n int) {
-	n = len(a.Alerts)
+func (f *filtersSort) Len() (n int) {
+	n = len(f.Filters)
 	return
 }
 
-func (a *alertsSort) Less(i int, j int) (x bool) {
-	x = a.Alerts[i].Label < a.Alerts[j].Label
+func (f *filtersSort) Less(i int, j int) (x bool) {
+	x = f.Filters[i].Label < f.Filters[j].Label
 	return
 }
 
-func (a *alertsSort) Swap(i int, j int) {
-	a.Alerts[i], a.Alerts[j] = a.Alerts[j], a.Alerts[i]
+func (f *filtersSort) Swap(i int, j int) {
+	f.Filters[i], f.Filters[j] = f.Filters[j], f.Filters[i]
 }
 
-func (a *Account) sortAlerts() {
-	srt := &alertsSort{
-		Alerts: a.Alerts,
+func (f *Account) sortFilters() {
+	srt := &filtersSort{
+		Filters: f.Filters,
 	}
 	sort.Sort(srt)
 }

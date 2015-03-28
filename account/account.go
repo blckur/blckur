@@ -33,7 +33,7 @@ type Account struct {
 	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
 	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
-	Alerts []*Alert `bson:"alerts" json:"alerts"`
+	Filters []*Filter `bson:"filters" json:"filters"`
 }
 
 func (a *Account) Commit(db *database.Database) (err error) {
@@ -137,7 +137,7 @@ func GetAccounts(db *database.Database, userId bson.ObjectId) (
 
 	acct := &Account{}
 	for iter.Next(acct) {
-		acct.ParseAlerts()
+		acct.ParseFilters()
 
 		accts = append(accts, acct)
 		acct = &Account{}

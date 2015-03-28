@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func alertTypesGet(c *gin.Context) {
+func filterTypesGet(c *gin.Context) {
 	acctType := c.Params.ByName("type")
-	c.JSON(200, account.AlertTypes[acctType])
+	c.JSON(200, account.FilterTypes[acctType])
 }
