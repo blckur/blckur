@@ -30,7 +30,7 @@ func init() {
 			Type: "from",
 			ValueType: "input",
 			ValueLabel: "Enter complete or partial email address " +
-			"of sender to match",
+				"of sender to match",
 			ValueHolder: "Email address",
 		},
 		&FilterType{
@@ -43,6 +43,28 @@ func init() {
 		&FilterType{
 			Label: "Messages matching message body",
 			Type: "body",
+			ValueType: "input",
+			ValueLabel: "Enter search term to match in email body",
+			ValueHolder: "Search term",
+		},
+		&FilterType{
+			Label: "Exclude messages matching sender",
+			Type: "not_from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial email address " +
+				"of sender to match",
+			ValueHolder: "Email address",
+		},
+		&FilterType{
+			Label: "Exclude messages matching subject",
+			Type: "not_subject",
+			ValueType: "input",
+			ValueLabel: "Enter search term to match in email subject",
+			ValueHolder: "Search term",
+		},
+		&FilterType{
+			Label: "Exclude messages matching message body",
+			Type: "not_body",
 			ValueType: "input",
 			ValueLabel: "Enter search term to match in email body",
 			ValueHolder: "Search term",
