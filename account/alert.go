@@ -1,6 +1,7 @@
 package account
 
 import (
+	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -21,7 +22,17 @@ type Alert struct {
 }
 
 func (a *Account) ParseAlerts() {
-	for _, alrt := range a.Alerts {
+	alerts := set.NewSet()
+
+	for i, alrt := range a.Alerts {
+		key := alrt.Type + alrt.Value
+
+		if alerts.Contains(key) {
+			a.Alerts = append(a.Alerts[:i], a.Alerts[i + 1:]...)
+			continue
+		}
+		alerts.Add(key)
+
 		if alrt.Id == "" {
 			alrt.Id = bson.NewObjectId()
 		}
