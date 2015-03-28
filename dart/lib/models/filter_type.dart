@@ -2,10 +2,6 @@ library filter_type_mod;
 
 import 'package:blckur/model.dart' as model;
 
-import 'package:angular/angular.dart' show Injectable;
-import 'package:angular/angular.dart' as ng;
-
-@Injectable()
 class FilterType extends model.Model {
   int id;
   String label;
@@ -14,10 +10,8 @@ class FilterType extends model.Model {
   String valueLabel;
   String valueHolder;
 
-  FilterType(ng.Http http) : super(http);
-
   model.Model newModel() {
-    return new FilterType(this.http);
+    return new FilterType();
   }
 
   Map<String, Function> get getters {

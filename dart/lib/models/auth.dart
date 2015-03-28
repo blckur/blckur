@@ -2,11 +2,8 @@ library auth_mod;
 
 import 'package:blckur/model.dart' as model;
 
-import 'package:angular/angular.dart' show Injectable;
-import 'package:angular/angular.dart' as ng;
 import 'dart:async' as async;
 
-@Injectable()
 class Auth extends model.Model {
   String url = '/auth';
   String email;
@@ -23,10 +20,8 @@ class Auth extends model.Model {
   }
   bool remember;
 
-  Auth(ng.Http http) : super(http);
-
   model.Model newModel() {
-    return new Auth(this.http);
+    return new Auth();
   }
 
   Map<String, Function> get getters {

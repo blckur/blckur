@@ -2,10 +2,6 @@ library account_mod;
 
 import 'package:blckur/model.dart' as model;
 
-import 'package:angular/angular.dart' show Injectable;
-import 'package:angular/angular.dart' as ng;
-
-@Injectable()
 class Account extends model.Model {
   String id;
   String userId;
@@ -13,10 +9,8 @@ class Account extends model.Model {
   String identity;
   List<Map<String, String>> filters;
 
-  Account(ng.Http http) : super(http);
-
   model.Model newModel() {
-    return new Account(this.http);
+    return new Account();
   }
 
   Map<String, Function> get getters {

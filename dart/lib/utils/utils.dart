@@ -1,5 +1,8 @@
 library utils;
 
+export 'package:blckur/utils/loading.dart' show Loading;
+export 'package:blckur/utils/modeswitch.dart' show ModeSwitch;
+
 import 'dart:html' as dom;
 import 'dart:math' as math;
 import 'dart:js' as js;

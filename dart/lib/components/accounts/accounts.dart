@@ -2,7 +2,7 @@ library accounts_comp;
 
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/collections/collections.dart' as collections;
-import 'package:blckur/injectables/injectables.dart' as injectables;
+import 'package:blckur/utils/utils.dart' as utils;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
@@ -22,11 +22,15 @@ class AccountsComp {
   collections.Accounts accounts;
   models.AccountAdd model;
   collections.AccountTypes accountTypes;
-  injectables.Loading loading;
-  injectables.ModeSwitch modeswitch;
+  utils.Loading loading;
+  utils.ModeSwitch modeswitch;
 
-  AccountsComp(this.accounts, this.accountTypes, this.loading,
-      this.modeswitch) {
+  AccountsComp() {
+    this.accounts = new collections.Accounts();
+    this.accountTypes = new collections.AccountTypes();
+    this.loading = new utils.Loading();
+    this.modeswitch = new utils.ModeSwitch();
+    this.modeswitch.mode = ACCOUNTS;
     this.update(true);
   }
 

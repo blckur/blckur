@@ -1,7 +1,7 @@
 library account_comp;
 
 import 'package:blckur/models/models.dart' as models;
-import 'package:blckur/injectables/injectables.dart' as injectables;
+import 'package:blckur/utils/utils.dart' as utils;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
@@ -20,9 +20,11 @@ class AccountComp {
   bool addingAlert;
   bool confirm;
   dom.ShadowRoot root;
-  injectables.Loading loading;
+  utils.Loading loading;
 
-  AccountComp(this.root, this.loading);
+  AccountComp(this.root) {
+    this.loading = new utils.Loading();
+  }
 
   @NgOneWay('model')
   models.Account model;

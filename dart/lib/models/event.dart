@@ -2,20 +2,14 @@ library event_mod;
 
 import 'package:blckur/model.dart' as model;
 
-import 'package:angular/angular.dart' show Injectable;
-import 'package:angular/angular.dart' as ng;
-
-@Injectable()
 class Event extends model.Model {
   String id;
   String type;
   String resourceId;
   double timestamp;
 
-  Event(ng.Http http) : super(http);
-
   model.Model newModel() {
-    return new Event(this.http);
+    return new Event();
   }
 
   Map<String, Function> get getters {

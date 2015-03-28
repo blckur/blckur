@@ -18,7 +18,9 @@ class UserComp {
   models.Auth authModel;
   ng.Router router;
 
-  UserComp(this.model, this.authModel, this.router) {
+  UserComp(this.router) {
+    this.model = new models.User();
+    this.authModel = new models.Auth();
     this.update();
   }
 

@@ -18,7 +18,7 @@ abstract class Model extends remote.Remote {
   dynamic id;
   Function onLinkClear;
 
-  Model(ng.Http http) : super(http) {
+  Model() : super() {
     this.init();
   }
 
@@ -90,21 +90,16 @@ abstract class Model extends remote.Remote {
   }
 
   async.Future destroy() {
-    var loadId = this.setLoading();
-
     return this.http.delete(this.url).then((response) {
-      this.clearLoading(loadId);
       this.clearError();
       this.import(response.data);
       return response.data;
     }).catchError((err) {
-      this.clearLoading(loadId);
       return new async.Future.error(this.parseError(err));
     }, test: (e) => e is ng.HttpResponse);
   }
 
   async.Future send(String method, String url, List<String> fields) {
-    var loadId = this.setLoading();
     var methodFunc;
 
     var data = this.export(fields);
@@ -120,12 +115,10 @@ abstract class Model extends remote.Remote {
     }
 
     return methodFunc(url, data).then((response) {
-      this.clearLoading(loadId);
       this.clearError();
       this.import(response.data);
       return response.data;
     }).catchError((err) {
-      this.clearLoading(loadId);
       return new async.Future.error(this.parseError(err));
     }, test: (e) => e is ng.HttpResponse);
   }

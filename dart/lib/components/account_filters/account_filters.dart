@@ -2,7 +2,7 @@ library account_filters_comp;
 
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/collections/collections.dart' as collections;
-import 'package:blckur/injectables/injectables.dart' as injectables;
+import 'package:blckur/utils/utils.dart' as utils;
 import 'package:blckur/enter_aware.dart' as enter_aware;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
@@ -24,13 +24,16 @@ class AccountFiltersComp extends enter_aware.EnterAware {
   dynamic typeValue;
   models.FilterType typeModel;
   collections.FilterTypes filterTypes;
-  injectables.Loading loading;
-  injectables.ModeSwitch modeswitch;
+  utils.Loading loading;
+  utils.ModeSwitch modeswitch;
 
   @NgTwoWay('model')
   models.Account model;
 
-  AccountFiltersComp(this.filterTypes, this.loading, this.modeswitch) {
+  AccountFiltersComp() {
+    this.filterTypes = new collections.FilterTypes();
+    this.loading = new utils.Loading();
+    this.modeswitch = new utils.ModeSwitch();
     this.modeswitch.mode = FILTERS;
   }
 

@@ -1,30 +1,26 @@
 library blckur;
 
 import 'package:blckur/routers/routers.dart' as routers;
-import 'package:blckur/collections/collections.dart' as collections;
 import 'package:blckur/collections/events.dart' as evnts;
 import 'package:blckur/components/components.dart' as components;
 import 'package:blckur/decorators/decorators.dart' as decorators;
 import 'package:blckur/formatters/formatters.dart' as formatters;
-import 'package:blckur/injectables/injectables.dart' as injectables;
-import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
+import 'package:blckur/app.dart' as app;
 
+import 'package:angular/angular.dart' as ng;
 import 'package:angular/application_factory.dart' as appfactory;
 import 'package:angular/animate/module.dart' as animate;
 
 void main() {
   logger.setup();
-  var app = appfactory.applicationFactory()
+  app.root = appfactory.applicationFactory()
     .addModule(new routers.RoutersMod())
-    .addModule(new collections.CollectionsMod())
     .addModule(new components.ComponentsMod())
     .addModule(new decorators.DecoratorsMod())
     .addModule(new formatters.FormattersMod())
-    .addModule(new injectables.InjectablesMod())
-    .addModule(new models.ModelsMod())
     .addModule(new animate.AnimationModule())
     .run();
 
-  app.get(evnts.Events).start();
+  new evnts.Events(app.root.get(ng.RootScope)).start();
 }

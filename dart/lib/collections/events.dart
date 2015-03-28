@@ -4,32 +4,30 @@ import 'package:blckur/model.dart' as model;
 import 'package:blckur/collection.dart' as collection;
 import 'package:blckur/models/models.dart' as models;
 
-import 'package:angular/angular.dart' show Injectable;
 import 'package:angular/angular.dart' as ng;
 import 'dart:async' as async;
 import 'dart:html' as dom;
 import 'dart:convert' as convert;
 
-@Injectable()
 class Events extends collection.Collection {
   String cursor;
   ng.RootScope rootScope;
   dom.WebSocket socket;
 
-  Events(ng.Http http, this.rootScope) : super(http);
+  Events(this.rootScope) : super();
 
   String url = '/events';
 
   model.Model newModel() {
-    return new models.Event(this.http);
+    return new models.Event();
   }
 
   collection.Collection newCollection() {
-    return new Events(this.http, this.rootScope);
+    return new Events(this.rootScope);
   }
 
   void onEvent(dom.MessageEvent evt) {
-    var event = new models.Event(this.http);
+    var event = new models.Event();
     event.init();
 
     event.import(convert.JSON.decode(evt.data));

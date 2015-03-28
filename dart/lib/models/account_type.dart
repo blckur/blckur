@@ -2,19 +2,13 @@ library account_type_mod;
 
 import 'package:blckur/model.dart' as model;
 
-import 'package:angular/angular.dart' show Injectable;
-import 'package:angular/angular.dart' as ng;
-
-@Injectable()
 class AccountType extends model.Model {
   int id;
   String label;
   String type;
 
-  AccountType(ng.Http http) : super(http);
-
   model.Model newModel() {
-    return new AccountType(this.http);
+    return new AccountType();
   }
 
   Map<String, Function> get getters {

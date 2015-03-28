@@ -13,7 +13,7 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
   Function onChange;
   Function onRemove;
 
-  Collection(ng.Http http) : super(http), _collection = [];
+  Collection() : super(), _collection = [];
 
   model.Model newModel() {
     throw new UnimplementedError('Model new not implemented.');

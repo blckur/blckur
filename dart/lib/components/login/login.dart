@@ -20,7 +20,8 @@ class LoginComp implements ng.ShadowRootAware {
   String mode;
   ng.Router router;
 
-  LoginComp(this.model, this.router) : mode = 'login' {
+  LoginComp(this.router) : mode = 'login' {
+    this.model = new models.Auth();
     this.model.remember = true;
   }
 
