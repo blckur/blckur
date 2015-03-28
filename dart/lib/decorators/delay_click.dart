@@ -13,7 +13,7 @@ class DelayClickDec {
 
   DelayClickDec(dom.Element element) {
     element.onClick.listen((_) {
-      new async.Timer(const Duration(milliseconds: 150), () {
+      new async.Timer(const Duration(milliseconds: 185), () {
         this.callback();
       });
     });
