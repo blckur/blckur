@@ -10,24 +10,24 @@
 }
 
 .accounts.ng-enter,
-.account-add.ng-enter {
+.add-account.ng-enter {
   transform: translate(0, -100%);
   @include transition(transform 0.3s);
 }
 
 .accounts.ng-enter-active,
-.account-add.ng-enter-active {
+.add-account.ng-enter-active {
   transform: translate(0,0);
 }
 
 .accounts.ng-leave,
-.account-add.ng-leave {
+.add-account.ng-leave {
   transform: translate(0,0);
   @include transition(transform 0.3s);
 }
 
 .accounts.ng-leave-active,
-.account-add.ng-leave-active {
+.add-account.ng-leave-active {
   transform: translate(0, -100%);
 }
 
