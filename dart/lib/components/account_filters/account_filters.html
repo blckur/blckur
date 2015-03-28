@@ -1,6 +1,6 @@
 <div flex>
   <paper-progress ng-if="loading.state" indeterminate></paper-progress>
-  <div ng-if="showAddFilter == true" class="add-filter" ng-animate flex>
+  <div ng-if="modeswitch.state[2]" class="add-filter" ng-animate flex>
     <div class="form" ng-show="selected == true">
       <div class="label" ng-bind="typeModel.valueLabel"></div>
       <div class="input"> <!-- ng-switch="typeModel.valueType" -->
@@ -28,7 +28,7 @@
       <div class="info" flex>Cancel</div>
     </paper-button>
   </div>
-  <div ng-if="showFilters == true" class="filters" ng-animate flex>
+  <div ng-if="modeswitch.state[1]" class="filters" ng-animate flex>
     <div class="filter-type" ng-repeat="filter in model.filters"
         layout horizontal>
       <div flex>

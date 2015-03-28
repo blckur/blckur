@@ -8,7 +8,6 @@ import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgTwoWay;
-import 'dart:async' as async;
 
 const NONE = 0;
 const FILTERS = 1;
@@ -21,75 +20,18 @@ const ADD_FILTER = 2;
   cssUrl: 'packages/blckur/components/account_filters/account_filters.css'
 )
 class AccountFiltersComp extends enter_aware.EnterAware {
-  int _mode;
-  async.Future _modeWait;
-  bool showFilters;
-  bool showAddFilter;
   bool selected;
   dynamic typeValue;
   models.FilterType typeModel;
   collections.FilterTypes filterTypes;
   injectables.Loading loading;
+  injectables.ModeSwitch modeswitch;
 
   @NgTwoWay('model')
   models.Account model;
 
-  AccountFiltersComp(this.filterTypes, this.loading) {
-    this.mode = FILTERS;
-  }
-
-  void set mode (int mode) {
-    if (this._modeWait != null) {
-      this._modeWait.then((_) {
-        this._modeWait = null;
-        this.mode = mode;
-      });
-      return;
-    }
-
-    if (this._mode == mode) {
-      return;
-    }
-    this._mode = mode;
-
-    switch (mode) {
-      case FILTERS:
-        this.showAddFilter = false;
-        break;
-      case ADD_FILTER:
-        this.showFilters = false;
-        break;
-      default:
-        this.showFilters = false;
-        this.showAddFilter = false;
-
-        this._modeWait = new async.Future.delayed(
-          const Duration(milliseconds: 400), () {
-            this._modeWait = null;
-          });
-
-        return;
-    }
-
-    this._modeWait = new async.Future.delayed(
-      const Duration(milliseconds: 800), () {});
-
-    new async.Timer(const Duration(milliseconds: 400), () {
-      switch (mode) {
-        case FILTERS:
-          this.showFilters = true;
-          break;
-        case ADD_FILTER:
-          this.showAddFilter = true;
-          break;
-      }
-      this.mode = mode;
-      this._modeWait = null;
-    });
-  }
-
-  int get mode {
-    return this._mode;
+  AccountFiltersComp(this.filterTypes, this.loading, this.modeswitch) {
+    this.modeswitch.mode = FILTERS;
   }
 
   void clear() {
@@ -101,20 +43,20 @@ class AccountFiltersComp extends enter_aware.EnterAware {
     if (!this.loading.set()) {
       return;
     }
-    this.mode = NONE;
+    this.modeswitch.mode = NONE;
 
     this.filterTypes.acctType = this.model.type;
     this.filterTypes.fetch().catchError((err) {
       logger.severe('Failed to load filter types', err);
       new alert.Alert('Failed to load filter types');
     }).whenComplete(() {
-      this.mode = ADD_FILTER;
+      this.modeswitch.mode = ADD_FILTER;
       this.loading.clear();
     });
   }
 
   void onCancel() {
-    this.mode = FILTERS;
+    this.modeswitch.mode = FILTERS;
     this.clear();
     this.loading.clear();
   }
@@ -154,7 +96,7 @@ class AccountFiltersComp extends enter_aware.EnterAware {
     if (!this.loading.set()) {
       return;
     }
-    this.mode = NONE;
+    this.modeswitch.mode = NONE;
 
     if (this.model.filters == null) {
       this.model.filters = [];
@@ -169,7 +111,7 @@ class AccountFiltersComp extends enter_aware.EnterAware {
       logger.severe('Failed to add filter', err);
       new alert.Alert('Failed to add filter');
     }).whenComplete(() {
-      this.mode = FILTERS;
+      this.modeswitch.mode = FILTERS;
       this.clear();
       this.loading.clear();
     });
