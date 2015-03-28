@@ -1,6 +1,10 @@
 @import 'styles/variables.scss';
 @import 'styles/colors.scss';
 
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 *,
 *:before,
 *:after {
