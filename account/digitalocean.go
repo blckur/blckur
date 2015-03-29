@@ -49,15 +49,11 @@ func (d *DigitalOceanClient) setAccount(acct *Account) {
 	d.acct = acct
 }
 
-func (d *DigitalOceanClient) newClient() (client *oauth.Oauth2Client) {
-	client = digitalOceanConf.NewClient(d.acct.UserId, d.acct.Oauth2AccTokn,
-		d.acct.Oauth2RefTokn, d.acct.Oauth2Exp)
-	return
-}
-
 func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
-	client := d.newClient()
-	oauth2Refresh(db, d.acct, client)
+	client, err := oauth2Client(db, digitalOceanConf, d.acct)
+	if err != nil {
+		return
+	}
 
 	data := struct {
 		Account struct {

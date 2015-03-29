@@ -100,15 +100,11 @@ func (g *GmailClient) setAccount(acct *Account) {
 	g.acct = acct
 }
 
-func (g *GmailClient) newClient() (client *oauth.Oauth2Client) {
-	client = gmailConf.NewClient(g.acct.UserId, g.acct.Oauth2AccTokn,
-		g.acct.Oauth2RefTokn, g.acct.Oauth2Exp)
-	return
-}
-
 func (g *GmailClient) Update(db *database.Database) (err error) {
-	client := g.newClient()
-	oauth2Refresh(db, g.acct, client)
+	client, err := oauth2Client(db, gmailConf, g.acct)
+	if err != nil {
+		return
+	}
 
 	data := struct {
 		EmailAddress string `json:"emailAddress"`
@@ -238,8 +234,10 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 }
 
 func (g *GmailClient) Sync(db *database.Database) (err error) {
-	client := g.newClient()
-	oauth2Refresh(db, g.acct, client)
+	client, err := oauth2Client(db, gmailConf, g.acct)
+	if err != nil {
+		return
+	}
 
 	lastNotf, err := notification.GetLastNotification(db,
 		g.acct.UserId, g.acct.Id)
