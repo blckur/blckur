@@ -52,6 +52,10 @@ func (s *Store) addDir(dir string) (err error) {
 		}
 
 		ext := filepath.Ext(name)
+		if len(ext) == 0 {
+			continue
+		}
+
 		baseName := name[:len(name) - len(ext)]
 
 		data, e := ioutil.ReadFile(fullPath)
