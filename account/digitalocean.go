@@ -5,7 +5,6 @@ import (
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
-	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -56,36 +55,9 @@ func (d *DigitalOceanClient) newClient() (client *oauth.Oauth2Client) {
 	return
 }
 
-func (d *DigitalOceanClient) refresh(db *database.Database,
-		client *oauth.Oauth2Client) (err error) {
-	refreshed, err := client.Check()
-	if err != nil {
-		return
-	}
-
-	if refreshed {
-		coll := db.Accounts()
-
-		d.acct.Oauth2AccTokn = client.AccessToken
-		d.acct.Oauth2RefTokn = client.RefreshToken
-		d.acct.Oauth2Exp = client.Expiry
-
-		fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn",
-			"oauth2_exp")
-
-		err = coll.CommitFields(d.acct.Id, d, fields)
-		if err != nil {
-			err = database.ParseError(err)
-			return
-		}
-	}
-
-	return
-}
-
 func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
 	client := d.newClient()
-	d.refresh(db, client)
+	oauth2Refresh(db, d.acct, client)
 
 	data := struct {
 		Account struct {
