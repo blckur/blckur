@@ -102,7 +102,9 @@ func (g *GmailClient) setAccount(acct *account.Account) {
 }
 
 func (g *GmailClient) Update(db *database.Database) (err error) {
-	client, err := Oauth2Client(db, gmailConf, g.acct)
+	client := gmailConf.NewClient(g.acct)
+
+	err = client.Refresh(db)
 	if err != nil {
 		return
 	}
@@ -235,7 +237,9 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 }
 
 func (g *GmailClient) Sync(db *database.Database) (err error) {
-	client, err := Oauth2Client(db, gmailConf, g.acct)
+	client := gmailConf.NewClient(g.acct)
+
+	err = client.Refresh(db)
 	if err != nil {
 		return
 	}
@@ -338,15 +342,7 @@ func (g *GmailAuth) Authorize(db *database.Database, state string,
 		return
 	}
 
-	acct = &account.Account{
-		UserId: auth.UserId,
-		Type: "gmail",
-		Oauth2AccTokn: auth.AccessToken,
-		Oauth2RefTokn: auth.RefreshToken,
-		Oauth2Exp: auth.Expiry,
-	}
-
-	client, err := acct.GetClient()
+	client, err := auth.Account.GetClient()
 	if err != nil {
 		return
 	}
@@ -356,7 +352,7 @@ func (g *GmailAuth) Authorize(db *database.Database, state string,
 		return
 	}
 
-	err = coll.Insert(acct)
+	err = coll.Insert(auth.Account)
 	if err != nil {
 		err = database.ParseError(err)
 		return

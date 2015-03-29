@@ -51,7 +51,8 @@ func (d *DigitalOceanClient) setAccount(acct *account.Account) {
 }
 
 func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
-	client, err := Oauth2Client(db, digitalOceanConf, d.acct)
+	client := digitalOceanConf.NewClient(d.acct)
+	err = client.Refresh(db)
 	if err != nil {
 		return
 	}
@@ -99,15 +100,7 @@ func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
 		return
 	}
 
-	acct = &account.Account{
-		UserId: auth.UserId,
-		Type: "digitalocean",
-		Oauth2AccTokn: auth.AccessToken,
-		Oauth2RefTokn: auth.RefreshToken,
-		Oauth2Exp: auth.Expiry,
-	}
-
-	client, err := acct.GetClient()
+	client, err := auth.Account.GetClient()
 	if err != nil {
 		return
 	}
@@ -117,7 +110,7 @@ func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
 		return
 	}
 
-	err = coll.Insert(acct)
+	err = coll.Insert(auth.Account)
 	if err != nil {
 		err = database.ParseError(err)
 		return
