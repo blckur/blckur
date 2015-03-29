@@ -6,6 +6,19 @@ import (
 	"github.com/dropbox/godropbox/container/set"
 )
 
+func oauth2Client(db *database.Database, conf *oauth.Oauth2, acct *Account) (
+		client *oauth.Oauth2Client, err error) {
+	client = conf.NewClient(acct.UserId, acct.Oauth2AccTokn,
+		acct.Oauth2RefTokn, acct.Oauth2Exp)
+
+	err = oauth2Refresh(db, acct, client)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func oauth2Refresh(db *database.Database, acct *Account,
 		client *oauth.Oauth2Client) (err error) {
 	refreshed, err := client.Check()
