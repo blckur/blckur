@@ -118,6 +118,7 @@ type Oauth2Client struct {
 	oauth2.Token
 	client *http.Client
 	conf *Oauth2
+	UserId bson.ObjectId
 }
 
 func (c *Oauth2Client) Refresh(db *database.Database) (err error) {
