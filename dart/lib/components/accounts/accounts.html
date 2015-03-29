@@ -12,7 +12,8 @@
   </div>
   <div ng-if="modeswitch.state[2]" class="add-account" ng-animate>
     <core-item ng-repeat="accountType in accountTypes"
-      class="account-type" layout horizontal>
+        class="account-type" ng-class="typeClasses[accountType.type]"
+        layout horizontal>
       <paper-button flex delay-click="onClick(accountType.type)" noink>
         <x-brand-logo icon="{{accountType.type}}" horizontal layout
           center></x-brand-logo>

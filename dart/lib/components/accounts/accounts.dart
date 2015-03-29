@@ -19,13 +19,15 @@ const ADD_ACCOUNT = 2;
   cssUrl: 'packages/blckur/components/accounts/accounts.css'
 )
 class AccountsComp {
-  collections.Accounts accounts;
   models.AccountAdd model;
+  collections.Accounts accounts;
   collections.AccountTypes accountTypes;
   utils.Loading loading;
   utils.ModeSwitch modeswitch;
+  Map<String, String> typeClasses;
 
   AccountsComp() {
+    this.model = new models.AccountAdd();
     this.accounts = new collections.Accounts();
     this.accountTypes = new collections.AccountTypes();
     this.loading = new utils.Loading();
@@ -57,6 +59,7 @@ class AccountsComp {
       return;
     }
     this.modeswitch.mode = NONE;
+    this.typeClasses = {};
 
     this.accountTypes.fetch().catchError((err) {
       logger.severe('Failed to load account types', err);
@@ -77,6 +80,10 @@ class AccountsComp {
       return;
     }
 
+    this.typeClasses = {
+      type: 'active',
+    };
+
     this.model.type = type;
     this.model.create().then((_) {
       if (this.modeswitch.mode != ADD_ACCOUNT) {
@@ -91,7 +98,6 @@ class AccountsComp {
       new alert.Alert('Unable to add account, try again later.', () {
         this.onClick(type);
       });
-    }).whenComplete(() {
       this.loading.clear();
     });
   }

@@ -35,6 +35,10 @@ core-item {
   color: #595959;
 }
 
+.account-type.active {
+  background-color: #b9bec3;
+}
+
 paper-fab {
   pointer-events: none;
 }
