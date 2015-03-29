@@ -86,9 +86,17 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 		return
 	}
 
-	client = &Oauth2Client{
-		Token: *accessTokn,
+	acct := &account.Account{
 		UserId: tokn.UserId,
+		Type: o.Type,
+		Oauth2AccTokn: accessTokn.AccessToken,
+		Oauth2RefTokn: accessTokn.RefreshToken,
+		Oauth2Exp: accessTokn.Expiry,
+	}
+
+	client = &Oauth2Client{
+		Account: acct,
+		Token: *accessTokn,
 		client: o.conf.Client(oauth2.NoContext, accessTokn),
 		conf: o,
 	}
@@ -96,7 +104,7 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	return
 }
 
-func (o *Oauth2) NewClient(acct account.Account) (client *Oauth2Client) {
+func (o *Oauth2) NewClient(acct *account.Account) (client *Oauth2Client) {
 	tokn := &oauth2.Token{
 		AccessToken: acct.Oauth2AccTokn,
 		TokenType: "Bearer",
@@ -105,7 +113,7 @@ func (o *Oauth2) NewClient(acct account.Account) (client *Oauth2Client) {
 	}
 
 	client = &Oauth2Client{
-		acct: acct,
+		Account: acct,
 		client: o.conf.Client(oauth2.NoContext, tokn),
 		conf: o,
 	}
@@ -114,11 +122,10 @@ func (o *Oauth2) NewClient(acct account.Account) (client *Oauth2Client) {
 }
 
 type Oauth2Client struct {
-	acct *account.Account
 	oauth2.Token
 	client *http.Client
 	conf *Oauth2
-	UserId bson.ObjectId
+	Account *account.Account
 }
 
 func (c *Oauth2Client) Refresh(db *database.Database) (err error) {
@@ -133,13 +140,13 @@ func (c *Oauth2Client) Refresh(db *database.Database) (err error) {
 
 	coll := db.Accounts()
 
-	c.acct.Oauth2AccTokn = c.AccessToken
-	c.acct.Oauth2RefTokn = c.RefreshToken
-	c.acct.Oauth2Exp = c.Expiry
+	c.Account.Oauth2AccTokn = c.AccessToken
+	c.Account.Oauth2RefTokn = c.RefreshToken
+	c.Account.Oauth2Exp = c.Expiry
 
 	fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn", "oauth2_exp")
 
-	err = coll.CommitFields(c.acct.Id, c.acct, fields)
+	err = coll.CommitFields(c.Account.Id, c.Account, fields)
 	if err != nil {
 		err = database.ParseError(err)
 		return
