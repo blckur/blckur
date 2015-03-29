@@ -105,7 +105,6 @@ func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
 	}
 
 	client = &Oauth2Client{
-		Token: *tokn,
 		UserId: userId,
 		client: o.conf.Client(oauth2.NoContext, tokn),
 		conf: o,
