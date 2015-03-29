@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"encoding/json"
+	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/utils"
@@ -9,7 +10,6 @@ import (
 	"golang.org/x/oauth2"
 	"labix.org/v2/mgo/bson"
 	"io/ioutil"
-	"time"
 	"net/http"
 )
 
@@ -95,17 +95,16 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	return
 }
 
-func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
-		refreshToken string, expiry time.Time) (client *Oauth2Client) {
+func (o *Oauth2) NewClient(acct account.Account) (client *Oauth2Client) {
 	tokn := &oauth2.Token{
-		AccessToken: accessToken,
+		AccessToken: acct.Oauth2AccTokn,
 		TokenType: "Bearer",
-		RefreshToken: refreshToken,
-		Expiry: expiry,
+		RefreshToken: acct.Oauth2RefTokn,
+		Expiry: acct.Oauth2Exp,
 	}
 
 	client = &Oauth2Client{
-		UserId: userId,
+		acct: acct,
 		client: o.conf.Client(oauth2.NoContext, tokn),
 		conf: o,
 	}
@@ -114,8 +113,8 @@ func (o *Oauth2) NewClient(userId bson.ObjectId, accessToken string,
 }
 
 type Oauth2Client struct {
+	acct *account.Account
 	oauth2.Token
-	UserId bson.ObjectId
 	client *http.Client
 	conf *Oauth2
 }
