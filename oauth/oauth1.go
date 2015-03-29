@@ -40,7 +40,7 @@ func (o *Oauth1) Request(db *database.Database, userId bson.ObjectId) (
 	reqTokn, url, err := o.consumer.GetRequestTokenAndUrl(o.CallbackUrl)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown oauth1 api error"),
+			errors.Wrap(err, "oauth.oauth1: Unknown api error"),
 		}
 		return
 	}
@@ -80,7 +80,7 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	accessTokn, err := o.consumer.AuthorizeToken(reqTokn, code)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown oauth1 api error"),
+			errors.Wrap(err, "oauth.oauth1: Unknown api error"),
 		}
 		return
 	}
@@ -124,7 +124,7 @@ func (c *Oauth1Client) GetJson(url string, userParams map[string]string,
 	httpResp, err := c.conf.consumer.Get(url, userParams, tokn)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown oauth1 api error"),
+			errors.Wrap(err, "oauth.oauth1: Unknown api error"),
 		}
 		return
 	}
@@ -133,7 +133,7 @@ func (c *Oauth1Client) GetJson(url string, userParams map[string]string,
 	body, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown parse error"),
+			errors.Wrap(err, "oauth.oauth1: Unknown parse error"),
 		}
 		return
 	}

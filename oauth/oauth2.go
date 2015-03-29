@@ -47,7 +47,7 @@ func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
 		oauth2.ApprovalForce)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown oauth2 api error"),
+			errors.Wrap(err, "oauth.oauth2: Unknown api error"),
 		}
 		return
 	}
@@ -81,7 +81,7 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	accessTokn, err := o.conf.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth2: Unknown oauth2 error"),
+			errors.Wrap(err, "oauth.oauth2: Unknown api error"),
 		}
 		return
 	}
@@ -159,7 +159,7 @@ func (c *Oauth2Client) Check() (refreshed bool, err error) {
 	tokn, err := c.client.Transport.(*oauth2.Transport).Source.Token()
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown oauth2 token error"),
+			errors.Wrap(err, "oauth.oauth2: Unknown token error"),
 		}
 		return
 	}
@@ -178,7 +178,7 @@ func (c *Oauth2Client) GetJson(url string, resp interface{}) (err error) {
 	httpResp, err := c.client.Get(url)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown oauth2 api error"),
+			errors.Wrap(err, "oauth.oauth2: Unknown api error"),
 		}
 		return
 	}
@@ -187,7 +187,7 @@ func (c *Oauth2Client) GetJson(url string, resp interface{}) (err error) {
 	body, err := ioutil.ReadAll(httpResp.Body)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown parse error"),
+			errors.Wrap(err, "oauth.oauth2: Unknown parse error"),
 		}
 		return
 	}
@@ -195,7 +195,7 @@ func (c *Oauth2Client) GetJson(url string, resp interface{}) (err error) {
 	err = json.Unmarshal(body, resp)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown parse error"),
+			errors.Wrap(err, "oauth.oauth2: Unknown parse error"),
 		}
 		return
 	}
