@@ -107,36 +107,9 @@ func (g *GmailClient) newClient() (client *oauth.Oauth2Client) {
 	return
 }
 
-func (g *GmailClient) refresh(db *database.Database,
-		client *oauth.Oauth2Client) (err error) {
-	refreshed, err := client.Check()
-	if err != nil {
-		return
-	}
-
-	if refreshed {
-		coll := db.Accounts()
-
-		g.acct.Oauth2AccTokn = client.AccessToken
-		g.acct.Oauth2RefTokn = client.RefreshToken
-		g.acct.Oauth2Exp = client.Expiry
-
-		fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn",
-			"oauth2_exp")
-
-		err = coll.CommitFields(g.acct.Id, g, fields)
-		if err != nil {
-			err = database.ParseError(err)
-			return
-		}
-	}
-
-	return
-}
-
 func (g *GmailClient) Update(db *database.Database) (err error) {
 	client := g.newClient()
-	g.refresh(db, client)
+	oauth2Refresh(db, g.acct, client)
 
 	data := struct {
 		EmailAddress string `json:"emailAddress"`
@@ -267,7 +240,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 
 func (g *GmailClient) Sync(db *database.Database) (err error) {
 	client := g.newClient()
-	g.refresh(db, client)
+	oauth2Refresh(db, g.acct, client)
 
 	lastNotf, err := notification.GetLastNotification(db,
 		g.acct.UserId, g.acct.Id)
