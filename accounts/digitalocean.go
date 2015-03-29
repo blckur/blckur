@@ -46,12 +46,13 @@ type DigitalOceanClient struct {
 	acct *account.Account
 }
 
-func (d *DigitalOceanClient) setAccount(acct *account.Account) {
+func (d *DigitalOceanClient) SetAccount(acct *account.Account) {
 	d.acct = acct
 }
 
 func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
 	client := digitalOceanConf.NewClient(d.acct)
+
 	err = client.Refresh(db)
 	if err != nil {
 		return

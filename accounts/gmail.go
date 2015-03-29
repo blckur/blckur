@@ -97,7 +97,7 @@ type GmailClient struct {
 	acct *account.Account
 }
 
-func (g *GmailClient) setAccount(acct *account.Account) {
+func (g *GmailClient) SetAccount(acct *account.Account) {
 	g.acct = acct
 }
 

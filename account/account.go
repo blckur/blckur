@@ -14,7 +14,7 @@ import (
 type Client interface {
 	Update(*database.Database) error
 	Sync(*database.Database) error
-	setAccount(acct *Account)
+	SetAccount(acct *Account)
 }
 
 type Auth interface {
@@ -61,7 +61,7 @@ func (a *Account) GetClient() (client Client, err error) {
 	val := reflect.New(typ).Elem()
 
 	client = val.Addr().Interface().(Client)
-	client.setAccount(a)
+	client.SetAccount(a)
 
 	return
 }

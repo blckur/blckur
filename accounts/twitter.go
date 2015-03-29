@@ -59,7 +59,7 @@ func init() {
 	})
 }
 
-func (t *TwitterClient) setAccount(acct *account.Account) {
+func (t *TwitterClient) SetAccount(acct *account.Account) {
 	t.acct = acct
 }
 
