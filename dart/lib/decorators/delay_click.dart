@@ -12,9 +12,9 @@ class DelayClickDec {
   Function callback;
 
   DelayClickDec(dom.Element element) {
-    element.onClick.listen((_) {
+    element.onClick.listen((evt) {
       new async.Timer(const Duration(milliseconds: 185), () {
-        this.callback();
+        this.callback({r'$event': evt});
       });
     });
   }
