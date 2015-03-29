@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"encoding/json"
+	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/dropbox/godropbox/errors"
@@ -85,8 +86,15 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 		return
 	}
 
-	client = &Oauth1Client{
+	acct := &account.Account{
 		UserId: tokn.UserId,
+		Type: o.Type,
+		OauthTokn: accessTokn.Token,
+		OauthSec: accessTokn.Secret,
+	}
+
+	client = &Oauth1Client{
+		Account: acct,
 		Token: accessTokn.Token,
 		Secret: accessTokn.Secret,
 		conf: o,
@@ -95,12 +103,11 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	return
 }
 
-func (o *Oauth1) NewClient(userId bson.ObjectId, token string,
-		secret string) (client *Oauth1Client) {
+func (o *Oauth1) NewClient(acct *account.Account) (client *Oauth1Client) {
 	client = &Oauth1Client{
-		UserId: userId,
-		Token: token,
-		Secret: secret,
+		Account: acct,
+		Token: acct.OauthTokn,
+		Secret: acct.OauthSec,
 		conf: o,
 	}
 
@@ -108,7 +115,7 @@ func (o *Oauth1) NewClient(userId bson.ObjectId, token string,
 }
 
 type Oauth1Client struct {
-	UserId bson.ObjectId
+	Account *account.Account
 	Token string
 	Secret string
 	conf *Oauth1
@@ -141,7 +148,7 @@ func (c *Oauth1Client) GetJson(url string, userParams map[string]string,
 	err = json.Unmarshal(body, resp)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "oauth: Unknown parse error"),
+			errors.Wrap(err, "oauth.oauth1: Unknown parse error"),
 		}
 		return
 	}
