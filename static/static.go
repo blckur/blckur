@@ -64,6 +64,11 @@ func (s *Store) addDir(dir string) (err error) {
 			return
 		}
 
+		typ, ok := mimeTypes[ext]
+		if !ok {
+			continue
+		}
+
 		file := &File{
 			Type: mimeTypes[ext],
 			Data: data,
