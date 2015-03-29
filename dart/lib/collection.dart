@@ -4,7 +4,6 @@ import 'package:blckur/exceptions.dart';
 import 'package:blckur/remote.dart' as remote;
 import 'package:blckur/model.dart' as model;
 
-import 'package:angular/angular.dart' as ng;
 import 'dart:collection' as collection;
 
 abstract class Collection extends remote.Remote with collection.IterableMixin {
