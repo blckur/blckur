@@ -51,7 +51,7 @@ func (d *DigitalOceanClient) setAccount(acct *account.Account) {
 }
 
 func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
-	client, err := account.Oauth2Client(db, digitalOceanConf, d.acct)
+	client, err := Oauth2Client(db, digitalOceanConf, d.acct)
 	if err != nil {
 		return
 	}
