@@ -6,7 +6,6 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
-	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 	"encoding/base64"
 	"fmt"
