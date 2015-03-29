@@ -81,7 +81,7 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	accessTokn, err := o.conf.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "account: Unknown google api error"),
+			errors.Wrap(err, "oauth2: Unknown oauth2 error"),
 		}
 		return
 	}
