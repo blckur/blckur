@@ -6,7 +6,7 @@ import (
 	"github.com/dropbox/godropbox/container/set"
 )
 
-func oauth2Client(db *database.Database, conf *oauth.Oauth2, acct *Account) (
+func Oauth2Client(db *database.Database, conf *oauth.Oauth2, acct *Account) (
 		client *oauth.Oauth2Client, err error) {
 	client = conf.NewClient(acct.UserId, acct.Oauth2AccTokn,
 		acct.Oauth2RefTokn, acct.Oauth2Exp)

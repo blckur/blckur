@@ -5,11 +5,6 @@ import (
 	"sort"
 )
 
-const (
-	OAUTH1 = 1
-	OAUTH2 = 2
-)
-
 var (
 	authTypes = map[string]int{}
 	authRegistry = map[string]reflect.Type{}
@@ -27,7 +22,7 @@ func sortAccountTypes() {
 	sort.Sort(srt)
 }
 
-func register(name string, label string, typ int, auth interface{},
+func Register(name string, label string, typ int, auth interface{},
 		client interface{}, types []*FilterType, handler func()) {
 	authTypes[name] = typ
 	authRegistry[name] = reflect.TypeOf(auth)
