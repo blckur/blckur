@@ -29,39 +29,24 @@
 
 .filters.ng-enter,
 .add-filter.ng-enter {
-  -webkit-transform: translate(0, -100%);
-  -moz-transform: translate(0, -100%);
-  -ms-transform: translate(0, -100%);
-  -o-transform: translate(0, -100%);
-  transform: translate(0, -100%);
+  @include transform(translate(0, -100%));
   @include transition(transform 0.3s);
 }
 
 .filters.ng-enter-active,
 .add-filter.ng-enter-active {
-  -webkit-transform: translate(0, 0);
-  -moz-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  -o-transform: translate(0, 0);
-  transform: translate(0, 0);
+  @include transform(translate(0, 0));
 }
 
 .filters.ng-leave,
 .add-filter.ng-leave {
-  -webkit-transform: translate(0, 0);
-  -moz-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  -o-transform: translate(0, 0);
-  transform: translate(0, 0);
+  @include transform(translate(0, 0));
   @include transition(transform 0.3s);
 }
 
 .filters.ng-leave-active,
 .add-filter.ng-leave-active {
-  -webkit-transform: translate(0, -100%);
-  -moz-transform: translate(0, -100%);
-  -ms-transform: translate(0, -100%);
-  -o-transform: translate(0, -100%);
+  @include transform(translate(0, -100%));
   transform: translate(0, -100%);
 }
 

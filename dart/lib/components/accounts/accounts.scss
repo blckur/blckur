@@ -11,40 +11,24 @@
 
 .accounts.ng-enter,
 .add-account.ng-enter {
-  -webkit-transform: translate(0, -100%);
-  -moz-transform: translate(0, -100%);
-  -ms-transform: translate(0, -100%);
-  -o-transform: translate(0, -100%);
-  transform: translate(0, -100%);
+  @include transform(translate(0, -100%));
   @include transition(transform 0.3s);
 }
 
 .accounts.ng-enter-active,
 .add-account.ng-enter-active {
-  -webkit-transform: translate(0, 0);
-  -moz-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  -o-transform: translate(0, 0);
-  transform: translate(0, 0);
+  @include transform(translate(0, 0));
 }
 
 .accounts.ng-leave,
 .add-account.ng-leave {
-  -webkit-transform: translate(0, 0);
-  -moz-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  -o-transform: translate(0, 0);
-  transform: translate(0, 0);
+  @include transform(translate(0, 0));
   @include transition(transform 0.3s);
 }
 
 .accounts.ng-leave-active,
 .add-account.ng-leave-active {
-  -webkit-transform: translate(0, -100%);
-  -moz-transform: translate(0, -100%);
-  -ms-transform: translate(0, -100%);
-  -o-transform: translate(0, -100%);
-  transform: translate(0, -100%);
+  @include transform(translate(0, -100%));
 }
 
 core-item {
