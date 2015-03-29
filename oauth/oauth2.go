@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/utils"
 	"github.com/dropbox/godropbox/errors"
+	"github.com/dropbox/godropbox/container/set"
 	"golang.org/x/oauth2"
 	"labix.org/v2/mgo/bson"
 	"io/ioutil"
@@ -117,6 +118,33 @@ type Oauth2Client struct {
 	oauth2.Token
 	client *http.Client
 	conf *Oauth2
+}
+
+func (c *Oauth2Client) Refresh(db *database.Database) (err error) {
+	refreshed, err := c.Check()
+	if err != nil {
+		return
+	}
+
+	if !refreshed {
+		return
+	}
+
+	coll := db.Accounts()
+
+	c.acct.Oauth2AccTokn = c.AccessToken
+	c.acct.Oauth2RefTokn = c.RefreshToken
+	c.acct.Oauth2Exp = c.Expiry
+
+	fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn", "oauth2_exp")
+
+	err = coll.CommitFields(c.acct.Id, c.acct, fields)
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
 }
 
 func (c *Oauth2Client) Check() (refreshed bool, err error) {
