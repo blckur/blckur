@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/blckur/blckur/account"
+	"github.com/blckur/blckur/accounts"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/settings"
@@ -25,7 +26,7 @@ func callbackGet(c *gin.Context) {
 	var y string
 	var denied bool
 
-	if authType == account.OAUTH1 {
+	if authType == accounts.OAUTH1 {
 		x = params.GetByName("oauth_token")
 		y = params.GetByName("oauth_verifier")
 		denied = params.GetByName("denied") != ""
@@ -46,12 +47,12 @@ func callbackGet(c *gin.Context) {
 		}
 	}
 
-	if x == "" || y == "" {
-		c.AbortWithStatus(400)
-		return
-	}
-
 	if !denied {
+		if x == "" || y == "" {
+			c.AbortWithStatus(400)
+			return
+		}
+
 		_, err = auth.Authorize(db, x, y)
 		if err != nil {
 			panic(err)
