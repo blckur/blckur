@@ -63,14 +63,8 @@ func (t *TwitterClient) SetAccount(acct *account.Account) {
 	t.acct = acct
 }
 
-func (t *TwitterClient) newClient() (client *oauth.Oauth1Client) {
-	client = twitterConf.NewClient(t.acct.UserId, t.acct.OauthTokn,
-		t.acct.OauthSec)
-	return
-}
-
 func (t *TwitterClient) Update(db *database.Database) (err error) {
-	client := t.newClient()
+	client := twitterConf.NewClient(t.acct)
 
 	data := struct {
 		IdStr string `json:"id_str"`
@@ -282,14 +276,7 @@ func (t *TwitterAuth) Authorize(db *database.Database, token string,
 		return
 	}
 
-	acct = &account.Account{
-		UserId: auth.UserId,
-		Type: "twitter",
-		OauthTokn: auth.Token,
-		OauthSec: auth.Secret,
-	}
-
-	client, err := acct.GetClient()
+	client, err := auth.Account.GetClient()
 	if err != nil {
 		return
 	}
@@ -299,7 +286,7 @@ func (t *TwitterAuth) Authorize(db *database.Database, token string,
 		return
 	}
 
-	err = coll.Insert(acct)
+	err = coll.Insert(auth.Account)
 	if err != nil {
 		err = database.ParseError(err)
 		return
