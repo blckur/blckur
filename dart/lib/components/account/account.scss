@@ -28,6 +28,21 @@
   padding-top: 9px;
 }
 
+.item.new {
+  background-color: #b3e5fc;
+}
+
+.new-label {
+  display: none;
+  margin-top: 9px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.item.new .new-label {
+  display: inline;
+}
+
 .item.settings-active .account core-icon-button {
   display: none;
 }
