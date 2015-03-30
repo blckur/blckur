@@ -1,3 +1,4 @@
+// Versions static files with hash, replaces references and stores in memory
 package static
 
 import (
