@@ -59,6 +59,7 @@ class BrandLogoComp extends all_aware.AllAware {
     if (this.imgElem != null) {
       this.imgElem.style.maxWidth = this.size == null ? '80px' : this.size;
       this.imgElem.style.maxHeight = this.size == null ? '58px' : this.size;
+      this.imgElem.style.width = '100%';
     }
   }
 
