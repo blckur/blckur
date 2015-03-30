@@ -50,11 +50,6 @@ func (s *staticHandler) Static(c *gin.Context) {
 			c.AbortWithStatus(404)
 			return
 		}
-//		} else {
-//			logrus.WithFields(logrus.Fields{
-//				"path": path,
-//			}).Warning("handlers: Non hash static lookup")
-//		}
 		catch = false
 	}
 
