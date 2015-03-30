@@ -32,6 +32,11 @@ type File struct {
 	Data []byte
 }
 
+type FileName struct {
+	Name string
+	HashName string
+}
+
 type Store struct {
 	Files map[string]*File
 	HashFiles map[string]*File
