@@ -5,6 +5,15 @@ import 'package:blckur/all_aware.dart' as all_aware;
 import 'package:angular/angular.dart' show Component, NgAttr;
 import 'dart:html' as dom;
 
+// Used for static hash versioning search and replace
+var icons = {
+  'digitalocean': '/s/img/digitalocean.png',
+  'github': '/s/img/github.png',
+  'gmail': '/s/img/gmail.png',
+  'hipchat': '/s/img/hipchat.png',
+  'twitter': '/s/img/twitter.png',
+};
+
 @Component(
   selector: 'x-brand-logo',
   template: '<img>'
@@ -37,7 +46,7 @@ class BrandLogoComp extends all_aware.AllAware {
   }
 
   String get iconUrl {
-    return '/s/img/${this.icon}.png';
+    return icons[this.icon];
   }
 
   void _updateIcon() {
