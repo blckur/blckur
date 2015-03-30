@@ -7,6 +7,7 @@ import (
 	"crypto/md5"
 	"encoding/base32"
 	"strings"
+	"regexp"
 )
 
 var (
@@ -32,8 +33,10 @@ type File struct {
 }
 
 type Store struct {
-	files map[string]*File
-	lookup map[string]string
+	Files map[string]*File
+	HashFiles map[string]*File
+	dirNames map[string][]*FileName
+	lookup map[string]*FileName
 }
 
 func (s *Store) addDir(dir string) (err error) {
@@ -56,6 +59,11 @@ func (s *Store) addDir(dir string) (err error) {
 			continue
 		}
 
+		typ, ok := mimeTypes[ext]
+		if !ok {
+			continue
+		}
+
 		baseName := name[:len(name) - len(ext)]
 
 		data, e := ioutil.ReadFile(fullPath)
@@ -64,14 +72,15 @@ func (s *Store) addDir(dir string) (err error) {
 			return
 		}
 
-		typ, ok := mimeTypes[ext]
-		if !ok {
-			continue
+		file := &File{
+			Type: typ,
+			Data: data,
 		}
 
-		file := &File{
-			Type: mimeTypes[ext],
-			Data: data,
+		s.Files[fullPath] = file
+
+		if name == "index.html" {
+			continue
 		}
 
 		hash := md5.Sum(data)
@@ -83,23 +92,52 @@ func (s *Store) addDir(dir string) (err error) {
 
 		hashName := baseName + "." + hashStr + ext
 
-		s.files[hashName] = file
-		s.lookup[name] = hashName
+		s.HashFiles[path.Join(dir, hashName)] = file
+
+		s.lookup[fullPath] = &FileName{
+			Name: name,
+			HashName: hashName,
+		}
 	}
 
 	return
 }
 
+func (s *Store) parseFiles() {
+	srcReg := regexp.MustCompile(`(src=)('|")(.*?)('|")`)
+
+	for path, file := range s.Files {
+		path = filepath.Dir(path)
+		dataStr := string(file.Data)
+
+		dataStr = srcReg.ReplaceAllStringFunc(dataStr, func(
+				match string) string {
+			matchPath := filepath.Join(path, match[5:len(match) - 1])
+
+			if name, ok := s.lookup[matchPath]; ok {
+				match = strings.Replace(match, name.Name, name.HashName, 1)
+			}
+
+			return match
+		})
+
+		file.Data = []byte(dataStr)
+	}
+}
+
 func NewStore(root string) (store *Store, err error) {
 	store = &Store{
-		files: map[string]*File{},
-		lookup: map[string]string{},
+		Files: map[string]*File{},
+		HashFiles: map[string]*File{},
+		lookup: map[string]*FileName{},
 	}
 
 	err = store.addDir(root)
 	if err != nil {
 		return
 	}
+
+	store.parseFiles()
 
 	return
 }
