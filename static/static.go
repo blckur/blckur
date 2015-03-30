@@ -27,6 +27,7 @@ var (
 		".ttf": "application/font-sfnt",
 		".woff": "application/font-woff",
 		".eot": "application/vnd.ms-fontobject",
+		".map": "application/json",
 	}
 	srcReg = regexp.MustCompile(`(src=)('|")(.*?)('|")`)
 	pathReg = regexp.MustCompile(`('|")(packages/|/s/img/)(.*?)('|")`)
