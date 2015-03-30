@@ -1,4 +1,4 @@
-// Versions static files with hash, replaces references and stores in memory
+// Versions static files with hash, replaces references and stores in memory.
 package static
 
 import (

@@ -1,4 +1,4 @@
-// Account types
+// Account types.
 package accounts
 
 const (
