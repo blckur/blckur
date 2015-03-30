@@ -27,7 +27,7 @@ var (
 		".eot": "application/vnd.ms-fontobject",
 	}
 	srcReg = regexp.MustCompile(`(src=)('|")(.*?)('|")`)
-	pathReg = regexp.MustCompile(`('|")(packages/)(.*?)('|")`)
+	pathReg = regexp.MustCompile(`('|")(packages/|/s/img/)(.*?)('|")`)
 )
 
 type File struct {
@@ -43,6 +43,7 @@ type FileName struct {
 type Store struct {
 	Files map[string]*File
 	HashFiles map[string]*File
+	root string
 	dirNames map[string][]*FileName
 	lookup map[string]*FileName
 }
@@ -118,7 +119,12 @@ func (s *Store) parseFiles() {
 
 		dataStr = pathReg.ReplaceAllStringFunc(dataStr, func(
 		match string) string {
-			matchPath := filepath.Join(path, match[1:len(match) - 1])
+			var matchPath string
+			if match[1:4] == "/s/" {
+				matchPath = filepath.Join(s.root, match[4:len(match) - 1])
+			} else {
+				matchPath = filepath.Join(path, match[1:len(match) - 1])
+			}
 
 			if name, ok := s.lookup[matchPath]; ok {
 				match = strings.Replace(match, name.Name, name.HashName, 1)
@@ -146,6 +152,7 @@ func NewStore(root string) (store *Store, err error) {
 	store = &Store{
 		Files: map[string]*File{},
 		HashFiles: map[string]*File{},
+		root: root,
 		lookup: map[string]*FileName{},
 	}
 
