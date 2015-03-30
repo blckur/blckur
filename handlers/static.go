@@ -35,6 +35,8 @@ func (s *staticHandler) Proxy(c *gin.Context) {
 }
 
 func (s *staticHandler) Static(c *gin.Context) {
+	catch := true
+
 	path := c.Params.ByName("path")
 	if path == "" || path == "/" {
 		path = "/index.html"
@@ -47,19 +49,22 @@ func (s *staticHandler) Static(c *gin.Context) {
 		if !ok {
 			c.AbortWithStatus(404)
 			return
-		} else {
-			// TODO Remove
-			logrus.WithFields(logrus.Fields{
-				"path": path,
-			}).Warning("handlers: Non hash static lookup")
 		}
+//		} else {
+//			logrus.WithFields(logrus.Fields{
+//				"path": path,
+//			}).Warning("handlers: Non hash static lookup")
+//		}
+		catch = false
+	}
 
+	if catch {
+		c.Writer.Header().Add("Cache-Control", "public, max-age=63113900")
+		c.Writer.Header().Add("Expires", s.expire)
+	} else {
 		c.Writer.Header().Add("Cache-Control",
 			"no-cache, no-store, must-revalidate")
 		c.Writer.Header().Add("Pragma", "no-cache")
-	} else {
-		c.Writer.Header().Add("Cache-Control", "public, max-age=63113900")
-		c.Writer.Header().Add("Expires", s.expire)
 	}
 
 	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
