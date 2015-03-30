@@ -30,7 +30,7 @@
 .filters.ng-enter,
 .add-filter.ng-enter {
   @include transform(translate(0, -100%));
-  @include transition(transform 0.3s);
+  @include transition(transform 0.25s);
 }
 
 .filters.ng-enter-active,
@@ -41,7 +41,7 @@
 .filters.ng-leave,
 .add-filter.ng-leave {
   @include transform(translate(0, 0));
-  @include transition(transform 0.3s);
+  @include transition(transform 0.25s);
 }
 
 .filters.ng-leave-active,
