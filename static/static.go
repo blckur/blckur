@@ -2,6 +2,8 @@
 package static
 
 import (
+	"github.com/blckur/blckur/errortypes"
+	"github.com/dropbox/godropbox/errors"
 	"io/ioutil"
 	"path"
 	"path/filepath"
@@ -158,6 +160,9 @@ func NewStore(root string) (store *Store, err error) {
 
 	err = store.addDir(root)
 	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "static: Init error"),
+		}
 		return
 	}
 
