@@ -87,6 +87,7 @@ func (s *Store) addDir(dir string) (err error) {
 		s.Files[fullPath] = file
 
 		if name == "index.html" {
+			s.HashFiles[fullPath] = file
 			continue
 		}
 
