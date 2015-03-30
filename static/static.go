@@ -25,6 +25,8 @@ var (
 		".woff": "application/font-woff",
 		".eot": "application/vnd.ms-fontobject",
 	}
+	srcReg = regexp.MustCompile(`(src=)('|")(.*?)('|")`)
+	pathReg = regexp.MustCompile(`('|")(packages/)(.*?)('|")`)
 )
 
 type File struct {
@@ -109,11 +111,20 @@ func (s *Store) addDir(dir string) (err error) {
 }
 
 func (s *Store) parseFiles() {
-	srcReg := regexp.MustCompile(`(src=)('|")(.*?)('|")`)
-
 	for path, file := range s.Files {
 		path = filepath.Dir(path)
 		dataStr := string(file.Data)
+
+		dataStr = pathReg.ReplaceAllStringFunc(dataStr, func(
+		match string) string {
+			matchPath := filepath.Join(path, match[1:len(match) - 1])
+
+			if name, ok := s.lookup[matchPath]; ok {
+				match = strings.Replace(match, name.Name, name.HashName, 1)
+			}
+
+			return match
+		})
 
 		dataStr = srcReg.ReplaceAllStringFunc(dataStr, func(
 				match string) string {
