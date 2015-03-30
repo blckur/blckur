@@ -11,6 +11,8 @@ import (
 	"encoding/base32"
 	"strings"
 	"regexp"
+	"compress/gzip"
+	"bytes"
 )
 
 var (
@@ -36,6 +38,7 @@ var (
 type File struct {
 	Type string
 	Data []byte
+	GzipData []byte
 }
 
 type fileName struct {
@@ -139,6 +142,12 @@ func (s *Store) parseFiles() {
 		})
 
 		file.Data = []byte(dataStr)
+
+		data := &bytes.Buffer{}
+		writer := gzip.NewWriter(data)
+		writer.Write(file.Data)
+		writer.Close()
+		file.GzipData = data.Bytes()
 	}
 }
 
