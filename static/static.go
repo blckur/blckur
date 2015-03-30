@@ -155,5 +155,7 @@ func NewStore(root string) (store *Store, err error) {
 
 	store.parseFiles()
 
+	store.lookup = nil
+
 	return
 }
