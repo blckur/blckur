@@ -10,7 +10,7 @@ func App() {
 	opts := getServiceOptions()
 
 	source := os.Getenv("SOURCE")
-	if source != "" {
+	if source == "" {
 		panic("Missing source")
 	}
 
