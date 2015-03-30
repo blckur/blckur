@@ -46,6 +46,8 @@ type fileName struct {
 	HashName string
 }
 
+// Currently all static references are found and replaced Files can be
+// used as a fallback if a reference is missed
 type Store struct {
 	Files map[string]*File
 	HashFiles map[string]*File
