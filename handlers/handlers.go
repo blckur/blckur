@@ -2,11 +2,20 @@
 package handlers
 
 import (
+	"github.com/blckur/blckur/static"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
+	"github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
+	"time"
+	"strings"
+)
+
+var (
+	staticStore *static.Store
+	staticExpire = time.Now().Add(17531 * time.Hour).UTC().Format(time.RFC1123)
 )
 
 // Limit size of request body
@@ -50,7 +59,7 @@ func Session(required bool) gin.HandlerFunc {
 	}
 }
 
-func Static(c *gin.Context) {
+func Proxy(c *gin.Context) {
 	resp, err := http.Get(
 		"http://localhost:8080" + c.Params.ByName("path"))
 	if err != nil {
@@ -70,8 +79,55 @@ func Static(c *gin.Context) {
 	c.Data(200, resp.Header.Get("Content-Type"), body)
 }
 
+func Static(c *gin.Context) {
+	path := c.Params.ByName("path")
+	if path == "" || path == "/" {
+		path = "/index.html"
+	}
+
+	path = "dart/build/web" + path
+
+
+	file, ok := staticStore.HashFiles[path]
+	if !ok {
+		file, ok = staticStore.Files[path]
+		if !ok {
+			c.AbortWithStatus(404)
+			return
+		} else {
+			// TODO Remove
+			logrus.WithFields(logrus.Fields{
+				"path": path,
+			}).Warning("handlers: Non hash static lookup")
+		}
+
+		c.Writer.Header().Add("Cache-Control",
+			"no-cache, no-store, must-revalidate")
+		c.Writer.Header().Add("Pragma", "no-cache")
+	} else {
+		c.Writer.Header().Add("Cache-Control", "public, max-age=63113900")
+		c.Writer.Header().Add("Expires", staticExpire)
+	}
+
+	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
+		c.Writer.Header().Add("Content-Encoding", "gzip")
+		c.Data(200, file.Type, file.GzipData)
+	} else {
+		c.Data(200, file.Type, file.Data)
+	}
+}
+
 // Register all endpoint handlers
 func Register(engine *gin.Engine) {
+	var err error
+	staticStore, err = static.NewStore("dart/build/web")
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("handlers: Static store error")
+		panic(err)
+	}
+
 	engine.Use(Limiter)
 	engine.Use(gin.Recovery())
 
@@ -103,5 +159,5 @@ func Register(engine *gin.Engine) {
 
 	authGroup.GET("/events", eventGet)
 
-	engine.GET("/s/*path", Static)
+	engine.GET("/s/*path", Proxy)
 }
