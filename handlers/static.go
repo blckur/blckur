@@ -55,7 +55,7 @@ func (s *staticHandler) Static(c *gin.Context) {
 		}
 
 		c.Writer.Header().Add("Cache-Control",
-		"no-cache, no-store, must-revalidate")
+			"no-cache, no-store, must-revalidate")
 		c.Writer.Header().Add("Pragma", "no-cache")
 	} else {
 		c.Writer.Header().Add("Cache-Control", "public, max-age=63113900")
