@@ -16,7 +16,6 @@ class Invalid extends Error {
 
 abstract class Model extends remote.Remote {
   dynamic id;
-  Function onLinkClear;
 
   Model() : super() {
     this.init();
