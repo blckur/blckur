@@ -25,7 +25,7 @@ class ModeSwitch {
 
     if (mode == 0) {
       this._modeWait = new async.Future.delayed(
-        const Duration(milliseconds: 300), () {
+        const Duration(milliseconds: 350), () {
           this._modeWait = null;
         });
 
@@ -33,9 +33,9 @@ class ModeSwitch {
     }
 
     this._modeWait = new async.Future.delayed(
-      const Duration(milliseconds: 600), () {});
+      const Duration(milliseconds: 700), () {});
 
-    new async.Timer(const Duration(milliseconds: 300), () {
+    new async.Timer(const Duration(milliseconds: 350), () {
       this.state[mode] = true;
       this.mode = mode;
       this._modeWait = null;

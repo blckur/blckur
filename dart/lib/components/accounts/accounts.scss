@@ -12,7 +12,7 @@
 .accounts.ng-enter,
 .add-account.ng-enter {
   @include transform(translate(0, -100%));
-  @include transition(transform 0.25s);
+  @include transition(transform .3s);
 }
 
 .accounts.ng-enter-active,
@@ -23,7 +23,7 @@
 .accounts.ng-leave,
 .add-account.ng-leave {
   @include transform(translate(0, 0));
-  @include transition(transform 0.25s);
+  @include transition(transform .3s);
 }
 
 .accounts.ng-leave-active,
