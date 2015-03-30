@@ -29,6 +29,20 @@ class AccountComp {
   @NgOneWay('model')
   models.Account model;
 
+  String get itemClass {
+    var cls = '';
+
+    if (this.settings == true) {
+      cls += 'settings-active ';
+    }
+
+    if (this.model.newAcct == true) {
+      cls += 'new';
+    }
+
+    return cls;
+  }
+
   void onSettings() {
     this.settings = this.settings != true;
   }

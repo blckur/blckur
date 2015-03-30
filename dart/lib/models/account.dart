@@ -7,6 +7,7 @@ class Account extends model.Model {
   String userId;
   String type;
   String identity;
+  bool newAcct;
   List<Map<String, String>> filters;
 
   model.Model newModel() {
@@ -20,6 +21,7 @@ class Account extends model.Model {
       'type': () => this.type,
       'identity': () => this.identity,
       'filters': () => this.filters,
+      'new': () => this.newAcct,
     };
   }
 
@@ -30,6 +32,7 @@ class Account extends model.Model {
       'type': (x) => this.type = x,
       'identity': (x) => this.identity = x,
       'filters': (x) => this.filters = x,
+      'new': (x) => this.newAcct = x,
     };
   }
 
