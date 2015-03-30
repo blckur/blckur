@@ -106,7 +106,7 @@ func (s *Store) addDir(dir string) (err error) {
 		hashStr = strings.Replace(hashStr, "/", "", -1)
 		hashStr = strings.Replace(hashStr, "+", "", -1)
 		hashStr = strings.Replace(hashStr, "=", "", -1)
-		hashStr = strings.ToLower(hashStr[:10])
+		hashStr = strings.ToLower(hashStr[:12])
 		hashName := baseName + "." + hashStr + ext
 
 		s.HashFiles[path.Join(dir, hashName)] = file
