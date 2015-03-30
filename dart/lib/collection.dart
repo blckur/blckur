@@ -30,16 +30,14 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     return this._collection[index];
   }
 
-  void add(Map<String, dynamic> attrs) {
-    var mdl = this.newModel();
-    mdl.import(attrs);
-    this._collection.add(mdl);
-  }
-
   void validate(String name) {
     for (var model in this) {
       model.validate(name);
     }
+  }
+
+  void _onDestroy(model.Model mdl) {
+    this._collection.remove(mdl);
   }
 
   Collection clone() {
@@ -108,6 +106,7 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
         }
         else {
           model = this.newModel();
+          model.onDestroy = this._onDestroy;
         }
         model.init();
       }

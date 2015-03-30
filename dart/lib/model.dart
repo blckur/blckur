@@ -16,6 +16,7 @@ class Invalid extends Error {
 
 abstract class Model extends remote.Remote {
   dynamic id;
+  Function onDestroy;
 
   Model() : super() {
     this.init();
@@ -89,10 +90,9 @@ abstract class Model extends remote.Remote {
   }
 
   async.Future destroy() {
-    return this.http.delete(this.url).then((response) {
+    return this.http.delete(this.url).then((_) {
       this.clearError();
-      this.import(response.data);
-      return response.data;
+      this.onDestroy(this);
     }).catchError((err) {
       return new async.Future.error(this.parseError(err));
     }, test: (e) => e is ng.HttpResponse);
