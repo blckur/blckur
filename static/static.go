@@ -38,7 +38,7 @@ type File struct {
 	Data []byte
 }
 
-type FileName struct {
+type fileName struct {
 	Name string
 	HashName string
 }
@@ -47,8 +47,8 @@ type Store struct {
 	Files map[string]*File
 	HashFiles map[string]*File
 	root string
-	dirNames map[string][]*FileName
-	lookup map[string]*FileName
+	dirNames map[string][]*fileName
+	lookup map[string]*fileName
 }
 
 func (s *Store) addDir(dir string) (err error) {
@@ -106,7 +106,7 @@ func (s *Store) addDir(dir string) (err error) {
 
 		s.HashFiles[path.Join(dir, hashName)] = file
 
-		s.lookup[fullPath] = &FileName{
+		s.lookup[fullPath] = &fileName{
 			Name: name,
 			HashName: hashName,
 		}
@@ -156,7 +156,7 @@ func NewStore(root string) (store *Store, err error) {
 		Files: map[string]*File{},
 		HashFiles: map[string]*File{},
 		root: root,
-		lookup: map[string]*FileName{},
+		lookup: map[string]*fileName{},
 	}
 
 	err = store.addDir(root)
