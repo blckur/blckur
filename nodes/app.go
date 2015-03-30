@@ -13,6 +13,7 @@ type AppNode struct {
 	Id string
 	Host string
 	Port int
+	Source string
 }
 
 func (a *AppNode) Start() {
@@ -20,7 +21,7 @@ func (a *AppNode) Start() {
 	address := getAddress() + ":" + port
 
 	router := gin.Default()
-	handlers.Register(router)
+	handlers.Register(router, a.Source)
 
 	server := &http.Server{
 		Addr: a.Host + ":" + port,
