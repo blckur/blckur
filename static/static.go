@@ -29,8 +29,8 @@ var (
 		".eot": "application/vnd.ms-fontobject",
 		".map": "application/json",
 	}
-	srcReg = regexp.MustCompile(`(src=)('|")(.*?)('|")`)
-	pathReg = regexp.MustCompile(`('|")(packages/|/s/img/)(.*?)('|")`)
+	pathReg = regexp.MustCompile(
+		`((src=)('|")(.*?)('|"))|(('|")(packages/|/s/img/)(.*?)('|"))`)
 )
 
 type File struct {
@@ -121,24 +121,15 @@ func (s *Store) parseFiles() {
 		dataStr := string(file.Data)
 
 		dataStr = pathReg.ReplaceAllStringFunc(dataStr, func(
-		match string) string {
+				match string) string {
 			var matchPath string
 			if match[1:4] == "/s/" {
 				matchPath = filepath.Join(s.root, match[4:len(match) - 1])
-			} else {
+			} else if match[1:4] == "pac" {
 				matchPath = filepath.Join(path, match[1:len(match) - 1])
+			} else {
+				matchPath = filepath.Join(path, match[5:len(match) - 1])
 			}
-
-			if name, ok := s.lookup[matchPath]; ok {
-				match = strings.Replace(match, name.Name, name.HashName, 1)
-			}
-
-			return match
-		})
-
-		dataStr = srcReg.ReplaceAllStringFunc(dataStr, func(
-				match string) string {
-			matchPath := filepath.Join(path, match[5:len(match) - 1])
 
 			if name, ok := s.lookup[matchPath]; ok {
 				match = strings.Replace(match, name.Name, name.HashName, 1)
