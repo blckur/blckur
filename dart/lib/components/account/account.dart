@@ -55,8 +55,7 @@ class AccountComp {
     this.model.destroy().catchError((err) {
       logger.severe('Failed to delete account', err);
       new alert.Alert('Failed to delete account');
-    }).whenComplete(() {
-      this.root.host.remove();
+      this.loading.clear();
     });
   }
 }
