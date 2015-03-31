@@ -90,8 +90,12 @@ func accountsDel(c *gin.Context) {
 
 	err := account.RemAccount(db, sess.UserId, acctId)
 	if err != nil {
-		c.Fail(500, err)
-		return
+		switch err.(type) {
+		case *database.NotFoundError:
+		default:
+			c.Fail(500, err)
+			return
+		}
 	}
 
 	c.JSON(200, map[string]string{})
