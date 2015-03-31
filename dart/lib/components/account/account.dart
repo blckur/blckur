@@ -33,11 +33,11 @@ class AccountComp {
     var cls = '';
 
     if (this.settings == true) {
-      cls += 'settings-active ';
+      cls += 'settings-active';
     }
 
     if (this.model.newAcct == true) {
-      cls += 'new';
+      cls += ' new';
     }
 
     return cls;
