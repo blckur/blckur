@@ -8,8 +8,6 @@ import 'package:blckur/alert.dart' as alert;
 import 'package:angular/angular.dart' show Component, NgOneWay;
 import 'dart:html' as dom;
 
-// Add attr new if new highlight account for init setup
-
 @Component(
   selector: 'x-account',
   templateUrl: 'packages/blckur/components/account/account.html',
