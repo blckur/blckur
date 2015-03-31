@@ -7,6 +7,10 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/oauth"
 	"labix.org/v2/mgo/bson"
+	"github.com/blckur/blckur/notification"
+	"fmt"
+	"time"
+	"strconv"
 )
 
 var (
@@ -76,6 +80,111 @@ func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
 }
 
 func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
+	client := digitalOceanConf.NewClient(d.acct)
+
+	err = client.Refresh(db)
+	if err != nil {
+		return
+	}
+
+	lastNotf, err := notification.GetLastNotification(db,
+		d.acct.UserId, d.acct.Id)
+	if err != nil {
+		return
+	}
+
+	var msgCount int
+	if lastNotf == nil {
+		msgCount = 3
+	} else {
+		msgCount = 10
+	}
+
+	url := fmt.Sprintf("https://api.digitalocean.com/v2" +
+		"/actions?page=1&per_page=%d", msgCount)
+
+	notfs := []*notification.Notification{}
+
+	n := settings.Google.MaxMsg / 10
+	Loop:
+	for i := 0; i < n; i++ {
+		actions := struct{
+			Actions []struct{
+				Id int `json:"id"`
+				StartedAt string `json:"started_at"`
+				Type string `json:"type"`
+			} `json:"actions"`
+			Links struct{
+				Pages struct{
+					Next string `json:"next"`
+				} `json:"pages"`
+			} `json:"links"`
+		}{}
+
+		err = client.GetJson(url, &actions)
+		if err != nil {
+			return
+		}
+
+		url = actions.Links.Pages.Next
+
+		for _, action := range actions.Actions {
+			timestamp, _ := time.Parse("2006-01-02T15:04:05Z",
+				action.StartedAt)
+			if timestamp.IsZero() {
+				continue
+			}
+
+			var subject string
+			switch (action.Type) {
+			case "create":
+				subject = "Droplet created"
+			case "destroy":
+				subject = "Droplet destroyed"
+			case "password_reset":
+				subject = "Droplet password reset"
+			default:
+				continue
+			}
+
+			if lastNotf == nil {
+				notf := &notification.Notification{
+					UserId: d.acct.UserId,
+					AccountId: d.acct.Id,
+					RemoteId: strconv.Itoa(action.Id),
+					Timestamp: timestamp,
+				}
+				notfs = append(notfs, notf)
+				break Loop
+			}
+
+			notf := &notification.Notification{
+				UserId: d.acct.UserId,
+				AccountId: d.acct.Id,
+				RemoteId: strconv.Itoa(action.Id),
+				Timestamp: timestamp,
+				Type: action.Type,
+				Subject: subject,
+			}
+
+			if timestamp.Before(lastNotf.Timestamp) ||
+					notf.RemoteId == lastNotf.RemoteId {
+				break Loop
+			}
+
+			notfs = append(notfs, notf)
+		}
+	}
+
+	for i := len(notfs) - 1; i >= 0; i-- {
+		notf := notfs[i]
+
+		err = notf.Initialize(db)
+		if err != nil {
+			return
+		}
+	}
+
 	return
 }
 
