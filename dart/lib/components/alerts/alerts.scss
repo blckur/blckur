@@ -1,15 +1,15 @@
 @import 'styles/base.scss';
 
 paper-toast.alert0.core-opened {
-  @include transform(translateY(0));
+  @include transform(translateY(-200%));
 }
 
 paper-toast.alert1.core-opened {
-  @include transform(translateY(-125%));
+  @include transform(translateY(-325%));
 }
 
 paper-toast.alert2.core-opened {
-  @include transform(translateY(-250%));
+  @include transform(translateY(-450%));
 }
 
 .retry {
