@@ -17,7 +17,8 @@ func userGet(c *gin.Context) {
 
 	usr, err := sess.GetUser()
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.JSON(200, usr)

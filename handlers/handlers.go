@@ -28,7 +28,8 @@ func Session(required bool) gin.HandlerFunc {
 
 		cook, err := session.GetCookie(c)
 		if err != nil {
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 
 		sess, err := cook.GetSession(db)
@@ -38,11 +39,13 @@ func Session(required bool) gin.HandlerFunc {
 			sess = nil
 			err = nil
 		default:
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 
 		if required && sess == nil {
 			c.AbortWithStatus(401)
+			return
 		}
 
 		c.Set("session", sess)

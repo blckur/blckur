@@ -38,7 +38,8 @@ func loginPost(c *gin.Context) {
 			})
 			return
 		default:
-			panic(err)
+			c.Fail(500, err)
+			return
 		}
 	}
 

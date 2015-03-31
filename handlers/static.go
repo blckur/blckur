@@ -18,13 +18,15 @@ type staticHandler struct {
 func (s *staticHandler) Proxy(c *gin.Context) {
 	resp, err := http.Get(s.source + c.Params.ByName("path"))
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		c.Fail(500, err)
+		return
 	}
 
 	c.Writer.Header().Add("Cache-Control",
