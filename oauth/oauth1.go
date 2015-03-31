@@ -89,6 +89,7 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	acct := &account.Account{
 		UserId: tokn.UserId,
 		Type: o.Type,
+		New: true,
 		OauthTokn: accessTokn.Token,
 		OauthSec: accessTokn.Secret,
 	}
