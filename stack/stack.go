@@ -25,7 +25,7 @@ func (s *StringStack) Pop() (elem string) {
 	}
 
 	elem = s.data[n - 1]
-	s.data = s.data[:n -1]
+	s.data = s.data[:n - 1]
 
 	s.mutex.Unlock()
 	return
