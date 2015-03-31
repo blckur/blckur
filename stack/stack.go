@@ -31,8 +31,8 @@ func (s *StringStack) Pop() (elem string) {
 	return
 }
 
-func NewStringStack(data []string) (que *StringStack) {
-	que = &StringStack{
+func NewStringStack(data []string) (stck *StringStack) {
+	stck = &StringStack{
 		data: data,
 		mutex: &sync.Mutex{},
 	}
