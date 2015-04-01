@@ -3,9 +3,12 @@ package cache
 import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/dropbox/godropbox/errors"
+	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/utils"
 	"time"
 	"strconv"
+	"labix.org/v2/mgo/bson"
+	"encoding/json"
 )
 
 // Connection to redis cluster
@@ -96,6 +99,19 @@ func (c *ClusterConn) Publish(channel string, val string) (err error) {
 	success := false
 	var er error
 
+	msg := &message{
+		Id: bson.NewObjectId(),
+		Data: val,
+	}
+	msgJson, err := json.Marshal(msg)
+	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "cache.cluster: Unknown json error"),
+		}
+		return
+	}
+	msgStr := string(msgJson)
+
 	for _, server := range c.clst.shrd.Select(channel) {
 		wait.Add(1)
 		go func(server string) {
@@ -105,7 +121,7 @@ func (c *ClusterConn) Publish(channel string, val string) (err error) {
 				c.conns[server] = conn
 			}
 
-			_, e := conn.Do("PUBLISH", channel, val)
+			_, e := conn.Do("PUBLISH", channel, msgStr)
 			if e != nil {
 				er = &CacheError{
 					errors.Wrap(e, "cache.cluster: Publish error"),
