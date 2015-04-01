@@ -1,5 +1,9 @@
 package cache
 
+import (
+	"encoding/json"
+)
+
 type handler struct {
 	State bool
 	listener *Listener
@@ -15,7 +19,20 @@ func (h *handler) Handle(evt *event) {
 		defer func() {
 			recover()
 		}()
-		h.listener.stream <- evt.Data
+
+		msg := &message{}
+		err := json.Unmarshal([]byte(evt.Data), msg)
+		if err != nil {
+			panic(err)
+			return
+		}
+
+		if h.listener.idCache.Contains(msg.Id) {
+			return
+		}
+		h.listener.idCache.Add(msg.Id)
+
+		h.listener.stream <- msg.Data
 	case RESHARD:
 		h.listener.reshard(h)
 	}
