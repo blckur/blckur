@@ -142,7 +142,7 @@ func update() {
 
 		if curClst != nil {
 			for _, psc := range curClst.pubsubConns {
-				psc.Reshard()
+				psc.Close()
 			}
 		}
 
@@ -150,6 +150,11 @@ func update() {
 			go func(psc *pubSubConn) {
 				psc.Listen()
 			}(psc)
+		}
+
+		for lstnrIntf := range subs.Iter() {
+			lstnr := lstnrIntf.(*Listener)
+			lstnr.reshard()
 		}
 
 		clstMutex.Unlock()

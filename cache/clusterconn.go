@@ -112,6 +112,14 @@ func (c *ClusterConn) Publish(channel string, val string) (err error) {
 	}
 	msgStr := string(msgJson)
 
+	servers := c.clst.shrd.Select(channel)
+	if len(servers) == 0 {
+		err = &NodesUnavailable{
+			errors.New("No nodes available"),
+		}
+		return
+	}
+
 	for _, server := range c.clst.shrd.Select(channel) {
 		wait.Add(1)
 		go func(server string) {

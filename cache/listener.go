@@ -15,12 +15,8 @@ type Listener struct {
 	idCache *stackcache.IdStackCache
 }
 
-func (l *Listener) reshard(hnd *handler) {
+func (l *Listener) reshard() {
 	l.mutex.Lock()
-	if !hnd.State {
-		l.mutex.Unlock()
-		return
-	}
 
 	for _, handler := range l.handlers {
 		handler.State = false
@@ -35,6 +31,10 @@ func (l *Listener) Listen() (stream chan string) {
 }
 
 func (l *Listener) Close() {
+	clstMutex.RLock()
+	subs.Remove(l)
+	clstMutex.RUnlock()
+
 	l.mutex.Lock()
 	for _, handler := range l.handlers {
 		handler.State = false
@@ -72,6 +72,7 @@ func (l *Listener) init() {
 	clstMutex.RLock()
 	l.mutex.Lock()
 	l.sub()
+	subs.Add(l)
 	l.mutex.Unlock()
 	clstMutex.RUnlock()
 }
