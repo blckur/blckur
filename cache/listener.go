@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"github.com/blckur/blckur/stackcache"
 	"sync"
 )
 
@@ -11,6 +12,7 @@ type Listener struct {
 	servers []string
 	handlers []*handler
 	stream chan string
+	idCache *stackcache.IdStackCache
 }
 
 func (l *Listener) reshard(hnd *handler) {
@@ -79,6 +81,7 @@ func Subscribe(channel string) (lst *Listener) {
 		mutex: &sync.Mutex{},
 		channel: channel,
 		stream: make(chan string),
+		idCache: stackcache.NewIdStackCache(64),
 	}
 
 	lst.init()
