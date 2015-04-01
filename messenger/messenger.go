@@ -192,7 +192,7 @@ func init() {
 				err := Subscribe(db, channels, 10 * time.Second,
 				func(msg *Message) bool {
 					if msg == nil {
-						return false
+						return true
 					}
 
 					key := msg.Channel + ":all"
@@ -205,7 +205,7 @@ func init() {
 						listener(msg)
 					}
 
-					return false
+					return true
 				})
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
