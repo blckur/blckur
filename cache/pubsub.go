@@ -23,11 +23,11 @@ type pubSubConn struct {
 	addQueue *list.List
 	remQueue *list.List
 	conn *redis.PubSubConn
-	listeners map[string]func(evt *event)
+	listeners map[string]func(string)
 	closed bool
 }
 
-func (p *pubSubConn) Subscribe(key string, handler func(evt *event)) {
+func (p *pubSubConn) Subscribe(key string, handler func(string)) {
 	p.addMutex.Lock()
 	p.listeners[key] = handler
 	p.addQueue.PushBack(key)
@@ -38,24 +38,6 @@ func (p *pubSubConn) Unsubsribe(key string) {
 	p.remMutex.Lock()
 	p.remQueue.PushBack(key)
 	delete(p.listeners, key)
-	p.remMutex.Unlock()
-}
-
-func (p *pubSubConn) Reshard() {
-	p.addMutex.Lock()
-	p.remMutex.Lock()
-
-	evt := &event{
-		Type: RESHARD,
-	}
-
-	for _, handler := range p.listeners {
-		handler(evt)
-	}
-
-	p.Close()
-
-	p.addMutex.Unlock()
 	p.remMutex.Unlock()
 }
 
@@ -70,7 +52,7 @@ func (p *pubSubConn) parseAddQueue() {
 		conn := p.conn
 		p.addMutex.Unlock()
 
-		if elem == nil || conn.Conn == nil {
+		if elem == nil || conn == nil {
 			break
 		}
 
@@ -100,7 +82,7 @@ func (p *pubSubConn) parseRemQueue() {
 		conn := p.conn
 		p.remMutex.Unlock()
 
-		if elem == nil || conn.Conn == nil {
+		if elem == nil || conn == nil {
 			break
 		}
 
@@ -134,17 +116,15 @@ func (p *pubSubConn) Listen() {
 	}()
 
 	for {
-		if p.conn.Conn != nil {
+		conn := p.conn
+		if conn != nil {
 			Loop:
 			for {
-				switch obj := p.conn.Receive().(type) {
+				switch obj := conn.Receive().(type) {
 				case redis.Message:
 					if listener, ok := p.listeners[obj.Channel]; ok {
 						go func() {
-							listener(&event{
-								Type: MESSAGE,
-								Data: string(obj.Data),
-							})
+							listener(string(obj.Data))
 						}()
 					}
 				case error:
@@ -161,11 +141,11 @@ func (p *pubSubConn) Listen() {
 			}
 		}
 
-		if p.closed {
-			return
-		}
-
 		for {
+			if p.closed {
+				return
+			}
+
 			time.Sleep(constants.RETRY_DELAY)
 
 			conn, err := dialLong(p.address)
@@ -202,9 +182,18 @@ func (p *pubSubConn) Listen() {
 }
 
 func (p *pubSubConn) Close() {
+	p.addMutex.Lock()
+	p.remMutex.Lock()
 	p.closed = true
-	p.conn.Close()
-	p.conn = nil
+
+	conn := p.conn
+	if conn != nil {
+		p.conn.Close()
+		p.conn = nil
+	}
+
+	p.addMutex.Unlock()
+	p.remMutex.Unlock()
 }
 
 func newPubSubConn(address string) (psc *pubSubConn) {
@@ -214,7 +203,7 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 		remMutex: &sync.Mutex{},
 		addQueue: list.New(),
 		remQueue: list.New(),
-		listeners: map[string]func(evt *event){},
+		listeners: map[string]func(string){},
 		closed: false,
 	}
 
@@ -226,10 +215,10 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 		logrus.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("cache.pubsub: Connection error")
-	}
-
-	psc.conn = &redis.PubSubConn{
-		Conn: conn,
+	} else {
+		psc.conn = &redis.PubSubConn{
+			Conn: conn,
+		}
 	}
 
 	return
