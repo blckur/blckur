@@ -47,6 +47,7 @@ import (
 	"github.com/blckur/blckur/node"
 	"github.com/garyburd/redigo/redis"
 	"github.com/Sirupsen/logrus"
+	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 	"sync"
 	"time"
@@ -54,6 +55,7 @@ import (
 
 var (
 	clst *cluster
+	subs set.Set
 	clstMutex = sync.RWMutex{}
 )
 
@@ -180,4 +182,6 @@ func init() {
 			}
 		})
 	}
+
+	subs = set.NewSet()
 }
