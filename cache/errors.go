@@ -7,3 +7,7 @@ import (
 type CacheError struct {
 	errors.DropboxError
 }
+
+type NodesUnavailable struct {
+	errors.DropboxError
+}
