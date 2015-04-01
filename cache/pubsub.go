@@ -8,7 +8,13 @@ import (
 	"github.com/Sirupsen/logrus"
 	"sync"
 	"time"
+	"labix.org/v2/mgo/bson"
 )
+
+type message struct {
+	Id bson.ObjectId `json:"i"`
+	Data string `json:"d"`
+}
 
 type pubSubConn struct {
 	address string
