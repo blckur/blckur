@@ -31,10 +31,9 @@ func (s *StringStack) Pop() (elem string) {
 	return
 }
 
-func NewStringStack(data []string) (stck *StringStack) {
-	stck = &StringStack{
+func NewStringStack(data []string) *StringStack {
+	return &StringStack{
 		data: data,
 		mutex: &sync.Mutex{},
 	}
-	return
 }
