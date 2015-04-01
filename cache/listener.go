@@ -77,6 +77,7 @@ func (l *Listener) init() {
 	clstMutex.RUnlock()
 }
 
+// Subscribe to a channel connection will auto repair as nodes are added/lost
 func Subscribe(channel string) (lst *Listener) {
 	lst = &Listener{
 		mutex: &sync.Mutex{},
