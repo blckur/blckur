@@ -36,7 +36,7 @@ class Alert {
     if (this.retryCallback != null) {
       return 3600000;
     }
-    return 4000;
+    return 5000;
   }
 }
 
