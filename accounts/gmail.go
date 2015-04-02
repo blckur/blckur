@@ -92,9 +92,10 @@ func init() {
 				ValueHolder: "Search term",
 			},
 		}, func() {
-			messenger.Register("settings", "google", func(_ *messenger.Message) {
-				updateGmail()
-			})
+			messenger.Register("settings", "google",
+				func(_ *messenger.Message) {
+					updateGmail()
+				})
 			updateGmail()
 		})
 }

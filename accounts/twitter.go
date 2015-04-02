@@ -99,9 +99,10 @@ func init() {
 				ValueHolder: "Twitter handle",
 			},
 		}, func() {
-			messenger.Register("settings", "twitter", func(_ *messenger.Message) {
-				updateTwitter()
-			})
+			messenger.Register("settings", "twitter",
+				func(_ *messenger.Message) {
+					updateTwitter()
+				})
 			updateTwitter()
 		})
 }
