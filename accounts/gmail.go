@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
+	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
 	"encoding/base64"
 	"fmt"
@@ -15,10 +16,31 @@ import (
 )
 
 var (
+	dateLayouts []string
 	gmailConf *oauth.Oauth2
 )
 
 func init() {
+	dows := [...]string{"", "Mon, "}
+	days := [...]string{"2", "02"}
+	years := [...]string{"2006", "06"}
+	seconds := [...]string{":05", ""}
+	zones := [...]string{"-0700", "MST", "-0700 (MST)"}
+
+	for _, dow := range dows {
+		for _, day := range days {
+			for _, year := range years {
+				for _, second := range seconds {
+					for _, zone := range zones {
+						s := dow + day + " Jan " + year +
+							" 15:04" + second + " " + zone
+						dateLayouts = append(dateLayouts, s)
+					}
+				}
+			}
+		}
+	}
+
 	account.Register("gmail", "Gmail", OAUTH2, GmailAuth{}, GmailClient{},
 	[]*account.FilterType{
 		&account.FilterType{
@@ -75,6 +97,21 @@ func init() {
 		})
 		updateGmail()
 	})
+}
+
+func parseDate(date string) (parsed time.Time, err error) {
+	for _, layout := range dateLayouts {
+		parsed, err = time.Parse(layout, date)
+		if err == nil {
+			return
+		}
+	}
+
+	err = &EmailParsed{
+		errors.New("accounts.gmail: Failed to parse date"),
+	}
+
+	return
 }
 
 type gmailMessage struct {
