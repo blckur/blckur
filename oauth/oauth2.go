@@ -40,6 +40,7 @@ func (o *Oauth2) Config() {
 
 func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
 	url string, err error) {
+
 	coll := db.Tokens()
 	state := utils.RandStr(32)
 
@@ -69,6 +70,7 @@ func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
 
 func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	client *Oauth2Client, err error) {
+
 	coll := db.Tokens()
 	tokn := &Token{}
 

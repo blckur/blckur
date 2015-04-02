@@ -36,6 +36,7 @@ func (o *Oauth1) Config() {
 
 func (o *Oauth1) Request(db *database.Database, userId bson.ObjectId) (
 	url string, err error) {
+
 	coll := db.Tokens()
 
 	reqTokn, url, err := o.consumer.GetRequestTokenAndUrl(o.CallbackUrl)
@@ -64,6 +65,7 @@ func (o *Oauth1) Request(db *database.Database, userId bson.ObjectId) (
 
 func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	client *Oauth1Client, err error) {
+
 	coll := db.Tokens()
 	tokn := &Token{}
 
@@ -124,6 +126,7 @@ type Oauth1Client struct {
 
 func (c *Oauth1Client) GetJson(url string, userParams map[string]string,
 	resp interface{}) (err error) {
+
 	tokn := &oauth.AccessToken{
 		Token:  c.Token,
 		Secret: c.Secret,

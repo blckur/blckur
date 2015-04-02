@@ -63,6 +63,7 @@ func GetNotifications(db *database.Database, userId bson.ObjectId) (
 
 func GetLastNotification(db *database.Database, userId bson.ObjectId,
 	acctId bson.ObjectId) (notf *Notification, err error) {
+
 	coll := db.Notifications()
 	notf = &Notification{}
 
