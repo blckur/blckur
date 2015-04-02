@@ -4,6 +4,6 @@ import (
 	"github.com/dropbox/godropbox/errors"
 )
 
-type EmailParsed struct {
+type InvalidDate struct {
 	errors.DropboxError
 }

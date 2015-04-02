@@ -107,7 +107,7 @@ func parseDate(date string) (parsed time.Time, err error) {
 		}
 	}
 
-	err = &EmailParsed{
+	err = &InvalidDate{
 		errors.New("accounts.gmail: Failed to parse date"),
 	}
 
