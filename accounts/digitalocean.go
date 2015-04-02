@@ -79,6 +79,16 @@ func (d *DigitalOceanClient) Update(db *database.Database) (err error) {
 	return
 }
 
+func (d *DigitalOceanClient) filter(typ string) bool {
+	for _, filter := range d.acct.Filters {
+		if filter.Type == "all" || filter.Type == typ {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
 	client := digitalOceanConf.NewClient(d.acct)
 
@@ -144,6 +154,10 @@ func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
 			case "password_reset":
 				subject = "Droplet password reset"
 			default:
+				continue
+			}
+
+			if !d.filter(action.Type) {
 				continue
 			}
 
