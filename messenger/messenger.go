@@ -25,6 +25,7 @@ type Message struct {
 
 func getCursorId(coll *database.Collection, channels []string) (
 	id bson.ObjectId, err error) {
+
 	msg := &Message{}
 
 	var query *bson.M
@@ -92,6 +93,7 @@ func Publish(db *database.Database, channel string, data interface{}) (
 
 func Subscribe(db *database.Database, channels []string,
 	duration time.Duration, onMsg func(*Message) bool) (err error) {
+
 	coll := db.Messages()
 	cursorId, err := getCursorId(coll, channels)
 	if err != nil {
