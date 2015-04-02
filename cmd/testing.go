@@ -109,5 +109,5 @@ func StressPub() {
 
 	wait.Wait()
 
-	fmt.Printf("publish time: %s", time.Since(start).String())
+	fmt.Printf("publish time: %s\n", time.Since(start).String())
 }
