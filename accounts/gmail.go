@@ -175,13 +175,12 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		} else if header.Name == "Subject" {
 			subject = header.Value
 		} else if header.Name == "Date" {
-			date, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 -0700",
-				header.Value)
+			var err error
+			date, err = parseDate(header.Value)
+			if err != nil {
+				return
+			}
 		}
-	}
-
-	if date.IsZero() {
-		return
 	}
 
 	if force || lastNotf == nil {
