@@ -155,7 +155,7 @@ type twitterBackend struct {
 func (b *twitterBackend) filter(typ string, origin string) bool {
 	for _, filter := range b.acct.Filters {
 		switch (filter.Type) {
-		case "all" || typ + "_all":
+		case "all", typ + "_all":
 			return true
 		case typ + "_from":
 			if strings.Contains(origin, filter.Value) {
