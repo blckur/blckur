@@ -7,19 +7,19 @@ import (
 	"github.com/blckur/blckur/errortypes"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/mrjones/oauth"
-	"labix.org/v2/mgo/bson"
 	"io/ioutil"
+	"labix.org/v2/mgo/bson"
 )
 
 type Oauth1 struct {
-	Type string
-	ConsumerKey string
+	Type           string
+	ConsumerKey    string
 	ConsumerSecret string
-	ReqTokenUrl string
-	AuthTokenUrl string
-	AccsTokenUrl string
-	CallbackUrl string
-	consumer *oauth.Consumer
+	ReqTokenUrl    string
+	AuthTokenUrl   string
+	AccsTokenUrl   string
+	CallbackUrl    string
+	consumer       *oauth.Consumer
 }
 
 func (o *Oauth1) Config() {
@@ -27,15 +27,15 @@ func (o *Oauth1) Config() {
 		o.ConsumerKey,
 		o.ConsumerSecret,
 		oauth.ServiceProvider{
-			RequestTokenUrl: o.ReqTokenUrl,
+			RequestTokenUrl:   o.ReqTokenUrl,
 			AuthorizeTokenUrl: o.AuthTokenUrl,
-			AccessTokenUrl: o.AccsTokenUrl,
+			AccessTokenUrl:    o.AccsTokenUrl,
 		},
 	)
 }
 
 func (o *Oauth1) Request(db *database.Database, userId bson.ObjectId) (
-		url string, err error) {
+	url string, err error) {
 	coll := db.Tokens()
 
 	reqTokn, url, err := o.consumer.GetRequestTokenAndUrl(o.CallbackUrl)
@@ -47,10 +47,10 @@ func (o *Oauth1) Request(db *database.Database, userId bson.ObjectId) (
 	}
 
 	tokn := &Token{
-		Id: reqTokn.Token,
-		Type: o.Type,
+		Id:          reqTokn.Token,
+		Type:        o.Type,
 		OauthSecret: reqTokn.Secret,
-		UserId: userId,
+		UserId:      userId,
 	}
 
 	err = coll.Insert(tokn)
@@ -63,7 +63,7 @@ func (o *Oauth1) Request(db *database.Database, userId bson.ObjectId) (
 }
 
 func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
-		client *Oauth1Client, err error) {
+	client *Oauth1Client, err error) {
 	coll := db.Tokens()
 	tokn := &Token{}
 
@@ -74,7 +74,7 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	}
 
 	reqTokn := &oauth.RequestToken{
-		Token: tokn.Id,
+		Token:  tokn.Id,
 		Secret: tokn.OauthSecret,
 	}
 
@@ -87,18 +87,18 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 	}
 
 	acct := &account.Account{
-		UserId: tokn.UserId,
-		Type: o.Type,
-		New: true,
+		UserId:    tokn.UserId,
+		Type:      o.Type,
+		New:       true,
 		OauthTokn: accessTokn.Token,
-		OauthSec: accessTokn.Secret,
+		OauthSec:  accessTokn.Secret,
 	}
 
 	client = &Oauth1Client{
 		Account: acct,
-		Token: accessTokn.Token,
-		Secret: accessTokn.Secret,
-		conf: o,
+		Token:   accessTokn.Token,
+		Secret:  accessTokn.Secret,
+		conf:    o,
 	}
 
 	return
@@ -107,9 +107,9 @@ func (o *Oauth1) Authorize(db *database.Database, token string, code string) (
 func (o *Oauth1) NewClient(acct *account.Account) (client *Oauth1Client) {
 	client = &Oauth1Client{
 		Account: acct,
-		Token: acct.OauthTokn,
-		Secret: acct.OauthSec,
-		conf: o,
+		Token:   acct.OauthTokn,
+		Secret:  acct.OauthSec,
+		conf:    o,
 	}
 
 	return
@@ -117,15 +117,15 @@ func (o *Oauth1) NewClient(acct *account.Account) (client *Oauth1Client) {
 
 type Oauth1Client struct {
 	Account *account.Account
-	Token string
-	Secret string
-	conf *Oauth1
+	Token   string
+	Secret  string
+	conf    *Oauth1
 }
 
 func (c *Oauth1Client) GetJson(url string, userParams map[string]string,
-		resp interface{}) (err error) {
+	resp interface{}) (err error) {
 	tokn := &oauth.AccessToken{
-		Token: c.Token,
+		Token:  c.Token,
 		Secret: c.Secret,
 	}
 

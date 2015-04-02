@@ -1,19 +1,19 @@
 package cache
 
 import (
-	"github.com/garyburd/redigo/redis"
-	"github.com/dropbox/godropbox/errors"
+	"encoding/json"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/utils"
-	"time"
-	"strconv"
+	"github.com/dropbox/godropbox/errors"
+	"github.com/garyburd/redigo/redis"
 	"labix.org/v2/mgo/bson"
-	"encoding/json"
+	"strconv"
+	"time"
 )
 
 // Connection to redis cluster
 type ClusterConn struct {
-	clst *cluster
+	clst  *cluster
 	conns map[string]redis.Conn
 }
 
@@ -58,7 +58,7 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 }
 
 func (c *ClusterConn) SetString(key string, val string,
-		ttl time.Duration) (err error) {
+	ttl time.Duration) (err error) {
 	wait := utils.WaitCancel{}
 	success := false
 	var er error
@@ -100,7 +100,7 @@ func (c *ClusterConn) Publish(channel string, val string) (err error) {
 	var er error
 
 	msg := &message{
-		Id: bson.NewObjectId(),
+		Id:   bson.NewObjectId(),
 		Data: val,
 	}
 	msgJson, err := json.Marshal(msg)

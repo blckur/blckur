@@ -26,7 +26,7 @@ func accountsPost(c *gin.Context) {
 	auth, _, err := account.GetAuth(acctType)
 	if err != nil {
 		c.JSON(400, &errorData{
-			Error: "unknown_type",
+			Error:   "unknown_type",
 			Message: "Unknown account type",
 		})
 	}

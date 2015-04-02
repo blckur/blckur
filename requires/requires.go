@@ -2,9 +2,9 @@
 package requires
 
 import (
-	"github.com/dropbox/godropbox/container/set"
 	"container/list"
 	"fmt"
+	"github.com/dropbox/godropbox/container/set"
 	"os"
 )
 
@@ -13,9 +13,9 @@ var (
 )
 
 type Module struct {
-	name string
-	before set.Set
-	after set.Set
+	name    string
+	before  set.Set
+	after   set.Set
 	Handler func()
 }
 
@@ -29,9 +29,9 @@ func (m *Module) After(name string) {
 
 func New(name string) (module *Module) {
 	module = &Module{
-		name: name,
+		name:   name,
 		before: set.NewSet(),
-		after: set.NewSet(),
+		after:  set.NewSet(),
 	}
 	modules.PushBack(module)
 	return
@@ -40,7 +40,7 @@ func New(name string) (module *Module) {
 func Init() {
 	count := 0
 
-	Loop:
+Loop:
 	for {
 		if count > 100 {
 			fmt.Fprintf(os.Stderr, "Requires failed to satisfy constraints\n")
@@ -57,12 +57,12 @@ func Init() {
 					line += fmt.Sprintf("   after: %s", val.(string))
 				}
 
-				fmt.Fprintf(os.Stderr, line + "\n")
+				fmt.Fprintf(os.Stderr, line+"\n")
 				i = i.Next()
 			}
 
 			i = modules.Front()
-			Loop2:
+		Loop2:
 			for i != nil {
 				module := i.Value.(*Module)
 

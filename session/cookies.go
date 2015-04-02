@@ -2,30 +2,30 @@ package session
 
 import (
 	"bytes"
+	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
-	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/constants"
-	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/settings"
+	"github.com/dropbox/godropbox/container/set"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"labix.org/v2/mgo/bson"
-	"github.com/dropbox/godropbox/container/set"
 	"time"
 )
 
 var (
 	curCookieKey []byte
-	Store *sessions.CookieStore
+	Store        *sessions.CookieStore
 )
 
 type Cookie struct {
-	Id bson.ObjectId
+	Id    bson.ObjectId
 	store *sessions.Session
-	con *gin.Context
+	con   *gin.Context
 }
 
 func (c *Cookie) Get(key string) (val string) {
@@ -43,7 +43,7 @@ func (c *Cookie) Set(key string, val string) {
 }
 
 func (c *Cookie) GetSession(db *database.Database) (
-		sess *Session, err error) {
+	sess *Session, err error) {
 	sessId := c.Get("id")
 	if sessId == "" {
 		err = &NotFoundError{
@@ -71,7 +71,7 @@ func (c *Cookie) GetSession(db *database.Database) (
 }
 
 func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId,
-		remember bool) (sess *Session, err error) {
+	remember bool) (sess *Session, err error) {
 	sess, err = NewSession(db, id)
 	if err != nil {
 		err = &errortypes.UnknownError{
@@ -151,7 +151,7 @@ func GetCookie(con *gin.Context) (cook *Cookie, err error) {
 
 	cook = &Cookie{
 		store: store,
-		con: con,
+		con:   con,
 	}
 
 	return

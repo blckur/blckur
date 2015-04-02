@@ -6,13 +6,13 @@ import (
 )
 
 var (
-	authTypes = map[string]int{}
-	authRegistry = map[string]reflect.Type{}
+	authTypes      = map[string]int{}
+	authRegistry   = map[string]reflect.Type{}
 	clientRegistry = map[string]reflect.Type{}
-	AccountTypes = []*AccountType{}
-	FilterTypes = map[string][]*FilterType{}
-	filterLabels = map[string]map[string]string{}
-	handlers = []func(){}
+	AccountTypes   = []*AccountType{}
+	FilterTypes    = map[string][]*FilterType{}
+	filterLabels   = map[string]map[string]string{}
+	handlers       = []func(){}
 )
 
 func sortAccountTypes() {
@@ -23,14 +23,14 @@ func sortAccountTypes() {
 }
 
 func Register(name string, label string, typ int, auth interface{},
-		client interface{}, types []*FilterType, handler func()) {
+	client interface{}, types []*FilterType, handler func()) {
 	authTypes[name] = typ
 	authRegistry[name] = reflect.TypeOf(auth)
 	clientRegistry[name] = reflect.TypeOf(client)
 
 	AccountTypes = append(AccountTypes, &AccountType{
 		Label: label,
-		Type: name,
+		Type:  name,
 	})
 	sortAccountTypes()
 	for i, acctType := range AccountTypes {

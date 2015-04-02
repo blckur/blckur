@@ -5,7 +5,7 @@ import (
 )
 
 type handler struct {
-	State bool
+	State    bool
 	listener *Listener
 }
 

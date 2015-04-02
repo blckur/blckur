@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"net/url"
 	"net/http"
+	"net/url"
 )
 
 type Params struct {

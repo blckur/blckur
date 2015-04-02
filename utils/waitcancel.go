@@ -9,7 +9,7 @@ import (
 // Warning: Wait() can not be called multiple times
 type WaitCancel struct {
 	count int32
-	wait chan int
+	wait  chan int
 }
 
 func (w *WaitCancel) Add(n int) {

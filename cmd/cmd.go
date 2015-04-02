@@ -3,13 +3,13 @@ package cmd
 
 import (
 	"github.com/blckur/blckur/utils"
+	"math/rand"
 	"os"
 	"strconv"
-	"math/rand"
 )
 
 type serviceOptions struct {
-	Id string
+	Id   string
 	Host string
 	Port int
 }
@@ -35,7 +35,7 @@ func getServiceOptions() (opts *serviceOptions) {
 	}
 
 	opts = &serviceOptions{
-		Id: id,
+		Id:   id,
 		Host: host,
 		Port: port,
 	}

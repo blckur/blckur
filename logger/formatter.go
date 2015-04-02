@@ -1,17 +1,17 @@
 package logger
 
 import (
-	"github.com/blckur/blckur/colorize"
-	"github.com/Sirupsen/logrus"
 	"fmt"
+	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/colorize"
 )
 
 var (
-	blueArrow = colorize.ColorString("▶", colorize.BlueBold, colorize.None)
+	blueArrow    = colorize.ColorString("▶", colorize.BlueBold, colorize.None)
 	whiteDiamond = colorize.ColorString("◆", colorize.WhiteBold, colorize.None)
 )
 
-type formatter struct {}
+type formatter struct{}
 
 func (f *formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 	msg := fmt.Sprintf("%s %s %s", formatLevel(entry.Level), blueArrow,
@@ -27,14 +27,14 @@ func (f *formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 		msg += fmt.Sprintf(" %s %s=%s", whiteDiamond,
 			colorize.ColorString(key, colorize.CyanBold, colorize.None),
 			colorize.ColorString(fmt.Sprintf("%#v", val),
-			colorize.GreenBold, colorize.None))
+				colorize.GreenBold, colorize.None))
 	}
 
 	if error != "" {
 		msg += "\n" + colorize.ColorString(error, colorize.Red, colorize.None)
 	}
 
-	if string(msg[len(msg) - 1]) != "\n" {
+	if string(msg[len(msg)-1]) != "\n" {
 		msg += "\n"
 	}
 

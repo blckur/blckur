@@ -31,7 +31,7 @@ func (s *sync) Run(db *database.Database) (err error) {
 		job.Resource = acctId
 
 		err = job.Put(0, 0,
-			time.Duration(settings.Task.RetryTimeout) * time.Second)
+			time.Duration(settings.Task.RetryTimeout)*time.Second)
 		if err != nil {
 			return
 		}

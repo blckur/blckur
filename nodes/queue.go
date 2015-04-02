@@ -1,19 +1,19 @@
 package nodes
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/node"
-	"github.com/Sirupsen/logrus"
 	"os/exec"
-	"time"
 	"strconv"
+	"time"
 )
 
 type QueueNode struct {
-	Id string
+	Id   string
 	Host string
 	Port int
 }
@@ -38,7 +38,7 @@ func (q *QueueNode) Start() {
 		}
 
 		logrus.WithFields(logrus.Fields{
-			"id": q.Id,
+			"id":      q.Id,
 			"address": address,
 		}).Info("nodes.queue: Starting queue node")
 
@@ -69,9 +69,9 @@ func (q *QueueNode) Start() {
 			}
 
 			stat, err := coll.UpsertId(q.Id, &node.Node{
-				Id: q.Id,
-				Type: "queue",
-				Address: address,
+				Id:        q.Id,
+				Type:      "queue",
+				Address:   address,
 				Timestamp: time.Now(),
 			})
 			if err != nil {

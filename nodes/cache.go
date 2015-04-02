@@ -1,19 +1,19 @@
 package nodes
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/logger"
-	"github.com/blckur/blckur/node"
 	"github.com/blckur/blckur/messenger"
-	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/node"
 	"os/exec"
-	"time"
 	"strconv"
+	"time"
 )
 
 type CacheNode struct {
-	Id string
+	Id   string
 	Host string
 	Port int
 }
@@ -42,7 +42,7 @@ func (c *CacheNode) Start() {
 		}
 
 		logrus.WithFields(logrus.Fields{
-			"id": c.Id,
+			"id":      c.Id,
 			"address": address,
 		}).Info("nodes.cache: Starting cache node")
 
@@ -73,9 +73,9 @@ func (c *CacheNode) Start() {
 			}
 
 			stat, err := coll.UpsertId(c.Id, &node.Node{
-				Id: c.Id,
-				Type: "cache",
-				Address: address,
+				Id:        c.Id,
+				Type:      "cache",
+				Address:   address,
 				Timestamp: time.Now(),
 			})
 			if err != nil {

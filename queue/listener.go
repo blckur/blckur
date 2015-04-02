@@ -5,8 +5,8 @@ import (
 )
 
 type Listener struct {
-	servers set.Set
-	streams map[string]*Stream
+	servers  set.Set
+	streams  map[string]*Stream
 	onStream func(*Stream)
 }
 
@@ -35,8 +35,8 @@ func (l *Listener) updateStreams(servers set.Set) {
 
 func NewListener(onStream func(*Stream)) (lstnr *Listener) {
 	lstnr = &Listener{
-		servers: set.NewSet(),
-		streams: map[string]*Stream{},
+		servers:  set.NewSet(),
+		streams:  map[string]*Stream{},
 		onStream: onStream,
 	}
 

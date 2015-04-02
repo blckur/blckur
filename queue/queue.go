@@ -2,28 +2,28 @@
 package queue
 
 import (
-	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/node"
-	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/constants"
-	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/gdefer"
+	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/node"
+	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/kr/beanstalk"
 	"labix.org/v2/mgo/bson"
-	"time"
 	"sync"
+	"time"
 )
 
 var (
-	clst *cluster
+	clst      *cluster
 	listeners = []*Listener{}
-	mutex = sync.Mutex{}
+	mutex     = sync.Mutex{}
 )
 
 func put(job *Job, priority int, delay time.Duration,
-		ttr time.Duration) (err error) {
+	ttr time.Duration) (err error) {
 	err = clst.Put(job, priority, delay, ttr)
 	return
 }
@@ -75,9 +75,9 @@ func init() {
 	module.Handler = func() {
 		clst = &cluster{
 			defaultConsistency: settings.Queue.Consistency,
-			servers: set.NewSet(),
-			serversSlc: []string{},
-			pool: map[string]*beanstalk.Conn{},
+			servers:            set.NewSet(),
+			serversSlc:         []string{},
+			pool:               map[string]*beanstalk.Conn{},
 		}
 		update()
 

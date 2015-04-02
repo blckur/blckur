@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/static"
 	"github.com/gin-gonic/gin"
-	"github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -11,7 +11,7 @@ import (
 
 type staticHandler struct {
 	source string
-	store *static.Store
+	store  *static.Store
 	expire string
 }
 

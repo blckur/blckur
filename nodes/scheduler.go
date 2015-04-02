@@ -1,8 +1,8 @@
 package nodes
 
 import (
-	"github.com/blckur/blckur/scheduler"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/scheduler"
 )
 
 type SchedulerNode struct {

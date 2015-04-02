@@ -9,7 +9,7 @@ func init() {
 }
 
 type task struct {
-	Id string `bson:"_id"`
-	Timeout int `bson:"timeout" default:"45"`
-	RetryTimeout int `bson:"retry_timeout" default:"15"`
+	Id           string `bson:"_id"`
+	Timeout      int    `bson:"timeout" default:"45"`
+	RetryTimeout int    `bson:"retry_timeout" default:"15"`
 }

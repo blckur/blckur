@@ -9,8 +9,8 @@ import (
 
 type Shard struct {
 	defaultConsistency int
-	maxConsistency int
-	servers [][][]string
+	maxConsistency     int
+	servers            [][][]string
 }
 
 func (s *Shard) SelectX(key string, consistency int) (servers []string) {
@@ -23,7 +23,7 @@ func (s *Shard) SelectX(key string, consistency int) (servers []string) {
 
 	hash := fnv.New32a()
 	hash.Write([]byte(key))
-	servers = s.servers[consistency - 1][hash.Sum32() % uint32(n)]
+	servers = s.servers[consistency-1][hash.Sum32()%uint32(n)]
 
 	return
 }
@@ -37,7 +37,7 @@ func (s *Shard) SelectAll(key string) (servers []string) {
 
 	hash := fnv.New32a()
 	hash.Write([]byte(key))
-	servers = s.servers[s.maxConsistency][hash.Sum32() % uint32(n)]
+	servers = s.servers[s.maxConsistency][hash.Sum32()%uint32(n)]
 
 	return
 }
@@ -51,7 +51,7 @@ func (s *Shard) Select(key string) (servers []string) {
 
 	hash := fnv.New32a()
 	hash.Write([]byte(key))
-	servers = s.servers[s.defaultConsistency - 1][hash.Sum32() % uint32(n)]
+	servers = s.servers[s.defaultConsistency-1][hash.Sum32()%uint32(n)]
 
 	return
 }
@@ -62,15 +62,15 @@ func New(keys []string, defaultConsistency int) (shd *Shard) {
 
 	shd = &Shard{
 		defaultConsistency: defaultConsistency,
-		maxConsistency: maxConsistency,
-		servers: make([][][]string, len(keys)),
+		maxConsistency:     maxConsistency,
+		servers:            make([][][]string, len(keys)),
 	}
 
 	sort.Strings(keys)
 
 	for k := 0; k < maxConsistency; k++ {
 		servers := make([][]string, len(keys))
-		for j := 0; j < k + 1; j++ {
+		for j := 0; j < k+1; j++ {
 			if j != 0 {
 				utils.RotateStrings(keys, 1)
 			}

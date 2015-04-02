@@ -15,9 +15,9 @@ func App() {
 	}
 
 	node := nodes.AppNode{
-		Id: opts.Id,
-		Host: opts.Host,
-		Port: opts.Port,
+		Id:     opts.Id,
+		Host:   opts.Host,
+		Port:   opts.Port,
 		Source: source,
 	}
 

@@ -15,10 +15,10 @@ import (
 )
 
 type User struct {
-	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	Email string `bson:"email" json:"email"`
-	PasswordSalt []byte `bson:"pass_salt" json:"-"`
-	PasswordHash []byte `bson:"pass_hash" json:"-"`
+	Id           bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	Email        string        `bson:"email" json:"email"`
+	PasswordSalt []byte        `bson:"pass_salt" json:"-"`
+	PasswordHash []byte        `bson:"pass_hash" json:"-"`
 }
 
 func (u *User) hashPassword(password string) (digest []byte) {
@@ -64,7 +64,7 @@ func (u *User) Commit(db *database.Database) (err error) {
 }
 
 func (u *User) CommitFields(db *database.Database, fields set.Set) (
-		err error) {
+	err error) {
 	coll := db.Users()
 	err = coll.CommitFields(u.Id, u, fields)
 	return

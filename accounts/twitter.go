@@ -1,23 +1,23 @@
 package accounts
 
 import (
-	"github.com/blckur/blckur/account"
-	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/oauth"
-	"github.com/blckur/blckur/notification"
-	"github.com/blckur/blckur/stream"
-	"github.com/ChimeraCoder/anaconda"
-	"github.com/Sirupsen/logrus"
-	"labix.org/v2/mgo/bson"
 	"crypto/md5"
-	"net/url"
-	"time"
-	"strconv"
 	"encoding/hex"
 	"fmt"
+	"github.com/ChimeraCoder/anaconda"
+	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/account"
+	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/notification"
+	"github.com/blckur/blckur/oauth"
+	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/stream"
+	"labix.org/v2/mgo/bson"
+	"net/url"
+	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -30,80 +30,80 @@ type TwitterClient struct {
 
 func init() {
 	account.Register("twitter", "Twitter", OAUTH1,
-	TwitterAuth{}, TwitterClient{},
-	[]*account.FilterType{
-		&account.FilterType{
-			Label: "All new events",
-			Type: "all",
-		},
-		&account.FilterType{
-			Label: "Events matching user",
-			Type: "from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial twitter handle",
-			ValueHolder: "Twitter handle",
-		},
-		&account.FilterType{
-			Label: "All new followers",
-			Type: "follow_all",
-		},
-		&account.FilterType{
-			Label: "Followers matching user",
-			Type: "follow_from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial twitter handle",
-			ValueHolder: "Twitter handle",
-		},
-		&account.FilterType{
-			Label: "All new favorited tweets",
-			Type: "favorite_all",
-		},
-		&account.FilterType{
-			Label: "Favorited by matching user",
-			Type: "favorite_from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial twitter handle",
-			ValueHolder: "Twitter handle",
-		},
-		&account.FilterType{
-			Label: "All new unfavorited tweets",
-			Type: "unfavorite_all",
-		},
-		&account.FilterType{
-			Label: "Unfavorited by matching user",
-			Type: "unfavorite_from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial twitter handle",
-			ValueHolder: "Twitter handle",
-		},
-		&account.FilterType{
-			Label: "All new retweets",
-			Type: "retweet_all",
-		},
-		&account.FilterType{
-			Label: "Retweets by matching user",
-			Type: "retweet_from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial twitter handle",
-			ValueHolder: "Twitter handle",
-		},
-		&account.FilterType{
-			Label: "All new tweet replies",
-			Type: "reply_all",
-		},
-		&account.FilterType{
-			Label: "Tweet replies by matching user",
-			Type: "reply_from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial twitter handle",
-			ValueHolder: "Twitter handle",
-		},
-	}, func() {
-		messenger.Register("settings", "twitter", func(_ *messenger.Message) {
+		TwitterAuth{}, TwitterClient{},
+		[]*account.FilterType{
+			&account.FilterType{
+				Label: "All new events",
+				Type:  "all",
+			},
+			&account.FilterType{
+				Label:       "Events matching user",
+				Type:        "from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial twitter handle",
+				ValueHolder: "Twitter handle",
+			},
+			&account.FilterType{
+				Label: "All new followers",
+				Type:  "follow_all",
+			},
+			&account.FilterType{
+				Label:       "Followers matching user",
+				Type:        "follow_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial twitter handle",
+				ValueHolder: "Twitter handle",
+			},
+			&account.FilterType{
+				Label: "All new favorited tweets",
+				Type:  "favorite_all",
+			},
+			&account.FilterType{
+				Label:       "Favorited by matching user",
+				Type:        "favorite_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial twitter handle",
+				ValueHolder: "Twitter handle",
+			},
+			&account.FilterType{
+				Label: "All new unfavorited tweets",
+				Type:  "unfavorite_all",
+			},
+			&account.FilterType{
+				Label:       "Unfavorited by matching user",
+				Type:        "unfavorite_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial twitter handle",
+				ValueHolder: "Twitter handle",
+			},
+			&account.FilterType{
+				Label: "All new retweets",
+				Type:  "retweet_all",
+			},
+			&account.FilterType{
+				Label:       "Retweets by matching user",
+				Type:        "retweet_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial twitter handle",
+				ValueHolder: "Twitter handle",
+			},
+			&account.FilterType{
+				Label: "All new tweet replies",
+				Type:  "reply_all",
+			},
+			&account.FilterType{
+				Label:       "Tweet replies by matching user",
+				Type:        "reply_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial twitter handle",
+				ValueHolder: "Twitter handle",
+			},
+		}, func() {
+			messenger.Register("settings", "twitter", func(_ *messenger.Message) {
+				updateTwitter()
+			})
 			updateTwitter()
 		})
-		updateTwitter()
-	})
 }
 
 func (t *TwitterClient) SetAccount(acct *account.Account) {
@@ -114,7 +114,7 @@ func (t *TwitterClient) Update(db *database.Database) (err error) {
 	client := twitterConf.NewClient(t.acct)
 
 	data := struct {
-		IdStr string `json:"id_str"`
+		IdStr      string `json:"id_str"`
 		ScreenName string `json:"screen_name"`
 	}{}
 
@@ -133,7 +133,7 @@ func (t *TwitterClient) Update(db *database.Database) (err error) {
 
 func (t *TwitterClient) Sync(db *database.Database) (err error) {
 	backend := &twitterBackend{
-		db: db,
+		db:   db,
 		acct: t.acct,
 	}
 	stream := stream.NewStream(db, t.acct.Id, backend)
@@ -147,14 +147,14 @@ func (t *TwitterClient) Sync(db *database.Database) (err error) {
 }
 
 type twitterBackend struct {
-	db *database.Database
+	db     *database.Database
 	stream *anaconda.Stream
-	acct *account.Account
+	acct   *account.Account
 }
 
 func (b *twitterBackend) filter(typ string, origin string) bool {
 	for _, filter := range b.acct.Filters {
-		switch (filter.Type) {
+		switch filter.Type {
 		case "all", typ + "_all":
 			return true
 		case typ + "_from":
@@ -198,7 +198,7 @@ func (b *twitterBackend) Stop() {
 }
 
 func (b *twitterBackend) handle(evtInf interface{}) (
-		notf *notification.Notification, err error) {
+	notf *notification.Notification, err error) {
 	var timestamp string
 
 	if evt, ok := evtInf.(anaconda.Tweet); ok {
@@ -229,22 +229,22 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		}
 
 		notf = &notification.Notification{
-			UserId: b.acct.UserId,
+			UserId:    b.acct.UserId,
 			AccountId: b.acct.Id,
-			Type: evtType,
-			Resource: evt.IdStr,
-			Origin: origin,
-			Subject: subject,
-			Body: evt.Text,
+			Type:      evtType,
+			Resource:  evt.IdStr,
+			Origin:    origin,
+			Subject:   subject,
+			Body:      evt.Text,
 		}
 	} else if evt, ok := evtInf.(anaconda.EventTweet); ok {
 		if evt.Target.IdStr != b.acct.IdentityId ||
-				evt.Source.IdStr == b.acct.IdentityId {
+			evt.Source.IdStr == b.acct.IdentityId {
 			return
 		}
 
 		var subject string
-		switch (evt.Event.Event) {
+		switch evt.Event.Event {
 		case "favorite":
 			subject = "Tweet favorited by "
 		case "unfavorite":
@@ -262,13 +262,13 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		}
 
 		notf = &notification.Notification{
-			UserId: b.acct.UserId,
+			UserId:    b.acct.UserId,
 			AccountId: b.acct.Id,
-			Type: evt.Event.Event,
-			Resource: evt.TargetObject.IdStr,
-			Origin: origin,
-			Subject: subject,
-			Body: evt.TargetObject.Text,
+			Type:      evt.Event.Event,
+			Resource:  evt.TargetObject.IdStr,
+			Origin:    origin,
+			Subject:   subject,
+			Body:      evt.TargetObject.Text,
 		}
 	} else if evt, ok := evtInf.(anaconda.Event); ok {
 		if evt.Target.IdStr != b.acct.IdentityId || evt.Event != "follow" {
@@ -283,19 +283,19 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		}
 
 		notf = &notification.Notification{
-			UserId: b.acct.UserId,
+			UserId:    b.acct.UserId,
 			AccountId: b.acct.Id,
-			Type: evt.Event,
-			Resource: evt.Target.IdStr,
-			Origin: origin,
-			Subject: "New follower " + origin,
+			Type:      evt.Event,
+			Resource:  evt.Target.IdStr,
+			Origin:    origin,
+			Subject:   "New follower " + origin,
 		}
 	} else if evt, ok := evtInf.(anaconda.StatusDeletionNotice); ok {
 		coll := b.db.Notifications()
 
 		err = coll.Remove(bson.M{
 			"account_id": b.acct.Id,
-			"resource": evt.IdStr,
+			"resource":   evt.IdStr,
 		})
 		if err != nil {
 			err = database.ParseError(err)
@@ -334,7 +334,7 @@ type TwitterAuth struct {
 }
 
 func (t *TwitterAuth) Request(db *database.Database, userId bson.ObjectId) (
-		url string, err error) {
+	url string, err error) {
 	url, err = twitterConf.Request(db, userId)
 	if err != nil {
 		return
@@ -344,7 +344,7 @@ func (t *TwitterAuth) Request(db *database.Database, userId bson.ObjectId) (
 }
 
 func (t *TwitterAuth) Authorize(db *database.Database, token string,
-		code string) (acct *account.Account, err error) {
+	code string) (acct *account.Account, err error) {
 	coll := db.Accounts()
 
 	auth, err := twitterConf.Authorize(db, token, code)
@@ -376,13 +376,13 @@ func updateTwitter() {
 	anaconda.SetConsumerSecret(settings.Twitter.ConsumerSecret)
 
 	conf := &oauth.Oauth1{
-		Type: "twitter",
-		ConsumerKey: settings.Twitter.ConsumerKey,
+		Type:           "twitter",
+		ConsumerKey:    settings.Twitter.ConsumerKey,
 		ConsumerSecret: settings.Twitter.ConsumerSecret,
-		ReqTokenUrl: "https://api.twitter.com/oauth/request_token",
-		AuthTokenUrl: "https://api.twitter.com/oauth/authorize",
-		AccsTokenUrl: "https://api.twitter.com/oauth/access_token",
-		CallbackUrl: settings.System.Domain + "/callback/twitter",
+		ReqTokenUrl:    "https://api.twitter.com/oauth/request_token",
+		AuthTokenUrl:   "https://api.twitter.com/oauth/authorize",
+		AccsTokenUrl:   "https://api.twitter.com/oauth/access_token",
+		CallbackUrl:    settings.System.Domain + "/callback/twitter",
 	}
 	conf.Config()
 

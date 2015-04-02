@@ -9,6 +9,6 @@ func init() {
 }
 
 type papperTrail struct {
-	Id string `bson:"_id"`
+	Id      string `bson:"_id"`
 	Address string `bson:"address"`
 }

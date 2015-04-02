@@ -2,16 +2,16 @@
 package logger
 
 import (
-	"github.com/blckur/blckur/requires"
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/colorize"
-	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/requires"
 	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/errors"
-	"github.com/Sirupsen/logrus"
-	"os"
 	"net"
+	"os"
 	"time"
 )
 

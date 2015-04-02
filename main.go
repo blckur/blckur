@@ -1,10 +1,10 @@
 package main
 
 import (
+	"flag"
 	"github.com/blckur/blckur/cmd"
 	"github.com/blckur/blckur/gdefer"
 	"github.com/blckur/blckur/requires"
-	"flag"
 )
 
 func main() {

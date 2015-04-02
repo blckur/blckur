@@ -2,11 +2,11 @@
 package messenger
 
 import (
+	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/constants"
 	"github.com/dropbox/godropbox/container/set"
-	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo/bson"
 	"strings"
 	"time"
@@ -17,14 +17,14 @@ var (
 )
 
 type Message struct {
-	Id bson.ObjectId `bson:"_id,omitempty"`
-	Channel string `bson:"channel"`
-	Timestamp time.Time `bson:"timestamp"`
-	Data interface{} `bson:"data"`
+	Id        bson.ObjectId `bson:"_id,omitempty"`
+	Channel   string        `bson:"channel"`
+	Timestamp time.Time     `bson:"timestamp"`
+	Data      interface{}   `bson:"data"`
 }
 
 func getCursorId(coll *database.Collection, channels []string) (
-		id bson.ObjectId, err error) {
+	id bson.ObjectId, err error) {
 	msg := &Message{}
 
 	var query *bson.M
@@ -72,13 +72,13 @@ func getCursorId(coll *database.Collection, channels []string) (
 }
 
 func Publish(db *database.Database, channel string, data interface{}) (
-		err error) {
+	err error) {
 	coll := db.Messages()
 
 	msg := &Message{
-		Channel: channel,
+		Channel:   channel,
 		Timestamp: time.Now(),
-		Data: data,
+		Data:      data,
 	}
 
 	err = coll.Insert(msg)
@@ -91,7 +91,7 @@ func Publish(db *database.Database, channel string, data interface{}) (
 }
 
 func Subscribe(db *database.Database, channels []string,
-		duration time.Duration, onMsg func(*Message) bool) (err error) {
+	duration time.Duration, onMsg func(*Message) bool) (err error) {
 	coll := db.Messages()
 	cursorId, err := getCursorId(coll, channels)
 	if err != nil {
@@ -189,24 +189,24 @@ func init() {
 			for {
 				db := database.GetDatabase()
 
-				err := Subscribe(db, channels, 10 * time.Second,
-				func(msg *Message) bool {
-					if msg == nil {
+				err := Subscribe(db, channels, 10*time.Second,
+					func(msg *Message) bool {
+						if msg == nil {
+							return true
+						}
+
+						key := msg.Channel + ":all"
+						for _, listener := range listeners[key] {
+							listener(msg)
+						}
+
+						key = msg.Channel + ":" + msg.Data.(string)
+						for _, listener := range listeners[key] {
+							listener(msg)
+						}
+
 						return true
-					}
-
-					key := msg.Channel + ":all"
-					for _, listener := range listeners[key] {
-						listener(msg)
-					}
-
-					key = msg.Channel + ":" + msg.Data.(string)
-					for _, listener := range listeners[key] {
-						listener(msg)
-					}
-
-					return true
-				})
+					})
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"error": err,

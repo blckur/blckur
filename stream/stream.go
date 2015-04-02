@@ -2,9 +2,9 @@
 package stream
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/settings"
-	"github.com/Sirupsen/logrus"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"time"
@@ -16,11 +16,11 @@ type Backend interface {
 }
 
 type Stream struct {
-	Id bson.ObjectId `bson:"_id"`
-	RunnerId bson.ObjectId `bson:"runner_id"`
-	Timestamp time.Time `bson:"timestamp"`
-	backend Backend
-	db *database.Database
+	Id        bson.ObjectId `bson:"_id"`
+	RunnerId  bson.ObjectId `bson:"runner_id"`
+	Timestamp time.Time     `bson:"timestamp"`
+	backend   Backend
+	db        *database.Database
 }
 
 func (s *Stream) Start() (err error) {
@@ -56,13 +56,13 @@ func (s *Stream) Start() (err error) {
 			}
 
 			time.Sleep(time.Duration(
-			settings.Stream.RefreshRate) * time.Second)
+				settings.Stream.RefreshRate) * time.Second)
 			stop, err := s.Update()
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
-					"error": err,
+					"error":      err,
 					"account_id": s.Id.Hex(),
-					"runner_id": s.RunnerId.Hex(),
+					"runner_id":  s.RunnerId.Hex(),
 				}).Error("streams: Update error")
 			} else if stop {
 				s.backend.Stop()
@@ -71,10 +71,10 @@ func (s *Stream) Start() (err error) {
 				lastUpdate = time.Now()
 			}
 
-			if time.Since(lastUpdate) > 2 * time.Minute {
+			if time.Since(lastUpdate) > 2*time.Minute {
 				logrus.WithFields(logrus.Fields{
 					"account_id": s.Id.Hex(),
-					"runner_id": s.RunnerId.Hex(),
+					"runner_id":  s.RunnerId.Hex(),
 				}).Error("streams: Update timed out")
 				s.backend.Stop()
 				break
@@ -100,7 +100,7 @@ func (s *Stream) Update() (stop bool, err error) {
 	doc := &Stream{}
 
 	_, err = coll.Find(bson.M{
-		"_id": s.Id,
+		"_id":       s.Id,
 		"runner_id": s.RunnerId,
 	}).Apply(change, doc)
 	if err != nil {
@@ -136,11 +136,11 @@ func (s *Stream) initialize() (err error) {
 }
 
 func NewStream(db *database.Database, acctId bson.ObjectId,
-		backend Backend) (stream *Stream) {
+	backend Backend) (stream *Stream) {
 	stream = &Stream{
 		backend: backend,
-		db: db,
-		Id: acctId,
+		db:      db,
+		Id:      acctId,
 	}
 
 	return

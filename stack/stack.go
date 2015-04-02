@@ -6,7 +6,7 @@ import (
 )
 
 type StringStack struct {
-	data []string
+	data  []string
 	mutex *sync.Mutex
 }
 
@@ -25,15 +25,15 @@ func (s *StringStack) Pop() (elem string) {
 		return
 	}
 
-	elem = s.data[n - 1]
-	s.data = s.data[:n - 1]
+	elem = s.data[n-1]
+	s.data = s.data[:n-1]
 
 	return
 }
 
 func NewStringStack(data []string) *StringStack {
 	return &StringStack{
-		data: data,
+		data:  data,
 		mutex: &sync.Mutex{},
 	}
 }

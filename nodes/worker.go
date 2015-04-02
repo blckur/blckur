@@ -1,10 +1,10 @@
 package nodes
 
 import (
-	"github.com/blckur/blckur/queue"
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
-	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/queue"
 	"time"
 )
 
@@ -38,7 +38,7 @@ func (w *WorkerNode) Start() {
 
 	db := database.GetDatabase()
 
-	queue.NewListener(func (stream *queue.Stream) {
+	queue.NewListener(func(stream *queue.Stream) {
 		for {
 			job := stream.Reserve(30 * time.Second)
 			if job == nil {

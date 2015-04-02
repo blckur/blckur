@@ -1,7 +1,7 @@
 package account
 
 type AccountType struct {
-	Id int `json:"id"`
+	Id    int    `json:"id"`
 	Label string `json:"label"`
-	Type string `json:"type"`
+	Type  string `json:"type"`
 }

@@ -2,10 +2,10 @@
 package database
 
 import (
-	"github.com/dropbox/godropbox/errors"
-	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/constants"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/requires"
+	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo"
 	"time"
 )
@@ -15,7 +15,7 @@ var (
 )
 
 type Database struct {
-	session *mgo.Session
+	session  *mgo.Session
 	database *mgo.Database
 }
 
@@ -112,7 +112,7 @@ func addIndexes() (err error) {
 
 	coll := db.Accounts()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"user_id"},
+		Key:        []string{"user_id"},
 		Background: true,
 	})
 	if err != nil {
@@ -151,8 +151,8 @@ func addIndexes() (err error) {
 
 	coll = db.Users()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"email"},
-		Unique: true,
+		Key:        []string{"email"},
+		Unique:     true,
 		Background: true,
 	})
 	if err != nil {
@@ -163,7 +163,7 @@ func addIndexes() (err error) {
 
 	coll = db.Messages()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"channel"},
+		Key:        []string{"channel"},
 		Background: true,
 	})
 	if err != nil {
@@ -174,9 +174,9 @@ func addIndexes() (err error) {
 
 	coll = db.Tasks()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"timestamp"},
+		Key:         []string{"timestamp"},
 		ExpireAfter: 6 * time.Hour,
-		Background: true,
+		Background:  true,
 	})
 	if err != nil {
 		err = &IndexError{
@@ -186,8 +186,19 @@ func addIndexes() (err error) {
 
 	coll = db.Streams()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"timestamp"},
+		Key:         []string{"timestamp"},
 		ExpireAfter: 1 * time.Minute,
+		Background:  true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
+	coll = db.Nodes()
+	err = coll.EnsureIndex(mgo.Index{
+		Key:        []string{"type"},
 		Background: true,
 	})
 	if err != nil {
@@ -198,18 +209,7 @@ func addIndexes() (err error) {
 
 	coll = db.Nodes()
 	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"type"},
-		Background: true,
-	})
-	if err != nil {
-		err = &IndexError{
-			errors.Wrap(err, "database: Index error"),
-		}
-	}
-
-	coll = db.Nodes()
-	err = coll.EnsureIndex(mgo.Index{
-		Key: []string{"timestamp"},
+		Key:        []string{"timestamp"},
 		Background: true,
 	})
 	if err != nil {
@@ -239,8 +239,8 @@ func addCollections() (err error) {
 	}
 
 	err = coll.Create(&mgo.CollectionInfo{
-		Capped: true,
-		MaxDocs: 1024,
+		Capped:   true,
+		MaxDocs:  1024,
 		MaxBytes: 100000,
 	})
 	if err != nil {

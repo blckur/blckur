@@ -2,27 +2,27 @@ package queue
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/stack"
 	"github.com/blckur/blckur/utils"
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/kr/beanstalk"
-	"time"
 	"sync"
-	"fmt"
+	"time"
 )
 
 const (
 	NORMAL = "normal"
-	CHECK = "check"
+	CHECK  = "check"
 )
 
 type cluster struct {
 	defaultConsistency int
-	servers set.Set
-	serversSlc []string
-	pool map[string]*beanstalk.Conn
+	servers            set.Set
+	serversSlc         []string
+	pool               map[string]*beanstalk.Conn
 }
 
 func (c *cluster) conn(server string) (conn *beanstalk.Conn, err error) {
@@ -78,7 +78,7 @@ func (c *cluster) Close() (err error) {
 }
 
 func (c *cluster) putRetry(server string, data []byte, priority int,
-		delay time.Duration, ttr time.Duration) (err error) {
+	delay time.Duration, ttr time.Duration) (err error) {
 	for i := 0; i < 2; i++ {
 		conn, e := c.conn(server)
 		if e != nil {
@@ -98,7 +98,7 @@ func (c *cluster) putRetry(server string, data []byte, priority int,
 }
 
 func (c *cluster) Put(job *Job, priority int,
-		delay time.Duration, ttr time.Duration) (err error) {
+	delay time.Duration, ttr time.Duration) (err error) {
 	jsonJob, err := json.Marshal(job)
 	if err != nil {
 		err = &errortypes.UnknownError{
@@ -128,7 +128,7 @@ func (c *cluster) Put(job *Job, priority int,
 					err = c.putRetry(server, jsonJob, priority, delay, ttr)
 				} else {
 					err = c.putRetry(server, jsonJob, priority,
-						time.Duration(2) * ttr + delay, ttr)
+						time.Duration(2)*ttr+delay, ttr)
 				}
 				if err != nil {
 					continue

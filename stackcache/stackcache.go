@@ -9,7 +9,7 @@ import (
 
 type IdStackCache struct {
 	queue chan bson.ObjectId
-	data set.Set
+	data  set.Set
 	limit int
 	mutex *sync.Mutex
 }
@@ -34,7 +34,7 @@ func (s *IdStackCache) Contains(elem bson.ObjectId) bool {
 func NewIdStackCache(limit int) *IdStackCache {
 	return &IdStackCache{
 		queue: make(chan bson.ObjectId, limit),
-		data: set.NewSet(),
+		data:  set.NewSet(),
 		limit: limit,
 		mutex: &sync.Mutex{},
 	}

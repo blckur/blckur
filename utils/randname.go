@@ -50,6 +50,6 @@ var (
 
 func RandName() (name string) {
 	name = fmt.Sprintf("%s-%s-%d", randOne[rand.Intn(18)],
-		randTwo[rand.Intn(18)], rand.Intn(8999) + 1000)
+		randTwo[rand.Intn(18)], rand.Intn(8999)+1000)
 	return
 }

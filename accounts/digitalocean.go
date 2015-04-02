@@ -1,16 +1,16 @@
 package accounts
 
 import (
+	"fmt"
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/oauth"
-	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/notification"
-	"fmt"
-	"time"
+	"github.com/blckur/blckur/oauth"
+	"github.com/blckur/blckur/settings"
+	"labix.org/v2/mgo/bson"
 	"strconv"
+	"time"
 )
 
 var (
@@ -19,31 +19,31 @@ var (
 
 func init() {
 	account.Register("digitalocean", "DigitalOcean", OAUTH2,
-	DigitalOceanAuth{}, DigitalOceanClient{},
-	[]*account.FilterType{
-		&account.FilterType{
-			Label: "All new events",
-			Type: "all",
-		},
-		&account.FilterType{
-			Label: "Droplet created",
-			Type: "create",
-		},
-		&account.FilterType{
-			Label: "Droplet destroyed",
-			Type: "destroy",
-		},
-		&account.FilterType{
-			Label: "Droplet password reset",
-			Type: "password_reset",
-		},
-	}, func() {
-		messenger.Register("settings", "digitalocean",
+		DigitalOceanAuth{}, DigitalOceanClient{},
+		[]*account.FilterType{
+			&account.FilterType{
+				Label: "All new events",
+				Type:  "all",
+			},
+			&account.FilterType{
+				Label: "Droplet created",
+				Type:  "create",
+			},
+			&account.FilterType{
+				Label: "Droplet destroyed",
+				Type:  "destroy",
+			},
+			&account.FilterType{
+				Label: "Droplet password reset",
+				Type:  "password_reset",
+			},
+		}, func() {
+			messenger.Register("settings", "digitalocean",
 				func(_ *messenger.Message) {
+					updateDigitalOcean()
+				})
 			updateDigitalOcean()
 		})
-		updateDigitalOcean()
-	})
 }
 
 type DigitalOceanClient struct {
@@ -110,22 +110,22 @@ func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
 		msgCount = 10
 	}
 
-	url := fmt.Sprintf("https://api.digitalocean.com/v2" +
+	url := fmt.Sprintf("https://api.digitalocean.com/v2"+
 		"/actions?page=1&per_page=%d", msgCount)
 
 	notfs := []*notification.Notification{}
 
 	n := settings.Google.MaxMsg / 10
-	Loop:
+Loop:
 	for i := 0; i < n; i++ {
-		actions := struct{
-			Actions []struct{
-				Id int `json:"id"`
+		actions := struct {
+			Actions []struct {
+				Id        int    `json:"id"`
 				StartedAt string `json:"started_at"`
-				Type string `json:"type"`
+				Type      string `json:"type"`
 			} `json:"actions"`
-			Links struct{
-				Pages struct{
+			Links struct {
+				Pages struct {
 					Next string `json:"next"`
 				} `json:"pages"`
 			} `json:"links"`
@@ -146,7 +146,7 @@ func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
 			}
 
 			var subject string
-			switch (action.Type) {
+			switch action.Type {
 			case "create":
 				subject = "Droplet created"
 			case "destroy":
@@ -163,9 +163,9 @@ func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
 
 			if lastNotf == nil {
 				notf := &notification.Notification{
-					UserId: d.acct.UserId,
+					UserId:    d.acct.UserId,
 					AccountId: d.acct.Id,
-					RemoteId: strconv.Itoa(action.Id),
+					RemoteId:  strconv.Itoa(action.Id),
 					Timestamp: timestamp,
 				}
 				notfs = append(notfs, notf)
@@ -173,16 +173,16 @@ func (d *DigitalOceanClient) Sync(db *database.Database) (err error) {
 			}
 
 			notf := &notification.Notification{
-				UserId: d.acct.UserId,
+				UserId:    d.acct.UserId,
 				AccountId: d.acct.Id,
-				RemoteId: strconv.Itoa(action.Id),
+				RemoteId:  strconv.Itoa(action.Id),
 				Timestamp: timestamp,
-				Type: action.Type,
-				Subject: subject,
+				Type:      action.Type,
+				Subject:   subject,
 			}
 
 			if timestamp.Before(lastNotf.Timestamp) ||
-					notf.RemoteId == lastNotf.RemoteId {
+				notf.RemoteId == lastNotf.RemoteId {
 				break Loop
 			}
 
@@ -206,7 +206,7 @@ type DigitalOceanAuth struct {
 }
 
 func (d *DigitalOceanAuth) Request(db *database.Database,
-		userId bson.ObjectId) (url string, err error) {
+	userId bson.ObjectId) (url string, err error) {
 	url, err = digitalOceanConf.Request(db, userId)
 	if err != nil {
 		return
@@ -216,7 +216,7 @@ func (d *DigitalOceanAuth) Request(db *database.Database,
 }
 
 func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
-		code string) (acct *account.Account, err error) {
+	code string) (acct *account.Account, err error) {
 	coll := db.Accounts()
 
 	auth, err := digitalOceanConf.Authorize(db, state, code)
@@ -245,12 +245,12 @@ func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
 
 func updateDigitalOcean() {
 	digitalOceanConf = &oauth.Oauth2{
-		Type: "digitalocean",
-		ClientId: settings.DigitalOcean.ClientId,
+		Type:         "digitalocean",
+		ClientId:     settings.DigitalOcean.ClientId,
 		ClientSecret: settings.DigitalOcean.ClientSecret,
-		CallbackUrl: settings.System.Domain + "/callback/digitalocean",
-		AuthUrl: "https://cloud.digitalocean.com/v1/oauth/authorize",
-		TokenUrl: "https://cloud.digitalocean.com/v1/oauth/token",
+		CallbackUrl:  settings.System.Domain + "/callback/digitalocean",
+		AuthUrl:      "https://cloud.digitalocean.com/v1/oauth/authorize",
+		TokenUrl:     "https://cloud.digitalocean.com/v1/oauth/token",
 		Scopes: []string{
 			"read",
 		},

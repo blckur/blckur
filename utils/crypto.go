@@ -2,12 +2,12 @@ package utils
 
 import (
 	"crypto/rand"
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/dropbox/godropbox/errors"
-	"github.com/Sirupsen/logrus"
 	"math/big"
-	"time"
 	mathrand "math/rand"
+	"time"
 )
 
 func RandBytes(size int) (bytes []byte, err error) {

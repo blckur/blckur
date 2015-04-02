@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/settings"
-	"github.com/blckur/blckur/messenger"
 	"flag"
+	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/settings"
 )
 
 // Manages system settigs stored in database

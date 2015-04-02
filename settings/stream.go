@@ -9,6 +9,6 @@ func init() {
 }
 
 type stream struct {
-	Id string `bson:"_id"`
-	RefreshRate int `bson:"refresh_rate" default:"30"`
+	Id          string `bson:"_id"`
+	RefreshRate int    `bson:"refresh_rate" default:"30"`
 }

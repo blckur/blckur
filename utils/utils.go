@@ -2,9 +2,9 @@
 package utils
 
 import (
-	"math/rand"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/dropbox/godropbox/errors"
+	"math/rand"
 	"net"
 	"net/mail"
 	"os"
@@ -95,7 +95,7 @@ func ReverseStrings(data []string, start int, end int) {
 func RotateStrings(data []string, d int) {
 	n := len(data) - 1
 	ReverseStrings(data, 0, n)
-	ReverseStrings(data, 0, d - 1)
+	ReverseStrings(data, 0, d-1)
 	ReverseStrings(data, d, n)
 }
 
@@ -119,13 +119,13 @@ func isEscapable(b byte) bool {
 }
 
 func Escape(s string) string {
-	t := make([]byte, 0, 3 * len(s))
+	t := make([]byte, 0, 3*len(s))
 	for i := 0; i < len(s); i++ {
 		c := s[i]
 		if isEscapable(c) {
 			t = append(t, '%')
-			t = append(t, "0123456789ABCDEF"[c >> 4])
-			t = append(t, "0123456789ABCDEF"[c & 15])
+			t = append(t, "0123456789ABCDEF"[c>>4])
+			t = append(t, "0123456789ABCDEF"[c&15])
 		} else {
 			t = append(t, s[i])
 		}

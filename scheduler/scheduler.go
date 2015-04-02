@@ -2,17 +2,17 @@
 package scheduler
 
 import (
-	"github.com/blckur/blckur/tasks"
-	"github.com/blckur/blckur/database"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/tasks"
 	"hash/fnv"
-	"time"
-	"strconv"
 	"math/rand"
+	"strconv"
+	"time"
 )
 
 type Reserve struct {
-	Id uint32 `bson:"_id"`
+	Id        uint32    `bson:"_id"`
 	Timestamp time.Time `bson:"timestamp"`
 }
 
@@ -33,7 +33,7 @@ func runTasks(tme time.Time) {
 		id := idHash.Sum32()
 
 		resv := &Reserve{
-			Id: id,
+			Id:        id,
 			Timestamp: time.Now(),
 		}
 

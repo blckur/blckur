@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/utils"
 	"strconv"
-	"fmt"
 	"time"
 )
 
@@ -63,7 +63,7 @@ func StressPub() {
 		go func(j int) {
 			conn := cache.Get()
 
-			for i := 20000 * j; i < 20000 * (j + 1); i++ {
+			for i := 20000 * j; i < 20000*(j+1); i++ {
 				x := strconv.Itoa(i)
 				err := conn.Publish(x, x)
 				if err != nil {
@@ -81,7 +81,6 @@ func StressPub() {
 	fmt.Printf("publish time: %s\n", time.Since(start).String())
 }
 
-
 // Starts subscribe performance test
 func StressSub() {
 	start := time.Now()
@@ -96,7 +95,7 @@ func StressSub() {
 
 			go func() {
 				for msg := range lst.Listen() {
-					if i % 10000 == 0 || i == 99999 {
+					if i%10000 == 0 || i == 99999 {
 						fmt.Printf("%s: %s\n", channel, msg)
 					}
 				}

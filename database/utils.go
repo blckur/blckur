@@ -1,9 +1,9 @@
 package database
 
 import (
+	"fmt"
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo"
-	"fmt"
 )
 
 // Get mongodb error code from error

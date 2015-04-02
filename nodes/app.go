@@ -1,18 +1,18 @@
 package nodes
 
 import (
-	"github.com/blckur/blckur/handlers"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/handlers"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"time"
 	"strconv"
+	"time"
 )
 
 type AppNode struct {
-	Id string
-	Host string
-	Port int
+	Id     string
+	Host   string
+	Port   int
 	Source string
 }
 
@@ -24,15 +24,15 @@ func (a *AppNode) Start() {
 	handlers.Register(router, a.Source)
 
 	server := &http.Server{
-		Addr: a.Host + ":" + port,
-		Handler: router,
-		ReadTimeout: 10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		Addr:           a.Host + ":" + port,
+		Handler:        router,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 4096,
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"id": a.Id,
+		"id":      a.Id,
 		"address": address,
 	}).Info("nodes.app: Starting app node")
 

@@ -2,13 +2,13 @@
 package account
 
 import (
-	"labix.org/v2/mgo/bson"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/dropbox/godropbox/errors"
-	"time"
+	"labix.org/v2/mgo/bson"
 	"reflect"
+	"time"
 )
 
 type Client interface {
@@ -23,18 +23,18 @@ type Auth interface {
 }
 
 type Account struct {
-	Id bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	UserId bson.ObjectId `bson:"user_id" json:"user_id"`
-	Type string `bson:"type" json:"type"`
-	Identity string `bson:"identity" json:"identity"`
-	IdentityId string `bson:"identity_id,omitempty" json:"-"`
-	New bool `bson:"new" json:"new"`
-	OauthTokn string `bson:"oauth_tokn,omitempty" json:"-"`
-	OauthSec string `bson:"oauth_sec,omitempty" json:"-"`
-	Oauth2AccTokn string `bson:"oauth2_acc_tokn,omitempty" json:"-"`
-	Oauth2RefTokn string `bson:"oauth2_ref_tokn,omitempty" json:"-"`
-	Oauth2Exp time.Time `bson:"oauth2_exp,omitempty" json:"-"`
-	Filters []*Filter `bson:"filters" json:"filters"`
+	Id            bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	UserId        bson.ObjectId `bson:"user_id" json:"user_id"`
+	Type          string        `bson:"type" json:"type"`
+	Identity      string        `bson:"identity" json:"identity"`
+	IdentityId    string        `bson:"identity_id,omitempty" json:"-"`
+	New           bool          `bson:"new" json:"new"`
+	OauthTokn     string        `bson:"oauth_tokn,omitempty" json:"-"`
+	OauthSec      string        `bson:"oauth_sec,omitempty" json:"-"`
+	Oauth2AccTokn string        `bson:"oauth2_acc_tokn,omitempty" json:"-"`
+	Oauth2RefTokn string        `bson:"oauth2_ref_tokn,omitempty" json:"-"`
+	Oauth2Exp     time.Time     `bson:"oauth2_exp,omitempty" json:"-"`
+	Filters       []*Filter     `bson:"filters" json:"filters"`
 }
 
 func (a *Account) Commit(db *database.Database) (err error) {
@@ -44,7 +44,7 @@ func (a *Account) Commit(db *database.Database) (err error) {
 }
 
 func (a *Account) CommitFields(db *database.Database,
-		fields set.Set) (err error) {
+	fields set.Set) (err error) {
 	coll := db.Accounts()
 	err = coll.CommitFields(a.Id, a, fields)
 	return
@@ -85,7 +85,7 @@ func GetAuth(acctType string) (auth Auth, authTyp int, err error) {
 }
 
 func GetAccount(db *database.Database, userId bson.ObjectId,
-		acctId bson.ObjectId) (acct *Account, err error) {
+	acctId bson.ObjectId) (acct *Account, err error) {
 	coll := db.Accounts()
 	acct = &Account{}
 
@@ -107,7 +107,7 @@ func GetAccount(db *database.Database, userId bson.ObjectId,
 }
 
 func RemAccount(db *database.Database, userId bson.ObjectId,
-		acctId bson.ObjectId) (err error) {
+	acctId bson.ObjectId) (err error) {
 	coll := db.Accounts()
 
 	query := bson.M{
@@ -128,7 +128,7 @@ func RemAccount(db *database.Database, userId bson.ObjectId,
 }
 
 func GetAccounts(db *database.Database, userId bson.ObjectId) (
-		accts []*Account, err error) {
+	accts []*Account, err error) {
 	coll := db.Accounts()
 	accts = []*Account{}
 

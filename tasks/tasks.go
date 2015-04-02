@@ -27,8 +27,8 @@ func register(hour int, min int, task Task) {
 		}
 	}
 
-	registry[hour + 1][min + 1] = append(
-		registry[hour + 1][min + 1],
+	registry[hour+1][min+1] = append(
+		registry[hour+1][min+1],
 		task)
 }
 
@@ -43,15 +43,15 @@ func registerMulti(hours []int, mins []int, task Task) {
 func GetTasks(tme time.Time) (tasks []Task) {
 	tasks = []Task{}
 
-	for _, task := range registry[tme.Hour() + 1][tme.Minute() + 1] {
+	for _, task := range registry[tme.Hour()+1][tme.Minute()+1] {
 		tasks = append(tasks, task)
 	}
 
-	for _, task := range registry[0][tme.Minute() + 1] {
+	for _, task := range registry[0][tme.Minute()+1] {
 		tasks = append(tasks, task)
 	}
 
-	for _, task := range registry[tme.Hour() + 1][0] {
+	for _, task := range registry[tme.Hour()+1][0] {
 		tasks = append(tasks, task)
 	}
 

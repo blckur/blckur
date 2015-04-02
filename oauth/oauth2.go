@@ -6,40 +6,40 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/utils"
-	"github.com/dropbox/godropbox/errors"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/dropbox/godropbox/errors"
 	"golang.org/x/oauth2"
-	"labix.org/v2/mgo/bson"
 	"io/ioutil"
+	"labix.org/v2/mgo/bson"
 	"net/http"
 )
 
 type Oauth2 struct {
-	Type string
-	ClientId string
+	Type         string
+	ClientId     string
 	ClientSecret string
-	CallbackUrl string
-	AuthUrl string
-	TokenUrl string
-	Scopes []string
-	conf *oauth2.Config
+	CallbackUrl  string
+	AuthUrl      string
+	TokenUrl     string
+	Scopes       []string
+	conf         *oauth2.Config
 }
 
 func (o *Oauth2) Config() {
 	o.conf = &oauth2.Config{
-		ClientID: o.ClientId,
+		ClientID:     o.ClientId,
 		ClientSecret: o.ClientSecret,
-		RedirectURL: o.CallbackUrl,
-		Scopes: o.Scopes,
+		RedirectURL:  o.CallbackUrl,
+		Scopes:       o.Scopes,
 		Endpoint: oauth2.Endpoint{
-			AuthURL: o.AuthUrl,
+			AuthURL:  o.AuthUrl,
 			TokenURL: o.TokenUrl,
 		},
 	}
 }
 
 func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
-		url string, err error) {
+	url string, err error) {
 	coll := db.Tokens()
 	state := utils.RandStr(32)
 
@@ -53,8 +53,8 @@ func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
 	}
 
 	tokn := &Token{
-		Id: state,
-		Type: o.Type,
+		Id:     state,
+		Type:   o.Type,
 		UserId: userId,
 	}
 
@@ -68,7 +68,7 @@ func (o *Oauth2) Request(db *database.Database, userId bson.ObjectId) (
 }
 
 func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
-		client *Oauth2Client, err error) {
+	client *Oauth2Client, err error) {
 	coll := db.Tokens()
 	tokn := &Token{}
 
@@ -87,19 +87,19 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 	}
 
 	acct := &account.Account{
-		UserId: tokn.UserId,
-		Type: o.Type,
-		New: true,
+		UserId:        tokn.UserId,
+		Type:          o.Type,
+		New:           true,
 		Oauth2AccTokn: accessTokn.AccessToken,
 		Oauth2RefTokn: accessTokn.RefreshToken,
-		Oauth2Exp: accessTokn.Expiry,
+		Oauth2Exp:     accessTokn.Expiry,
 	}
 
 	client = &Oauth2Client{
 		Account: acct,
-		Token: *accessTokn,
-		client: o.conf.Client(oauth2.NoContext, accessTokn),
-		conf: o,
+		Token:   *accessTokn,
+		client:  o.conf.Client(oauth2.NoContext, accessTokn),
+		conf:    o,
 	}
 
 	return
@@ -107,16 +107,16 @@ func (o *Oauth2) Authorize(db *database.Database, state string, code string) (
 
 func (o *Oauth2) NewClient(acct *account.Account) (client *Oauth2Client) {
 	tokn := &oauth2.Token{
-		AccessToken: acct.Oauth2AccTokn,
-		TokenType: "Bearer",
+		AccessToken:  acct.Oauth2AccTokn,
+		TokenType:    "Bearer",
 		RefreshToken: acct.Oauth2RefTokn,
-		Expiry: acct.Oauth2Exp,
+		Expiry:       acct.Oauth2Exp,
 	}
 
 	client = &Oauth2Client{
 		Account: acct,
-		client: o.conf.Client(oauth2.NoContext, tokn),
-		conf: o,
+		client:  o.conf.Client(oauth2.NoContext, tokn),
+		conf:    o,
 	}
 
 	return
@@ -124,8 +124,8 @@ func (o *Oauth2) NewClient(acct *account.Account) (client *Oauth2Client) {
 
 type Oauth2Client struct {
 	oauth2.Token
-	client *http.Client
-	conf *Oauth2
+	client  *http.Client
+	conf    *Oauth2
 	Account *account.Account
 }
 

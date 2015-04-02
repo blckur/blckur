@@ -9,6 +9,6 @@ func init() {
 }
 
 type queue struct {
-	Id string `bson:"_id"`
-	Consistency int `bson:"consistency" default:"2"`
+	Id          string `bson:"_id"`
+	Consistency int    `bson:"consistency" default:"2"`
 }

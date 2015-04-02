@@ -2,17 +2,17 @@
 package settings
 
 import (
-	"github.com/blckur/blckur/database"
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/requires"
-	"github.com/Sirupsen/logrus"
-	"github.com/dropbox/godropbox/errors"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
 	"reflect"
-	"time"
 	"strconv"
+	"time"
 )
 
 var (
@@ -20,7 +20,7 @@ var (
 )
 
 func Commit(db *database.Database, group interface{}, fields set.Set) (
-		err error) {
+	err error) {
 	coll := db.Settings()
 
 	selector := database.SelectFields(group, set.NewSet("_id"))
@@ -36,7 +36,7 @@ func Commit(db *database.Database, group interface{}, fields set.Set) (
 }
 
 func Get(db *database.Database, group string, key string) (
-		val interface{}, err error) {
+	val interface{}, err error) {
 	coll := db.Settings()
 
 	grp := map[string]interface{}{}
@@ -66,7 +66,7 @@ func Get(db *database.Database, group string, key string) (
 }
 
 func Set(db *database.Database, group string, key string, val interface{}) (
-		err error) {
+	err error) {
 	coll := db.Settings()
 
 	_, err = coll.Upsert(bson.M{
@@ -113,7 +113,7 @@ func setDefaults(obj interface{}) {
 			continue
 		}
 
-		switch (fld.Kind()) {
+		switch fld.Kind() {
 		case reflect.Bool:
 			parVal, err := strconv.ParseBool(tag)
 			if err != nil {

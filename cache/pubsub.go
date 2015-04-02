@@ -2,29 +2,29 @@ package cache
 
 import (
 	"container/list"
-	"github.com/blckur/blckur/constants"
-	"github.com/garyburd/redigo/redis"
-	"github.com/dropbox/godropbox/errors"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/constants"
+	"github.com/dropbox/godropbox/errors"
+	"github.com/garyburd/redigo/redis"
+	"labix.org/v2/mgo/bson"
 	"sync"
 	"time"
-	"labix.org/v2/mgo/bson"
 )
 
 type message struct {
-	Id bson.ObjectId `json:"i"`
-	Data string `json:"d"`
+	Id   bson.ObjectId `json:"i"`
+	Data string        `json:"d"`
 }
 
 type pubSubConn struct {
-	address string
-	addMutex *sync.Mutex
-	remMutex *sync.Mutex
-	addQueue *list.List
-	remQueue *list.List
-	conn *redis.PubSubConn
+	address   string
+	addMutex  *sync.Mutex
+	remMutex  *sync.Mutex
+	addQueue  *list.List
+	remQueue  *list.List
+	conn      *redis.PubSubConn
 	listeners map[string]func(string)
-	closed bool
+	closed    bool
 }
 
 func (p *pubSubConn) Subscribe(key string, handler func(string)) {
@@ -118,7 +118,7 @@ func (p *pubSubConn) Listen() {
 	for {
 		conn := p.conn
 		if conn != nil {
-			Loop:
+		Loop:
 			for {
 				switch obj := conn.Receive().(type) {
 				case redis.Message:
@@ -198,13 +198,13 @@ func (p *pubSubConn) Close() {
 
 func newPubSubConn(address string) (psc *pubSubConn) {
 	psc = &pubSubConn{
-		address: address,
-		addMutex: &sync.Mutex{},
-		remMutex: &sync.Mutex{},
-		addQueue: list.New(),
-		remQueue: list.New(),
+		address:   address,
+		addMutex:  &sync.Mutex{},
+		remMutex:  &sync.Mutex{},
+		addQueue:  list.New(),
+		remQueue:  list.New(),
 		listeners: map[string]func(string){},
-		closed: false,
+		closed:    false,
 	}
 
 	conn, err := dialLong(address)

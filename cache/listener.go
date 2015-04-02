@@ -6,13 +6,13 @@ import (
 )
 
 type Listener struct {
-	mutex *sync.Mutex
-	cluster *cluster
-	channel string
-	servers []string
+	mutex    *sync.Mutex
+	cluster  *cluster
+	channel  string
+	servers  []string
 	handlers []*handler
-	stream chan string
-	idCache *stackcache.IdStackCache
+	stream   chan string
+	idCache  *stackcache.IdStackCache
 }
 
 func (l *Listener) reshard() {
@@ -56,7 +56,7 @@ func (l *Listener) sub() {
 	for _, server := range servers {
 		handler := &handler{
 			listener: l,
-			State: true,
+			State:    true,
 		}
 		handlers = append(handlers, handler)
 
@@ -80,9 +80,9 @@ func (l *Listener) init() {
 // Subscribe to a channel connection will auto repair as nodes are added/lost
 func Subscribe(channel string) (lst *Listener) {
 	lst = &Listener{
-		mutex: &sync.Mutex{},
+		mutex:   &sync.Mutex{},
 		channel: channel,
-		stream: make(chan string),
+		stream:  make(chan string),
 		idCache: stackcache.NewIdStackCache(64),
 	}
 

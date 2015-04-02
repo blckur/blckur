@@ -2,58 +2,58 @@
 package static
 
 import (
+	"bytes"
+	"compress/gzip"
+	"crypto/md5"
+	"encoding/base32"
 	"github.com/blckur/blckur/errortypes"
 	"github.com/dropbox/godropbox/errors"
 	"io/ioutil"
 	"path"
 	"path/filepath"
-	"crypto/md5"
-	"encoding/base32"
-	"strings"
 	"regexp"
-	"compress/gzip"
-	"bytes"
+	"strings"
 )
 
 var (
 	mimeTypes = map[string]string{
-		".js": "application/javascript",
+		".js":   "application/javascript",
 		".dart": "application/dart",
 		".json": "application/json",
-		".css": "text/css",
+		".css":  "text/css",
 		".html": "text/html",
-		".jpg": "image/jpeg",
-		".png": "image/png",
-		".svg": "image/svg+xml",
-		".otf": "application/font-sfnt",
-		".ttf": "application/font-sfnt",
+		".jpg":  "image/jpeg",
+		".png":  "image/png",
+		".svg":  "image/svg+xml",
+		".otf":  "application/font-sfnt",
+		".ttf":  "application/font-sfnt",
 		".woff": "application/font-woff",
-		".eot": "application/vnd.ms-fontobject",
-		".map": "application/json",
+		".eot":  "application/vnd.ms-fontobject",
+		".map":  "application/json",
 	}
 	pathReg = regexp.MustCompile(
 		`((src=)('|")(.*?)('|"))|(('|")(packages/|/s/img/)(.*?)('|"))`)
 )
 
 type File struct {
-	Type string
-	Data []byte
+	Type     string
+	Data     []byte
 	GzipData []byte
 }
 
 type fileName struct {
-	Name string
+	Name     string
 	HashName string
 }
 
 // Currently all static references are found and replaced Files can be
 // used as a fallback if a reference is missed
 type Store struct {
-	Files map[string]*File
+	Files     map[string]*File
 	HashFiles map[string]*File
-	root string
-	dirNames map[string][]*fileName
-	lookup map[string]*fileName
+	root      string
+	dirNames  map[string][]*fileName
+	lookup    map[string]*fileName
 }
 
 func (s *Store) addDir(dir string) (err error) {
@@ -81,7 +81,7 @@ func (s *Store) addDir(dir string) (err error) {
 			continue
 		}
 
-		baseName := name[:len(name) - len(ext)]
+		baseName := name[:len(name)-len(ext)]
 
 		data, e := ioutil.ReadFile(fullPath)
 		if e != nil {
@@ -111,7 +111,7 @@ func (s *Store) addDir(dir string) (err error) {
 		s.HashFiles[path.Join(dir, hashName)] = file
 
 		s.lookup[fullPath] = &fileName{
-			Name: name,
+			Name:     name,
 			HashName: hashName,
 		}
 	}
@@ -125,14 +125,14 @@ func (s *Store) parseFiles() {
 		dataStr := string(file.Data)
 
 		dataStr = pathReg.ReplaceAllStringFunc(dataStr, func(
-				match string) string {
+			match string) string {
 			var matchPath string
 			if match[1:4] == "/s/" {
-				matchPath = filepath.Join(s.root, match[4:len(match) - 1])
+				matchPath = filepath.Join(s.root, match[4:len(match)-1])
 			} else if match[1:4] == "pac" {
-				matchPath = filepath.Join(path, match[1:len(match) - 1])
+				matchPath = filepath.Join(path, match[1:len(match)-1])
 			} else {
-				matchPath = filepath.Join(path, match[5:len(match) - 1])
+				matchPath = filepath.Join(path, match[5:len(match)-1])
 			}
 
 			if name, ok := s.lookup[matchPath]; ok {
@@ -154,10 +154,10 @@ func (s *Store) parseFiles() {
 
 func NewStore(root string) (store *Store, err error) {
 	store = &Store{
-		Files: map[string]*File{},
+		Files:     map[string]*File{},
 		HashFiles: map[string]*File{},
-		root: root,
-		lookup: map[string]*fileName{},
+		root:      root,
+		lookup:    map[string]*fileName{},
 	}
 
 	err = store.addDir(root)

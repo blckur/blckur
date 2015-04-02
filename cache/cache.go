@@ -37,32 +37,32 @@
 package cache
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
-	"github.com/blckur/blckur/shard"
-	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/messenger"
-	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/gdefer"
+	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/node"
-	"github.com/garyburd/redigo/redis"
-	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/shard"
 	"github.com/dropbox/godropbox/container/set"
+	"github.com/garyburd/redigo/redis"
 	"labix.org/v2/mgo/bson"
 	"sync"
 	"time"
 )
 
 var (
-	clst *cluster
-	subs set.Set
+	clst      *cluster
+	subs      set.Set
 	clstMutex = sync.RWMutex{}
 )
 
 type cluster struct {
-	serverMap map[string]*redis.Pool
+	serverMap   map[string]*redis.Pool
 	pubsubConns map[string]*pubSubConn
-	shrd *shard.Shard
+	shrd        *shard.Shard
 }
 
 func dial(address string) (conn redis.Conn, err error) {
@@ -80,8 +80,8 @@ func dialLong(address string) (conn redis.Conn, err error) {
 
 func newPool(address string) (pool *redis.Pool) {
 	pool = &redis.Pool{
-		MaxIdle: settings.Cache.MaxIdle,
-		MaxActive: settings.Cache.MaxActive,
+		MaxIdle:     settings.Cache.MaxIdle,
+		MaxActive:   settings.Cache.MaxActive,
 		IdleTimeout: time.Duration(settings.Cache.IdleTimeout) * time.Second,
 		Dial: func() (conn redis.Conn, err error) {
 			conn, err = dial(address)
@@ -97,7 +97,7 @@ func newPool(address string) (pool *redis.Pool) {
 
 func Get() (conn *ClusterConn) {
 	conn = &ClusterConn{
-		clst: clst,
+		clst:  clst,
 		conns: map[string]redis.Conn{},
 	}
 	return
@@ -109,7 +109,7 @@ func update() {
 		coll := db.Nodes()
 		nodes := []*node.Node{}
 		cls := &cluster{
-			serverMap: map[string]*redis.Pool{},
+			serverMap:   map[string]*redis.Pool{},
 			pubsubConns: map[string]*pubSubConn{},
 		}
 

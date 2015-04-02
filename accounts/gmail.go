@@ -1,23 +1,23 @@
 package accounts
 
 import (
+	"encoding/base64"
+	"fmt"
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
+	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
-	"encoding/base64"
-	"fmt"
-	"time"
 	"strings"
+	"time"
 )
 
 var (
 	dateLayouts []string
-	gmailConf *oauth.Oauth2
+	gmailConf   *oauth.Oauth2
 )
 
 func init() {
@@ -42,61 +42,61 @@ func init() {
 	}
 
 	account.Register("gmail", "Gmail", OAUTH2, GmailAuth{}, GmailClient{},
-	[]*account.FilterType{
-		&account.FilterType{
-			Label: "All new messages",
-			Type: "all",
-		},
-		&account.FilterType{
-			Label: "Messages matching sender",
-			Type: "from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial email address " +
-				"of sender to match",
-			ValueHolder: "Email address",
-		},
-		&account.FilterType{
-			Label: "Messages matching subject",
-			Type: "subject",
-			ValueType: "input",
-			ValueLabel: "Enter search term to match in email subject",
-			ValueHolder: "Search term",
-		},
-		&account.FilterType{
-			Label: "Messages matching message body",
-			Type: "body",
-			ValueType: "input",
-			ValueLabel: "Enter search term to match in email body",
-			ValueHolder: "Search term",
-		},
-		&account.FilterType{
-			Label: "Exclude messages matching sender",
-			Type: "not_from",
-			ValueType: "input",
-			ValueLabel: "Enter complete or partial email address " +
-				"of sender to match",
-			ValueHolder: "Email address",
-		},
-		&account.FilterType{
-			Label: "Exclude messages matching subject",
-			Type: "not_subject",
-			ValueType: "input",
-			ValueLabel: "Enter search term to match in email subject",
-			ValueHolder: "Search term",
-		},
-		&account.FilterType{
-			Label: "Exclude messages matching message body",
-			Type: "not_body",
-			ValueType: "input",
-			ValueLabel: "Enter search term to match in email body",
-			ValueHolder: "Search term",
-		},
-	}, func() {
-		messenger.Register("settings", "google", func(_ *messenger.Message) {
+		[]*account.FilterType{
+			&account.FilterType{
+				Label: "All new messages",
+				Type:  "all",
+			},
+			&account.FilterType{
+				Label:     "Messages matching sender",
+				Type:      "from",
+				ValueType: "input",
+				ValueLabel: "Enter complete or partial email address " +
+					"of sender to match",
+				ValueHolder: "Email address",
+			},
+			&account.FilterType{
+				Label:       "Messages matching subject",
+				Type:        "subject",
+				ValueType:   "input",
+				ValueLabel:  "Enter search term to match in email subject",
+				ValueHolder: "Search term",
+			},
+			&account.FilterType{
+				Label:       "Messages matching message body",
+				Type:        "body",
+				ValueType:   "input",
+				ValueLabel:  "Enter search term to match in email body",
+				ValueHolder: "Search term",
+			},
+			&account.FilterType{
+				Label:     "Exclude messages matching sender",
+				Type:      "not_from",
+				ValueType: "input",
+				ValueLabel: "Enter complete or partial email address " +
+					"of sender to match",
+				ValueHolder: "Email address",
+			},
+			&account.FilterType{
+				Label:       "Exclude messages matching subject",
+				Type:        "not_subject",
+				ValueType:   "input",
+				ValueLabel:  "Enter search term to match in email subject",
+				ValueHolder: "Search term",
+			},
+			&account.FilterType{
+				Label:       "Exclude messages matching message body",
+				Type:        "not_body",
+				ValueType:   "input",
+				ValueLabel:  "Enter search term to match in email body",
+				ValueHolder: "Search term",
+			},
+		}, func() {
+			messenger.Register("settings", "google", func(_ *messenger.Message) {
+				updateGmail()
+			})
 			updateGmail()
 		})
-		updateGmail()
-	})
 }
 
 func parseDate(date string) (parsed time.Time, err error) {
@@ -115,16 +115,16 @@ func parseDate(date string) (parsed time.Time, err error) {
 }
 
 type gmailMessage struct {
-	Id string `json:"id"`
-	Labels []string `json:"labelIds"`
-	Snippet string `json:"snippet"`
+	Id      string   `json:"id"`
+	Labels  []string `json:"labelIds"`
+	Snippet string   `json:"snippet"`
 	Payload struct {
 		Headers []struct {
-			Name string `json:"name"`
+			Name  string `json:"name"`
 			Value string `json:"value"`
 		}
 		Body struct {
-			Size int `json:"size"`
+			Size int    `json:"size"`
 			Data string `json:"data"`
 		} `json:"body"`
 	} `json:"payload"`
@@ -162,8 +162,9 @@ func (g *GmailClient) Update(db *database.Database) (err error) {
 }
 
 func (g *GmailClient) parseMessage(msg *gmailMessage,
-		lastNotf *notification.Notification, force bool) (
-		notf *notification.Notification, done bool) {
+	lastNotf *notification.Notification, force bool) (
+	notf *notification.Notification, done bool) {
+
 	done = false
 	from := ""
 	subject := ""
@@ -185,15 +186,15 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 
 	if force {
 		notf = &notification.Notification{
-			UserId: g.acct.UserId,
+			UserId:    g.acct.UserId,
 			AccountId: g.acct.Id,
-			RemoteId: msg.Id,
+			RemoteId:  msg.Id,
 			Timestamp: date,
 		}
 	}
 
 	if lastNotf == nil || date.Before(lastNotf.Timestamp) ||
-			msg.Id == lastNotf.RemoteId {
+		msg.Id == lastNotf.RemoteId {
 		done = true
 		return
 	}
@@ -201,9 +202,9 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	match := false
 	body := ""
 
-	Loop:
+Loop:
 	for _, filter := range g.acct.Filters {
-		switch (filter.Type) {
+		switch filter.Type {
 		case "all":
 			match = true
 			break Loop
@@ -250,14 +251,14 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	}
 
 	notf = &notification.Notification{
-		UserId: g.acct.UserId,
+		UserId:    g.acct.UserId,
 		AccountId: g.acct.Id,
-		RemoteId: msg.Id,
+		RemoteId:  msg.Id,
 		Timestamp: date,
-		Type: "email",
-		Origin: from,
-		Subject: subject,
-		Body: bodySnippet,
+		Type:      "email",
+		Origin:    from,
+		Subject:   subject,
+		Body:      bodySnippet,
 	}
 
 	return
@@ -289,17 +290,17 @@ func (g *GmailClient) Sync(db *database.Database) (err error) {
 	notfs := []*notification.Notification{}
 
 	n := settings.Google.MaxMsg / 10
-	Loop:
+Loop:
 	for i := 0; i < n; i++ {
-		messages := struct{
-			Messages []struct{
+		messages := struct {
+			Messages []struct {
 				Id string `json:"id"`
 			} `json:"messages"`
 			NextPageToken string `json:"nextPageToken"`
 		}{}
 
-		url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
-			"/users/me/messages?labelIds=INBOX&maxResults=%d" +
+		url := fmt.Sprintf("https://www.googleapis.com/gmail/v1"+
+			"/users/me/messages?labelIds=INBOX&maxResults=%d"+
 			"&includeSpamTrash=false", msgCount)
 
 		if pageToken != "" {
@@ -316,7 +317,7 @@ func (g *GmailClient) Sync(db *database.Database) (err error) {
 		for j, msg := range messages.Messages {
 			data := &gmailMessage{}
 
-			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
+			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1"+
 				"/users/me/messages/%s?format=full", msg.Id)
 
 			err = client.GetJson(url, data)
@@ -351,7 +352,7 @@ type GmailAuth struct {
 }
 
 func (g *GmailAuth) Request(db *database.Database, userId bson.ObjectId) (
-		url string, err error) {
+	url string, err error) {
 	url, err = gmailConf.Request(db, userId)
 	if err != nil {
 		return
@@ -361,7 +362,7 @@ func (g *GmailAuth) Request(db *database.Database, userId bson.ObjectId) (
 }
 
 func (g *GmailAuth) Authorize(db *database.Database, state string,
-		code string) (acct *account.Account, err error) {
+	code string) (acct *account.Account, err error) {
 	coll := db.Accounts()
 
 	auth, err := gmailConf.Authorize(db, state, code)
@@ -390,12 +391,12 @@ func (g *GmailAuth) Authorize(db *database.Database, state string,
 
 func updateGmail() {
 	gmailConf = &oauth.Oauth2{
-		Type: "gmail",
-		ClientId: settings.Google.ClientId,
+		Type:         "gmail",
+		ClientId:     settings.Google.ClientId,
 		ClientSecret: settings.Google.ClientSecret,
-		CallbackUrl: settings.System.Domain + "/callback/gmail",
-		AuthUrl: "https://accounts.google.com/o/oauth2/auth",
-		TokenUrl: "https://www.googleapis.com/oauth2/v3/token",
+		CallbackUrl:  settings.System.Domain + "/callback/gmail",
+		AuthUrl:      "https://accounts.google.com/o/oauth2/auth",
+		TokenUrl:     "https://www.googleapis.com/oauth2/v3/token",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/gmail.readonly",
 		},

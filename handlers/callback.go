@@ -4,8 +4,8 @@ import (
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/accounts"
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/utils"
 	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +16,7 @@ func callbackGet(c *gin.Context) {
 	auth, authType, err := account.GetAuth(acctType)
 	if err != nil {
 		c.JSON(400, &errorData{
-			Error: "unknown_type",
+			Error:   "unknown_type",
 			Message: "Unknown account type",
 		})
 	}

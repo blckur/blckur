@@ -2,15 +2,15 @@ package queue
 
 import (
 	"encoding/json"
-	"github.com/blckur/blckur/constants"
-	"github.com/blckur/blckur/cache"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/cache"
+	"github.com/blckur/blckur/constants"
 	"time"
 )
 
 type Stream struct {
 	server string
-	Stop bool
+	Stop   bool
 }
 
 func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
@@ -79,7 +79,7 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 func newStream(server string) (stream *Stream) {
 	stream = &Stream{
 		server: server,
-		Stop: false,
+		Stop:   false,
 	}
 	return
 }
