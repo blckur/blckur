@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/blckur/blckur/cmd"
 	"github.com/blckur/blckur/gdefer"
-	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/requires"
 	"flag"
 )
