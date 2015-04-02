@@ -204,6 +204,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 	if evt, ok := evtInf.(anaconda.Tweet); ok {
 		var evtType string
 		var subject string
+
 		if evt.RetweetedStatus != nil {
 			evtType = "retweet"
 			subject = "Tweet retweeted by "
