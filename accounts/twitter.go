@@ -32,24 +32,70 @@ func init() {
 	TwitterAuth{}, TwitterClient{},
 	[]*account.FilterType{
 		&account.FilterType{
+			Label: "All new events",
+			Type: "all",
+		},
+		&account.FilterType{
+			Label: "Events matching user",
+			Type: "from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial twitter handle",
+			ValueHolder: "Twitter handle",
+		},
+		&account.FilterType{
 			Label: "All new followers",
-			Type: "follower_all",
+			Type: "follow_all",
+		},
+		&account.FilterType{
+			Label: "Followers matching user",
+			Type: "follow_from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial twitter handle",
+			ValueHolder: "Twitter handle",
 		},
 		&account.FilterType{
 			Label: "All new favorited tweets",
 			Type: "favorite_all",
 		},
 		&account.FilterType{
+			Label: "Favorited by matching user",
+			Type: "favorite_from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial twitter handle",
+			ValueHolder: "Twitter handle",
+		},
+		&account.FilterType{
 			Label: "All new unfavorited tweets",
 			Type: "unfavorite_all",
+		},
+		&account.FilterType{
+			Label: "Unfavorited by matching user",
+			Type: "unfavorite_from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial twitter handle",
+			ValueHolder: "Twitter handle",
 		},
 		&account.FilterType{
 			Label: "All new retweets",
 			Type: "retweet_all",
 		},
 		&account.FilterType{
+			Label: "Retweets by matching user",
+			Type: "retweet_from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial twitter handle",
+			ValueHolder: "Twitter handle",
+		},
+		&account.FilterType{
 			Label: "All new tweet replies",
 			Type: "reply_all",
+		},
+		&account.FilterType{
+			Label: "Tweet replies by matching user",
+			Type: "reply_from",
+			ValueType: "input",
+			ValueLabel: "Enter complete or partial twitter handle",
+			ValueHolder: "Twitter handle",
 		},
 	}, func() {
 		messenger.Register("settings", "twitter", func(_ *messenger.Message) {
