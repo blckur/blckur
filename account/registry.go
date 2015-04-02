@@ -24,6 +24,7 @@ func sortAccountTypes() {
 
 func Register(name string, label string, typ int, auth interface{},
 	client interface{}, types []*FilterType, handler func()) {
+
 	authTypes[name] = typ
 	authRegistry[name] = reflect.TypeOf(auth)
 	clientRegistry[name] = reflect.TypeOf(client)

@@ -45,8 +45,10 @@ func (a *Account) Commit(db *database.Database) (err error) {
 
 func (a *Account) CommitFields(db *database.Database,
 	fields set.Set) (err error) {
+
 	coll := db.Accounts()
 	err = coll.CommitFields(a.Id, a, fields)
+
 	return
 }
 
@@ -86,6 +88,7 @@ func GetAuth(acctType string) (auth Auth, authTyp int, err error) {
 
 func GetAccount(db *database.Database, userId bson.ObjectId,
 	acctId bson.ObjectId) (acct *Account, err error) {
+
 	coll := db.Accounts()
 	acct = &Account{}
 
@@ -108,6 +111,7 @@ func GetAccount(db *database.Database, userId bson.ObjectId,
 
 func RemAccount(db *database.Database, userId bson.ObjectId,
 	acctId bson.ObjectId) (err error) {
+
 	coll := db.Accounts()
 
 	query := bson.M{
@@ -129,6 +133,7 @@ func RemAccount(db *database.Database, userId bson.ObjectId,
 
 func GetAccounts(db *database.Database, userId bson.ObjectId) (
 	accts []*Account, err error) {
+
 	coll := db.Accounts()
 	accts = []*Account{}
 
