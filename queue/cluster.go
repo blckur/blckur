@@ -138,10 +138,10 @@ func (c *cluster) Put(job *Job, priority int,
 				sent += 1
 				sentMutex.Unlock()
 
-				waiters.Done()
-
 				break
 			}
+
+			waiters.Done()
 		}(i == 0)
 	}
 
