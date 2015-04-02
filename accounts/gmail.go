@@ -183,7 +183,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		}
 	}
 
-	if force || lastNotf == nil {
+	if force {
 		notf = &notification.Notification{
 			UserId: g.acct.UserId,
 			AccountId: g.acct.Id,
@@ -313,7 +313,7 @@ func (g *GmailClient) Sync(db *database.Database) (err error) {
 
 		pageToken = messages.NextPageToken
 
-		for i, msg := range messages.Messages {
+		for j, msg := range messages.Messages {
 			data := &gmailMessage{}
 
 			url := fmt.Sprintf("https://www.googleapis.com/gmail/v1" +
@@ -324,7 +324,7 @@ func (g *GmailClient) Sync(db *database.Database) (err error) {
 				return
 			}
 
-			notf, done := g.parseMessage(data, lastNotf, i == 0)
+			notf, done := g.parseMessage(data, lastNotf, i == 0 && j == 0)
 			if notf != nil {
 				notfs = append(notfs, notf)
 			}
