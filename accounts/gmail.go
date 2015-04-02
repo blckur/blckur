@@ -163,7 +163,6 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	}
 
 	match := false
-	matchType := ""
 	body := ""
 
 	Loop:
@@ -171,14 +170,12 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		switch (filter.Type) {
 		case "all":
 			match = true
-			matchType = "all"
 			break Loop
 		case "from":
 			match = strings.Contains(
 				strings.ToLower(from),
 				strings.ToLower(filter.Value))
 			if match {
-				matchType = "from"
 				break Loop
 			}
 		case "subject":
@@ -186,7 +183,6 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 				strings.ToLower(subject),
 				strings.ToLower(filter.Value))
 			if match {
-				matchType = "subject"
 				break Loop
 			}
 		case "body":
@@ -201,7 +197,6 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 			}
 			match = strings.Contains(body, strings.ToLower(filter.Value))
 			if match {
-				matchType = "body"
 				break Loop
 			}
 		}
@@ -223,7 +218,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		AccountId: g.acct.Id,
 		RemoteId: msg.Id,
 		Timestamp: date,
-		Type: matchType,
+		Type: "email",
 		Origin: from,
 		Subject: subject,
 		Body: bodySnippet,
