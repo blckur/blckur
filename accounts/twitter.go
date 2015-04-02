@@ -17,6 +17,7 @@ import (
 	"strconv"
 	"encoding/hex"
 	"fmt"
+	"strings"
 )
 
 var (
@@ -151,6 +152,21 @@ type twitterBackend struct {
 	acct *account.Account
 }
 
+func (b *twitterBackend) filter(typ string, origin string) bool {
+	for _, filter := range b.acct.Filters {
+		switch (filter.Type) {
+		case "all" || typ + "_all":
+			return true
+		case typ + "_from":
+			if strings.Contains(origin, filter.Value) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func (b *twitterBackend) newClient() (client *anaconda.TwitterApi) {
 	client = anaconda.NewTwitterApi(b.acct.OauthTokn, b.acct.OauthSec)
 	return
@@ -207,6 +223,10 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		timestamp = evt.CreatedAt
 		subject += fmt.Sprintf("%s (%s)", evt.User.Name, origin)
 
+		if !b.filter(evtType, origin) {
+			return
+		}
+
 		notf = &notification.Notification{
 			UserId: b.acct.UserId,
 			AccountId: b.acct.Id,
@@ -236,6 +256,10 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		timestamp = evt.CreatedAt
 		subject += fmt.Sprintf("%s (%s)", evt.Source.Name, origin)
 
+		if !b.filter(evt.Event.Event, origin) {
+			return
+		}
+
 		notf = &notification.Notification{
 			UserId: b.acct.UserId,
 			AccountId: b.acct.Id,
@@ -252,6 +276,11 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 
 		origin := "@" + evt.Source.ScreenName
 		timestamp = evt.CreatedAt
+
+		if !b.filter(evt.Event, origin) {
+			return
+		}
+
 		notf = &notification.Notification{
 			UserId: b.acct.UserId,
 			AccountId: b.acct.Id,
