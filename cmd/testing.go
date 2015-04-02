@@ -52,6 +52,36 @@ func PubSub() {
 	}
 }
 
+// Starts publish performance test
+func StressPub() {
+	start := time.Now()
+
+	wait := utils.WaitCancel{}
+	wait.Add(5)
+
+	for j := 0; j < 5; j++ {
+		go func(j int) {
+			conn := cache.Get()
+
+			for i := 20000 * j; i < 20000 * (j + 1); i++ {
+				x := strconv.Itoa(i)
+				err := conn.Publish(x, x)
+				if err != nil {
+					fmt.Printf("err: %d\n", i)
+				}
+			}
+
+			conn.Close()
+			wait.Done()
+		}(j)
+	}
+
+	wait.Wait()
+
+	fmt.Printf("publish time: %s\n", time.Since(start).String())
+}
+
+
 // Starts subscribe performance test
 func StressSub() {
 	start := time.Now()
@@ -81,33 +111,4 @@ func StressSub() {
 	fmt.Printf("subscribe time: %s\n", time.Since(start).String())
 
 	time.Sleep(6 * time.Hour)
-}
-
-// Starts publish performance test
-func StressPub() {
-	start := time.Now()
-
-	wait := utils.WaitCancel{}
-	wait.Add(5)
-
-	for j := 0; j < 5; j++ {
-		go func(j int) {
-			conn := cache.Get()
-
-			for i := 20000 * j; i < 20000 * (j + 1); i++ {
-				x := strconv.Itoa(i)
-				err := conn.Publish(x, x)
-				if err != nil {
-					fmt.Printf("err: %d\n", i)
-				}
-			}
-
-			conn.Close()
-			wait.Done()
-		}(j)
-	}
-
-	wait.Wait()
-
-	fmt.Printf("publish time: %s\n", time.Since(start).String())
 }
