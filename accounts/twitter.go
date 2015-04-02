@@ -336,6 +336,7 @@ type TwitterAuth struct {
 
 func (t *TwitterAuth) Request(db *database.Database, userId bson.ObjectId) (
 	url string, err error) {
+
 	url, err = twitterConf.Request(db, userId)
 	if err != nil {
 		return
@@ -346,6 +347,7 @@ func (t *TwitterAuth) Request(db *database.Database, userId bson.ObjectId) (
 
 func (t *TwitterAuth) Authorize(db *database.Database, token string,
 	code string) (acct *account.Account, err error) {
+
 	coll := db.Accounts()
 
 	auth, err := twitterConf.Authorize(db, token, code)

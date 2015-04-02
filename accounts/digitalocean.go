@@ -207,6 +207,7 @@ type DigitalOceanAuth struct {
 
 func (d *DigitalOceanAuth) Request(db *database.Database,
 	userId bson.ObjectId) (url string, err error) {
+
 	url, err = digitalOceanConf.Request(db, userId)
 	if err != nil {
 		return
@@ -217,6 +218,7 @@ func (d *DigitalOceanAuth) Request(db *database.Database,
 
 func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
 	code string) (acct *account.Account, err error) {
+
 	coll := db.Accounts()
 
 	auth, err := digitalOceanConf.Authorize(db, state, code)

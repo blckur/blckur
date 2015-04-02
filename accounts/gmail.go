@@ -354,6 +354,7 @@ type GmailAuth struct {
 
 func (g *GmailAuth) Request(db *database.Database, userId bson.ObjectId) (
 	url string, err error) {
+
 	url, err = gmailConf.Request(db, userId)
 	if err != nil {
 		return
@@ -364,6 +365,7 @@ func (g *GmailAuth) Request(db *database.Database, userId bson.ObjectId) (
 
 func (g *GmailAuth) Authorize(db *database.Database, state string,
 	code string) (acct *account.Account, err error) {
+
 	coll := db.Accounts()
 
 	auth, err := gmailConf.Authorize(db, state, code)
