@@ -27,5 +27,15 @@ func main() {
 		cmd.Scheduler()
 	case "worker":
 		cmd.Worker()
+	case "pub":
+		cmd.Pub()
+	case "sub":
+		cmd.Sub()
+	case "pubsub":
+		cmd.PubSub()
+	case "xpub":
+		cmd.StressPub()
+	case "xsub":
+		cmd.StressSub()
 	}
 }
