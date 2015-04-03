@@ -71,8 +71,9 @@ func accountsPut(c *gin.Context) {
 	}
 
 	acct.Filters = data.Filters
-	acct.New = false
 	acct.ParseFilters()
+
+	acct.New = len(acct.Filters) == 0
 
 	err = acct.CommitFields(db, set.NewSet("filters", "new"))
 	if err != nil {
