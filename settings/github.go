@@ -1,11 +1,11 @@
 package settings
 
-var Github = &github{
+var GitHub = &github{
 	Id: "github",
 }
 
 func init() {
-	register("github", Github)
+	register("github", GitHub)
 }
 
 type github struct {
