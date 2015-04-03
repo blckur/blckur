@@ -41,11 +41,6 @@ func (g *GitHubClient) SetAccount(acct *account.Account) {
 func (g *GitHubClient) Update(db *database.Database) (err error) {
 	client := gitHubConf.NewClient(g.acct)
 
-	err = client.Refresh(db)
-	if err != nil {
-		return
-	}
-
 	data := struct {
 		Login string `json:"login"`
 	}{}
