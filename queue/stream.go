@@ -33,7 +33,8 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 
 		id, body, err := conn.Reserve(timeout)
 		if err != nil {
-			if err.Error() == "reserve-with-timeout: timeout" {
+			if err.Error() == "reserve-with-timeout: timeout" ||
+					err.Error() == "reserve-with-timeout: deadline soon" {
 				continue
 			}
 			logrus.WithFields(logrus.Fields{
