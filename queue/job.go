@@ -23,7 +23,9 @@ type Job struct {
 
 func (j *Job) Put(priority int, delay time.Duration,
 	ttr time.Duration) (err error) {
+
 	err = put(j, priority, delay, ttr)
+
 	return
 }
 

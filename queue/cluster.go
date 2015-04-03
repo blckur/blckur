@@ -79,6 +79,7 @@ func (c *cluster) Close() (err error) {
 
 func (c *cluster) putRetry(server string, data []byte, priority int,
 	delay time.Duration, ttr time.Duration) (err error) {
+
 	for i := 0; i < 2; i++ {
 		conn, e := c.conn(server)
 		if e != nil {
@@ -99,6 +100,7 @@ func (c *cluster) putRetry(server string, data []byte, priority int,
 
 func (c *cluster) Put(job *Job, priority int,
 	delay time.Duration, ttr time.Duration) (err error) {
+
 	jsonJob, err := json.Marshal(job)
 	if err != nil {
 		err = &errortypes.UnknownError{

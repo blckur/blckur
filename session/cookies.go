@@ -72,6 +72,7 @@ func (c *Cookie) GetSession(db *database.Database) (
 
 func (c *Cookie) NewSession(db *database.Database, id bson.ObjectId,
 	remember bool) (sess *Session, err error) {
+
 	sess, err = NewSession(db, id)
 	if err != nil {
 		err = &errortypes.UnknownError{

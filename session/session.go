@@ -27,6 +27,7 @@ func (s *Session) GetUser() (usr *user.User, err error) {
 
 func GetSession(db *database.Database, id bson.ObjectId) (
 	sess *Session, err error) {
+
 	coll := db.Sessions()
 	sess = &Session{}
 
@@ -42,6 +43,7 @@ func GetSession(db *database.Database, id bson.ObjectId) (
 
 func NewSession(db *database.Database, userId bson.ObjectId) (
 	sess *Session, err error) {
+
 	coll := db.Sessions()
 	sess = &Session{
 		Id:        bson.NewObjectId(),

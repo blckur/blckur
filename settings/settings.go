@@ -37,6 +37,7 @@ func Commit(db *database.Database, group interface{}, fields set.Set) (
 
 func Get(db *database.Database, group string, key string) (
 	val interface{}, err error) {
+
 	coll := db.Settings()
 
 	grp := map[string]interface{}{}
@@ -67,6 +68,7 @@ func Get(db *database.Database, group string, key string) (
 
 func Set(db *database.Database, group string, key string, val interface{}) (
 	err error) {
+
 	coll := db.Settings()
 
 	_, err = coll.Upsert(bson.M{
