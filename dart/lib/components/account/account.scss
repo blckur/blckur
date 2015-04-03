@@ -63,6 +63,10 @@
   z-index: 5;
 }
 
+.item.settings-active .new-label {
+  display: none;
+}
+
 .item.settings-active {
   position: absolute;
   top: -125px;
