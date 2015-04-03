@@ -21,6 +21,28 @@ func init() {
 				Label: "All new events",
 				Type:  "all",
 			},
+			&account.FilterType{
+				Label: "All issues opened",
+				Type:  "issue_opened_all",
+			},
+			&account.FilterType{
+				Label:        "Issues opened matching repository",
+				Type:         "issue_opened_from",
+				ValueType:    "input",
+				ValueLabel:   "Enter complete or partial repository name",
+				ValueHolder:  "Repository name",
+			},
+			&account.FilterType{
+				Label: "All issues closed",
+				Type:  "issue_closed_all",
+			},
+			&account.FilterType{
+				Label:        "Issues closed matching repository",
+				Type:         "issue_closed_from",
+				ValueType:    "input",
+				ValueLabel:   "Enter complete or partial repository name",
+				ValueHolder:  "Repository name",
+			},
 		}, func() {
 			messenger.Register("settings", "github",
 				func(_ *messenger.Message) {
