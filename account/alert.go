@@ -6,12 +6,12 @@ import (
 )
 
 type FilterType struct {
-	Id          int    `json:"id"`
-	Label       string `json:"label"`
-	Type        string `json:"type"`
-	ValueType   string `json:"value_type"`
-	ValueLabel  string `json:"value_label"`
-	ValueHolder string `json:"value_holder"`
+	Id           int    `json:"id"`
+	Label        string `json:"label"`
+	Type         string `json:"type"`
+	ValueType    string `json:"value_type"`
+	ValueLabel   string `json:"value_label"`
+	ValueHolder  string `json:"value_holder"`
 	ValueExample string `json:"value_example"`
 }
 
