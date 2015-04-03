@@ -202,8 +202,7 @@ Loop:
 	return
 }
 
-type DigitalOceanAuth struct {
-}
+type DigitalOceanAuth struct{}
 
 func (d *DigitalOceanAuth) Request(db *database.Database,
 	userId bson.ObjectId) (url string, err error) {
