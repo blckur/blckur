@@ -12,6 +12,7 @@ type FilterType struct {
 	ValueType   string `json:"value_type"`
 	ValueLabel  string `json:"value_label"`
 	ValueHolder string `json:"value_holder"`
+	ValueExample string `json:"value_example"`
 }
 
 type Filter struct {
