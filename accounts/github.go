@@ -110,6 +110,7 @@ func updateGitHub() {
 		AuthUrl:      "https://github.com/login/oauth/authorize",
 		TokenUrl:     "https://github.com/login/oauth/access_token",
 		Scopes: []string{
+			"repo:status",
 			"notifications",
 		},
 	}
