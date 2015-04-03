@@ -59,8 +59,7 @@ func (g *GitHubClient) Sync(db *database.Database) (err error) {
 	return
 }
 
-type GitHubAuth struct{
-}
+type GitHubAuth struct{}
 
 func (g *GitHubAuth) Request(db *database.Database,
 	userId bson.ObjectId) (url string, err error) {
