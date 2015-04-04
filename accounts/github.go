@@ -26,11 +26,11 @@ func init() {
 				Type:  "issue_opened_all",
 			},
 			&account.FilterType{
-				Label:        "Issues opened matching repository",
-				Type:         "issue_opened_from",
-				ValueType:    "input",
-				ValueLabel:   "Enter complete or partial repository name",
-				ValueHolder:  "Repository name",
+				Label:       "Issues opened matching repository",
+				Type:        "issue_opened_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial repository name",
+				ValueHolder: "Repository name",
 			},
 			&account.FilterType{
 				Label: "All issues closed",
