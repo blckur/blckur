@@ -277,6 +277,10 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			subject = fmt.Sprintf("Issue %s in %s", action, repoName)
 		}
 
+		if !g.filter(typ, repo) {
+			return
+		}
+
 		notf := &notification.Notification{
 			UserId:    g.acct.UserId,
 			AccountId: g.acct.Id,
