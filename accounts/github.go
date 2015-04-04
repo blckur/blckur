@@ -332,7 +332,7 @@ func (g *gitHubBackend) sync() {
 	}
 
 	if resp.StatusCode == 304 {
-		continue
+		return
 	}
 
 	g.etag = resp.Header.Get("ETag")
