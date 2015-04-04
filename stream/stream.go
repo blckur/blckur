@@ -137,6 +137,7 @@ func (s *Stream) initialize() (err error) {
 
 func NewStream(db *database.Database, acctId bson.ObjectId,
 	backend Backend) (stream *Stream) {
+
 	stream = &Stream{
 		backend: backend,
 		db:      db,
