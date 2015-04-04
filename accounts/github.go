@@ -239,6 +239,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 		user := issue["user"].(map[string]interface{})
 		from := user["login"].(string)
 		title := issue["title"].(string)
+		link := issue["url"].(string)
 		repo := evt.Payload["repository"]["full_name"].(string)
 		var typ string
 		var subject string
@@ -278,6 +279,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			Type:      typ,
 			Resource:  repo,
 			Origin:    from,
+			Link:      link,
 			Subject:   subject,
 			Body:      title,
 		}
