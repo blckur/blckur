@@ -23,7 +23,7 @@ func init() {
 			},
 			&account.FilterType{
 				Label: "All issues opened",
-				Type:  "issue_opened_all",
+				Type:  "issue_opened",
 			},
 			&account.FilterType{
 				Label:       "Issues opened matching repository",
@@ -34,7 +34,7 @@ func init() {
 			},
 			&account.FilterType{
 				Label: "All issues closed",
-				Type:  "issue_closed_all",
+				Type:  "issue_closed",
 			},
 			&account.FilterType{
 				Label:       "Issues closed matching repository",
