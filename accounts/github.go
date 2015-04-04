@@ -277,7 +277,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			subject = fmt.Sprintf("Issue %s in %s", action, repoName)
 		}
 
-		if !g.filter(typ, repo) {
+		if !g.filter(typ, repoName) {
 			return
 		}
 
