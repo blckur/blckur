@@ -195,7 +195,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	}
 
 	if lastNotf == nil || msg.Id == lastNotf.RemoteId ||
-			date.Before(lastNotf.Timestamp) {
+		date.Before(lastNotf.Timestamp) {
 
 		done = true
 
