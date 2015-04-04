@@ -1,12 +1,23 @@
 package accounts
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/settings"
+	"github.com/dropbox/godropbox/errors"
+	"io/ioutil"
 	"labix.org/v2/mgo/bson"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
 )
 
 var (
@@ -154,8 +165,219 @@ func (g *GitHubClient) Update(db *database.Database) (err error) {
 	return
 }
 
-func (g *GitHubClient) Sync(db *database.Database) (err error) {
+type gitHubBackend struct {
+	db       *database.Database
+	acct     *account.Account
+	etag     string
+	url      string
+	client   *oauth.Oauth2Client
+	interval int
+	stop     bool
+	lastNotf *notification.Notification
+}
+
+type gitHubEvent struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
+	Repo struct {
+		Name string `json:"name"`
+	} `json:"repo"`
+	Actor struct {
+		Login string `json:"login"`
+	} `json:"actor"`
+	Org struct {
+		Login string `json:"login"`
+	} `json:"org"`
+	CreatedAt string                 `json:"created_at"`
+	Payload   map[string]interface{} `json:"payload"`
+}
+
+func (g *gitHubBackend) filter(typ string, repo string) bool {
+	for _, filter := range g.acct.Filters {
+		switch filter.Type {
+		case "all", typ:
+			return true
+		case typ + "_from":
+			if strings.Contains(repo, filter.Value) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
+	timestamp, err := time.Parse("2006-01-02T15:04:05Z", evt.CreatedAt)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("account.github: Failed to parse timestamp")
+		return
+	}
+
+	if g.lastNotf == nil || evt.Id == g.lastNotf.RemoteId ||
+		timestamp.Before(g.lastNotf.Timestamp) {
+
+		notf := &notification.Notification{
+			UserId:    g.acct.UserId,
+			AccountId: g.acct.Id,
+			RemoteId:  evt.Id,
+			Timestamp: timestamp,
+		}
+
+		err = notf.Initialize(g.db)
+		if err != nil {
+			return
+		}
+	}
+
+	switch evt.Type {
+	case "IssuesEvent", "IssueCommentEvent":
+		action := evt.Payload["action"].(string)
+		issue := evt.Payload["issue"].(map[string]interface{})
+		user := issue["user"].(map[string]interface{})
+		from := user["login"].(string)
+		title := issue["title"].(string)
+		repo := evt.Payload["repository"]["full_name"].(string)
+		var typ string
+		var subject string
+
+		if evt.Type == "IssueCommentEvent" {
+			if action != "created" {
+				return
+			}
+
+			typ = "issue_comment"
+			subject = fmt.Sprintf("New issue comment in %s", repo)
+		} else {
+			switch action {
+			case "assigned", "unassigned":
+				if evt.Payload["assignee"] != g.acct.Identity {
+					return
+				}
+				typ = "issue_" + action
+			case "opened":
+				typ = "issue_opened"
+			case "closed":
+				typ = "issue_closed"
+			case "reopened":
+				typ = "issue_reopened"
+			default:
+				return
+			}
+
+			subject = fmt.Sprintf("Issue %s in %s", action, repo)
+		}
+
+		notf := &notification.Notification{
+			UserId:    g.acct.UserId,
+			AccountId: g.acct.Id,
+			RemoteId:  evt.Id,
+			Timestamp: timestamp,
+			Type:      typ,
+			Resource:  repo,
+			Origin:    from,
+			Subject:   subject,
+			Body:      title,
+		}
+
+		_ = notf
+	}
+
 	return
+}
+
+func (g *gitHubBackend) sync() {
+	req, err := http.NewRequest("GET", g.url, nil)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("account.github: Stream request init error")
+		return
+	}
+
+	if g.etag != "" {
+		req.Header.Add("If-None-Match", g.etag)
+	}
+
+	resp, err := g.client.Do(req)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("account.github: Stream request error")
+		return
+	}
+	defer resp.Body.Close()
+
+	intervalStr := resp.Header.Get("X-Poll-Interval")
+	if intervalStr != "" {
+		g.interval, err = strconv.Atoi(intervalStr)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("account.github: Failed to parse poll interval")
+			g.interval = 60
+		}
+	} else {
+		g.interval = 60
+	}
+
+	if resp.StatusCode == 304 {
+		continue
+	}
+
+	g.etag = resp.Header.Get("ETag")
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "accounts.github: Unknown parse error"),
+		}
+		return
+	}
+
+	data := []*gitHubEvent{}
+
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "accounts.github: Unknown parse error"),
+		}
+		return
+	}
+
+	for _, evt := range data {
+		err = g.parse(evt)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("account.github: Failed to parse event")
+		}
+	}
+}
+
+func (g *gitHubBackend) Run() {
+	g.url = fmt.Sprintf("https://api.github.com/users/%s/received_events",
+		g.acct.Identity)
+	g.client = gitHubConf.NewClient(g.acct)
+	g.interval = 0
+
+	for {
+		if g.interval > 0 {
+			time.Sleep(time.Duration(g.interval) * time.Second)
+		}
+
+		if g.stop {
+			return
+		}
+
+		g.sync()
+	}
+}
+
+func (g *gitHubBackend) Stop() {
+	g.stop = true
 }
 
 type GitHubAuth struct{}
