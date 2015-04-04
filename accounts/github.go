@@ -165,6 +165,10 @@ func (g *GitHubClient) Update(db *database.Database) (err error) {
 	return
 }
 
+func (g *GitHubClient) Sync(db *database.Database) (err error) {
+	return
+}
+
 type gitHubBackend struct {
 	db       *database.Database
 	acct     *account.Account
