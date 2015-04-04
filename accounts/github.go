@@ -294,7 +294,10 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			Body:      title,
 		}
 
-		_ = notf
+		err = notf.Initialize(g.db)
+		if err != nil {
+			return
+		}
 	}
 
 	return
