@@ -11,6 +11,7 @@ import (
 	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/settings"
+	"github.com/blckur/blckur/stream"
 	"github.com/dropbox/godropbox/errors"
 	"io/ioutil"
 	"labix.org/v2/mgo/bson"
@@ -166,6 +167,17 @@ func (g *GitHubClient) Update(db *database.Database) (err error) {
 }
 
 func (g *GitHubClient) Sync(db *database.Database) (err error) {
+	backend := &gitHubBackend{
+		db:   db,
+		acct: g.acct,
+	}
+	stream := stream.NewStream(db, g.acct.Id, backend)
+
+	err = stream.Start()
+	if err != nil {
+		return
+	}
+
 	return
 }
 
