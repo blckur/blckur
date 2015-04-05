@@ -198,7 +198,7 @@ type gitHubEvent struct {
 	Repo struct {
 		Name     string `json:"name"`
 		FullName string `json:"full_name"`
-	} `json:"repository"`
+	} `json:"repo"`
 	Actor struct {
 		Login string `json:"login"`
 	} `json:"actor"`
