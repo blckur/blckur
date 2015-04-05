@@ -205,3 +205,7 @@ func (c *Oauth2Client) GetJson(url string, resp interface{}) (err error) {
 
 	return
 }
+
+func (c *Oauth2Client) Do(req *http.Request) (*http.Response, error) {
+	return c.client.Do(req)
+}
