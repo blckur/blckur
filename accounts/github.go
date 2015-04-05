@@ -244,20 +244,21 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		return
 	}
 
-	if g.lastNotf == nil || evt.Id == g.lastNotf.RemoteId ||
-		timestamp.Before(g.lastNotf.Timestamp) {
-
-		notf := &notification.Notification{
+	if force {
+		notf = &notification.Notification{
 			UserId:    g.acct.UserId,
 			AccountId: g.acct.Id,
 			RemoteId:  evt.Id,
 			Timestamp: timestamp,
 		}
+	}
 
-		err = notf.Initialize(g.db)
-		if err != nil {
-			return
-		}
+	if g.lastNotf == nil || evt.Id == g.lastNotf.RemoteId ||
+		timestamp.Before(g.lastNotf.Timestamp) {
+
+		stop = true
+
+		return
 	}
 
 	switch evt.Type {
