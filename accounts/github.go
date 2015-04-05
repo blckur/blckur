@@ -264,8 +264,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 		from := user["login"].(string)
 		title := issue["title"].(string)
 		link := issue["url"].(string)
-		repo := evt.Payload["repo"].(map[string]interface{})
-		repoName := repo["full_name"].(string)
+		repo := evt.Repo.FullName
 
 		var typ string
 		var subject string
@@ -276,7 +275,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			}
 
 			typ = "issue_comment"
-			subject = fmt.Sprintf("New issue comment in %s", repoName)
+			subject = fmt.Sprintf("New issue comment in %s", repo)
 		} else {
 			switch action {
 			case "assigned", "unassigned":
@@ -294,10 +293,10 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 				return
 			}
 
-			subject = fmt.Sprintf("Issue %s in %s", action, repoName)
+			subject = fmt.Sprintf("Issue %s in %s", action, repo)
 		}
 
-		if !g.filter(typ, repoName) {
+		if !g.filter(typ, repo) {
 			return
 		}
 
@@ -307,7 +306,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			RemoteId:  evt.Id,
 			Timestamp: timestamp,
 			Type:      typ,
-			Resource:  repoName,
+			Resource:  repo,
 			Origin:    from,
 			Link:      link,
 			Subject:   subject,
