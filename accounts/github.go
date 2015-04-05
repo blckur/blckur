@@ -133,6 +133,17 @@ func init() {
 				ValueHolder: "Repository name",
 			},
 			&account.FilterType{
+				Label: "Comment on commit",
+				Type:  "commit_comment",
+			},
+			&account.FilterType{
+				Label:       "Comment on commit matching repository",
+				Type:        "commit_comment_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial repository name",
+				ValueHolder: "Repository name",
+			},
+			&account.FilterType{
 				Label: "",
 				Type:  "",
 			},
