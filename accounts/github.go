@@ -391,12 +391,26 @@ func (g *gitHubBackend) sync() {
 		return
 	}
 
-	for _, evt := range data {
-		err = g.parse(evt)
-		if err != nil {
+	for i, evt := range data {
+		notf, done, e := g.parse(evt, i == 0)
+		if e != nil {
+			err = e
 			logrus.WithFields(logrus.Fields{
 				"error": err,
 			}).Error("account.github: Failed to parse event")
+		}
+
+		if notf != nil {
+			err := notf.Initialize(g.db)
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("account.github: Failed to parse event")
+			}
+		}
+
+		if done {
+			return
 		}
 	}
 }
