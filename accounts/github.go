@@ -268,7 +268,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		user := issue["user"].(map[string]interface{})
 		from := user["login"].(string)
 		title := issue["title"].(string)
-		link := issue["url"].(string)
+		link := issue["html_url"].(string)
 		repo := evt.Repo.FullName
 
 		var typ string
