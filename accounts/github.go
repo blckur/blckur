@@ -305,7 +305,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			return
 		}
 
-		notf := &notification.Notification{
+		notf = &notification.Notification{
 			UserId:    g.acct.UserId,
 			AccountId: g.acct.Id,
 			RemoteId:  evt.Id,
