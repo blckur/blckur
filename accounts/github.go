@@ -317,11 +317,6 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			Subject:   subject,
 			Body:      title,
 		}
-
-		err = notf.Initialize(g.db)
-		if err != nil {
-			return
-		}
 	}
 
 	return
