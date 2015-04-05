@@ -223,7 +223,9 @@ func (g *gitHubBackend) filter(typ string, repo string) bool {
 	return false
 }
 
-func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
+func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
+	notf *notification.Notification, stop bool, err error) {
+
 	defer func() {
 		if r := recover(); r != nil {
 			err = &ParseError{
@@ -231,6 +233,8 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 			}
 		}
 	}()
+
+	stop = false
 
 	timestamp, err := time.Parse("2006-01-02T15:04:05Z", evt.CreatedAt)
 	if err != nil {
