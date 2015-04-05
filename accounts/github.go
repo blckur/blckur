@@ -361,6 +361,38 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			Subject:   subject,
 			Body:      body,
 		}
+
+	case "CommitCommentEvent":
+		typ := "commit_comment"
+		comment := evt.Payload["comment"].(map[string]interface{})
+		body := comment["body"].(string)
+		user := comment["user"].(map[string]interface{})
+		from := user["login"].(string)
+		link := comment["html_url"].(string)
+		repo := evt.Repo.Name
+
+		if !g.filter(typ, repo) {
+			return
+		}
+
+		subject := fmt.Sprintf("Commit comment in %s", repo)
+
+		if len(body) > 140 {
+			body = body[:140]
+		}
+
+		notf = &notification.Notification{
+			UserId:    g.acct.UserId,
+			AccountId: g.acct.Id,
+			RemoteId:  evt.Id,
+			Timestamp: timestamp,
+			Type:      typ,
+			Resource:  repo,
+			Origin:    from,
+			Link:      link,
+			Subject:   subject,
+			Body:      body,
+		}
 	}
 
 	return
