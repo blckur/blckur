@@ -122,6 +122,17 @@ func init() {
 				ValueHolder: "Repository name",
 			},
 			&account.FilterType{
+				Label: "Repository forked",
+				Type:  "fork",
+			},
+			&account.FilterType{
+				Label:       "Repository forked matching repository",
+				Type:        "fork_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial repository name",
+				ValueHolder: "Repository name",
+			},
+			&account.FilterType{
 				Label: "",
 				Type:  "",
 			},
