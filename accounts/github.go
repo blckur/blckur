@@ -322,6 +322,34 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			Subject:   subject,
 			Body:      title,
 		}
+	case "ForkEvent":
+		typ := "fork"
+		forkee := evt.Payload["forkee"].(map[string]interface{})
+		forkName := forkee["full_name"].(string)
+		owner := forkee["owner"].(map[string]interface{})
+		from := owner["login"].(string)
+		link := forkee["html_url"].(string)
+		repo := evt.Repo.Name
+
+		subject := fmt.Sprintf("Fork of %s created", repo)
+		body := fmt.Sprintf("Repository %s was forked to %s.", repo, forkName)
+
+		if !g.filter(typ, repo) {
+			return
+		}
+
+		notf = &notification.Notification{
+			UserId:    g.acct.UserId,
+			AccountId: g.acct.Id,
+			RemoteId:  evt.Id,
+			Timestamp: timestamp,
+			Type:      typ,
+			Resource:  repo,
+			Origin:    from,
+			Link:      link,
+			Subject:   subject,
+			Body:      body,
+		}
 	}
 
 	return
