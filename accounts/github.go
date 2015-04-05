@@ -196,8 +196,7 @@ type gitHubEvent struct {
 	Id   string `json:"id"`
 	Type string `json:"type"`
 	Repo struct {
-		Name     string `json:"name"`
-		FullName string `json:"full_name"`
+		Name string `json:"name"`
 	} `json:"repo"`
 	Actor struct {
 		Login string `json:"login"`
@@ -270,11 +269,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		from := user["login"].(string)
 		title := issue["title"].(string)
 		link := issue["html_url"].(string)
-
-		repo := evt.Repo.FullName
-		if repo == "" {
-			repo = evt.Repo.Name
-		}
+		repo := evt.Repo.Name
 
 		var typ string
 		var subject string
@@ -322,6 +317,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			Subject:   subject,
 			Body:      title,
 		}
+
 	case "ForkEvent":
 		typ := "fork"
 		forkee := evt.Payload["forkee"].(map[string]interface{})
