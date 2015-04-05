@@ -282,6 +282,10 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		link := issue["html_url"].(string)
 		repo := evt.Repo.Name
 
+		if len(title) > 140 {
+			title = title[:140]
+		}
+
 		var typ string
 		var subject string
 
