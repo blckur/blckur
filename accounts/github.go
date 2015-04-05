@@ -323,6 +323,16 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 }
 
 func (g *gitHubBackend) sync() {
+	lastNotf, err := notification.GetLastNotification(g.db,
+		g.acct.UserId, g.acct.Id)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("account.github: Failed to get last notification")
+		return
+	}
+	g.lastNotf = lastNotf
+
 	req, err := http.NewRequest("GET", g.url, nil)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
