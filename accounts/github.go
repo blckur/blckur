@@ -264,7 +264,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
 		from := user["login"].(string)
 		title := issue["title"].(string)
 		link := issue["url"].(string)
-		repo := evt.Payload["repository"].(map[string]interface{})
+		repo := evt.Payload["repo"].(map[string]interface{})
 		repoName := repo["full_name"].(string)
 
 		var typ string
