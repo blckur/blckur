@@ -212,6 +212,14 @@ func (g *gitHubBackend) filter(typ string, repo string) bool {
 }
 
 func (g *gitHubBackend) parse(evt *gitHubEvent) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = &ParseError{
+				errors.New(fmt.Sprint(r)),
+			}
+		}
+	}()
+
 	timestamp, err := time.Parse("2006-01-02T15:04:05Z", evt.CreatedAt)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
