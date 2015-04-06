@@ -19,6 +19,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"github.com/blckur/blckur/utils"
 )
 
 var (
@@ -592,7 +593,8 @@ func (g *gitHubBackend) Run() {
 
 	for {
 		if g.interval > 0 {
-			time.Sleep(time.Duration(g.interval) * time.Second)
+			interval := time.Duration(utils.MinInt(g.interval, 180))
+			time.Sleep(interval * time.Second)
 		}
 
 		if g.stop {
