@@ -75,7 +75,7 @@ func (s *StripeClient) SetAccount(acct *account.Account) {
 }
 
 func (s *StripeClient) Update(db *database.Database) (err error) {
-	client := stripeConf.NewClient(g.acct)
+	client := stripeConf.NewClient(s.acct)
 
 	data := struct {
 		Login string `json:"login"`
