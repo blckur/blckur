@@ -404,6 +404,52 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			Subject:   subject,
 			Body:      body,
 		}
+
+	case "PullRequestEvent":
+		action := evt.Payload["action"].(string)
+		pull := evt.Payload["pull_request"].(map[string]interface{})
+		user := pull["user"].(map[string]interface{})
+		from := user["login"].(string)
+		title := pull["title"].(string)
+		link := pull["html_url"].(string)
+		repo := evt.Repo.Name
+
+		var typ string
+
+		switch action {
+		case "assigned", "unassigned":
+			if evt.Payload["assignee"] != g.acct.Identity {
+				return
+			}
+			typ = "pull_" + action
+		case "opened":
+			typ = "pull_opened"
+		case "closed":
+			typ = "pull_closed"
+		case "reopened":
+			typ = "pull_reopened"
+		default:
+			return
+		}
+
+		if !g.filter(typ, repo) {
+			return
+		}
+
+		subject = fmt.Sprintf("Pull request %s in %s", action, repo)
+
+		notf = &notification.Notification{
+			UserId:    g.acct.UserId,
+			AccountId: g.acct.Id,
+			RemoteId:  evt.Id,
+			Timestamp: timestamp,
+			Type:      typ,
+			Resource:  repo,
+			Origin:    from,
+			Link:      link,
+			Subject:   subject,
+			Body:      title,
+		}
 	}
 
 	return
