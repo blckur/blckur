@@ -45,23 +45,23 @@ func init() {
 				ValueHolder: "Repository name",
 			},
 			&account.FilterType{
-				Label: "All issues opened",
-				Type:  "issue_opened",
-			},
-			&account.FilterType{
-				Label:       "Issues opened matching repository",
-				Type:        "issue_opened_from",
-				ValueType:   "input",
-				ValueLabel:  "Enter complete or partial repository name",
-				ValueHolder: "Repository name",
-			},
-			&account.FilterType{
 				Label: "All issues closed",
 				Type:  "issue_closed",
 			},
 			&account.FilterType{
 				Label:       "Issues closed matching repository",
 				Type:        "issue_closed_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial repository name",
+				ValueHolder: "Repository name",
+			},
+			&account.FilterType{
+				Label: "All issues reopened",
+				Type:  "issue_reopened",
+			},
+			&account.FilterType{
+				Label:       "All issues reopened matching repository",
+				Type:        "issue_reopened_from",
 				ValueType:   "input",
 				ValueLabel:  "Enter complete or partial repository name",
 				ValueHolder: "Repository name",
@@ -95,28 +95,6 @@ func init() {
 			&account.FilterType{
 				Label:       "Issues unassigned matching repository",
 				Type:        "issue_unassigned_from",
-				ValueType:   "input",
-				ValueLabel:  "Enter complete or partial repository name",
-				ValueHolder: "Repository name",
-			},
-			&account.FilterType{
-				Label: "All issues closed",
-				Type:  "issue_closed",
-			},
-			&account.FilterType{
-				Label:       "All issues closed matching repository",
-				Type:        "issue_closed_from",
-				ValueType:   "input",
-				ValueLabel:  "Enter complete or partial repository name",
-				ValueHolder: "Repository name",
-			},
-			&account.FilterType{
-				Label: "All issues reopened",
-				Type:  "issue_reopened",
-			},
-			&account.FilterType{
-				Label:       "All issues reopened matching repository",
-				Type:        "issue_reopened_from",
 				ValueType:   "input",
 				ValueLabel:  "Enter complete or partial repository name",
 				ValueHolder: "Repository name",
