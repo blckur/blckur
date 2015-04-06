@@ -344,7 +344,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		} else {
 			switch action {
 			case "assigned", "unassigned":
-				if evt.Payload["assignee"] != g.acct.Identity {
+				if issue["assignee"].(string) != g.acct.Identity {
 					return
 				}
 				typ = "issue_" + action
