@@ -21,6 +21,42 @@ func init() {
 				Label: "All new events",
 				Type:  "all",
 			},
+			&account.FilterType{
+				Label: "Charge succeeded",
+				Type:  "charge_succeeded",
+			},
+			&account.FilterType{
+				Label: "Charge failed",
+				Type:  "charge_failed",
+			},
+			&account.FilterType{
+				Label: "Charge refunded",
+				Type:  "charge_refunded",
+			},
+			&account.FilterType{
+				Label: "Chargeback created",
+				Type:  "charge_dispute_created",
+			},
+			&account.FilterType{
+				Label: "Chargeback closed",
+				Type:  "charge_dispute_closed",
+			},
+			&account.FilterType{
+				Label: "New customer",
+				Type:  "customer_created",
+			},
+			&account.FilterType{
+				Label: "Customer deleted",
+				Type:  "customer_deleted",
+			},
+			&account.FilterType{
+				Label: "Subscription created",
+				Type:  "subscription_created",
+			},
+			&account.FilterType{
+				Label: "Subscription deleted",
+				Type:  "subscription_deleted",
+			},
 		}, func() {
 			messenger.Register("settings", "stripe",
 				func(_ *messenger.Message) {
