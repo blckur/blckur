@@ -12,6 +12,7 @@ import (
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/stream"
+	"github.com/blckur/blckur/utils"
 	"github.com/dropbox/godropbox/errors"
 	"io/ioutil"
 	"labix.org/v2/mgo/bson"
@@ -19,7 +20,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"github.com/blckur/blckur/utils"
 )
 
 var (
