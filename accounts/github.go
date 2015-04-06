@@ -436,7 +436,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			return
 		}
 
-		subject = fmt.Sprintf("Pull request %s in %s", action, repo)
+		subject := fmt.Sprintf("Pull request %s in %s", action, repo)
 
 		notf = &notification.Notification{
 			UserId:    g.acct.UserId,
