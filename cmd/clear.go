@@ -14,4 +14,10 @@ func Clear() {
 	if err != nil {
 		panic(err)
 	}
+
+	coll = db.Streams()
+	_, err = coll.RemoveAll(bson.M{})
+	if err != nil {
+		panic(err)
+	}
 }
