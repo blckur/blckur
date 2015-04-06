@@ -439,7 +439,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 			Body:      body,
 		}
 
-	case "PullRequestEvent":
+	case "PullRequestEvent", "PullRequestReviewCommentEvent":
 		action := evt.Payload["action"].(string)
 		pull := evt.Payload["pull_request"].(map[string]interface{})
 		user := pull["user"].(map[string]interface{})
@@ -447,33 +447,44 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		title := pull["title"].(string)
 		link := pull["html_url"].(string)
 		repo := evt.Repo.Name
-		var typ string
 
 		if len(title) > 140 {
 			title = title[:140]
 		}
 
-		switch action {
-		case "assigned", "unassigned":
-			if evt.Payload["assignee"] != g.acct.Identity {
+		var typ string
+		var subject string
+
+		if evt.Type == "PullRequestReviewCommentEvent" {
+			if action != "created" {
 				return
 			}
-			typ = "pull_" + action
-		case "opened":
-			typ = "pull_opened"
-		case "closed":
-			typ = "pull_closed"
-		case "reopened":
-			typ = "pull_reopened"
-		default:
-			return
+
+			typ = "pull_comment"
+			subject = fmt.Sprintf("New pull request comment in %s", repo)
+		} else {
+			switch action {
+			case "assigned", "unassigned":
+				if pull["assignee"].(string) != g.acct.Identity {
+					return
+				}
+				typ = "pull_" + action
+			case "opened":
+				typ = "pull_opened"
+			case "closed":
+				typ = "pull_closed"
+			case "reopened":
+				typ = "pull_reopened"
+			default:
+				return
+			}
+
+			subject = fmt.Sprintf("Pull request %s in %s", action, repo)
 		}
 
 		if !g.filter(typ, repo) {
 			return
 		}
-
-		subject := fmt.Sprintf("Pull request %s in %s", action, repo)
 
 		notf = &notification.Notification{
 			UserId:    g.acct.UserId,
