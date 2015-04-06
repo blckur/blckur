@@ -413,8 +413,11 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		title := pull["title"].(string)
 		link := pull["html_url"].(string)
 		repo := evt.Repo.Name
-
 		var typ string
+
+		if len(title) > 140 {
+			title = title[:140]
+		}
 
 		switch action {
 		case "assigned", "unassigned":
