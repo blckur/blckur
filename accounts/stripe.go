@@ -78,6 +78,7 @@ type stripeEvent struct {
 		Object struct {
 			Id               string `json:"id"`
 			Name             string `json:"name"`
+			Email            string `json:"email"`
 			Amount           int    `json:"amount"`
 			Currency         string `json:"currency"`
 			Reason           string `json:"reason"`
