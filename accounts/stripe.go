@@ -78,15 +78,15 @@ func (s *StripeClient) Update(db *database.Database) (err error) {
 	client := stripeConf.NewClient(s.acct)
 
 	data := struct {
-		Login string `json:"login"`
+		Email string `json:"email"`
 	}{}
 
-	err = client.GetJson("", &data)
+	err = client.GetJson("https://api.stripe.com/v1/account", &data)
 	if err != nil {
 		return
 	}
 
-	s.acct.Identity = data.Login
+	s.acct.Identity = data.Email
 
 	return
 }
