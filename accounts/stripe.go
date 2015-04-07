@@ -91,7 +91,7 @@ type stripeEvent struct {
 			}
 			Plan struct {
 				Name string `json:"name"`
-			} `json"plan"`
+			} `json:"plan"`
 		} `json:"object"`
 	}
 }
