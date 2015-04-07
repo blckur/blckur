@@ -1,12 +1,15 @@
 package accounts
 
 import (
+	"fmt"
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/messenger"
+	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/settings"
 	"labix.org/v2/mgo/bson"
+	"time"
 )
 
 var (
@@ -66,6 +69,17 @@ func init() {
 		})
 }
 
+type stripeEvent struct {
+	Id      string `json:"id"`
+	Created int    `json:"created"`
+	Type    string `json:"type"`
+	Data    struct {
+		Object struct {
+			Name string `json:"name"`
+		} `json:"object"`
+	}
+}
+
 type StripeClient struct {
 	acct *account.Account
 }
@@ -91,7 +105,97 @@ func (s *StripeClient) Update(db *database.Database) (err error) {
 	return
 }
 
+func (s *StripeClient) parse(evt *stripeEvent,
+	lastNotf *notification.Notification, force bool) (
+	notf *notification.Notification, stop bool) {
+
+	stop = false
+	timestamp := time.Unix(int64(evt.Created), 0)
+
+	if force {
+		notf = &notification.Notification{
+			UserId:    s.acct.UserId,
+			AccountId: s.acct.Id,
+			RemoteId:  evt.Id,
+			Timestamp: timestamp,
+		}
+	}
+
+	if lastNotf == nil || evt.Id == lastNotf.RemoteId ||
+		timestamp.Before(lastNotf.Timestamp) {
+
+		stop = true
+		return
+	}
+
+	return
+}
+
 func (s *StripeClient) Sync(db *database.Database) (err error) {
+	client := stripeConf.NewClient(s.acct)
+
+	err = client.Refresh(db)
+	if err != nil {
+		return
+	}
+
+	lastNotf, err := notification.GetLastNotification(db,
+		s.acct.UserId, s.acct.Id)
+	if err != nil {
+		return
+	}
+
+	var msgCount int
+	if lastNotf == nil {
+		msgCount = 3
+	} else {
+		msgCount = 10
+	}
+
+	pageToken := ""
+
+	notfs := []*notification.Notification{}
+
+	n := settings.Stripe.MaxMsg / 10
+Loop:
+	for i := 0; i < n; i++ {
+		events := struct {
+			Data []*stripeEvent `json:"data"`
+		}{}
+
+		url := fmt.Sprintf("https://api.stripe.com/v1/events?limit=%d",
+			msgCount)
+
+		if pageToken != "" {
+			url += "&starting_after=" + pageToken
+		}
+
+		err = client.GetJson(url, &events)
+		if err != nil {
+			return
+		}
+
+		for j, evt := range events.Data {
+			notf, stop := s.parse(evt, lastNotf, i == 0 && j == 0)
+			if notf != nil {
+				notfs = append(notfs, notf)
+			}
+
+			if stop {
+				break Loop
+			}
+		}
+	}
+
+	for i := len(notfs) - 1; i >= 0; i-- {
+		notf := notfs[i]
+
+		err = notf.Initialize(db)
+		if err != nil {
+			return
+		}
+	}
+
 	return
 }
 
