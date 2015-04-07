@@ -85,7 +85,7 @@ func GetLastNotification(db *database.Database, userId bson.ObjectId,
 	return
 }
 
-func NotificationUpdate(userId bson.ObjectId) (err error) {
+func PublishUpdate(userId bson.ObjectId) (err error) {
 	conn := cache.Get()
 	defer conn.Close()
 
