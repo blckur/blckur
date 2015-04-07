@@ -348,6 +348,10 @@ Loop:
 		}
 	}
 
+	if len(notfs) > 0 {
+		notification.PublishUpdate(g.acct.UserId)
+	}
+
 	return
 }
 

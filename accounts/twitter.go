@@ -322,6 +322,8 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		return
 	}
 
+	notification.PublishUpdate(b.acct.UserId)
+
 	return
 }
 

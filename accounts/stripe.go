@@ -295,6 +295,10 @@ Loop:
 		}
 	}
 
+	if len(notfs) > 0 {
+		notification.PublishUpdate(s.acct.UserId)
+	}
+
 	return
 }
 
