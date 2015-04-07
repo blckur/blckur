@@ -173,6 +173,14 @@ func (s *StripeClient) parse(evt *stripeEvent,
 
 		body = fmt.Sprintf("%s charge dispute %s for $%.2f reason %s",
 			refund, title, amount, evt.Data.Object.Reason)
+
+	case "customer.created", "customer.deleted":
+		title := strings.Split(evt.Type, ".")[1]
+		subject = fmt.Sprintf("Customer %s %s", evt.Data.Object.Email, title)
+		body = fmt.Sprintf("Customer %s with email %s", title,
+			evt.Data.Object.Email)
+		link = fmt.Sprintf("https://dashboard.stripe.com/customers/%s",
+			evt.Data.Object.Id)
 	}
 
 	notf = &notification.Notification{
