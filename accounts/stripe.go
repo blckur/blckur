@@ -155,6 +155,23 @@ func (s *StripeClient) parse(evt *stripeEvent,
 		body = fmt.Sprintf("Charge %s from %s %s %s for $%.2f", title,
 			evt.Data.Object.Source.Country, evt.Data.Object.Source.Brand,
 			evt.Data.Object.Source.Funding, amount)
+
+	case "charge.dispute.created", "charge.dispute.closed":
+		title := strings.Split(evt.Type, ".")[2]
+		amount := evt.Data.Object.Amount / 100.
+		subject = fmt.Sprintf("Charge dispute %s for $%.2f", title, amount)
+		link = fmt.Sprintf("https://dashboard.stripe.com/payments/%s",
+			evt.Data.Object.Charge)
+
+		var refund string
+		if evt.Data.Object.ChargeRefundable {
+			refund = "Refundable"
+		} else {
+			refund = "Non-refundable"
+		}
+
+		body = fmt.Sprintf("%s charge dispute %s for $%.2f reason %s",
+			refund, title, amount, evt.Data.Object.Reason)
 	}
 
 	notf = &notification.Notification{
