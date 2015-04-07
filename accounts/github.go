@@ -294,9 +294,6 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 
 	timestamp, err := time.Parse("2006-01-02T15:04:05Z", evt.CreatedAt)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"error": err,
-		}).Error("account.github: Failed to parse timestamp")
 		return
 	}
 
