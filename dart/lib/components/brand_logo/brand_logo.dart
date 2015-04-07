@@ -47,7 +47,13 @@ class BrandLogoComp extends all_aware.AllAware {
   }
 
   String get iconUrl {
-    return icons[this.icon];
+    var icon = icons[this.icon];
+
+    if (icon == null) {
+      icon = "";
+    }
+
+    return icon;
   }
 
   void _updateIcon() {
