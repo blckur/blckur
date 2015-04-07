@@ -76,13 +76,15 @@ type stripeEvent struct {
 	Type    string `json:"type"`
 	Data    struct {
 		Object struct {
-			Id       string `json:"id"`
-			Name     string `json:"name"`
-			Amount   int    `json:"amount"`
-			Currency string `json:"currency"`
-			Reason   string `json:"reason"`
-			Charge   string `json:"charge"`
-			Source   struct {
+			Id               string `json:"id"`
+			Name             string `json:"name"`
+			Amount           int    `json:"amount"`
+			Currency         string `json:"currency"`
+			Reason           string `json:"reason"`
+			Charge           string `json:"charge"`
+			ChargeRefundable bool   `json:"is_charge_refundable"`
+			Reason           string `json:"reason"`
+			Source           struct {
 				Brand   string `json:"brand"`
 				Funding string `json:"funding"`
 				Country string `json:"country"`
