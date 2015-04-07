@@ -11,6 +11,7 @@ var icons = {
   'github': '/s/img/github.png',
   'gmail': '/s/img/gmail.png',
   'hipchat': '/s/img/hipchat.png',
+  'stripe': '/s/img/stripe.png',
   'twitter': '/s/img/twitter.png',
 };
 
