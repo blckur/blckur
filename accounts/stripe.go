@@ -89,6 +89,9 @@ type stripeEvent struct {
 				Funding string `json:"funding"`
 				Country string `json:"country"`
 			}
+			Plan struct {
+				Name string `json:"name"`
+			} `json"plan"`
 		} `json:"object"`
 	}
 }
@@ -191,6 +194,14 @@ func (s *StripeClient) parse(evt *stripeEvent,
 		body = fmt.Sprintf("Customer %s with email %s", title,
 			evt.Data.Object.Email)
 		link = fmt.Sprintf("https://dashboard.stripe.com/customers/%s",
+			evt.Data.Object.Id)
+
+	case "subscription_created", "subscription_deleted":
+		title := strings.Split(evt.Type, ".")[1]
+		subject = fmt.Sprintf("Subscription %s", title)
+		body = fmt.Sprintf("Subscription %s has been %s",
+			evt.Data.Object.Email, title)
+		link = fmt.Sprintf("https://dashboard.stripe.com/subscriptions/%s",
 			evt.Data.Object.Id)
 
 	default:
