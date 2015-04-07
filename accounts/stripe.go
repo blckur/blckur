@@ -260,6 +260,10 @@ Loop:
 		}
 
 		for j, evt := range events.Data {
+			if j == 0 {
+				pageToken = evt.Id
+			}
+
 			notf, stop := s.parse(evt, lastNotf, i == 0 && j == 0)
 			if notf != nil {
 				notfs = append(notfs, notf)
