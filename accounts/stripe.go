@@ -190,9 +190,9 @@ func (s *StripeClient) parse(evt *stripeEvent,
 		RemoteId:  evt.Id,
 		Timestamp: timestamp,
 		Type:      typ,
-		Link:    link,
-		Subject: subject,
-		Body:    body,
+		Link:      link,
+		Subject:   subject,
+		Body:      body,
 	}
 
 	return
