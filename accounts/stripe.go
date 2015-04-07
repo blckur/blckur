@@ -83,7 +83,6 @@ type stripeEvent struct {
 			Reason           string `json:"reason"`
 			Charge           string `json:"charge"`
 			ChargeRefundable bool   `json:"is_charge_refundable"`
-			Reason           string `json:"reason"`
 			Source           struct {
 				Brand   string `json:"brand"`
 				Funding string `json:"funding"`
