@@ -9,6 +9,7 @@ import (
 	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/settings"
 	"labix.org/v2/mgo/bson"
+	"strings"
 	"time"
 )
 
@@ -126,6 +127,35 @@ func (s *StripeClient) parse(evt *stripeEvent,
 
 		stop = true
 		return
+	}
+
+	typ := strings.Replace(evt.Type, ".", "_", 1)
+
+	var subject string
+	var body string
+	var link string
+
+	switch evt.Type {
+	case "charge.succeeded", "charge.failed", "charge.refunded":
+		title := strings.Split(evt.Type, ".")[1]
+		amount := evt.Data.Object.Amount / 100.
+		subject = fmt.Sprintf("Charge %s for $%.2f", title, amount)
+		link = fmt.Sprintf("https://dashboard.stripe.com/payments/%s",
+			evt.Data.Object.Id)
+		body = fmt.Sprintf("Charge %s from %s %s %s for $%.2f", title,
+			evt.Data.Object.Source.Country, evt.Data.Object.Source.Brand,
+			evt.Data.Object.Source.Funding, amount)
+	}
+
+	notf = &notification.Notification{
+		UserId:    s.acct.UserId,
+		AccountId: s.acct.Id,
+		RemoteId:  evt.Id,
+		Timestamp: timestamp,
+		Type:      typ,
+		Link:    link,
+		Subject: subject,
+		Body:    body,
 	}
 
 	return
