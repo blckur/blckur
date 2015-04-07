@@ -192,6 +192,9 @@ func (s *StripeClient) parse(evt *stripeEvent,
 			evt.Data.Object.Email)
 		link = fmt.Sprintf("https://dashboard.stripe.com/customers/%s",
 			evt.Data.Object.Id)
+
+	default:
+		return
 	}
 
 	if !s.filter(typ) {
