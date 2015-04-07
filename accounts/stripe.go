@@ -118,6 +118,16 @@ func (s *StripeClient) Update(db *database.Database) (err error) {
 	return
 }
 
+func (s *StripeClient) filter(typ string) bool {
+	for _, filter := range s.acct.Filters {
+		if filter.Type == "all" || filter.Type == typ {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (s *StripeClient) parse(evt *stripeEvent,
 	lastNotf *notification.Notification, force bool) (
 	notf *notification.Notification, stop bool) {
@@ -182,6 +192,10 @@ func (s *StripeClient) parse(evt *stripeEvent,
 			evt.Data.Object.Email)
 		link = fmt.Sprintf("https://dashboard.stripe.com/customers/%s",
 			evt.Data.Object.Id)
+	}
+
+	if !s.filter(typ) {
+		return
 	}
 
 	notf = &notification.Notification{
