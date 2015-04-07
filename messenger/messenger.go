@@ -131,7 +131,7 @@ func Subscribe(db *database.Database, channels []string,
 				continue
 			}
 
-			if onMsg(msg) == false {
+			if !onMsg(msg) {
 				return
 			}
 		}
@@ -142,7 +142,7 @@ func Subscribe(db *database.Database, channels []string,
 		}
 
 		if iter.Timeout() {
-			if onMsg(nil) == false {
+			if !onMsg(nil) {
 				return
 			}
 			continue
