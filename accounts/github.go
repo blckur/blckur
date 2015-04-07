@@ -313,7 +313,6 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		timestamp.Before(g.lastNotf.Timestamp) {
 
 		stop = true
-
 		return
 	}
 
