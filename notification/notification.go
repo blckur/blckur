@@ -2,10 +2,10 @@
 package notification
 
 import (
+	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/database"
 	"labix.org/v2/mgo/bson"
 	"time"
-	"github.com/blckur/blckur/cache"
 )
 
 type Notification struct {
@@ -85,7 +85,7 @@ func GetLastNotification(db *database.Database, userId bson.ObjectId,
 	return
 }
 
-func PublishNotificationUpdate(userId bson.ObjectId) (err error) {
+func NotificationUpdate(userId bson.ObjectId) (err error) {
 	conn := cache.Get()
 	defer conn.Close()
 
