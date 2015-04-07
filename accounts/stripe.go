@@ -139,15 +139,14 @@ func (s *StripeAuth) Authorize(db *database.Database, state string,
 
 func updateStripe() {
 	stripeConf = &oauth.Oauth2{
-		Type:         "github",
+		Type:         "stripe",
 		ClientId:     settings.Stripe.ClientId,
 		ClientSecret: settings.Stripe.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/stripe",
 		AuthUrl:      "https://connect.stripe.com/oauth/authorize",
 		TokenUrl:     "https://connect.stripe.com/oauth/token",
 		Scopes: []string{
-			"repo:status",
-			"notifications",
+			"read_only",
 		},
 	}
 	stripeConf.Config()
