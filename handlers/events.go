@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/websocket"
 	"labix.org/v2/mgo/bson"
 	"net/http"
-	"strings"
 )
 
 var upgrader = websocket.Upgrader{
