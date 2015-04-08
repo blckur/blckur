@@ -126,6 +126,7 @@ func (s *Store) parseFiles() {
 
 		dataStr = pathReg.ReplaceAllStringFunc(dataStr, func(
 			match string) string {
+
 			var matchPath string
 			if match[1:4] == "/s/" {
 				matchPath = filepath.Join(s.root, match[4:len(match)-1])
