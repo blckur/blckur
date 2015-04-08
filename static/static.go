@@ -127,17 +127,29 @@ func (s *Store) parseFiles() {
 		dataStr = pathReg.ReplaceAllStringFunc(dataStr, func(
 			match string) string {
 
+			var newMatch string
 			var matchPath string
 			if match[1:4] == "/s/" {
 				matchPath = filepath.Join(s.root, match[4:len(match)-1])
+				newMatch = match
 			} else if match[1:4] == "pac" {
 				matchPath = filepath.Join(path, match[1:len(match)-1])
+				if path == s.root {
+					newMatch = match[:1] + "/s/" + match[1:len(match)]
+				} else {
+					newMatch = match
+				}
 			} else {
 				matchPath = filepath.Join(path, match[5:len(match)-1])
+				if path == s.root {
+					newMatch = match[:5] + "/s/" + match[5:len(match)]
+				} else {
+					newMatch = match
+				}
 			}
 
 			if name, ok := s.lookup[matchPath]; ok {
-				match = strings.Replace(match, name.Name, name.HashName, 1)
+				match = strings.Replace(newMatch, name.Name, name.HashName, 1)
 			}
 
 			return match
