@@ -5,6 +5,7 @@ import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
 import 'package:angular/angular.dart'as ng;
+import 'dart:html' as dom;
 
 @Component(
   selector: 'x-user',
@@ -51,7 +52,7 @@ class UserComp {
 
   void onLogout() {
     this.authModel.logout().then((_) {
-      this.router.gotoUrl('/login');
+      dom.window.location.replace('#/login');
     }).catchError((err) {
       logger.severe('Failed to logout', err);
     });
