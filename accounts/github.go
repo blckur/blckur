@@ -580,7 +580,9 @@ func (g *gitHubBackend) sync() {
 		}
 
 		if notf != nil {
-			new = true
+			if !new && notf.Type != "" {
+				new = true
+			}
 
 			err := notf.Initialize(g.db)
 			if err != nil {

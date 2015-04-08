@@ -339,8 +339,14 @@ Loop:
 		}
 	}
 
+	new := false
+
 	for i := len(notfs) - 1; i >= 0; i-- {
 		notf := notfs[i]
+
+		if !new && notf.Type != "" {
+			new = true
+		}
 
 		err = notf.Initialize(db)
 		if err != nil {
@@ -348,7 +354,7 @@ Loop:
 		}
 	}
 
-	if len(notfs) > 0 {
+	if new {
 		notification.PublishUpdate(g.acct.UserId)
 	}
 
