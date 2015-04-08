@@ -91,15 +91,13 @@ func (s *staticHandler) Index(c *gin.Context) {
 }
 
 func newStaticHandler(source string) (handler *staticHandler) {
-	source = filepath.Dir(source)
-
-	handler = &staticHandler{
-		source: source,
-	}
+	handler = &staticHandler{}
 
 	if source[:4] == "http" {
+		handler.source = source
 		handler.Static = handler.proxy
 	} else {
+		handler.source = filepath.Dir(source)
 		store, err := static.NewStore(source)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
