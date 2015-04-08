@@ -333,8 +333,7 @@ func hashEvent(id string, timestamp time.Time) (hashStr string) {
 	return
 }
 
-type TwitterAuth struct {
-}
+type TwitterAuth struct{}
 
 func (t *TwitterAuth) Request(db *database.Database, userId bson.ObjectId) (
 	url string, err error) {
@@ -384,10 +383,10 @@ func updateTwitter() {
 		Type:           "twitter",
 		ConsumerKey:    settings.Twitter.ConsumerKey,
 		ConsumerSecret: settings.Twitter.ConsumerSecret,
+		CallbackUrl:    settings.System.Domain + "/callback/twitter",
 		ReqTokenUrl:    "https://api.twitter.com/oauth/request_token",
 		AuthTokenUrl:   "https://api.twitter.com/oauth/authorize",
 		AccsTokenUrl:   "https://api.twitter.com/oauth/access_token",
-		CallbackUrl:    settings.System.Domain + "/callback/twitter",
 	}
 	conf.Config()
 
