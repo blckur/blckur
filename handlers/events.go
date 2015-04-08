@@ -47,15 +47,9 @@ func eventGet(c *gin.Context) {
 	defer lst.Close()
 
 	for msg := range lst.Listen() {
-		msgSplit := strings.Split(msg, ":")
-
 		evt := &event{
 			Id:   bson.NewObjectId(),
-			Type: msgSplit[0],
-		}
-
-		if len(msgSplit) > 1 {
-			evt.Resource = msgSplit[1]
+			Type: msg,
 		}
 
 		err = conn.WriteJSON(evt)
