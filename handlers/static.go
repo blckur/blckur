@@ -94,10 +94,9 @@ func newStaticHandler(source string) (handler *staticHandler) {
 	handler = &staticHandler{}
 
 	if source[:4] == "http" {
-		handler.source = source
 		handler.Static = handler.proxy
 	} else {
-		handler.source = filepath.Dir(source)
+		source = filepath.Dir(source)
 		store, err := static.NewStore(source)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
@@ -109,6 +108,8 @@ func newStaticHandler(source string) (handler *staticHandler) {
 		handler.store = store
 		handler.Static = handler.local
 	}
+
+	handler.source = source
 
 	return
 }
