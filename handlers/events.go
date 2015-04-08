@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"github.com/blckur/blckur/cache"
+	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"labix.org/v2/mgo/bson"
 	"net/http"
-	"time"
+	"strings"
 )
 
 var upgrader = websocket.Upgrader{
@@ -24,6 +26,8 @@ type event struct {
 }
 
 func eventGet(c *gin.Context) {
+	sess := c.MustGet("session").(*session.Session)
+
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		c.Fail(500, err)
@@ -39,10 +43,19 @@ func eventGet(c *gin.Context) {
 		}
 	}()
 
-	for {
+	lst := cache.Subscribe(sess.UserId.Hex())
+	defer lst.Close()
+
+	for msg := range lst.Listen() {
+		msgSplit := strings.Split(msg, ":")
+
 		evt := &event{
 			Id:   bson.NewObjectId(),
-			Type: "test_event",
+			Type: msgSplit[0],
+		}
+
+		if len(msgSplit) > 1 {
+			evt.Resource = msgSplit[1]
 		}
 
 		err = conn.WriteJSON(evt)
@@ -50,7 +63,5 @@ func eventGet(c *gin.Context) {
 			c.Fail(500, err)
 			return
 		}
-
-		time.Sleep(time.Second)
 	}
 }
