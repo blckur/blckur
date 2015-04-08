@@ -64,4 +64,6 @@ func eventGet(c *gin.Context) {
 			return
 		}
 	}
+
+	c.Fail(500, nil)
 }
