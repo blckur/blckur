@@ -92,7 +92,9 @@ abstract class Model extends remote.Remote {
   async.Future destroy() {
     return this.http.delete(this.url).then((_) {
       this.clearError();
-      this.onDestroy(this);
+      if (this.onDestroy != null) {
+        this.onDestroy(this);
+      }
     }).catchError((err) {
       return new async.Future.error(this.parseError(err));
     }, test: (e) => e is ng.HttpResponse);
