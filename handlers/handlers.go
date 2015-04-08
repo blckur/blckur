@@ -85,5 +85,7 @@ func Register(engine *gin.Engine, source string) {
 
 	authGroup.GET("/events", eventGet)
 
-	engine.GET("/s/*path", newStaticHandler(source))
+	staticHand := newStaticHandler(source)
+	engine.GET("/", staticHand.Index)
+	engine.GET("/s/*path", staticHand.Static)
 }
