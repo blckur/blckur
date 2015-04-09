@@ -129,6 +129,7 @@ func (s *Store) parseFiles() {
 
 			var newMatch string
 			var matchPath string
+
 			if match[1:4] == "/s/" {
 				matchPath = filepath.Join(s.root, match[4:len(match)-1])
 				newMatch = match
@@ -158,9 +159,15 @@ func (s *Store) parseFiles() {
 		file.Data = []byte(dataStr)
 
 		data := &bytes.Buffer{}
-		writer := gzip.NewWriter(data)
+
+		writer, err := gzip.NewWriterLevel(data, gzip.BestCompression)
+		if err != nil {
+			panic(err)
+		}
+
 		writer.Write(file.Data)
 		writer.Close()
+
 		file.GzipData = data.Bytes()
 	}
 }
