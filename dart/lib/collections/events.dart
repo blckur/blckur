@@ -49,6 +49,7 @@ class Events extends collection.Collection {
   }
 
   void start() {
+    return;
     this.openSocket();
   }
 }
