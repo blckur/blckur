@@ -1,0 +1,15 @@
+@import 'styles/base.scss';
+
+:host {
+  display: block;
+}
+
+paper-progress {
+  height: 5px;
+  position: absolute;
+  width: 100%;
+}
+
+.list {
+  overflow-y: auto;
+}
