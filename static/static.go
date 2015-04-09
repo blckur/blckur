@@ -159,15 +159,9 @@ func (s *Store) parseFiles() {
 		file.Data = []byte(dataStr)
 
 		data := &bytes.Buffer{}
-
-		writer, err := gzip.NewWriterLevel(data, gzip.BestCompression)
-		if err != nil {
-			panic(err)
-		}
-
+		writer := gzip.NewWriter(data)
 		writer.Write(file.Data)
 		writer.Close()
-
 		file.GzipData = data.Bytes()
 	}
 }
