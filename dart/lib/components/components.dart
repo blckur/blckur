@@ -20,6 +20,10 @@ import 'package:blckur/components/user/user.dart'
   as user;
 import 'package:blckur/components/login/login.dart'
   as login;
+import 'package:blckur/components/notification/notification.dart'
+  as notification;
+import 'package:blckur/components/notifications/notifications.dart'
+  as notifications;
 import 'package:blckur/components/recaptcha/recaptcha.dart'
   as recaptcha;
 
@@ -37,6 +41,8 @@ class ComponentsMod extends ng.Module {
     this.bind(input.InputComp);
     this.bind(user.UserComp);
     this.bind(login.LoginComp);
+    this.bind(notification.NotificationComp);
+    this.bind(notifications.NotificationsComp);
     this.bind(recaptcha.RecaptchaComp);
   }
 }
