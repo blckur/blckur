@@ -1,6 +1,8 @@
-<div>
-  <div ng-bind="model.type"></div>
-  <div ng-bind="model.link"></div>
-  <div ng-bind="model.subject"></div>
-  <div ng-bind="model.body"></div>
+<div layout horizontal>
+  <x-brand-logo icon="{{model.accountType}}" horizontal layout
+    center></x-brand-logo>
+  <div class="info" layout vertical flex>
+    <h3 class="title" ng-bind="model.subject"></h3>
+    <div ng-bind="model.body"></div>
+  </div>
 </div>
