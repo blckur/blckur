@@ -13,3 +13,7 @@ paper-progress {
 .list {
   overflow-y: auto;
 }
+
+x-notification+x-notification {
+  border-top: 1px solid #f2f2f2;
+}
