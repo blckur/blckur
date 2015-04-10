@@ -22,12 +22,16 @@ import (
 	"time"
 )
 
+const (
+	GITHUB = "github"
+)
+
 var (
 	gitHubConf *oauth.Oauth2
 )
 
 func init() {
-	account.Register("github", "GitHub", OAUTH2,
+	account.Register(GITHUB, "GitHub", OAUTH2,
 		GitHubAuth{}, GitHubClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -189,7 +193,7 @@ func init() {
 				ValueHolder: "Repository name",
 			},
 		}, func() {
-			messenger.Register("settings", "github",
+			messenger.Register("settings", GITHUB,
 				func(_ *messenger.Message) {
 					updateGitHub()
 				})
@@ -299,10 +303,11 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 
 	if force {
 		notf = &notification.Notification{
-			UserId:    g.acct.UserId,
-			AccountId: g.acct.Id,
-			RemoteId:  evt.Id,
-			Timestamp: timestamp,
+			UserId:      g.acct.UserId,
+			AccountId:   g.acct.Id,
+			AccountType: GITHUB,
+			RemoteId:    evt.Id,
+			Timestamp:   timestamp,
 		}
 	}
 
@@ -362,16 +367,17 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    g.acct.UserId,
-			AccountId: g.acct.Id,
-			RemoteId:  evt.Id,
-			Timestamp: timestamp,
-			Type:      typ,
-			Resource:  repo,
-			Origin:    from,
-			Link:      link,
-			Subject:   subject,
-			Body:      title,
+			UserId:      g.acct.UserId,
+			AccountId:   g.acct.Id,
+			AccountType: GITHUB,
+			RemoteId:    evt.Id,
+			Timestamp:   timestamp,
+			Type:        typ,
+			Resource:    repo,
+			Origin:      from,
+			Link:        link,
+			Subject:     subject,
+			Body:        title,
 		}
 
 	case "ForkEvent":
@@ -391,16 +397,17 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    g.acct.UserId,
-			AccountId: g.acct.Id,
-			RemoteId:  evt.Id,
-			Timestamp: timestamp,
-			Type:      typ,
-			Resource:  repo,
-			Origin:    from,
-			Link:      link,
-			Subject:   subject,
-			Body:      body,
+			UserId:      g.acct.UserId,
+			AccountId:   g.acct.Id,
+			AccountType: GITHUB,
+			RemoteId:    evt.Id,
+			Timestamp:   timestamp,
+			Type:        typ,
+			Resource:    repo,
+			Origin:      from,
+			Link:        link,
+			Subject:     subject,
+			Body:        body,
 		}
 
 	case "CommitCommentEvent":
@@ -423,16 +430,17 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    g.acct.UserId,
-			AccountId: g.acct.Id,
-			RemoteId:  evt.Id,
-			Timestamp: timestamp,
-			Type:      typ,
-			Resource:  repo,
-			Origin:    from,
-			Link:      link,
-			Subject:   subject,
-			Body:      body,
+			UserId:      g.acct.UserId,
+			AccountId:   g.acct.Id,
+			AccountType: GITHUB,
+			RemoteId:    evt.Id,
+			Timestamp:   timestamp,
+			Type:        typ,
+			Resource:    repo,
+			Origin:      from,
+			Link:        link,
+			Subject:     subject,
+			Body:        body,
 		}
 
 	case "PullRequestEvent", "PullRequestReviewCommentEvent":
@@ -483,16 +491,17 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    g.acct.UserId,
-			AccountId: g.acct.Id,
-			RemoteId:  evt.Id,
-			Timestamp: timestamp,
-			Type:      typ,
-			Resource:  repo,
-			Origin:    from,
-			Link:      link,
-			Subject:   subject,
-			Body:      title,
+			UserId:      g.acct.UserId,
+			AccountId:   g.acct.Id,
+			AccountType: GITHUB,
+			RemoteId:    evt.Id,
+			Timestamp:   timestamp,
+			Type:        typ,
+			Resource:    repo,
+			Origin:      from,
+			Link:        link,
+			Subject:     subject,
+			Body:        title,
 		}
 	}
 
@@ -670,7 +679,7 @@ func (g *GitHubAuth) Authorize(db *database.Database, state string,
 
 func updateGitHub() {
 	gitHubConf = &oauth.Oauth2{
-		Type:         "github",
+		Type:         GITHUB,
 		ClientId:     settings.GitHub.ClientId,
 		ClientSecret: settings.GitHub.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/github",
