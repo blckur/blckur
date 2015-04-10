@@ -13,12 +13,16 @@ import (
 	"time"
 )
 
+const (
+	STRIPE = "stripe"
+)
+
 var (
 	stripeConf *oauth.Oauth2
 )
 
 func init() {
-	account.Register("stripe", "Stripe", OAUTH2,
+	account.Register(STRIPE, "Stripe", OAUTH2,
 		StripeAuth{}, StripeClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -62,7 +66,7 @@ func init() {
 				Type:  "subscription_deleted",
 			},
 		}, func() {
-			messenger.Register("settings", "stripe",
+			messenger.Register("settings", STRIPE,
 				func(_ *messenger.Message) {
 					updateStripe()
 				})
@@ -140,10 +144,11 @@ func (s *StripeClient) parse(evt *stripeEvent,
 
 	if force {
 		notf = &notification.Notification{
-			UserId:    s.acct.UserId,
-			AccountId: s.acct.Id,
-			RemoteId:  evt.Id,
-			Timestamp: timestamp,
+			UserId:      s.acct.UserId,
+			AccountId:   s.acct.Id,
+			AccountType: STRIPE,
+			RemoteId:    evt.Id,
+			Timestamp:   timestamp,
 		}
 	}
 
@@ -213,14 +218,15 @@ func (s *StripeClient) parse(evt *stripeEvent,
 	}
 
 	notf = &notification.Notification{
-		UserId:    s.acct.UserId,
-		AccountId: s.acct.Id,
-		RemoteId:  evt.Id,
-		Timestamp: timestamp,
-		Type:      typ,
-		Link:      link,
-		Subject:   subject,
-		Body:      body,
+		UserId:      s.acct.UserId,
+		AccountId:   s.acct.Id,
+		AccountType: STRIPE,
+		RemoteId:    evt.Id,
+		Timestamp:   timestamp,
+		Type:        typ,
+		Link:        link,
+		Subject:     subject,
+		Body:        body,
 	}
 
 	return
@@ -352,7 +358,7 @@ func (s *StripeAuth) Authorize(db *database.Database, state string,
 
 func updateStripe() {
 	stripeConf = &oauth.Oauth2{
-		Type:         "stripe",
+		Type:         STRIPE,
 		ClientId:     settings.Stripe.ClientId,
 		ClientSecret: settings.Stripe.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/stripe",
