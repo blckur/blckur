@@ -23,21 +23,42 @@ type pubSubConn struct {
 	addQueue  *list.List
 	remQueue  *list.List
 	conn      *redis.PubSubConn
-	listeners map[string]func(string)
+	listeners map[string]map[int]func(string)
 	closed    bool
+	counter int
 }
 
-func (p *pubSubConn) Subscribe(key string, handler func(string)) {
+func (p *pubSubConn) Subscribe(key string, handler func(string)) (id int) {
 	p.addMutex.Lock()
-	p.listeners[key] = handler
+
+	handlers, ok := p.listeners[key]
+	if !ok {
+		handlers = map[int]func(string){}
+		p.listeners[key] = handlers
+	}
+
+	id = p.counter
+	p.counter += 1
+
+	handlers[id] = handler
+
 	p.addQueue.PushBack(key)
 	p.addMutex.Unlock()
+
+	return
 }
 
-func (p *pubSubConn) Unsubsribe(key string) {
+func (p *pubSubConn) Unsubsribe(key string, id int) {
 	p.remMutex.Lock()
 	p.remQueue.PushBack(key)
-	delete(p.listeners, key)
+
+	if handlers, ok := p.listeners[key]; ok {
+		delete(handlers, id)
+		if len(handlers) == 0 {
+			delete(p.listeners, key)
+		}
+	}
+
 	p.remMutex.Unlock()
 }
 
@@ -122,9 +143,11 @@ func (p *pubSubConn) Listen() {
 			for {
 				switch obj := conn.Receive().(type) {
 				case redis.Message:
-					if listener, ok := p.listeners[obj.Channel]; ok {
+					if listeners, ok := p.listeners[obj.Channel]; ok {
 						go func() {
-							listener(string(obj.Data))
+							for _, listener := range listeners {
+								listener(string(obj.Data))
+							}
 						}()
 					}
 				case error:
@@ -203,7 +226,7 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 		remMutex:  &sync.Mutex{},
 		addQueue:  list.New(),
 		remQueue:  list.New(),
-		listeners: map[string]func(string){},
+		listeners: map[string]map[int]func(string){},
 		closed:    false,
 	}
 
