@@ -36,15 +36,14 @@ func (l *Listener) Close() {
 	clstMutex.RUnlock()
 
 	l.mutex.Lock()
+
 	for _, handler := range l.handlers {
 		handler.State = false
-	}
 
-	for _, server := range l.servers {
-		l.cluster.pubsubConns[server].Unsubsribe(l.channel)
+		l.cluster.pubsubConns[handler.Server].Unsubsribe(l.channel, handler.Id)
 	}
-
 	close(l.stream)
+
 	l.mutex.Unlock()
 }
 
@@ -57,10 +56,12 @@ func (l *Listener) sub() {
 		handler := &handler{
 			listener: l,
 			State:    true,
+			Server:   server,
 		}
 		handlers = append(handlers, handler)
 
-		cst.pubsubConns[server].Subscribe(l.channel, handler.Handle)
+		handler.Id = cst.pubsubConns[server].Subscribe(
+			l.channel, handler.Handle)
 	}
 
 	l.cluster = cst
