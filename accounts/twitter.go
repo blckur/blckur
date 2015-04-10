@@ -227,7 +227,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 
 		origin := "@" + evt.User.ScreenName
 		timestamp = evt.CreatedAt
-		subject += fmt.Sprintf("%s (%s)", evt.User.Name, origin)
+		subject += evt.User.Name
 
 		if !b.filter(evtType, origin) {
 			return
@@ -261,7 +261,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 
 		origin := "@" + evt.Source.ScreenName
 		timestamp = evt.CreatedAt
-		subject += fmt.Sprintf("%s (%s)", evt.Source.Name, origin)
+		subject += evt.Source.Name
 
 		if !b.filter(evt.Event.Event, origin) {
 			return
