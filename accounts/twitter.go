@@ -20,6 +20,10 @@ import (
 	"time"
 )
 
+const (
+	TWITTER = "twitter"
+)
+
 var (
 	twitterConf *oauth.Oauth1
 )
@@ -29,7 +33,7 @@ type TwitterClient struct {
 }
 
 func init() {
-	account.Register("twitter", "Twitter", OAUTH1,
+	account.Register(TWITTER, "Twitter", OAUTH1,
 		TwitterAuth{}, TwitterClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -99,7 +103,7 @@ func init() {
 				ValueHolder: "Twitter handle",
 			},
 		}, func() {
-			messenger.Register("settings", "twitter",
+			messenger.Register("settings", TWITTER,
 				func(_ *messenger.Message) {
 					updateTwitter()
 				})
@@ -230,13 +234,14 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    b.acct.UserId,
-			AccountId: b.acct.Id,
-			Type:      evtType,
-			Resource:  evt.IdStr,
-			Origin:    origin,
-			Subject:   subject,
-			Body:      evt.Text,
+			UserId:      b.acct.UserId,
+			AccountId:   b.acct.Id,
+			AccountType: TWITTER,
+			Type:        evtType,
+			Resource:    evt.IdStr,
+			Origin:      origin,
+			Subject:     subject,
+			Body:        evt.Text,
 		}
 	} else if evt, ok := evtInf.(anaconda.EventTweet); ok {
 		if evt.Target.IdStr != b.acct.IdentityId ||
@@ -263,13 +268,14 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    b.acct.UserId,
-			AccountId: b.acct.Id,
-			Type:      evt.Event.Event,
-			Resource:  evt.TargetObject.IdStr,
-			Origin:    origin,
-			Subject:   subject,
-			Body:      evt.TargetObject.Text,
+			UserId:      b.acct.UserId,
+			AccountId:   b.acct.Id,
+			AccountType: TWITTER,
+			Type:        evt.Event.Event,
+			Resource:    evt.TargetObject.IdStr,
+			Origin:      origin,
+			Subject:     subject,
+			Body:        evt.TargetObject.Text,
 		}
 	} else if evt, ok := evtInf.(anaconda.Event); ok {
 		if evt.Target.IdStr != b.acct.IdentityId || evt.Event != "follow" {
@@ -284,12 +290,13 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		}
 
 		notf = &notification.Notification{
-			UserId:    b.acct.UserId,
-			AccountId: b.acct.Id,
-			Type:      evt.Event,
-			Resource:  evt.Target.IdStr,
-			Origin:    origin,
-			Subject:   "New follower " + origin,
+			UserId:      b.acct.UserId,
+			AccountId:   b.acct.Id,
+			AccountType: TWITTER,
+			Type:        evt.Event,
+			Resource:    evt.Target.IdStr,
+			Origin:      origin,
+			Subject:     "New follower " + origin,
 		}
 	} else if evt, ok := evtInf.(anaconda.StatusDeletionNotice); ok {
 		coll := b.db.Notifications()
@@ -380,7 +387,7 @@ func updateTwitter() {
 	anaconda.SetConsumerSecret(settings.Twitter.ConsumerSecret)
 
 	conf := &oauth.Oauth1{
-		Type:           "twitter",
+		Type:           TWITTER,
 		ConsumerKey:    settings.Twitter.ConsumerKey,
 		ConsumerSecret: settings.Twitter.ConsumerSecret,
 		CallbackUrl:    settings.System.Domain + "/callback/twitter",
