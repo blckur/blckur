@@ -5,7 +5,9 @@ import (
 )
 
 type handler struct {
+	Id       int
 	State    bool
+	Server   string
 	listener *Listener
 }
 
