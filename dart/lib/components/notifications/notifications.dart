@@ -22,10 +22,10 @@ class NotificationsComp {
     this.model = new models.Notification();
     this.notifications = new collections.Notifications();
     this.loading = new utils.Loading();
-    this.update(true);
+    this.update();
   }
 
-  void update([bool initMode]) {
+  void update() {
     if (!this.loading.set()) {
       return;
     }
