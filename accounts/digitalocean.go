@@ -13,12 +13,16 @@ import (
 	"time"
 )
 
+const (
+	DIGITAL_OCEAN = "digitalocean"
+)
+
 var (
 	digitalOceanConf *oauth.Oauth2
 )
 
 func init() {
-	account.Register("digitalocean", "DigitalOcean", OAUTH2,
+	account.Register(DIGITAL_OCEAN, "DigitalOcean", OAUTH2,
 		DigitalOceanAuth{}, DigitalOceanClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -38,7 +42,7 @@ func init() {
 				Type:  "password_reset",
 			},
 		}, func() {
-			messenger.Register("settings", "digitalocean",
+			messenger.Register("settings", DIGITAL_OCEAN,
 				func(_ *messenger.Message) {
 					updateDigitalOcean()
 				})
@@ -163,22 +167,24 @@ Loop:
 
 			if lastNotf == nil {
 				notf := &notification.Notification{
-					UserId:    d.acct.UserId,
-					AccountId: d.acct.Id,
-					RemoteId:  strconv.Itoa(action.Id),
-					Timestamp: timestamp,
+					UserId:      d.acct.UserId,
+					AccountId:   d.acct.Id,
+					AccountType: DIGITAL_OCEAN,
+					RemoteId:    strconv.Itoa(action.Id),
+					Timestamp:   timestamp,
 				}
 				notfs = append(notfs, notf)
 				break Loop
 			}
 
 			notf := &notification.Notification{
-				UserId:    d.acct.UserId,
-				AccountId: d.acct.Id,
-				RemoteId:  strconv.Itoa(action.Id),
-				Timestamp: timestamp,
-				Type:      action.Type,
-				Subject:   subject,
+				UserId:      d.acct.UserId,
+				AccountId:   d.acct.Id,
+				AccountType: DIGITAL_OCEAN,
+				RemoteId:    strconv.Itoa(action.Id),
+				Timestamp:   timestamp,
+				Type:        action.Type,
+				Subject:     subject,
 			}
 
 			if timestamp.Before(lastNotf.Timestamp) ||
@@ -256,7 +262,7 @@ func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
 
 func updateDigitalOcean() {
 	digitalOceanConf = &oauth.Oauth2{
-		Type:         "digitalocean",
+		Type:         DIGITAL_OCEAN,
 		ClientId:     settings.DigitalOcean.ClientId,
 		ClientSecret: settings.DigitalOcean.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/digitalocean",
