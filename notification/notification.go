@@ -9,17 +9,18 @@ import (
 )
 
 type Notification struct {
-	Id        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	UserId    bson.ObjectId `bson:"user_id" json:"-"`
-	AccountId bson.ObjectId `bson:"account_id" json:"-"`
-	RemoteId  string        `bson:"remote_id" json:"-"`
-	Timestamp time.Time     `bson:"timestamp" json:"timestamp"`
-	Type      string        `bson:"type,omitempty" json:"type"`
-	Resource  string        `bson:"resource,omitempty" json:"-"`
-	Origin    string        `bson:"origin,omitempty" json:"origin"`
-	Link      string        `bson:"link,omitempty" json:"link"`
-	Subject   string        `bson:"subject,omitempty" json:"subject"`
-	Body      string        `bson:"body,omitempty" json:"body"`
+	Id          bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	UserId      bson.ObjectId `bson:"user_id" json:"-"`
+	AccountId   bson.ObjectId `bson:"account_id" json:"-"`
+	AccountType string        `bson:"account_type" json:"account_type"`
+	RemoteId    string        `bson:"remote_id" json:"-"`
+	Timestamp   time.Time     `bson:"timestamp" json:"timestamp"`
+	Type        string        `bson:"type,omitempty" json:"type"`
+	Resource    string        `bson:"resource,omitempty" json:"-"`
+	Origin      string        `bson:"origin,omitempty" json:"origin"`
+	Link        string        `bson:"link,omitempty" json:"link"`
+	Subject     string        `bson:"subject,omitempty" json:"subject"`
+	Body        string        `bson:"body,omitempty" json:"body"`
 }
 
 func (n *Notification) Initialize(db *database.Database) (err error) {
