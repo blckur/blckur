@@ -3,7 +3,6 @@ package accounts
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/account"
