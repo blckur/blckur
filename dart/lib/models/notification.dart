@@ -4,6 +4,7 @@ import 'package:blckur/model.dart' as model;
 
 class Notification extends model.Model {
   String id;
+  String accountType;
   String timestamp;
   String type;
   String origin;
@@ -18,6 +19,7 @@ class Notification extends model.Model {
   Map<String, Function> get getters {
     return {
       'id': () => this.id,
+      'account_type': () => this.accountType,
       'timestamp': () => this.timestamp,
       'type': () => this.type,
       'origin': () => this.origin,
@@ -30,6 +32,7 @@ class Notification extends model.Model {
   Map<String, Function> get setters {
     return {
       'id': (x) => this.id = x,
+      'account_type': (x) => this.accountType = x,
       'timestamp': (x) => this.timestamp = x,
       'type': (x) => this.type = x,
       'origin': (x) => this.origin = x,
