@@ -4,6 +4,7 @@ package notification
 import (
 	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/database"
+	"github.com/dropbox/godropbox/container/set"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -36,6 +37,21 @@ func (n *Notification) Initialize(db *database.Database) (err error) {
 		err = database.ParseError(err)
 		return
 	}
+
+	return
+}
+
+func (n *Notification) Commit(db *database.Database) (err error) {
+	coll := db.Notifications()
+	err = coll.Commit(n.Id, n)
+	return
+}
+
+func (n *Notification) CommitFields(db *database.Database,
+	fields set.Set) (err error) {
+
+	coll := db.Notifications()
+	err = coll.CommitFields(n.Id, n, fields)
 
 	return
 }
