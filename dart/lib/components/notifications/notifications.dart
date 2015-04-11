@@ -8,16 +8,18 @@ import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgOneWay;
 import 'package:angular/angular.dart' as ng;
+import 'dart:html' as dom;
 
 @Component(
   selector: 'x-notifications',
   templateUrl: 'packages/blckur/components/notifications/notifications.html',
   cssUrl: 'packages/blckur/components/notifications/notifications.css'
 )
-class NotificationsComp implements ng.ScopeAware {
+class NotificationsComp implements ng.ScopeAware, ng.ShadowRootAware {
   models.Notification model;
   collections.Notifications notifications;
   utils.Loading loading;
+  dom.Element list;
 
   NotificationsComp() {
     this.model = new models.Notification();
@@ -32,6 +34,10 @@ class NotificationsComp implements ng.ScopeAware {
     });
   }
 
+  void onShadowRoot(dom.ShadowRoot root) {
+    this.list = root.querySelector('.list');
+  }
+
   void update() {
     if (!this.loading.set()) {
       return;
@@ -43,6 +49,10 @@ class NotificationsComp implements ng.ScopeAware {
         this.update();
       });
     }).whenComplete(() {
+      this.notifications = this.notifications;
+
+      this.list.click();
+
       this.loading.clear();
     });
   }
