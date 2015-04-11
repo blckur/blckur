@@ -7,10 +7,40 @@
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link href="//fonts.googleapis.com/css?family=Pacifico|Roboto:400,700,900,500,300,100" rel="stylesheet" type="text/css">
+
+  <style>
+    .startup {
+      background-color: #03a9f4;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      z-index: 10000;
+    }
+
+    .startup div {
+      color: #fff;
+      font-family: Pacifico, cursive;
+      font-size: 68px;
+      margin: 0 auto;
+    }
+  </style>
+
   <link rel="stylesheet" type="text/css"
     href="packages/blckur/styles/globals.css" shim-shadowdom>
 
-  <link href="//fonts.googleapis.com/css?family=Pacifico|Roboto:400,700,900,500,300,100" rel="stylesheet" type="text/css">
   <link rel="import" href="packages/core_elements/core_toolbar.html">
   <link rel="import" href="packages/core_elements/core_icon_button.html">
   <link rel="import" href="packages/core_elements/core_menu.html">
@@ -32,6 +62,7 @@
   <link rel="import" href="packages/paper_elements/paper_toast.html">
 </head>
 <body>
+  <div class="startup"><div>blckur</div></div>
   <ng-view></ng-view>
   <script type="application/dart" src="main.dart"></script>
   <script type="text/javascript" src="packages/browser/dart.js"></script>
