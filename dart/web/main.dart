@@ -25,5 +25,5 @@ void main() {
 
   new evnts.Events(app.root.get(ng.RootScope)).start();
 
-  dom.document.querySelector('.startup').remove();
+  dom.document.querySelector('.startup-background').remove();
 }
