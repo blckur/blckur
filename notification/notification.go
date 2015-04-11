@@ -56,8 +56,23 @@ func (n *Notification) CommitFields(db *database.Database,
 	return
 }
 
+func GetNotification(db *database.Database, userId bson.ObjectId,
+	notfId bson.ObjectId) (notf *Notification, err error) {
+
+	coll := db.Notifications()
+	notf = &Notification{}
+
+	err = coll.FindOne(bson.M{
+		"_id":     notfId,
+		"user_id": userId,
+	}, notf)
+
+	return
+}
+
 func GetNotifications(db *database.Database, userId bson.ObjectId) (
 	notfs []*Notification, err error) {
+
 	coll := db.Notifications()
 	notfs = []*Notification{}
 
