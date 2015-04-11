@@ -11,6 +11,7 @@ import 'package:blckur/app.dart' as app;
 import 'package:angular/angular.dart' as ng;
 import 'package:angular/application_factory.dart' as appfactory;
 import 'package:angular/animate/module.dart' as animate;
+import 'dart:html' as dom;
 
 void main() {
   logger.setup();
@@ -23,4 +24,6 @@ void main() {
     .run();
 
   new evnts.Events(app.root.get(ng.RootScope)).start();
+
+  dom.document.querySelector('.startup').remove();
 }
