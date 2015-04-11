@@ -39,7 +39,6 @@ func (l *Listener) Close() {
 
 	for _, handler := range l.handlers {
 		handler.State = false
-
 		l.cluster.pubsubConns[handler.Server].Unsubsribe(l.channel, handler.Id)
 	}
 	close(l.stream)
