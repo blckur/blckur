@@ -63,7 +63,7 @@ func GetNotifications(db *database.Database, userId bson.ObjectId) (
 
 	iter := coll.Find(bson.M{
 		"user_id": userId,
-		"type": bson.M{"$exists": true},
+		"type":    bson.M{"$exists": true},
 	}).Sort("-timestamp").Iter()
 
 	notf := &Notification{}
