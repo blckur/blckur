@@ -15,6 +15,7 @@ type Notification struct {
 	AccountType string        `bson:"account_type" json:"account_type"`
 	RemoteId    string        `bson:"remote_id" json:"-"`
 	Timestamp   time.Time     `bson:"timestamp" json:"timestamp"`
+	Read        bool          `bson:"read" json:"read"`
 	Type        string        `bson:"type,omitempty" json:"type"`
 	Resource    string        `bson:"resource,omitempty" json:"-"`
 	Origin      string        `bson:"origin,omitempty" json:"origin"`
