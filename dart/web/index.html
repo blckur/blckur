@@ -11,7 +11,7 @@
   <link href="//fonts.googleapis.com/css?family=Pacifico|Roboto:400,700,900,500,300,100" rel="stylesheet" type="text/css">
 
   <style>
-    .startup {
+    .startup-background {
       background-color: #03a9f4;
       position: absolute;
       top: 0;
@@ -30,7 +30,7 @@
       z-index: 10000;
     }
 
-    .startup div {
+    .startup-background div {
       color: #fff;
       font-family: Pacifico, cursive;
       font-size: 68px;
@@ -62,7 +62,7 @@
   <link rel="import" href="packages/paper_elements/paper_toast.html">
 </head>
 <body>
-  <div class="startup"><div>blckur</div></div>
+  <div class="startup-background"><div>blckur</div></div>
   <ng-view></ng-view>
   <script type="application/dart" src="main.dart"></script>
   <script type="text/javascript" src="packages/browser/dart.js"></script>
