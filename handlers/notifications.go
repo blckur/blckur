@@ -28,7 +28,7 @@ func notificationGet(c *gin.Context) {
 func notificationPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
-	notfId := c.Params.ByName("id").(bson.ObjectId)
+	notfId := bson.ObjectId(c.Params.ByName("id"))
 	data := &notificationData{}
 
 	c.Bind(data)
