@@ -2,6 +2,8 @@ library notification_mod;
 
 import 'package:blckur/model.dart' as model;
 
+import 'dart:async' as async;
+
 class Notification extends model.Model {
   String id;
   String accountType;
@@ -47,5 +49,10 @@ class Notification extends model.Model {
 
   String get url {
     return '/notifications/' + this.id;
+  }
+
+  async.Future markRead() {
+    this.read = this.read != true;
+    return this.save(['read']);
   }
 }
