@@ -6,7 +6,6 @@ import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgOneWay;
-import 'dart:html' as dom;
 
 @Component(
   selector: 'x-account',
@@ -19,7 +18,7 @@ class AccountComp {
   bool confirm;
   utils.Loading loading;
 
-  AccountComp(this.root) {
+  AccountComp() {
     this.loading = new utils.Loading();
   }
 
