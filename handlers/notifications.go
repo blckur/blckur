@@ -29,7 +29,7 @@ func notificationGet(c *gin.Context) {
 func notificationPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
-	notfId := bson.ObjectId(c.Params.ByName("id"))
+	notfId := bson.ObjectIdHex(c.Params.ByName("id"))
 	data := &notificationData{}
 
 	c.Bind(data)
