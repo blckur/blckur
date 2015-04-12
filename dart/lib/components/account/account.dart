@@ -17,7 +17,6 @@ class AccountComp {
   bool settings;
   bool addingAlert;
   bool confirm;
-  dom.ShadowRoot root;
   utils.Loading loading;
 
   AccountComp(this.root) {
