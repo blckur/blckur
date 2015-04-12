@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
 	"labix.org/v2/mgo/bson"
+	"github.com/dropbox/godropbox/container/set"
 )
 
 type notificationData struct {
@@ -40,6 +41,12 @@ func notificationPut(c *gin.Context) {
 	}
 
 	notf.Read = data.Read
+
+	err = notf.CommitFields(db, set.NewSet("read"))
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
 
 	c.JSON(200, notf)
 }
