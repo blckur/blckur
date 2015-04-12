@@ -13,11 +13,6 @@ import (
 	"time"
 )
 
-const (
-	Normal = "normal"
-	Check  = "check"
-)
-
 type cluster struct {
 	defaultConsistency int
 	servers            set.Set
