@@ -12,6 +12,7 @@ paper-progress {
 
 .list {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 x-notification+x-notification {
