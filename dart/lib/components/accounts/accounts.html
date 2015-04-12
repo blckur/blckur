@@ -1,4 +1,5 @@
-<div class="menu scrollable" flex>
+<div class="menu scrollable"
+    ng-class="modeswitch.state[2] ? 'adding' : ''" flex>
   <paper-progress ng-if="loading.state" indeterminate></paper-progress>
   <div ng-if="modeswitch.state[1]" class="accounts" ng-animate>
     <x-account ng-repeat="account in accounts"
