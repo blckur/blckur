@@ -86,6 +86,7 @@ func Register(engine *gin.Engine, source string) {
 	authGroup.GET("/events", eventGet)
 
 	authGroup.GET("/notifications", notificationGet)
+	authGroup.PUT("/notifications/:id", notificationPut)
 
 	staticHand := newStaticHandler(source)
 	engine.GET("/", staticHand.Index)
