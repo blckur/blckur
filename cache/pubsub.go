@@ -25,7 +25,7 @@ type pubSubConn struct {
 	conn      *redis.PubSubConn
 	listeners map[string]map[int]func(string)
 	closed    bool
-	counter int
+	counter   int
 }
 
 func (p *pubSubConn) Subscribe(key string, handler func(string)) (id int) {
@@ -35,6 +35,7 @@ func (p *pubSubConn) Subscribe(key string, handler func(string)) (id int) {
 	if !ok {
 		handlers = map[int]func(string){}
 		p.listeners[key] = handlers
+		p.addQueue.PushBack(key)
 	}
 
 	id = p.counter
@@ -42,7 +43,6 @@ func (p *pubSubConn) Subscribe(key string, handler func(string)) (id int) {
 
 	handlers[id] = handler
 
-	p.addQueue.PushBack(key)
 	p.addMutex.Unlock()
 
 	return
@@ -50,12 +50,12 @@ func (p *pubSubConn) Subscribe(key string, handler func(string)) (id int) {
 
 func (p *pubSubConn) Unsubsribe(key string, id int) {
 	p.remMutex.Lock()
-	p.remQueue.PushBack(key)
 
 	if handlers, ok := p.listeners[key]; ok {
 		delete(handlers, id)
 		if len(handlers) == 0 {
 			delete(p.listeners, key)
+			p.remQueue.PushBack(key)
 		}
 	}
 
