@@ -27,3 +27,13 @@ void printColor(dynamic obj, String color) {
   js.context['console'].callMethod('log', [
     '%c$obj', 'color: $color']);
 }
+
+double distance(int x1, int y1, int x2, int y2) {
+  var xs = x2 - x1;
+  xs = xs * xs;
+
+  var ys = y2 - y1;
+  ys = ys * ys;
+
+  return math.sqrt(xs + ys);
+}
