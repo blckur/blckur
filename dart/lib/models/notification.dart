@@ -8,6 +8,7 @@ class Notification extends model.Model {
   String timestamp;
   String type;
   String origin;
+  bool read;
   String link;
   String subject;
   String body;
@@ -23,6 +24,7 @@ class Notification extends model.Model {
       'timestamp': () => this.timestamp,
       'type': () => this.type,
       'origin': () => this.origin,
+      'read': () => this.read,
       'link': () => this.link,
       'subject': () => this.subject,
       'body': () => this.body,
@@ -36,6 +38,7 @@ class Notification extends model.Model {
       'timestamp': (x) => this.timestamp = x,
       'type': (x) => this.type = x,
       'origin': (x) => this.origin = x,
+      'read': (x) => this.read = x,
       'link': (x) => this.link = x,
       'subject': (x) => this.subject = x,
       'body': (x) => this.body = x,
