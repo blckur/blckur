@@ -9,6 +9,10 @@
   overflow-y: auto;
 }
 
+.menu.adding {
+  -webkit-overflow-scrolling: touch;
+}
+
 .accounts.ng-enter,
 .add-account.ng-enter {
   @include transform(translate(0, -100%));
