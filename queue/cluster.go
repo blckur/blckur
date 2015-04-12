@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	NORMAL = "normal"
-	CHECK  = "check"
+	Normal = "normal"
+	Check  = "check"
 )
 
 type cluster struct {

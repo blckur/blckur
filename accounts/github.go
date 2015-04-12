@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	GITHUB = "github"
+	github = "github"
 )
 
 var (
@@ -31,7 +31,7 @@ var (
 )
 
 func init() {
-	account.Register(GITHUB, "GitHub", OAUTH2,
+	account.Register(github, "GitHub", Oauth2,
 		GitHubAuth{}, GitHubClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -193,7 +193,7 @@ func init() {
 				ValueHolder: "Repository name",
 			},
 		}, func() {
-			messenger.Register("settings", GITHUB,
+			messenger.Register("settings", github,
 				func(_ *messenger.Message) {
 					updateGitHub()
 				})
@@ -305,7 +305,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
 			AccountId:   g.acct.Id,
-			AccountType: GITHUB,
+			AccountType: github,
 			RemoteId:    evt.Id,
 			Timestamp:   timestamp,
 		}
@@ -369,7 +369,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
 			AccountId:   g.acct.Id,
-			AccountType: GITHUB,
+			AccountType: github,
 			RemoteId:    evt.Id,
 			Timestamp:   timestamp,
 			Type:        typ,
@@ -399,7 +399,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
 			AccountId:   g.acct.Id,
-			AccountType: GITHUB,
+			AccountType: github,
 			RemoteId:    evt.Id,
 			Timestamp:   timestamp,
 			Type:        typ,
@@ -432,7 +432,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
 			AccountId:   g.acct.Id,
-			AccountType: GITHUB,
+			AccountType: github,
 			RemoteId:    evt.Id,
 			Timestamp:   timestamp,
 			Type:        typ,
@@ -493,7 +493,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
 			AccountId:   g.acct.Id,
-			AccountType: GITHUB,
+			AccountType: github,
 			RemoteId:    evt.Id,
 			Timestamp:   timestamp,
 			Type:        typ,
@@ -679,7 +679,7 @@ func (g *GitHubAuth) Authorize(db *database.Database, state string,
 
 func updateGitHub() {
 	gitHubConf = &oauth.Oauth2{
-		Type:         GITHUB,
+		Type:         github,
 		ClientId:     settings.GitHub.ClientId,
 		ClientSecret: settings.GitHub.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/github",

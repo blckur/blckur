@@ -39,7 +39,7 @@ func update() {
 		}).All(&nodes)
 		if err != nil {
 			err = database.ParseError(err)
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 			continue
 		}
 

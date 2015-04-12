@@ -34,7 +34,7 @@ func (q *QueueNode) Start() {
 				cmd.Process.Kill()
 			}
 			cmd.Wait()
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 		}
 
 		logrus.WithFields(logrus.Fields{
@@ -56,7 +56,7 @@ func (q *QueueNode) Start() {
 		delay := false
 		for {
 			if delay {
-				time.Sleep(constants.RETRY_DELAY)
+				time.Sleep(constants.RetryDelay)
 			} else {
 				delay = true
 			}

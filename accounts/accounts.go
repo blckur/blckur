@@ -2,6 +2,6 @@
 package accounts
 
 const (
-	OAUTH1 = 1
-	OAUTH2 = 2
+	Oauth1 = 1
+	Oauth2 = 2
 )

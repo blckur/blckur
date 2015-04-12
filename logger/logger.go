@@ -64,7 +64,7 @@ func paperTrailConn() (conn net.Conn) {
 			}
 		}
 
-		time.Sleep(constants.RETRY_DELAY)
+		time.Sleep(constants.RetryDelay)
 	}
 
 	return

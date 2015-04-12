@@ -96,7 +96,7 @@ func (p *pubSubConn) parseQueue() {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
 				}).Error("cache.pubsub: Subscribe error")
-				time.Sleep(constants.RETRY_DELAY)
+				time.Sleep(constants.RetryDelay)
 				continue
 			}
 		} else {
@@ -105,7 +105,7 @@ func (p *pubSubConn) parseQueue() {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
 				}).Error("cache.pubsub: Unsubscribe error")
-				time.Sleep(constants.RETRY_DELAY)
+				time.Sleep(constants.RetryDelay)
 				continue
 			}
 		}
@@ -162,7 +162,7 @@ func (p *pubSubConn) Listen() {
 				return
 			}
 
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 
 			conn, err := dialLong(p.address)
 			if err != nil {

@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	TWITTER = "twitter"
+	twitter = "twitter"
 )
 
 var (
@@ -32,7 +32,7 @@ type TwitterClient struct {
 }
 
 func init() {
-	account.Register(TWITTER, "Twitter", OAUTH1,
+	account.Register(twitter, "Twitter", Oauth1,
 		TwitterAuth{}, TwitterClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -102,7 +102,7 @@ func init() {
 				ValueHolder: "Twitter handle",
 			},
 		}, func() {
-			messenger.Register("settings", TWITTER,
+			messenger.Register("settings", twitter,
 				func(_ *messenger.Message) {
 					updateTwitter()
 				})
@@ -235,7 +235,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		notf = &notification.Notification{
 			UserId:      b.acct.UserId,
 			AccountId:   b.acct.Id,
-			AccountType: TWITTER,
+			AccountType: twitter,
 			Type:        evtType,
 			Resource:    evt.IdStr,
 			Origin:      origin,
@@ -269,7 +269,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		notf = &notification.Notification{
 			UserId:      b.acct.UserId,
 			AccountId:   b.acct.Id,
-			AccountType: TWITTER,
+			AccountType: twitter,
 			Type:        evt.Event.Event,
 			Resource:    evt.TargetObject.IdStr,
 			Origin:      origin,
@@ -291,7 +291,7 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		notf = &notification.Notification{
 			UserId:      b.acct.UserId,
 			AccountId:   b.acct.Id,
-			AccountType: TWITTER,
+			AccountType: twitter,
 			Type:        evt.Event,
 			Resource:    evt.Target.IdStr,
 			Origin:      origin,
@@ -386,7 +386,7 @@ func updateTwitter() {
 	anaconda.SetConsumerSecret(settings.Twitter.ConsumerSecret)
 
 	conf := &oauth.Oauth1{
-		Type:           TWITTER,
+		Type:           twitter,
 		ConsumerKey:    settings.Twitter.ConsumerKey,
 		ConsumerSecret: settings.Twitter.ConsumerSecret,
 		CallbackUrl:    settings.System.Domain + "/callback/twitter",

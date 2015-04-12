@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	GMAIL = "gmail"
+	gmail = "gmail"
 )
 
 var (
@@ -45,7 +45,7 @@ func init() {
 		}
 	}
 
-	account.Register(GMAIL, "Gmail", OAUTH2, GmailAuth{}, GmailClient{},
+	account.Register(gmail, "Gmail", Oauth2, GmailAuth{}, GmailClient{},
 		[]*account.FilterType{
 			&account.FilterType{
 				Label: "All new messages",
@@ -193,7 +193,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
 			AccountId:   g.acct.Id,
-			AccountType: GMAIL,
+			AccountType: gmail,
 			RemoteId:    msg.Id,
 			Timestamp:   date,
 		}
@@ -261,7 +261,7 @@ Loop:
 	notf = &notification.Notification{
 		UserId:      g.acct.UserId,
 		AccountId:   g.acct.Id,
-		AccountType: GMAIL,
+		AccountType: gmail,
 		RemoteId:    msg.Id,
 		Timestamp:   date,
 		Type:        "email",
@@ -412,7 +412,7 @@ func (g *GmailAuth) Authorize(db *database.Database, state string,
 
 func updateGmail() {
 	gmailConf = &oauth.Oauth2{
-		Type:         GMAIL,
+		Type:         gmail,
 		ClientId:     settings.Google.ClientId,
 		ClientSecret: settings.Google.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/gmail",

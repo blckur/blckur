@@ -26,7 +26,7 @@ func callbackGet(c *gin.Context) {
 	var y string
 	var denied bool
 
-	if authType == accounts.OAUTH1 {
+	if authType == accounts.Oauth1 {
 		x = params.GetByName("oauth_token")
 		y = params.GetByName("oauth_verifier")
 		denied = params.GetByName("denied") != ""

@@ -1,8 +1,8 @@
 package cache
 
 const (
-	MESSAGE = 1
-	RESHARD = 2
+	evtMessage = 1
+	reshard = 2
 )
 
 type event struct {

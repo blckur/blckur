@@ -215,7 +215,7 @@ func init() {
 					}).Error("messenger: Listener")
 				}
 
-				time.Sleep(constants.RETRY_DELAY)
+				time.Sleep(constants.RetryDelay)
 			}
 		}()
 	}

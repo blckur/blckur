@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	STRIPE = "stripe"
+	stripe = "stripe"
 )
 
 var (
@@ -22,7 +22,7 @@ var (
 )
 
 func init() {
-	account.Register(STRIPE, "Stripe", OAUTH2,
+	account.Register(stripe, "Stripe", Oauth2,
 		StripeAuth{}, StripeClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -66,7 +66,7 @@ func init() {
 				Type:  "subscription_deleted",
 			},
 		}, func() {
-			messenger.Register("settings", STRIPE,
+			messenger.Register("settings", stripe,
 				func(_ *messenger.Message) {
 					updateStripe()
 				})
@@ -146,7 +146,7 @@ func (s *StripeClient) parse(evt *stripeEvent,
 		notf = &notification.Notification{
 			UserId:      s.acct.UserId,
 			AccountId:   s.acct.Id,
-			AccountType: STRIPE,
+			AccountType: stripe,
 			RemoteId:    evt.Id,
 			Timestamp:   timestamp,
 		}
@@ -220,7 +220,7 @@ func (s *StripeClient) parse(evt *stripeEvent,
 	notf = &notification.Notification{
 		UserId:      s.acct.UserId,
 		AccountId:   s.acct.Id,
-		AccountType: STRIPE,
+		AccountType: stripe,
 		RemoteId:    evt.Id,
 		Timestamp:   timestamp,
 		Type:        typ,
@@ -358,7 +358,7 @@ func (s *StripeAuth) Authorize(db *database.Database, state string,
 
 func updateStripe() {
 	stripeConf = &oauth.Oauth2{
-		Type:         STRIPE,
+		Type:         stripe,
 		ClientId:     settings.Stripe.ClientId,
 		ClientSecret: settings.Stripe.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/stripe",

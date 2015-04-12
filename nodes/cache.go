@@ -38,7 +38,7 @@ func (c *CacheNode) Start() {
 				cmd.Process.Kill()
 			}
 			cmd.Wait()
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 		}
 
 		logrus.WithFields(logrus.Fields{
@@ -60,7 +60,7 @@ func (c *CacheNode) Start() {
 		delay := false
 		for {
 			if delay {
-				time.Sleep(constants.RETRY_DELAY)
+				time.Sleep(constants.RetryDelay)
 			} else {
 				delay = true
 			}

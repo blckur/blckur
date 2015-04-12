@@ -121,7 +121,7 @@ func update() {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
 			}).Error("cache: Update error")
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 			continue
 		}
 

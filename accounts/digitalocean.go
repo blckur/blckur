@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	DIGITAL_OCEAN = "digitalocean"
+	digitalOcean = "digitalocean"
 )
 
 var (
@@ -22,7 +22,7 @@ var (
 )
 
 func init() {
-	account.Register(DIGITAL_OCEAN, "DigitalOcean", OAUTH2,
+	account.Register(digitalOcean, "DigitalOcean", Oauth2,
 		DigitalOceanAuth{}, DigitalOceanClient{},
 		[]*account.FilterType{
 			&account.FilterType{
@@ -42,7 +42,7 @@ func init() {
 				Type:  "password_reset",
 			},
 		}, func() {
-			messenger.Register("settings", DIGITAL_OCEAN,
+			messenger.Register("settings", digitalOcean,
 				func(_ *messenger.Message) {
 					updateDigitalOcean()
 				})
@@ -169,7 +169,7 @@ Loop:
 				notf := &notification.Notification{
 					UserId:      d.acct.UserId,
 					AccountId:   d.acct.Id,
-					AccountType: DIGITAL_OCEAN,
+					AccountType: digitalOcean,
 					RemoteId:    strconv.Itoa(action.Id),
 					Timestamp:   timestamp,
 				}
@@ -180,7 +180,7 @@ Loop:
 			notf := &notification.Notification{
 				UserId:      d.acct.UserId,
 				AccountId:   d.acct.Id,
-				AccountType: DIGITAL_OCEAN,
+				AccountType: digitalOcean,
 				RemoteId:    strconv.Itoa(action.Id),
 				Timestamp:   timestamp,
 				Type:        action.Type,
@@ -262,7 +262,7 @@ func (d *DigitalOceanAuth) Authorize(db *database.Database, state string,
 
 func updateDigitalOcean() {
 	digitalOceanConf = &oauth.Oauth2{
-		Type:         DIGITAL_OCEAN,
+		Type:         digitalOcean,
 		ClientId:     settings.DigitalOcean.ClientId,
 		ClientSecret: settings.DigitalOcean.ClientSecret,
 		CallbackUrl:  settings.System.Domain + "/callback/digitalocean",

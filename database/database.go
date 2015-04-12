@@ -265,7 +265,7 @@ func init() {
 				break
 			}
 
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 		}
 
 		for {
@@ -278,7 +278,7 @@ func init() {
 				break
 			}
 
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 		}
 
 		for {
@@ -291,7 +291,7 @@ func init() {
 				break
 			}
 
-			time.Sleep(constants.RETRY_DELAY)
+			time.Sleep(constants.RetryDelay)
 		}
 	}
 }
