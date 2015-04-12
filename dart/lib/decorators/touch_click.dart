@@ -1,4 +1,4 @@
-library delay_click_dec;
+library touch_click_dec;
 
 import 'package:blckur/utils/utils.dart' as utils;
 
