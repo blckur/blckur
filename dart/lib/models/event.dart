@@ -5,7 +5,7 @@ import 'package:blckur/model.dart' as model;
 class Event extends model.Model {
   String id;
   String type;
-  Map<String, dynamic> data;
+  dynamic data;
 
   model.Model newModel() {
     return new Event();

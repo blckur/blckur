@@ -38,6 +38,11 @@ class NotificationsComp implements ng.ScopeAware, ng.ShadowRootAware {
       this.notifications.update(evt.data.data);
       this.list.click();
     });
+
+    scope.on('notf_rem').listen((evt) {
+      this.notifications.remove(evt.data.data);
+      this.list.click();
+    });
   }
 
   void onShadowRoot(dom.ShadowRoot root) {
