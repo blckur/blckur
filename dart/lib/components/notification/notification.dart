@@ -27,7 +27,7 @@ class NotificationComp {
       return;
     }
 
-    this.model.markRead().catchError((err) {
+    this.model.toggleRead().catchError((err) {
       logger.severe('Failed to mark notification as read', err);
       new alert.Alert('Failed to mark notification as read');
     }).whenComplete(() {

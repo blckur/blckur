@@ -5,6 +5,11 @@
   display: block;
 }
 
+x-brand-logo,
+.info {
+  cursor: pointer;
+}
+
 paper-progress {
   position: absolute;
   width: 100%;
