@@ -119,14 +119,29 @@ func GetLastNotification(db *database.Database, userId bson.ObjectId,
 	return
 }
 
-func PublishUpdate(userId bson.ObjectId) (err error) {
-	conn := cache.Get()
-	defer conn.Close()
+type Publisher struct {
+	UserIdHex string
+	conn      *cache.ClusterConn
+}
 
-	err = conn.Publish(userId.Hex(), "notf_update")
-	if err != nil {
-		return
+func (p *Publisher) New(data interface{}) (err error) {
+	err = p.conn.Publish(p.UserIdHex, "notf_new", data)
+	return
+}
+
+func (p *Publisher) Update(data interface{}) (err error) {
+	err = p.conn.Publish(p.UserIdHex, "notf_update", data)
+	return
+}
+
+func (p *Publisher) Close() {
+	p.conn.Close()
+}
+
+func NewPublisher(userIdHex string) (pub *Publisher) {
+	pub = &Publisher{
+		UserIdHex: userIdHex,
+		conn:      cache.Get(),
 	}
-
 	return
 }
