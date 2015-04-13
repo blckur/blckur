@@ -5,6 +5,7 @@ import (
 	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/database"
 	"github.com/dropbox/godropbox/container/set"
+	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -27,16 +28,19 @@ type Notification struct {
 
 func (n *Notification) Initialize(db *database.Database) (err error) {
 	coll := db.Notifications()
+	notf := &Notification{}
 
-	_, err = coll.Upsert(bson.M{
+	coll.Find(bson.M{
 		"user_id":    n.UserId,
 		"account_id": n.AccountId,
 		"remote_id":  n.RemoteId,
-	}, n)
-	if err != nil {
-		err = database.ParseError(err)
-		return
-	}
+	}).Apply(mgo.Change{
+		Update:    n,
+		Upsert:    true,
+		ReturnNew: true,
+	}, notf)
+
+	n.Id = notf.Id
 
 	return
 }
