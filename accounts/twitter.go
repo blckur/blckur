@@ -328,7 +328,13 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 		return
 	}
 
-	notification.PublishUpdate(b.acct.UserId)
+	pub := notification.NewPublisher(b.acct.UserId.Hex())
+	defer pub.Close()
+
+	err = pub.New(notf)
+	if err != nil {
+		return
+	}
 
 	return
 }

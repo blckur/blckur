@@ -292,23 +292,23 @@ Loop:
 		}
 	}
 
-	new := false
+	pub := notification.NewPublisher(s.acct.UserId.Hex())
+	defer pub.Close()
 
 	for i := len(notfs) - 1; i >= 0; i-- {
 		notf := notfs[i]
-
-		if !new && notf.Type != "" {
-			new = true
-		}
 
 		err = notf.Initialize(db)
 		if err != nil {
 			return
 		}
-	}
 
-	if new {
-		notification.PublishUpdate(s.acct.UserId)
+		if notf.Type != "" {
+			err = pub.New(notf)
+			if err != nil {
+				return
+			}
+		}
 	}
 
 	return

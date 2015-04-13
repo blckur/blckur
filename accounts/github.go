@@ -577,7 +577,8 @@ func (g *gitHubBackend) sync() {
 		return
 	}
 
-	new := false
+	pub := notification.NewPublisher(g.acct.UserId.Hex())
+	defer pub.Close()
 
 	for i, evt := range data {
 		notf, done, e := g.parse(evt, i == 0)
@@ -589,25 +590,24 @@ func (g *gitHubBackend) sync() {
 		}
 
 		if notf != nil {
-			if !new && notf.Type != "" {
-				new = true
-			}
-
 			err := notf.Initialize(g.db)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
 				}).Error("account.github: Failed to parse event")
 			}
+
+			if notf.Type != "" {
+				err = pub.New(notf)
+				if err != nil {
+					return
+				}
+			}
 		}
 
 		if done {
 			return
 		}
-	}
-
-	if new {
-		notification.PublishUpdate(g.acct.UserId)
 	}
 }
 
