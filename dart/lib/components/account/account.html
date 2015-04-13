@@ -1,7 +1,8 @@
 <div class="item" ng-class="itemClass" layout vertical flex>
   <div ng-show="settings" class="row settings-header" layout horizontal>
     <span flex>Manage account filters</span>
-    <core-icon-button icon="close" ng-click="onSettings()"></core-icon-button>
+    <core-icon-button icon="close"
+      touch-click="onSettings()"></core-icon-button>
   </div>
   <div class="row account" layout horizontal>
     <x-brand-logo icon="{{model.type}}" layout horizontal
@@ -10,9 +11,9 @@
       <div class="buttons" layout horizontal>
         <div flex layout vertical center><span class="new-label">New account</span></div>
         <core-icon-button icon="settings"
-          ng-click="onSettings()"></core-icon-button>
+          touch-click="onSettings()"></core-icon-button>
         <core-icon-button icon="delete"
-          ng-click="confirm = true"></core-icon-button>
+          touch-click="confirm = true"></core-icon-button>
       </div>
       <div class="info" ng-bind="model.identity" flex></div>
     </div>
@@ -20,9 +21,9 @@
       <div class="label" flex>Are you sure?</div>
       <div class="buttons" layout horizontal center>
         <core-icon-button icon="clear"
-          ng-click="confirm = false"></core-icon-button>
+          touch-click="confirm = false"></core-icon-button>
         <core-icon-button icon="check"
-          ng-click="onDelete()"></core-icon-button>
+          touch-click="onDelete()"></core-icon-button>
       </div>
     </div>
   </div>
