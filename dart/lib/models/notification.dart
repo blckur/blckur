@@ -51,7 +51,7 @@ class Notification extends model.Model {
     return '/notifications/' + this.id;
   }
 
-  async.Future markRead() {
+  async.Future toggleRead() {
     this.read = this.read != true;
     return this.save(['read']);
   }
