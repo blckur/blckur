@@ -1,9 +1,8 @@
 <paper-progress ng-if="loading.state" indeterminate></paper-progress>
-<div layout horizontal touch-click="onRead()"
-    ng-class="model.read ? 'read' : ''">
+<div class="notf" layout horizontal ng-class="model.read ? 'read' : ''">
   <x-brand-logo icon="{{model.accountType}}" size="60px"
-    horizontal layout center></x-brand-logo>
-  <div class="info" layout vertical flex>
+    touch-click="toggleRead()" horizontal layout center></x-brand-logo>
+  <div class="info" touch-click="toggleRead()" layout vertical flex>
     <h3 class="title" ng-bind="model.subject"></h3>
     <div ng-bind="model.body"></div>
   </div>

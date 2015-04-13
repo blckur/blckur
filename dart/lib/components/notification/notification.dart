@@ -22,7 +22,7 @@ class NotificationComp {
   @NgOneWay('model')
   models.Notification model;
 
-  void onRead() {
+  void toggleRead() {
     if (!this.loading.set()) {
       return;
     }
