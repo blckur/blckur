@@ -1,3 +1,4 @@
+<paper-progress ng-if="loading.state" indeterminate></paper-progress>
 <div layout horizontal touch-click="onRead()"
     ng-class="model.read ? 'read' : ''">
   <x-brand-logo icon="{{model.accountType}}" size="60px"
