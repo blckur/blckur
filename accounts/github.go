@@ -301,6 +301,13 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		return
 	}
 
+	if evt.Id == g.lastNotf.RemoteId ||
+		timestamp.Before(g.lastNotf.Timestamp) {
+
+		stop = true
+		return
+	}
+
 	if force {
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
@@ -311,9 +318,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 	}
 
-	if g.lastNotf == nil || evt.Id == g.lastNotf.RemoteId ||
-		timestamp.Before(g.lastNotf.Timestamp) {
-
+	if g.lastNotf == nil {
 		stop = true
 		return
 	}

@@ -189,6 +189,11 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		}
 	}
 
+	if msg.Id == lastNotf.RemoteId || date.Before(lastNotf.Timestamp) {
+		done = true
+		return
+	}
+
 	if force {
 		notf = &notification.Notification{
 			UserId:      g.acct.UserId,
@@ -199,11 +204,8 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 		}
 	}
 
-	if lastNotf == nil || msg.Id == lastNotf.RemoteId ||
-		date.Before(lastNotf.Timestamp) {
-
+	if lastNotf == nil {
 		done = true
-
 		return
 	}
 

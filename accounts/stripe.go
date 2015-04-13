@@ -142,6 +142,13 @@ func (s *StripeClient) parse(evt *stripeEvent,
 	stop = false
 	timestamp := time.Unix(int64(evt.Created), 0)
 
+	if evt.Id == lastNotf.RemoteId ||
+		timestamp.Before(lastNotf.Timestamp) {
+
+		stop = true
+		return
+	}
+
 	if force {
 		notf = &notification.Notification{
 			UserId:      s.acct.UserId,
@@ -152,9 +159,7 @@ func (s *StripeClient) parse(evt *stripeEvent,
 		}
 	}
 
-	if lastNotf == nil || evt.Id == lastNotf.RemoteId ||
-		timestamp.Before(lastNotf.Timestamp) {
-
+	if lastNotf == nil {
 		stop = true
 		return
 	}
