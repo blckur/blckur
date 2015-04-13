@@ -7,8 +7,8 @@
     <div ng-bind="model.body"></div>
   </div>
   <div class="buttons" layout vertical>
-    <core-icon-button icon="launch"
-      touch-click="onLink()"></core-icon-button>
+    <a ng-if="model.link != '' && model.link != null" href="{{model.link}}"
+      target="_blank"><core-icon-button icon="launch"></core-icon-button></a>
     <core-icon-button icon="delete"
       touch-click="onDelete()"></core-icon-button>
   </div>
