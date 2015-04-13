@@ -189,6 +189,7 @@ Loop:
 
 			if timestamp.Before(lastNotf.Timestamp) ||
 				notf.RemoteId == lastNotf.RemoteId {
+
 				break Loop
 			}
 
