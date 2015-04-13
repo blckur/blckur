@@ -34,4 +34,16 @@ class NotificationComp {
       this.loading.clear();
     });
   }
+
+  void onDelete() {
+    if (!this.loading.set()) {
+      return;
+    }
+
+    this.model.destroy().catchError((err) {
+      logger.severe('Failed to delete notification', err);
+      new alert.Alert('Failed to delete notification');
+      this.loading.clear();
+    });
+  }
 }
