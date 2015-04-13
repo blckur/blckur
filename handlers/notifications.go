@@ -4,13 +4,14 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/notification"
 	"github.com/blckur/blckur/session"
+	"github.com/dropbox/godropbox/container/set"
 	"github.com/gin-gonic/gin"
 	"labix.org/v2/mgo/bson"
-	"github.com/dropbox/godropbox/container/set"
 )
 
 type notificationData struct {
-	Read bool `json:"read"`
+	Id   bson.ObjectId `json:"id"`
+	Read bool          `json:"read"`
 }
 
 func notificationGet(c *gin.Context) {
@@ -47,6 +48,12 @@ func notificationPut(c *gin.Context) {
 		c.Fail(500, err)
 		return
 	}
+
+	pub := notification.NewPublisher(sess.UserId.Hex())
+	defer pub.Close()
+
+	// Ignore err
+	_ = pub.Update(data)
 
 	c.JSON(200, notf)
 }

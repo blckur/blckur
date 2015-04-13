@@ -77,13 +77,8 @@ func eventGet(c *gin.Context) {
 				return
 			}
 
-			evt := &event{
-				Id:   bson.NewObjectId(),
-				Type: msg,
-			}
-
 			conn.SetWriteDeadline(time.Now().Add(writeTimeout))
-			err = conn.WriteJSON(evt)
+			err = conn.WriteJSON(msg)
 			if err != nil {
 				return
 			}
