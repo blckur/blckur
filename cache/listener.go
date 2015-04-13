@@ -11,7 +11,7 @@ type Listener struct {
 	channel  string
 	servers  []string
 	handlers []*handler
-	stream   chan string
+	stream   chan *Message
 	idCache  *stackcache.IdStackCache
 }
 
@@ -26,7 +26,7 @@ func (l *Listener) reshard() {
 	l.mutex.Unlock()
 }
 
-func (l *Listener) Listen() (stream chan string) {
+func (l *Listener) Listen() (stream chan *Message) {
 	return l.stream
 }
 
@@ -82,7 +82,7 @@ func Subscribe(channel string) (lst *Listener) {
 	lst = &Listener{
 		mutex:   &sync.Mutex{},
 		channel: channel,
-		stream:  make(chan string),
+		stream:  make(chan *Message),
 		idCache: stackcache.NewIdStackCache(64),
 	}
 

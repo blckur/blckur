@@ -20,7 +20,7 @@ func (h *handler) Handle(data string) {
 		recover()
 	}()
 
-	msg := &message{}
+	msg := &Message{}
 	err := json.Unmarshal([]byte(data), msg)
 	if err != nil {
 		panic(err)
@@ -32,5 +32,5 @@ func (h *handler) Handle(data string) {
 	}
 	h.listener.idCache.Add(msg.Id)
 
-	h.listener.stream <- msg.Data
+	h.listener.stream <- msg
 }

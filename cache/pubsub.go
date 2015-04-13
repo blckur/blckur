@@ -11,9 +11,10 @@ import (
 	"time"
 )
 
-type message struct {
-	Id   bson.ObjectId `json:"i"`
-	Data string        `json:"d"`
+type Message struct {
+	Id   bson.ObjectId `json:"id"`
+	Type string        `json:"type"`
+	Data interface{}   `json:"data"`
 }
 
 type queueItem struct {

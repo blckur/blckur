@@ -94,14 +94,16 @@ func (c *ClusterConn) SetString(key string, val string,
 	return
 }
 
-func (c *ClusterConn) Publish(channel string, val string) (err error) {
+func (c *ClusterConn) Publish(channel string, typ string, data interface{}) (
+		err error) {
 	wait := utils.WaitCancel{}
 	success := false
 	var er error
 
-	msg := &message{
+	msg := &Message{
 		Id:   bson.NewObjectId(),
-		Data: val,
+		Type: typ,
+		Data: data,
 	}
 	msgJson, err := json.Marshal(msg)
 	if err != nil {
