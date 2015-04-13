@@ -1,4 +1,5 @@
-<div layout horizontal>
+<div layout horizontal touch-click="onRead()"
+    ng-class="model.read ? 'read' : ''">
   <x-brand-logo icon="{{model.accountType}}" size="60px"
     horizontal layout center></x-brand-logo>
   <div class="info" layout vertical flex>

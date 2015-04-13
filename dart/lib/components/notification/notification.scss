@@ -10,8 +10,15 @@ x-brand-logo {
 
 .title {
   font-size: 20px;
-  font-weight: bold;
   margin: 15px 0 10px 0;
+}
+
+.read {
+  opacity: 0.5;
+}
+
+.read .title {
+  font-weight: normal;
 }
 
 .info {
