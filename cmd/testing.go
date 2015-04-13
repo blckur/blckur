@@ -14,7 +14,7 @@ func Pub() {
 
 	for {
 		conn := cache.Get()
-		err := conn.Publish("test", fmt.Sprintf("msg-%d", i))
+		err := conn.Publish("test", fmt.Sprintf("msg-%d", i), nil)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -29,7 +29,7 @@ func Sub() {
 	lst := cache.Subscribe("test")
 
 	for msg := range lst.Listen() {
-		fmt.Println(msg)
+		fmt.Println(msg.Type)
 	}
 }
 
@@ -46,7 +46,7 @@ func PubSub() {
 	time.Sleep(50 * time.Millisecond)
 
 	conn := cache.Get()
-	err := conn.Publish("test", "msg")
+	err := conn.Publish("test", "msg", nil)
 	if err != nil {
 		panic(err)
 	}
@@ -65,7 +65,7 @@ func StressPub() {
 
 			for i := 20000 * j; i < 20000*(j+1); i++ {
 				x := strconv.Itoa(i)
-				err := conn.Publish(x, x)
+				err := conn.Publish(x, x, nil)
 				if err != nil {
 					fmt.Printf("err: %d\n", i)
 				}
@@ -96,7 +96,7 @@ func StressSub() {
 			go func() {
 				for msg := range lst.Listen() {
 					if i%10000 == 0 || i == 99999 {
-						fmt.Printf("%s: %s\n", channel, msg)
+						fmt.Printf("%s: %s\n", channel, msg.Type)
 					}
 				}
 			}()
