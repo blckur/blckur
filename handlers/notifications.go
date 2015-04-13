@@ -38,6 +38,10 @@ func notificationDel(c *gin.Context) {
 		return
 	}
 
+	pub := notification.NewPublisher(sess.UserId.Hex())
+	pub.Remove(notfId.Hex())
+	defer pub.Close()
+
 	c.JSON(200, map[string]string{})
 }
 
@@ -64,10 +68,8 @@ func notificationPut(c *gin.Context) {
 	}
 
 	pub := notification.NewPublisher(sess.UserId.Hex())
+	pub.Update(data)
 	defer pub.Close()
-
-	// Ignore err
-	_ = pub.Update(data)
 
 	c.JSON(200, notf)
 }

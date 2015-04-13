@@ -145,13 +145,18 @@ type Publisher struct {
 	conn      *cache.ClusterConn
 }
 
-func (p *Publisher) New(data interface{}) (err error) {
-	err = p.conn.Publish(p.UserIdHex, "notf_new", data)
+func (p *Publisher) New(model interface{}) (err error) {
+	err = p.conn.Publish(p.UserIdHex, "notf_new", model)
 	return
 }
 
-func (p *Publisher) Update(data interface{}) (err error) {
-	err = p.conn.Publish(p.UserIdHex, "notf_update", data)
+func (p *Publisher) Update(model interface{}) (err error) {
+	err = p.conn.Publish(p.UserIdHex, "notf_update", model)
+	return
+}
+
+func (p *Publisher) Remove(id string) (err error) {
+	err = p.conn.Publish(p.UserIdHex, "notf_rem", id)
 	return
 }
 
