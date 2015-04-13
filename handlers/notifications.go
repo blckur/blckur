@@ -27,6 +27,20 @@ func notificationGet(c *gin.Context) {
 	c.JSON(200, accts)
 }
 
+func notificationDel(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	sess := c.MustGet("session").(*session.Session)
+	notfId := bson.ObjectIdHex(c.Params.ByName("id"))
+
+	err := notification.RemNotification(db, sess.UserId, notfId)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	c.JSON(200, map[string]string{})
+}
+
 func notificationPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)

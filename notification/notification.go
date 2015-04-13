@@ -123,6 +123,23 @@ func GetLastNotification(db *database.Database, userId bson.ObjectId,
 	return
 }
 
+func RemNotification(db *database.Database, userId bson.ObjectId,
+	notfId bson.ObjectId) (err error) {
+
+	coll := db.Notifications()
+
+	err = coll.Remove(bson.M{
+		"_id":     notfId,
+		"user_id": userId,
+	})
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
+
+	return
+}
+
 type Publisher struct {
 	UserIdHex string
 	conn      *cache.ClusterConn
