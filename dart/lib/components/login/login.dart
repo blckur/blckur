@@ -3,6 +3,7 @@ library login_comp;
 import 'package:blckur/exceptions.dart';
 import 'package:blckur/models/models.dart' as models;
 import 'package:blckur/logger.dart' as logger;
+import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component;
 import 'package:angular/angular.dart' as ng;
@@ -39,7 +40,7 @@ class LoginComp implements ng.ShadowRootAware {
     });
   }
 
-  void _handlerError(HttpError err) {
+  void _handlerError(HttpError err, String def) {
     this.clearErrors();
 
     if (err.error == 'email_invalid') {
@@ -50,6 +51,9 @@ class LoginComp implements ng.ShadowRootAware {
     }
     else if (err.error == 'email_exists') {
       this.emailError = 'Email is already signed up';
+    }
+    else {
+      new alert.Alert(def);
     }
   }
 
@@ -95,7 +99,7 @@ class LoginComp implements ng.ShadowRootAware {
       });
     }).catchError((err) {
       logger.severe('Failed to login', err);
-      this._handlerError(err);
+      this._handlerError(err, 'Error logging in');
     });
   }
 
@@ -111,7 +115,7 @@ class LoginComp implements ng.ShadowRootAware {
       });
     }).catchError((err) {
       logger.severe('Failed to signup', err);
-      this._handlerError(err);
+      this._handlerError(err, 'Error signing up');
     });
   }
 }
