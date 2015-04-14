@@ -13,7 +13,8 @@
             label="Remember me" no-select
             py-checked="model.remember"></paper-checkbox>
           <div flex></div>
-          <div class="forgot-pass link" no-select>Forgot password?</div>
+          <div class="forgot-pass link" no-select
+            touch-click="setMode('reset')">Forgot password?</div>
         </div>
         <paper-button role="button" tabindex="0" raised
           delay-click="onLogin()">Log In</paper-button>
@@ -29,6 +30,12 @@
           delay-click="onSignup()">Sign Up</paper-button>
         <div class="signup">Already a Blckur member? <span class="link"
           no-select touch-click="setMode('login')">Log in</span></div>
+      </form>
+      <form ng-if="mode == 'reset'"> <!-- ng-switch-when="forgot" -->
+        <x-input type="email" placeholder="Email address" error="emailError"
+          model="model.email" theme="dark"></x-input>
+        <paper-button role="button" tabindex="0" raised
+          delay-click="onReset()">Reset password</paper-button>
       </form>
     </div>
   </div>

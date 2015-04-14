@@ -62,7 +62,7 @@ class LoginComp implements ng.ShadowRootAware {
     this.passwordError = null;
   }
 
-  bool validate() {
+  bool validate([bool emailOnly]) {
     this.clearErrors();
 
     try {
@@ -72,11 +72,13 @@ class LoginComp implements ng.ShadowRootAware {
       return false;
     }
 
-    try {
-      this.model.validate('password');
-    } catch(err) {
-      this.passwordError = err.toString();
-      return false;
+    if (emailOnly != true) {
+      try {
+        this.model.validate('password');
+      } catch(err) {
+        this.passwordError = err.toString();
+        return false;
+      }
     }
 
     return true;
@@ -116,6 +118,19 @@ class LoginComp implements ng.ShadowRootAware {
     }).catchError((err) {
       logger.severe('Failed to signup', err);
       this._handlerError(err, 'Error signing up');
+    });
+  }
+
+  void onReset() {
+    if (!this.validate(true)) {
+      return;
+    }
+
+    this.model.reset(['email']).then((_) {
+      this.clearErrors();
+    }).catchError((err) {
+      logger.severe('Failed to reset password', err);
+      this._handlerError(err, 'Error reseting password');
     });
   }
 }
