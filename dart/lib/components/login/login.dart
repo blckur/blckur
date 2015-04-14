@@ -17,7 +17,6 @@ class LoginComp implements ng.ShadowRootAware {
   models.Auth model;
   String emailError;
   String passwordError;
-  String betakeyError;
   String mode;
   ng.Router router;
 
@@ -48,9 +47,6 @@ class LoginComp implements ng.ShadowRootAware {
     }
     else if (err.error == 'password_invalid') {
       this.passwordError = 'Password is invalid';
-    }
-    else if (err.error == 'betakey_invalid') {
-      this.betakeyError = 'Beta key is invalid';
     }
     else if (err.error == 'email_exists') {
       this.emailError = 'Email is already signed up';
@@ -108,7 +104,7 @@ class LoginComp implements ng.ShadowRootAware {
       return;
     }
 
-    this.model.signup(['email', 'password', 'betakey']).then((_) {
+    this.model.signup(['email', 'password']).then((_) {
       this.clearErrors();
       this.router.gotoUrl('/root').then((_) {
         this.model.clear();
