@@ -253,9 +253,10 @@ Loop:
 		return
 	}
 
+	limit := settings.Account.BodyLimit
 	var bodySnippet string
-	if len(msg.Snippet) > 140 {
-		bodySnippet = msg.Snippet[:140]
+	if len(msg.Snippet) > limit {
+		bodySnippet = msg.Snippet[:limit] + "..."
 	} else {
 		bodySnippet = msg.Snippet
 	}
