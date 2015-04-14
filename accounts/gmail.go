@@ -268,6 +268,7 @@ Loop:
 		Timestamp:   date,
 		Type:        "email",
 		Origin:      from,
+		Link:        "https://mail.google.com/mail/u/0/#inbox/" + msg.Id,
 		Subject:     subject,
 		Body:        bodySnippet,
 	}
