@@ -4,7 +4,7 @@
     <!-- TODO ng-switch not working ios -->
     <div> <!-- ng-switch="mode" -->
       <form ng-if="mode == 'login'"> <!-- ng-switch-when="login" -->
-        <x-input type="text" placeholder="Email address" error="emailError"
+        <x-input type="email" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
           model="model.password" theme="dark"></x-input>
@@ -21,7 +21,7 @@
           no-select touch-click="setMode('signup')">Sign up</span></div>
       </form>
       <form ng-if="mode == 'signup'"> <!-- ng-switch-when="signup" -->
-        <x-input type="text" placeholder="Email address" error="emailError"
+        <x-input type="email" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
           model="model.password" theme="dark"></x-input>
