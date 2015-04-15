@@ -61,4 +61,9 @@ class Auth extends model.Model {
     this.url = '/signup';
     return this.create(fields);
   }
+
+  async.Future reset([List<String> fields]) {
+    this.url = '/reset';
+    return this.save(fields);
+  }
 }
