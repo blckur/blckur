@@ -124,3 +124,26 @@ func signupPost(c *gin.Context) {
 
 	c.JSON(200, usr)
 }
+
+func resetPut(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	data := &authData{}
+	c.Bind(data)
+
+	usr, err := user.FindUser(db, data.Email)
+	if err != nil {
+		switch err.(type) {
+		case *database.NotFoundError:
+			c.JSON(401, &errorData{
+				Error:   "email_invalid",
+				Message: "Email is invalid",
+			})
+			return
+		default:
+			c.Fail(500, err)
+			return
+		}
+	}
+
+	c.JSON(200, usr)
+}
