@@ -27,9 +27,12 @@ class NotificationComp {
       return;
     }
 
-    this.model.toggleRead().catchError((err) {
+    this.model.read = this.model.read != true;
+
+    this.model.save(['read']).catchError((err) {
       logger.severe('Failed to mark notification as read', err);
       new alert.Alert('Failed to mark notification as read');
+      this.model.read = this.model.read != true;
     }).whenComplete(() {
       this.loading.clear();
     });

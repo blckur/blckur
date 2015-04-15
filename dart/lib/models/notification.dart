@@ -50,9 +50,4 @@ class Notification extends model.Model {
   String get url {
     return '/notifications/' + this.id;
   }
-
-  async.Future toggleRead() {
-    this.read = this.read != true;
-    return this.save(['read']);
-  }
 }
