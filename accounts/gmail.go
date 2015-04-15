@@ -127,7 +127,7 @@ type gmailMessage struct {
 		Headers []struct {
 			Name  string `json:"name"`
 			Value string `json:"value"`
-		}
+		} `json:"headers"`
 		Body struct {
 			Size int    `json:"size"`
 			Data string `json:"data"`
