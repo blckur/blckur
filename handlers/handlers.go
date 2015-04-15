@@ -67,6 +67,7 @@ func Register(engine *gin.Engine, source string) {
 	sessGroup.Use(Session(false))
 
 	dbGroup.POST("/signup", signupPost)
+	dbGroup.PUT("/reset", resetPut)
 	sessGroup.POST("/login", loginPost)
 	authGroup.DELETE("/session", sessionDelete)
 
