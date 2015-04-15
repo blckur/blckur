@@ -168,9 +168,9 @@ func (g *GmailClient) Update(db *database.Database) (err error) {
 
 func (g *GmailClient) parseMessage(msg *gmailMessage,
 	lastNotf *notification.Notification, force bool) (
-	notf *notification.Notification, done bool) {
+	notf *notification.Notification, stop bool) {
 
-	done = false
+	stop = false
 	from := ""
 	subject := ""
 	var date time.Time
@@ -190,7 +190,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	}
 
 	if msg.Id == lastNotf.RemoteId || date.Before(lastNotf.Timestamp) {
-		done = true
+		stop = true
 		return
 	}
 
@@ -205,7 +205,7 @@ func (g *GmailClient) parseMessage(msg *gmailMessage,
 	}
 
 	if lastNotf == nil {
-		done = true
+		stop = true
 		return
 	}
 
@@ -338,12 +338,12 @@ Loop:
 				return
 			}
 
-			notf, done := g.parseMessage(data, lastNotf, i == 0 && j == 0)
+			notf, stop := g.parseMessage(data, lastNotf, i == 0 && j == 0)
 			if notf != nil {
 				notfs = append(notfs, notf)
 			}
 
-			if done {
+			if stop {
 				break Loop
 			}
 		}
