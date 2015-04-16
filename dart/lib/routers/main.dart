@@ -16,7 +16,7 @@ MainRout(ng.Router router, ng.RouteViewFactory views) {
     ),
     'login': ng.ngRoute(
       path: '/login',
-      view: 'packages/blckur/views/login.html',
+      view: 'packages/blckur/views/auth.html',
       enter: (_) {
         alert.clear();
       }
