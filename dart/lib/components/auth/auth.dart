@@ -10,18 +10,18 @@ import 'package:angular/angular.dart' as ng;
 import 'dart:html' as dom;
 
 @Component(
-  selector: 'x-login',
-  templateUrl: 'packages/blckur/components/login/login.html',
-  cssUrl: 'packages/blckur/components/login/login.css'
+  selector: 'x-auth',
+  templateUrl: 'packages/blckur/components/auth/auth.html',
+  cssUrl: 'packages/blckur/components/auth/auth.css'
 )
-class LoginComp implements ng.ShadowRootAware {
+class AuthComp implements ng.ShadowRootAware {
   models.Auth model;
   String emailError;
   String passwordError;
   String mode;
   ng.Router router;
 
-  LoginComp(this.router) {
+  AuthComp(this.router) {
     this.model = new models.Auth();
     this.model.remember = true;
     this.mode = this.router.activePath[0].name;
@@ -130,6 +130,7 @@ class LoginComp implements ng.ShadowRootAware {
 
     this.model.reset(['email']).then((_) {
       this.clearErrors();
+      // TODO
     }).catchError((err) {
       logger.severe('Failed to reset password', err);
       this._handlerError(err, 'Error reseting password');
