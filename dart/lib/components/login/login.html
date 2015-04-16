@@ -1,9 +1,8 @@
 <div class="container" layout horizontal center>
   <div class="modal" flex>
     <header>blckur</header>
-    <!-- TODO ng-switch not working ios -->
-    <div> <!-- ng-switch="mode" -->
-      <form ng-if="mode == 'login'"> <!-- ng-switch-when="login" -->
+    <div ng-show="mode == 'login'">
+      <form>
         <x-input type="email" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
@@ -14,14 +13,16 @@
             py-checked="model.remember"></paper-checkbox>
           <div flex></div>
           <div class="forgot-pass link" no-select
-            touch-click="setMode('reset')">Forgot password?</div>
+            touch-click="setMode('forgot')">Forgot password?</div>
         </div>
         <paper-button role="button" tabindex="0" raised
           delay-click="onLogin()">Log In</paper-button>
         <div class="signup">Don't have an account? <span class="link"
           no-select touch-click="setMode('signup')">Sign up</span></div>
       </form>
-      <form ng-if="mode == 'signup'"> <!-- ng-switch-when="signup" -->
+    </div>
+    <div ng-show="mode == 'signup'">
+      <form>
         <x-input type="email" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <x-input type="password" placeholder="Password" error="passwordError"
