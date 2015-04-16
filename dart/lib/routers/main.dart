@@ -34,6 +34,13 @@ MainRout(ng.Router router, ng.RouteViewFactory views) {
       enter: (_) {
         alert.clear();
       }
+    ),
+    'reset': ng.ngRoute(
+      path: '/reset',
+      view: 'packages/blckur/views/auth.html',
+      enter: (_) {
+        alert.clear();
+      }
     )
   });
 }
