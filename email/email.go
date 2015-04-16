@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/blckur/blckur/settings"
+	"github.com/dropbox/godropbox/errors"
 	"net/mail"
 	"net/smtp"
 )
@@ -28,26 +29,41 @@ func (c *Client) Send(to *mail.Address, subject string,
 
 	err = c.client.Mail(c.from.Address)
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Mail command error"),
+		}
 		return
 	}
 
 	err = c.client.Rcpt(to.Address)
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Rcpt command error"),
+		}
 		return
 	}
 
 	w, err := c.client.Data()
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Data command error"),
+		}
 		return
 	}
 
 	_, err = w.Write([]byte(msg))
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Write error"),
+		}
 		return
 	}
 
 	err = w.Close()
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Write close error"),
+		}
 		return
 	}
 
@@ -56,6 +72,12 @@ func (c *Client) Send(to *mail.Address, subject string,
 
 func (c *Client) Close() (err error) {
 	err = c.client.Quit()
+	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Quit command error"),
+		}
+		return
+	}
 	return
 }
 
@@ -75,16 +97,25 @@ func New() (client *Client, err error) {
 		ServerName:         host,
 	})
 	if err != nil {
+		err = &TlsError{
+			errors.Wrap(err, "Dial error"),
+		}
 		return
 	}
 
 	client.client, err = smtp.NewClient(conn, host)
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Connection error"),
+		}
 		return
 	}
 
 	err = client.client.Auth(auth)
 	if err != nil {
+		err = &SmtpError{
+			errors.Wrap(err, "Auth error"),
+		}
 		return
 	}
 
