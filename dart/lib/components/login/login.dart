@@ -86,7 +86,9 @@ class LoginComp implements ng.ShadowRootAware {
   }
 
   void setMode(String mode) {
-    this.router.gotoUrl('/' + mode);
+    dom.window.history.pushState(null, "Blckur", '#/' + mode);
+    this.mode = mode;
+    this.clearErrors();
   }
 
   void onLogin() {
