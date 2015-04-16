@@ -23,7 +23,8 @@ void main() {
     .addModule(new animate.AnimationModule())
     .run();
 
-  new evnts.Events(app.root.get(ng.RootScope)).start();
+  new evnts.Events(app.root.get(ng.RootScope),
+    app.root.get(ng.Router)).start();
 
   dom.document.querySelector('.startup-background').remove();
 }
