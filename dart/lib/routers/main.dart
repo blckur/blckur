@@ -20,6 +20,20 @@ MainRout(ng.Router router, ng.RouteViewFactory views) {
       enter: (_) {
         alert.clear();
       }
+    ),
+    'signup': ng.ngRoute(
+      path: '/signup',
+      view: 'packages/blckur/views/auth.html',
+      enter: (_) {
+        alert.clear();
+      }
+    ),
+    'forgot': ng.ngRoute(
+      path: '/forgot',
+      view: 'packages/blckur/views/auth.html',
+      enter: (_) {
+        alert.clear();
+      }
     )
   });
 }
