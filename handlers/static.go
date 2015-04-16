@@ -12,6 +12,7 @@ import (
 
 type staticHandler struct {
 	Static gin.HandlerFunc
+	Index  gin.HandlerFunc
 	source string
 	store  *static.Store
 	expire string
@@ -36,6 +37,10 @@ func (s *staticHandler) proxy(c *gin.Context) {
 	c.Writer.Header().Add("Pragma", "no-cache")
 
 	c.Data(200, resp.Header.Get("Content-Type"), body)
+}
+
+func (s *staticHandler) proxyIndex(c *gin.Context) {
+	c.Redirect(302, "/s/")
 }
 
 func (s *staticHandler) local(c *gin.Context) {
@@ -69,7 +74,7 @@ func (s *staticHandler) local(c *gin.Context) {
 	}
 }
 
-func (s *staticHandler) Index(c *gin.Context) {
+func (s *staticHandler) localIndex(c *gin.Context) {
 	path := s.source + "/index.html"
 
 	file, ok := s.store.Files[path]
@@ -95,6 +100,7 @@ func newStaticHandler(source string) (handler *staticHandler) {
 
 	if source[:4] == "http" {
 		handler.Static = handler.proxy
+		handler.Index = handler.proxyIndex
 	} else {
 		source = filepath.Dir(source)
 		store, err := static.NewStore(source)
@@ -107,6 +113,7 @@ func newStaticHandler(source string) (handler *staticHandler) {
 
 		handler.store = store
 		handler.Static = handler.local
+		handler.Index = handler.localIndex
 	}
 
 	handler.source = source
