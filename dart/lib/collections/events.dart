@@ -13,8 +13,9 @@ class Events extends collection.Collection {
   String cursor;
   ng.RootScope rootScope;
   dom.WebSocket socket;
+  ng.Router router;
 
-  Events(this.rootScope) : super();
+  Events(this.rootScope, this.router) : super();
 
   String url = '/events';
 
@@ -23,7 +24,7 @@ class Events extends collection.Collection {
   }
 
   collection.Collection newCollection() {
-    return new Events(this.rootScope);
+    return new Events(this.rootScope, this.router);
   }
 
   void onEvent(dom.MessageEvent evt) {
@@ -36,16 +37,25 @@ class Events extends collection.Collection {
   }
 
   void onClose(_) {
-    new async.Timer(const Duration(seconds: 1), () {
-      this.openSocket();
-    });
+    this.openDelay();
   }
 
   void openSocket() {
+    if (this.router.activePath[0].name != 'feed') {
+      this.openDelay();
+      return;
+    }
+
     this.socket = new dom.WebSocket(
       'ws://${dom.window.location.host}${this.url}');
     this.socket.onMessage.listen(this.onEvent);
     this.socket.onClose.listen(this.onClose);
+  }
+
+  void openDelay() {
+    new async.Timer(const Duration(seconds: 1), () {
+      this.openSocket();
+    });
   }
 
   void start() {
