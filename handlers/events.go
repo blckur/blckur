@@ -5,7 +5,6 @@ import (
 	"github.com/blckur/blckur/session"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"labix.org/v2/mgo/bson"
 	"net/http"
 	"time"
 )
@@ -27,12 +26,6 @@ var (
 		},
 	}
 )
-
-type event struct {
-	Id       bson.ObjectId `json:"id"`
-	Type     string        `json:"type"`
-	Resource string        `json:"resource_id"`
-}
 
 func eventGet(c *gin.Context) {
 	sess := c.MustGet("session").(*session.Session)
