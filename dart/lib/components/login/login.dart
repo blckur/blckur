@@ -123,7 +123,7 @@ class LoginComp implements ng.ShadowRootAware {
     });
   }
 
-  void onReset() {
+  void onForgot() {
     if (!this.validate(true)) {
       return;
     }
