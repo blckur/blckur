@@ -136,4 +136,12 @@ class AuthComp implements ng.ShadowRootAware {
       this._handlerError(err, 'Error reseting password');
     });
   }
+
+  void onLogout() {
+    this.model.logout().then((_) {
+      this.setMode('login');
+    }).catchError((err) {
+      logger.severe('Failed to logout', err);
+    });
+  }
 }
