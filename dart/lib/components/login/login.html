@@ -32,7 +32,9 @@
         <div class="signup">Already a Blckur member? <span class="link"
           no-select touch-click="setMode('login')">Log in</span></div>
       </form>
-      <form ng-if="mode == 'reset'"> <!-- ng-switch-when="forgot" -->
+    </div>
+    <div ng-show="mode == 'forgot'">
+      <form>
         <x-input type="email" placeholder="Email address" error="emailError"
           model="model.email" theme="dark"></x-input>
         <paper-button role="button" tabindex="0" raised
