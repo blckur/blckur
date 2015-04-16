@@ -5,6 +5,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/settings"
+	"strconv"
 )
 
 // Manages system settigs stored in database
@@ -15,7 +16,14 @@ func Settings() {
 	db := database.GetDatabase()
 	defer db.Close()
 
-	err := settings.Set(db, group, key, val)
+	var valParsed interface{}
+	if x, err := strconv.Atoi(val); err == nil {
+		valParsed = x
+	} else {
+		valParsed = val
+	}
+
+	err := settings.Set(db, group, key, valParsed)
 	if err != nil {
 		panic(err)
 	}
