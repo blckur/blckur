@@ -125,6 +125,31 @@ func signupPost(c *gin.Context) {
 	c.JSON(200, usr)
 }
 
+func resetGet(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	key := c.Params.ByName("key")
+
+	usr, err := user.GetSessionUser(db, key)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	cook, err := session.GetCookie(c)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	_, err = cook.NewSession(db, usr.Id, true)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	c.Redirect(302, "/s/")
+}
+
 func resetPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	data := &authData{}
