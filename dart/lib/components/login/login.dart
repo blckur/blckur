@@ -21,9 +21,10 @@ class LoginComp implements ng.ShadowRootAware {
   String mode;
   ng.Router router;
 
-  LoginComp(this.router) : mode = 'login' {
+  LoginComp(this.router) {
     this.model = new models.Auth();
     this.model.remember = true;
+    this.mode = this.router.activePath[0].name;
   }
 
   void onShadowRoot(dom.ShadowRoot root) {
@@ -85,8 +86,7 @@ class LoginComp implements ng.ShadowRootAware {
   }
 
   void setMode(String mode) {
-    this.mode = mode;
-    this.clearErrors();
+    this.router.gotoUrl('/' + mode);
   }
 
   void onLogin() {
