@@ -1,9 +1,9 @@
 package mail
 
 import (
-	"net/smtp"
-	"github.com/blckur/blckur/settings"
 	"fmt"
+	"github.com/blckur/blckur/settings"
+	"net/smtp"
 )
 
 func SendMail(to string, subject string, body string) (err error) {
