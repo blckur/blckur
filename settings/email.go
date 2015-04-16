@@ -13,4 +13,5 @@ type email struct {
 	Username string `bson:"username"`
 	Password string `bson:"password"`
 	Server   string `bson:"server"`
+	From     string `bson:"from"`
 }
