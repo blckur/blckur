@@ -82,10 +82,6 @@ func (c *Client) Close() (err error) {
 }
 
 func New() (client *Client, err error) {
-	client = &Client{
-		from: &mail.Address{settings.Email.Name, settings.Email.From},
-	}
-
 	host := settings.Email.Server
 	addr := fmt.Sprintf("%s:%d", host, settings.Email.Port)
 
@@ -103,7 +99,7 @@ func New() (client *Client, err error) {
 		return
 	}
 
-	client.client, err = smtp.NewClient(conn, host)
+	smtpClient, err := smtp.NewClient(conn, host)
 	if err != nil {
 		err = &SmtpError{
 			errors.Wrap(err, "Connection error"),
@@ -111,12 +107,17 @@ func New() (client *Client, err error) {
 		return
 	}
 
-	err = client.client.Auth(auth)
+	err = smtpClient.Auth(auth)
 	if err != nil {
 		err = &SmtpError{
 			errors.Wrap(err, "Auth error"),
 		}
 		return
+	}
+
+	client = &Client{
+		from:   &mail.Address{settings.Email.Name, settings.Email.From},
+		client: smtpClient,
 	}
 
 	return
