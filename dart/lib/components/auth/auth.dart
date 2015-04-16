@@ -1,4 +1,4 @@
-library login_comp;
+library auth_comp;
 
 import 'package:blckur/exceptions.dart';
 import 'package:blckur/models/models.dart' as models;
