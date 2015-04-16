@@ -17,19 +17,17 @@ func (u *User) ResetPassword(db *database.Database) (
 	key *SessionKey, err error) {
 
 	coll := db.SessionKeys()
-	sessKey := &SessionKey{
+	key = &SessionKey{
 		Id:        utils.RandStr(32),
 		UserId:    u.Id,
 		Timestamp: time.Now(),
 	}
 
-	err = coll.Insert(sessKey)
+	err = coll.Insert(key)
 	if err != nil {
 		err = database.ParseError(err)
 		return
 	}
-
-	key = sessKey.Id
 	return
 }
 
