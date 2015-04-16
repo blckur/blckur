@@ -147,7 +147,7 @@ func resetGet(c *gin.Context) {
 		return
 	}
 
-	c.Redirect(302, "/s/")
+	c.Redirect(302, "/")
 }
 
 func resetPut(c *gin.Context) {
