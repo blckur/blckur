@@ -1,5 +1,9 @@
 @import 'styles/base.scss';
 
+.ng-hide {
+  display: none !important;
+}
+
 .container {
   background-color: #020d1b;
   position: absolute;
