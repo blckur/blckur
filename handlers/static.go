@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"path/filepath"
+	"strings"
 )
 
 type staticHandler struct {
@@ -79,7 +79,7 @@ func (s *staticHandler) Index(c *gin.Context) {
 	}
 
 	c.Writer.Header().Add("Cache-Control",
-	"no-cache, no-store, must-revalidate")
+		"no-cache, no-store, must-revalidate")
 	c.Writer.Header().Add("Pragma", "no-cache")
 
 	if strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
