@@ -81,6 +81,11 @@ func (d *Database) Settings() (coll *Collection) {
 	return
 }
 
+func (d *Database) SessionKeys() (coll *Collection) {
+	coll = d.getCollection("session_keys")
+	return
+}
+
 func Connect() (err error) {
 	Session, err = mgo.Dial("localhost")
 	if err != nil {
