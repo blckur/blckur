@@ -5,7 +5,13 @@ import 'package:blckur/model.dart' as model;
 class User extends model.Model {
   String id;
   String email;
+
   String password;
+  void passwordValidator(val) {
+    if (val == null || val == '') {
+      throw new model.Invalid('empty', 'Password cannot be empty');
+    }
+  }
 
   model.Model newModel() {
     return new User();
@@ -24,6 +30,12 @@ class User extends model.Model {
       'id': (x) => this.id = x,
       'email': (x) => this.email = x,
       'password': (x) => this.password = x,
+    };
+  }
+
+  Map<String, Function> get validators {
+    return {
+      'password': this.passwordValidator,
     };
   }
 
