@@ -46,9 +46,9 @@
     <div ng-show="mode == 'reset'">
       <form>
         <x-input type="password" placeholder="Password" error="passwordError"
-          model="model.password" theme="dark"></x-input>
+          model="userModel.password" theme="dark"></x-input>
         <paper-button role="button" tabindex="0" raised
-          delay-click="onForgot()">Change password</paper-button>
+          delay-click="onChange()">Change password</paper-button>
         <div class="signup">Not your account? <span class="link"
           no-select touch-click="onLogout()">Logout</span></div>
       </form>

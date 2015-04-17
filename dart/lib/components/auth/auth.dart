@@ -16,6 +16,7 @@ import 'dart:html' as dom;
 )
 class AuthComp implements ng.ShadowRootAware {
   models.Auth model;
+  models.User userModel;
   String emailError;
   String passwordError;
   String mode;
@@ -24,6 +25,7 @@ class AuthComp implements ng.ShadowRootAware {
   AuthComp(this.router) {
     this.model = new models.Auth();
     this.model.remember = true;
+    this.userModel = new models.User();
     this.mode = this.router.activePath[0].name;
   }
 
@@ -63,17 +65,19 @@ class AuthComp implements ng.ShadowRootAware {
     this.passwordError = null;
   }
 
-  bool validate([bool emailOnly]) {
+  bool validate({bool email: true, bool password: true}) {
     this.clearErrors();
 
-    try {
-      this.model.validate('email');
-    } catch(err) {
-      this.emailError = err.toString();
-      return false;
+    if (email) {
+      try {
+        this.model.validate('email');
+      } catch(err) {
+        this.emailError = err.toString();
+        return false;
+      }
     }
 
-    if (emailOnly != true) {
+    if (password) {
       try {
         this.model.validate('password');
       } catch(err) {
@@ -124,7 +128,7 @@ class AuthComp implements ng.ShadowRootAware {
   }
 
   void onForgot() {
-    if (!this.validate(true)) {
+    if (!this.validate(password: false)) {
       return;
     }
 
@@ -142,6 +146,23 @@ class AuthComp implements ng.ShadowRootAware {
       this.setMode('login');
     }).catchError((err) {
       logger.severe('Failed to logout', err);
+    });
+  }
+
+  void onChange() {
+    try {
+      this.userModel.validate('password');
+    } catch(err) {
+      this.passwordError = err.toString();
+      return;
+    }
+
+    this.userModel.save(['password']).then((_) {
+      this.router.gotoUrl('/feed').then((_) {
+        new alert.Alert('Password updated');
+      });
+    }).catchError((err) {
+      logger.severe('Failed to change password', err);
     });
   }
 }
