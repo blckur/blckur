@@ -100,6 +100,8 @@ func (u *User) Initialize(db *database.Database, password string) (err error) {
 	coll := db.Users()
 	u.SetPassword(password)
 
+	u.Id = bson.NewObjectId()
+
 	err = coll.Insert(u)
 	if err != nil {
 		err = database.ParseError(err)
