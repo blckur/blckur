@@ -133,8 +133,14 @@ func resetGet(c *gin.Context) {
 
 	usr, err := user.GetSessionUser(db, key)
 	if err != nil {
-		c.Fail(500, err)
-		return
+		switch err.(type) {
+		case *database.NotFoundError:
+			c.Fail(404, err)
+			return
+		default:
+			c.Fail(500, err)
+			return
+		}
 	}
 
 	cook, err := session.GetCookie(c)
