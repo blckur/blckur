@@ -1,6 +1,7 @@
 library user_comp;
 
 import 'package:blckur/models/models.dart' as models;
+import 'package:blckur/alert.dart' as alert;
 import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
@@ -32,6 +33,7 @@ class UserComp {
   void update() {
     this.model.fetch().catchError((err) {
       logger.severe('Failed to load user', err);
+      new alert.Alert('Failed to load user');
     });
   }
 
@@ -47,6 +49,7 @@ class UserComp {
       this.model = this.settingsModel;
     }).catchError((err) {
       logger.severe('Failed to save user', err);
+      new alert.Alert('Failed to save user');
     });
   }
 
@@ -55,6 +58,7 @@ class UserComp {
       dom.window.location.replace('#/login');
     }).catchError((err) {
       logger.severe('Failed to logout', err);
+      new alert.Alert('Failed to logout');
     });
   }
 }
