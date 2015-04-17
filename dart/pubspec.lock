@@ -4,7 +4,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.24.1"
+    version: "0.24.5"
   angular:
     description:
       ref: null
@@ -31,7 +31,7 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.7+2"
+    version: "0.2.8"
   collection:
     description: collection
     source: hosted
@@ -39,7 +39,7 @@ packages:
   core_elements:
     description: core_elements
     source: hosted
-    version: "0.6.1+2"
+    version: "0.7.0"
   csslib:
     description: csslib
     source: hosted
@@ -71,7 +71,7 @@ packages:
   initialize:
     description: initialize
     source: hosted
-    version: "0.6.0+3"
+    version: "0.6.0+4"
   intl:
     description: intl
     source: hosted
@@ -87,15 +87,15 @@ packages:
   observe:
     description: observe
     source: hosted
-    version: "0.13.0+1"
+    version: "0.13.0+2"
   paper_elements:
     description: paper_elements
     source: hosted
-    version: "0.6.2+3"
+    version: "0.7.0"
   path:
     description: path
     source: hosted
-    version: "1.3.4"
+    version: "1.3.5"
   perf_api:
     description: perf_api
     source: hosted
@@ -107,7 +107,7 @@ packages:
   polymer:
     description: polymer
     source: hosted
-    version: "0.16.0+7"
+    version: "0.16.1+3"
   polymer_expressions:
     description: polymer_expressions
     source: hosted
@@ -139,7 +139,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.2.4"
+    version: "1.3.1"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -159,7 +159,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.11.1+2"
+    version: "0.11.2"
   when:
     description: when
     source: hosted
