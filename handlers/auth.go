@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/email"
 	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/user"
 	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
+	"net/mail"
 )
 
 type authData struct {
@@ -168,6 +170,28 @@ func resetPut(c *gin.Context) {
 			c.Fail(500, err)
 			return
 		}
+	}
+
+	key, err := usr.ResetPassword(db)
+	if err != nil {
+		c.Fail(500, err)
+		return
+	}
+
+	client, err := email.New()
+	if err != nil {
+		return
+	}
+	defer client.Close()
+
+	err = client.Send(&mail.Address{"", usr.Email}, "Blckur - Password reset",
+		"You're receiving this email because you requested a password "+
+			"reset for your user account at Blckur.\r\n\r\nPlease go to "+
+			"the following page and choose a new password:\r\n\r\n"+
+			"https://blckur.com/reset/"+key.Id+"\r\n\r\nThanks for"+
+			"using our site!")
+	if err != nil {
+		return
 	}
 
 	c.JSON(200, usr)
