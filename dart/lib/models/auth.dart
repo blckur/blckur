@@ -6,18 +6,21 @@ import 'dart:async' as async;
 
 class Auth extends model.Model {
   String url = '/auth';
+
   String email;
   void emailValidator(val) {
     if (val == null || val == '') {
       throw new model.Invalid('empty', 'Email cannot be empty');
     }
   }
+
   String password;
   void passwordValidator(val) {
     if (val == null || val == '') {
       throw new model.Invalid('empty', 'Password cannot be empty');
     }
   }
+
   bool remember;
 
   model.Model newModel() {
