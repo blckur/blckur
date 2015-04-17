@@ -47,5 +47,10 @@ func GetSessionUser(db *database.Database, key string) (usr *User, err error) {
 		return
 	}
 
+	err = sessColl.RemoveId(sess.Id)
+	if err != nil {
+		return
+	}
+
 	return
 }
