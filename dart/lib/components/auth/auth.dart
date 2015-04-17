@@ -129,8 +129,8 @@ class AuthComp implements ng.ShadowRootAware {
     }
 
     this.model.reset(['email']).then((_) {
-      this.clearErrors();
-      // TODO
+      this.setMode('login');
+      new alert.Alert('Password reset instructions have been emailed');
     }).catchError((err) {
       logger.severe('Failed to reset password', err);
       this._handlerError(err, 'Error reseting password');
