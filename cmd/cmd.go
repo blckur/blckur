@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"github.com/blckur/blckur/database"
 )
 
 type serviceOptions struct {
@@ -33,6 +34,8 @@ func getServiceOptions() (opts *serviceOptions) {
 	} else {
 		port = rand.Intn(55000) + 10000
 	}
+
+	database.MongoUrl = os.Getenv("DB")
 
 	opts = &serviceOptions{
 		Id:   id,
