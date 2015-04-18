@@ -147,6 +147,10 @@ func (c *Oauth2Client) Refresh(db *database.Database) (err error) {
 	c.Account.Oauth2RefTokn = c.RefreshToken
 	c.Account.Oauth2Exp = c.Expiry
 
+	if c.Account.Id == "" {
+		return
+	}
+
 	fields := set.NewSet("oauth2_acc_tokn", "oauth2_ref_tokn", "oauth2_exp")
 
 	err = coll.CommitFields(c.Account.Id, c.Account, fields)
