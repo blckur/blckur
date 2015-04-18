@@ -36,7 +36,7 @@ func (a *AppNode) Start() {
 		"id":          a.Id,
 		"address":     a.Address,
 		"port":        a.Port,
-		"public_port": a.Port,
+		"public_port": a.PublicPort,
 	}).Info("nodes.app: Starting app node")
 
 	server.ListenAndServe()
