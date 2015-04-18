@@ -13,14 +13,16 @@ import (
 )
 
 type QueueNode struct {
-	Id   string
-	Host string
-	Port int
+	Id         string
+	Host       string
+	Address    string
+	Port       int
+	PublicPort int
 }
 
 func (q *QueueNode) Start() {
 	port := strconv.Itoa(q.Port)
-	address := getAddress() + ":" + port
+	address := q.Address + ":" + strconv.Itoa(q.PublicPort)
 
 	args := []string{"-p", port}
 	if q.Host != "" {
@@ -38,8 +40,10 @@ func (q *QueueNode) Start() {
 		}
 
 		logrus.WithFields(logrus.Fields{
-			"id":      q.Id,
-			"address": address,
+			"id":          q.Id,
+			"address":     q.Address,
+			"port":        q.Port,
+			"public_port": q.Port,
 		}).Info("nodes.queue: Starting queue node")
 
 		cmd = exec.Command("./bin/beanstalkd", args...) // TODO

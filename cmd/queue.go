@@ -9,9 +9,11 @@ func Queue() {
 	opts := getServiceOptions()
 
 	node := nodes.QueueNode{
-		Id:   opts.Id,
-		Host: opts.Host,
-		Port: opts.Port,
+		Id:         opts.Id,
+		Host:       opts.Host,
+		Address:    opts.Address,
+		Port:       opts.Port,
+		PublicPort: opts.PublicPort,
 	}
 
 	node.Start()
