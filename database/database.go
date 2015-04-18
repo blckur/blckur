@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo"
+	"strings"
 	"time"
 )
 
@@ -103,7 +104,15 @@ func Connect() (err error) {
 
 func GetDatabase() (db *Database) {
 	session := Session.Copy()
-	database := session.DB("blckur")
+
+	var dbName string
+	if x := strings.LastIndex(MongoUrl, "/"); x != -1 {
+		dbName = MongoUrl[x+1:]
+	} else {
+		dbName = "blckur"
+	}
+
+	database := session.DB(dbName)
 
 	db = &Database{
 		session:  session,
