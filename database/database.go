@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	Session *mgo.Session
+	MongoUrl string
+	Session  *mgo.Session
 )
 
 type Database struct {
@@ -87,7 +88,7 @@ func (d *Database) SessionKeys() (coll *Collection) {
 }
 
 func Connect() (err error) {
-	Session, err = mgo.Dial("localhost")
+	Session, err = mgo.Dial(MongoUrl)
 	if err != nil {
 		err = &ConnectionError{
 			errors.Wrap(err, "database: Connection error"),
