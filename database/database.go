@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/requires"
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo"
+	"os"
 	"strings"
 	"time"
 )
@@ -279,6 +280,8 @@ func addCollections() (err error) {
 }
 
 func init() {
+	MongoUrl = os.Getenv("DB")
+
 	module := requires.New("database")
 
 	module.Handler = func() {
