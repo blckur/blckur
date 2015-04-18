@@ -194,7 +194,7 @@ func resetPut(c *gin.Context) {
 		"You're receiving this email because you requested a password "+
 			"reset for your user account at Blckur.\r\n\r\nPlease go to "+
 			"the following page and choose a new password:\r\n\r\n"+
-			"https://blckur.com/reset/"+key.Id+"\r\n\r\nThanks for"+
+			"https://app.blckur.com/reset/"+key.Id+"\r\n\r\nThanks for"+
 			"using our site!")
 	if err != nil {
 		return
