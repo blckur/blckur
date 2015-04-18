@@ -4,6 +4,7 @@ import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/email"
 	"github.com/blckur/blckur/session"
+	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/user"
 	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
@@ -194,7 +195,7 @@ func resetPut(c *gin.Context) {
 		"You're receiving this email because you requested a password "+
 			"reset for your user account at Blckur.\r\n\r\nPlease go to "+
 			"the following page and choose a new password:\r\n\r\n"+
-			"https://app.blckur.com/reset/"+key.Id+"\r\n\r\nThanks for"+
+			settings.System.Domain+"/reset/"+key.Id+"\r\n\r\nThanks for"+
 			"using our site!")
 	if err != nil {
 		return
