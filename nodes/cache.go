@@ -13,18 +13,19 @@ import (
 )
 
 type CacheNode struct {
-	Id   string
-	Host string
-	Port int
+	Id         string
+	Host       string
+	Address    string
+	Port       int
+	PublicPort int
 }
 
 func (c *CacheNode) Start() {
-	port := strconv.Itoa(c.Port)
-	address := getAddress() + ":" + port
+	address := c.Address + ":" + strconv.Itoa(c.PublicPort)
 
 	args := []string{
 		"--save", "",
-		"--port", port,
+		"--port", strconv.Itoa(c.Port),
 	}
 
 	if c.Host != "" {
@@ -42,8 +43,10 @@ func (c *CacheNode) Start() {
 		}
 
 		logrus.WithFields(logrus.Fields{
-			"id":      c.Id,
-			"address": address,
+			"id":          c.Id,
+			"address":     c.Address,
+			"port":        c.Port,
+			"public_port": c.Port,
 		}).Info("nodes.cache: Starting cache node")
 
 		cmd = exec.Command("redis-server", args...)
