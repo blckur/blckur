@@ -10,15 +10,16 @@ import (
 )
 
 type AppNode struct {
-	Id     string
-	Host   string
-	Port   int
-	Source string
+	Id         string
+	Host       string
+	Address    string
+	Port       int
+	PublicPort int
+	Source     string
 }
 
 func (a *AppNode) Start() {
 	port := strconv.Itoa(a.Port)
-	address := getAddress() + ":" + port
 
 	router := gin.Default()
 	handlers.Register(router, a.Source)
@@ -32,8 +33,10 @@ func (a *AppNode) Start() {
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"id":      a.Id,
-		"address": address,
+		"id":          a.Id,
+		"address":     a.Address,
+		"port":        a.Port,
+		"public_port": a.Port,
 	}).Info("nodes.app: Starting app node")
 
 	server.ListenAndServe()
