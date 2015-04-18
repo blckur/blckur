@@ -1,8 +1,7 @@
 name: blckur
 version: 1.0.0
 dependencies:
-  angular:
-    git: https://github.com/zachhuff386/angular.dart.git
+  angular: ">=1.1.1 <2.0.0"
   web_components: ">=0.10.5"
   browser: ">=0.10.0+2"
   barback: ">=0.14.1"
