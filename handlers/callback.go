@@ -59,5 +59,5 @@ func callbackGet(c *gin.Context) {
 		}
 	}
 
-	c.Redirect(301, settings.System.AppHome)
+	c.Redirect(301, "/")
 }
