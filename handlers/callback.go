@@ -4,7 +4,6 @@ import (
 	"github.com/blckur/blckur/account"
 	"github.com/blckur/blckur/accounts"
 	"github.com/blckur/blckur/database"
-	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
 )
