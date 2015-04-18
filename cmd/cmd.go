@@ -10,10 +10,11 @@ import (
 )
 
 type serviceOptions struct {
-	Id      string
-	Host    string
-	Address string
-	Port    int
+	Id         string
+	Host       string
+	Address    string
+	Port       int
+	PublicPort int
 }
 
 func getAddress() (address string) {
@@ -34,6 +35,25 @@ func getAddress() (address string) {
 }
 
 func getPort() (port int) {
+	portStr := os.Getenv("PORT")
+
+	if portStr != "" {
+		p, err := strconv.Atoi(portStr)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("cmd: Failed to parse port")
+			panic(err)
+		}
+		port = p
+	} else {
+		port = rand.Intn(55000) + 10000
+	}
+
+	return
+}
+
+func getPublicPort() (port int) {
 	dockerEndpoint := os.Getenv("DOCKER_API")
 
 	if dockerEndpoint != "" {
@@ -45,20 +65,6 @@ func getPort() (port int) {
 			panic(err)
 		}
 		port = p
-	} else {
-		portStr := os.Getenv("PORT")
-		if portStr != "" {
-			p, err := strconv.Atoi(portStr)
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("cmd: Failed to parse port")
-				panic(err)
-			}
-			port = p
-		} else {
-			port = rand.Intn(55000) + 10000
-		}
 	}
 
 	return
@@ -74,11 +80,17 @@ func getServiceOptions() (opts *serviceOptions) {
 	address := getAddress()
 	port := getPort()
 
+	pubPort := getPublicPort()
+	if pubPort == 0 {
+		pubPort = port
+	}
+
 	opts = &serviceOptions{
-		Id:      id,
-		Host:    host,
-		Address: address,
-		Port:    port,
+		Id:         id,
+		Host:       host,
+		Address:    address,
+		Port:       port,
+		PublicPort: pubPort,
 	}
 
 	return
