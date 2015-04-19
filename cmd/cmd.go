@@ -54,14 +54,14 @@ func getPort() (port int) {
 }
 
 func getPublicPort() (port int) {
-	dockerEndpoint := os.Getenv("DOCKER_API")
+	portStr := os.Getenv("PUBLIC_PORT")
 
-	if dockerEndpoint != "" {
-		p, err := utils.GetDockerPort(dockerEndpoint)
+	if portStr != "" {
+		p, err := strconv.Atoi(portStr)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"error": err,
-			}).Error("cmd: Failed to get docker port")
+			}).Error("cmd: Failed to parse public port")
 			panic(err)
 		}
 		port = p
