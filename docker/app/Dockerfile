@@ -1,4 +1,4 @@
-FROM pritunl/archlinux:2015-04-11
+FROM pritunl/archlinux:2015-04-18
 MAINTAINER Blckur <contact@blckur.com>
 
 RUN pacman -S --noconfirm go git bzr
