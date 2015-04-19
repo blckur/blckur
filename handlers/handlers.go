@@ -66,7 +66,7 @@ func Register(engine *gin.Engine, source string) {
 	sessGroup := dbGroup.Group("")
 	sessGroup.Use(Session(false))
 
-	engine.GET("/check", checkGet)
+	dbGroup.GET("/check", checkGet)
 
 	dbGroup.POST("/signup", signupPost)
 	dbGroup.GET("/reset/:key", resetGet)
