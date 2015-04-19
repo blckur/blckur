@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  color: #595959; }
+
+.ng-hide {
+  display: none !important; }
+
+.item.settings-active .settings-header,
+.item.settings-active .account {
+  color: #fff;
+  background-color: #e91e63; }
+
+.settings {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; }
+
+.settings-header {
+  font-size: 22px;
+  padding: 10px 10px 0 20px; }
+
+.settings-header span {
+  padding-top: 9px; }
+
+.item.new {
+  background-color: #b3e5fc; }
+
+.new-label {
+  display: none;
+  margin-top: 9px;
+  font-size: 18px;
+  font-weight: 400; }
+
+.item.new .new-label {
+  display: inline; }
+
+.item.settings-active .account core-icon-button {
+  display: none; }
+
+.item.settings-active .account {
+  height: 48px; }
+
+.item.settings-active .account .info {
+  padding: 9px 5px 0 0;
+  font-weight: 400;
+  font-size: 14px; }
+
+.item.settings-active x-brand-logo {
+  position: relative;
+  top: -5px;
+  z-index: 5; }
+
+.item.settings-active .new-label {
+  display: none; }
+
+.item.settings-active {
+  position: absolute;
+  top: -125px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background-color: #edf3fc; }
+
+paper-progress {
+  position: absolute;
+  width: 100%; }
+
+paper-button,
+paper-checkbox {
+  margin: 10px 0; }
+
+x-brand-logo {
+  margin: 10px;
+  width: 80px;
+  height: 61px;
+  text-align: center; }
+
+.buttons {
+  margin-top: 5px; }
+
+.info {
+  font-weight: 300;
+  font-size: 14px;
+  text-align: right;
+  margin-right: 12px; }
+
+.confirm {
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  width: 114px;
+  height: 81px;
+  display: none;
+  color: #fff;
+  background-color: #f44336; }
+
+.confirm .label {
+  padding-top: 14px;
+  text-align: center; }
+
+.confirm .buttons {
+  padding: 0 0 5px 24px; }
+
+.confirm.ng-enter {
+  width: 0;
+  -webkit-transition: width 0.2s;
+  -o-transition: width 0.2s;
+  transition: width 0.2s; }
+
+.confirm.ng-enter.ng-enter-active {
+  width: 114px; }
+
+.confirm.ng-leave {
+  width: 114px;
+  -webkit-transition: width 0.2s;
+  -o-transition: width 0.2s;
+  transition: width 0.2s; }
+
+.confirm.ng-leave.ng-leave-active {
+  width: 0; }

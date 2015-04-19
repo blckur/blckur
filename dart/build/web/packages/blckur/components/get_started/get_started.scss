@@ -1,0 +1,29 @@
+@import 'styles/base.scss';
+
+:host {
+  display: block;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  overflow: hidden;
+  height: 190px;
+  width: 320px;
+  padding-top: 30px;
+}
+
+.content core-icon {
+  position: absolute;
+  top: -25px;
+  left: 0;
+  width: 310px;
+  height: 310px;
+  color: #cfdae8;
+}
+
+.content div {
+  font-size: 36px;
+  font-weight: 200;
+  color: #354861;
+}

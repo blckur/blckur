@@ -1,0 +1,15 @@
+<paper-progress ng-if="loading.state" indeterminate></paper-progress>
+<div class="notf" layout horizontal ng-class="model.read ? 'read' : ''">
+  <x-brand-logo icon="{{model.accountType}}" size="80px"
+    touch-click="toggleRead()" horizontal layout center></x-brand-logo>
+  <div class="info" touch-click="toggleRead()" layout vertical flex>
+    <h3 class="title" ng-bind="model.subject"></h3>
+    <div ng-bind="model.body"></div>
+  </div>
+  <div class="buttons" layout vertical>
+    <a ng-if="model.link != '' && model.link != null" href="{{model.link}}"
+      target="_blank"><core-icon-button icon="launch"></core-icon-button></a>
+    <core-icon-button icon="delete"
+      touch-click="onDelete()"></core-icon-button>
+  </div>
+</div>

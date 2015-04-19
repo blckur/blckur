@@ -1,0 +1,5 @@
+<paper-progress ng-if="loading.state" indeterminate></paper-progress>
+<div class="list scrollable" flex>
+  <x-notification ng-repeat="notification in notifications"
+    model="notification"></x-notification>
+</div>

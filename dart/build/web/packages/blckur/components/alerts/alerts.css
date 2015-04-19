@@ -1,0 +1,17 @@
+paper-toast.alert0.core-opened {
+  -webkit-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  transform: translateY(-100%); }
+
+paper-toast.alert1.core-opened {
+  -webkit-transform: translateY(-225%);
+  -o-transform: translateY(-225%);
+  transform: translateY(-225%); }
+
+paper-toast.alert2.core-opened {
+  -webkit-transform: translateY(-350%);
+  -o-transform: translateY(-350%);
+  transform: translateY(-350%); }
+
+.retry {
+  color: #eeff41; }

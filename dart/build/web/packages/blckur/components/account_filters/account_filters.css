@@ -1,0 +1,129 @@
+:host {
+  color: #595959; }
+
+.ng-hide {
+  display: none; }
+
+.filter-type + .filter-type {
+  border-top: 1px solid #dbe1ef; }
+
+.filter-type .label {
+  font-size: 16px;
+  padding: 20px 0 0 15px; }
+
+.filter-type .value {
+  font-size: 14px;
+  padding: 0 20px 20px 20px;
+  font-weight: 300; }
+
+.filter-del {
+  margin-right: 8px; }
+
+.filters.ng-enter,
+.add-filter.ng-enter {
+  -webkit-transform: translate(0, -100%);
+  -o-transform: translate(0, -100%);
+  transform: translate(0, -100%);
+  -webkit-transition: transform 0.3s;
+  -o-transition: transform 0.3s;
+  transition: transform 0.3s; }
+
+.filters.ng-enter-active,
+.add-filter.ng-enter-active {
+  -webkit-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0); }
+
+.filters.ng-leave,
+.add-filter.ng-leave {
+  -webkit-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
+  -webkit-transition: transform 0.3s;
+  -o-transition: transform 0.3s;
+  transition: transform 0.3s; }
+
+.filters.ng-leave-active,
+.add-filter.ng-leave-active {
+  -webkit-transform: translate(0, -100%);
+  -o-transform: translate(0, -100%);
+  transform: translate(0, -100%);
+  transform: translate(0, -100%); }
+
+.content {
+  text-align: left;
+  font-size: 17px;
+  text-transform: none !important;
+  white-space: normal; }
+
+paper-fab {
+  margin: 0 22px;
+  pointer-events: none; }
+
+paper-button.type {
+  padding: 5px 2px; }
+
+core-item + core-item > paper-button.type {
+  border-top: 1px solid #dbe1ef; }
+
+.info {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 300; }
+
+x-brand-logo {
+  margin: 10px; }
+
+.account-type .content {
+  padding-left: 10px;
+  text-align: left;
+  font-weight: 300;
+  font-size: 20px;
+  text-transform: none; }
+
+.account-type core-icon {
+  width: 30px;
+  height: 30px; }
+
+paper-progress {
+  position: absolute;
+  width: 100%; }
+
+.footer-btn {
+  width: 100%;
+  margin: 0;
+  padding: 2px 0; }
+
+.footer-btn .info {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 300;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s;
+  -o-transition: opacity 0.2s;
+  transition: opacity 0.2s; }
+
+.footer-btn:hover .info {
+  opacity: 1; }
+
+.footer-btn paper-fab {
+  margin: 0 15px 0 4px; }
+
+.footer-btn.add paper-fab {
+  background-color: #e91e63; }
+
+paper-button {
+  display: block; }
+
+.form .label {
+  font-size: 20px;
+  padding: 30px 20px 10px 20px;
+  font-weight: 300;
+  text-align: center; }
+
+.form .input {
+  padding: 0 15px; }
+
+.form paper-button {
+  font-size: 18px;
+  margin-top: 5px; }

@@ -1,0 +1,114 @@
+body {
+  x-label: body;
+  color: #000;
+  background-color: #fff; }
+
+* {
+  -webkit-tap-highlight-color: transparent; }
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+body /deep/ *,
+body /deep/ *:before,
+body /deep/ *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+body /deep/ paper-progress {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  margin: 0; }
+
+.warning {
+  display: none !important; }
+
+body /deep/ .label-text,
+body /deep/ .error {
+  color: #757575; }
+
+body /deep/ ::-webkit-input-placeholder {
+  color: #757575; }
+
+body /deep/ ::-moz-placeholder {
+  color: #757575; }
+
+body /deep/ :-ms-input-placeholder {
+  color: #757575; }
+
+body /deep/ .unfocused-underline {
+  background-color: #757575; }
+
+body /deep/ paper-input-decorator[focused] .floated-label .label-text {
+  color: #4059a9; }
+
+body /deep/ .focused-underline {
+  background-color: #4059a9; }
+
+body /deep/ .cursor {
+  background-color: #4059a9; }
+
+body /deep/ .invalid /deep/ .floated-label .label-text,
+body /deep/ .error {
+  color: #d34336; }
+
+body /deep/ .invalid /deep/ .unfocused-underline,
+body /deep/ .invalid /deep/ .focused-underline,
+body /deep/ .invalid /deep/ .cursor {
+  background-color: #d34336; }
+
+paper-input-decorator.dark {
+  color: #fff; }
+
+body /deep/ .dark /deep/ .label-text {
+  color: rgba(255, 255, 255, 0.85); }
+
+body /deep/ .dark /deep/ ::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.7); }
+
+body /deep/ .dark /deep/ ::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.7); }
+
+body /deep/ .dark /deep/ :-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.7); }
+
+body /deep/ .dark /deep/ .unfocused-underline {
+  background-color: rgba(255, 255, 255, 0.7); }
+
+body /deep/ .dark.invalid {
+  color: #d34336; }
+
+body /deep/ .dark.invalid /deep/ .label-text {
+  color: rgba(211, 67, 54, 0.85); }
+
+body /deep/ .dark.invalid /deep/ ::-webkit-input-placeholder {
+  color: rgba(211, 67, 54, 0.7); }
+
+body /deep/ .dark.invalid /deep/ ::-moz-placeholder {
+  color: rgba(211, 67, 54, 0.7); }
+
+body /deep/ .dark.invalid /deep/ :-ms-input-placeholder {
+  color: rgba(211, 67, 54, 0.7); }
+
+body /deep/ .dark.invalid /deep/ .unfocused-underline {
+  background-color: rgba(211, 67, 54, 0.7); }
+
+body /deep/ .dark[focused] /deep/ .floating-label .label-text {
+  color: #fff; }
+
+body /deep/ .dark /deep/ .focused-underline {
+  background-color: #fff; }

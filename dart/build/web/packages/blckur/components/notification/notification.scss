@@ -1,0 +1,46 @@
+@import 'styles/base.scss';
+
+:host {
+  position: relative;
+  display: block;
+}
+
+x-brand-logo,
+.info {
+  cursor: pointer;
+}
+
+paper-progress {
+  position: absolute;
+  width: 100%;
+}
+
+x-brand-logo {
+  margin: 0 10px;
+  position: absolute;
+  opacity: 0.15;
+  height: 100%;
+}
+
+.title {
+  font-size: 18px;
+  margin: 15px 0 10px 0;
+}
+
+.info {
+  z-index: 1;
+  padding-left: 10px;
+  padding-bottom: 12px;
+}
+
+.read {
+  opacity: 0.4;
+}
+
+.buttons {
+  padding: 8px 2px 0 2px;
+}
+
+.buttons a {
+  color: #595959;
+}

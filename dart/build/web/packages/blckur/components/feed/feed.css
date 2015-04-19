@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  color: #595959; }
+
+.main-panel,
+x-accounts {
+  position: relative; }
+
+x-accounts {
+  background-color: #edf3fc; }
+
+.drop-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  -webkit-box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4); }
+
+.toolbar {
+  color: #fff; }
+
+x-user {
+  color: #fff;
+  min-height: 125px;
+  background-color: #069bde;
+  background-image: url("/s/img/bg0.png"); }
+
+.toolbar {
+  background-color: #03a9f4; }
+
+core-drawer-panel:not([narrow]) .toolbar {
+  height: 100px; }
+
+.toolbar .logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 34px; }
+
+core-drawer-panel:not([narrow]) .toolbar .logo {
+  margin-top: 36px;
+  font-size: 60px; }
+
+core-drawer-panel:not([narrow]) .menu-toggle {
+  display: none; }

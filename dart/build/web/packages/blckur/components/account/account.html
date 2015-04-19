@@ -1,0 +1,35 @@
+<div class="item" ng-class="itemClass" layout vertical flex>
+  <div ng-show="settings" class="row settings-header" layout horizontal>
+    <span flex>Manage account filters</span>
+    <core-icon-button icon="close"
+      touch-click="onSettings()"></core-icon-button>
+  </div>
+  <div class="row account" layout horizontal>
+    <x-brand-logo icon="{{model.type}}" layout horizontal
+      center></x-brand-logo>
+    <div layout vertical flex>
+      <div class="buttons" layout horizontal>
+        <div flex layout vertical center><span
+          class="new-label">New account</span></div>
+        <core-icon-button icon="settings"
+          touch-click="onSettings()"></core-icon-button>
+        <core-icon-button icon="delete"
+          touch-click="confirm = true"></core-icon-button>
+      </div>
+      <div class="info" ng-bind="model.identity" flex></div>
+    </div>
+    <div ng-if="confirm" class="confirm" ng-animate layout vertical>
+      <div class="label" flex>Are you sure?</div>
+      <div class="buttons" layout horizontal center>
+        <core-icon-button icon="clear"
+          touch-click="confirm = false"></core-icon-button>
+        <core-icon-button icon="check"
+          touch-click="onDelete()"></core-icon-button>
+      </div>
+    </div>
+  </div>
+  <paper-progress ng-if="loading.state" indeterminate></paper-progress>
+  <div ng-if="settings" class="row settings" layout vertical flex>
+    <x-account-filters model="model"></x-account-filters>
+  </div>
+</div>
