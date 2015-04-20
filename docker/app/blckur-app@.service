@@ -1,0 +1,22 @@
+[Unit]
+Description=blckur-app
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStartPre=/usr/bin/docker pull quay.io/blckur/app
+ExecStart=/usr/bin/sh -c "IP=$(hostname --ip-address); \
+    /usr/bin/docker run --rm --name %p-%i \
+    -p 80:80 \
+    -e ID=blckur-app-%i \
+    -e IP=$IP \
+    -e PORT=80 \
+    -e DB=mongodb://winter-waters-7121.blckur.vpc:27017,restless-forest-4412.blckur.vpc:27017,autumn-plains-4942.blckur.vpc/blckur \
+    -e SOURCE=/go/src/github.com/blckur/blckur/dart/build/web/ \
+    quay.io/blckur/app"
+ExecStop=/usr/bin/docker stop %p-%i
+
+[X-Fleet]
+X-Conflicts=%p@*.service
