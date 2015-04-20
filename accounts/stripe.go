@@ -142,8 +142,8 @@ func (s *StripeClient) parse(evt *stripeEvent,
 	stop = false
 	timestamp := time.Unix(int64(evt.Created), 0)
 
-	if evt.Id == lastNotf.RemoteId ||
-		timestamp.Before(lastNotf.Timestamp) {
+	if lastNotf != nil && (evt.Id == lastNotf.RemoteId ||
+		timestamp.Before(lastNotf.Timestamp)) {
 
 		stop = true
 		return
