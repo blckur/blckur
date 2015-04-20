@@ -20551,7 +20551,7 @@ nYz:[function(a,b){this.Wd()},"$1","gCq",2,0,19,260],
 i9:function(){var z=this.db.gdR()
 if(0>=z.length)return H.e(z,0)
 if(!J.mG(J.O6(z[0]),"feed")){this.Wd()
-return}z=W.pS("ws://"+H.d(window.location.host)+H.d(this.dx),null)
+return}z=W.pS((window.location.protocol==="http:"?"ws":"wss")+"://"+H.d(window.location.host)+H.d(this.dx),null)
 this.cy=z
 z=C.ph.aM(z)
 H.J(new W.xC(0,z.Q,z.a,W.aF(this.gpd()),z.b),[H.Kp(z,0)]).DN()
