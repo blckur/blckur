@@ -98,7 +98,7 @@ func Connect() (err error) {
 		return
 	}
 
-	Session.SetMode(mgo.Monotonic, true)
+	Session.SetMode(mgo.Strong, true)
 
 	return
 }
