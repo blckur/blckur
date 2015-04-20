@@ -25,6 +25,7 @@ var (
 		".jpg":  "image/jpeg",
 		".png":  "image/png",
 		".svg":  "image/svg+xml",
+		".ico":  "image/vnd.microsoft.icon",
 		".otf":  "application/font-sfnt",
 		".ttf":  "application/font-sfnt",
 		".woff": "application/font-woff",
