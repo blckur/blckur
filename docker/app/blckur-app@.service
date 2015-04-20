@@ -13,7 +13,7 @@ ExecStart=/usr/bin/sh -c "IP=$(hostname --ip-address); \
     -e ID=blckur-app-%i \
     -e IP=$IP \
     -e PORT=80 \
-    -e DB=mongodb://winter-waters-7121.blckur.vpc:27017,restless-forest-4412.blckur.vpc:27017,autumn-plains-4942.blckur.vpc/blckur \
+    -e DB=mongodb://winter-waters-7121.blckur.vpc:27017,restless-forest-4412.blckur.vpc:27017,autumn-plains-4942.blckur.vpc:27017/blckur \
     -e SOURCE=/go/src/github.com/blckur/blckur/dart/build/web/ \
     quay.io/blckur/app"
 ExecStop=/usr/bin/docker stop %p-%i
