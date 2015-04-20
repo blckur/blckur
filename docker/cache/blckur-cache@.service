@@ -1,0 +1,22 @@
+[Unit]
+Description=blckur-cache
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStartPre=/usr/bin/docker pull quay.io/blckur/cache
+ExecStart=/usr/bin/sh -c "IP=$(hostname --ip-address); \
+    PORT=22$(printf %03d %i); \
+    /usr/bin/docker run --rm --name %p-%i \
+    -p $PORT:$PORT \
+    -e ID=blckur-cache-%i \
+    -e IP=$IP \
+    -e PORT=$PORT \
+    -e DB=mongodb://winter-waters-7121.blckur.vpc:27017,restless-forest-4412.blckur.vpc:27017,autumn-plains-4942.blckur.vpc:27017/blckur \
+    quay.io/blckur/cache"
+ExecStop=/usr/bin/docker stop %p-%i
+
+[X-Fleet]
+X-Conflicts=%p@%i.service
