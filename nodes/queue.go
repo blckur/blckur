@@ -46,7 +46,7 @@ func (q *QueueNode) Start() {
 			"public_port": q.Port,
 		}).Info("nodes.queue: Starting queue node")
 
-		cmd = exec.Command("./bin/beanstalkd", args...) // TODO
+		cmd = exec.Command("beanstalkd", args...)
 		cmd.Stderr = logger.NewErrorWriter()
 
 		var cmdErr error
