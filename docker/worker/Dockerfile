@@ -8,4 +8,4 @@ ENV PATH $PATH:/go/bin
 
 RUN go get github.com/blckur/blckur
 
-CMD ["blckur", "scheduler"]
+CMD ["blckur", "worker"]
