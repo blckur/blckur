@@ -46,8 +46,15 @@ class Events extends collection.Collection {
       return;
     }
 
+    var proto;
+    if (dom.window.location.protocol == 'http:') {
+      proto = 'ws';
+    } else {
+      proto = 'wss';
+    }
+
     this.socket = new dom.WebSocket(
-      'ws://${dom.window.location.host}${this.url}');
+      '${proto}://${dom.window.location.host}${this.url}');
     this.socket.onMessage.listen(this.onEvent);
     this.socket.onClose.listen(this.onClose);
   }
