@@ -12,7 +12,7 @@ type SchedulerNode struct {
 func (w *SchedulerNode) Start() {
 	logrus.WithFields(logrus.Fields{
 		"id": w.Id,
-	}).Info("nodes.worker: Starting scheduler node")
+	}).Info("nodes.scheduler: Starting scheduler node")
 
 	scheduler.Run()
 }
