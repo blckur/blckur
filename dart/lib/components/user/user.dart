@@ -6,6 +6,8 @@ import 'package:blckur/logger.dart' as logger;
 
 import 'package:angular/angular.dart' show Component;
 import 'package:angular/angular.dart'as ng;
+import 'package:crypto/crypto.dart' as crypto;
+import 'dart:convert' as convert;
 import 'dart:html' as dom;
 
 @Component(
@@ -19,6 +21,8 @@ class UserComp {
   models.User settingsModel;
   models.Auth authModel;
   ng.Router router;
+  var _curEmail;
+  var _avatar;
 
   UserComp(this.router) {
     this.model = new models.User();
@@ -27,7 +31,14 @@ class UserComp {
   }
 
   String get avatar {
-    return 'https://avatars0.githubusercontent.com/u/1305774?v=3&s=460';
+    if (this.model != this._curEmail && this.model.email != null) {
+      var enc = new crypto.MD5();
+      enc.add(convert.UTF8.encoder.convert(this.model.email));
+      var hash = crypto.CryptoUtils.bytesToHex(enc.close());
+
+      this._avatar = '//www.gravatar.com/avatar/${hash}?s=170&d=mm';
+    }
+    return this._avatar;
   }
 
   void update() {
