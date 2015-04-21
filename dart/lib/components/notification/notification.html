@@ -4,6 +4,7 @@
     touch-click="toggleRead()" horizontal layout center></x-brand-logo>
   <div class="info" touch-click="toggleRead()" layout vertical flex>
     <h3 class="title" ng-bind="model.subject"></h3>
+    <div class="timestamp" ng-bind="date"></div>
     <div ng-bind="model.body"></div>
   </div>
   <div class="buttons" layout vertical>
