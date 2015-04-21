@@ -32,12 +32,20 @@ x-brand-logo {
   padding-bottom: 12px;
 }
 
+.timestamp {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
 .read {
   opacity: 0.4;
 }
 
 .buttons {
-  padding: 8px 2px 0 2px;
+  padding: 18px 2px 0 2px;
 }
 
 .buttons a {
