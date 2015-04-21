@@ -28,7 +28,7 @@ class NotificationComp {
     var diff = now.difference(notf);
 
     if (diff < const Duration(hours: 1)) {
-      return '${diff.inMinutes} minutes ago';
+      return '${diff.inMinutes} mins ago';
     } else if (diff < const Duration(hours: 24)) {
       return '${diff.inHours} hours ago';
     } else if (diff < const Duration(days: 2)) {
