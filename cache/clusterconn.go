@@ -14,7 +14,6 @@ import (
 // Connection to redis cluster
 type ClusterConn struct {
 	clst  *cluster
-	conns map[string]redis.Conn
 }
 
 func (c *ClusterConn) GetString(key string) (val string, err error) {
@@ -25,11 +24,8 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 	for _, server := range c.clst.shrd.Select(key) {
 		wait.Add(1)
 		go func(server string) {
-			conn, ok := c.conns[server]
-			if !ok {
-				conn = c.clst.serverMap[server].Get()
-				c.conns[server] = conn
-			}
+			conn := c.clst.serverMap[server].Get()
+			defer conn.Close()
 
 			v, e := redis.String(conn.Do("GET", key))
 			if e != nil && e != redis.ErrNil {
@@ -66,11 +62,8 @@ func (c *ClusterConn) SetString(key string, val string,
 	for _, server := range c.clst.shrd.Select(key) {
 		wait.Add(1)
 		go func(server string) {
-			conn, ok := c.conns[server]
-			if !ok {
-				conn = c.clst.serverMap[server].Get()
-				c.conns[server] = conn
-			}
+			conn := c.clst.serverMap[server].Get()
+			defer conn.Close()
 
 			_, e := conn.Do("SETEX", key,
 				strconv.FormatInt(int64(ttl.Seconds()), 10), val)
@@ -125,11 +118,8 @@ func (c *ClusterConn) Publish(channel string, typ string, data interface{}) (
 	for _, server := range c.clst.shrd.Select(channel) {
 		wait.Add(1)
 		go func(server string) {
-			conn, ok := c.conns[server]
-			if !ok {
-				conn = c.clst.serverMap[server].Get()
-				c.conns[server] = conn
-			}
+			conn := c.clst.serverMap[server].Get()
+			defer conn.Close()
 
 			_, e := conn.Do("PUBLISH", channel, msgStr)
 			if e != nil {
@@ -150,12 +140,4 @@ func (c *ClusterConn) Publish(channel string, typ string, data interface{}) (
 		err = er
 	}
 	return
-}
-
-func (c *ClusterConn) Close() {
-	cns := c.conns
-	c.conns = map[string]redis.Conn{}
-	for _, conn := range cns {
-		conn.Close()
-	}
 }
