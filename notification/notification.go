@@ -161,7 +161,6 @@ func (p *Publisher) Remove(id string) (err error) {
 }
 
 func (p *Publisher) Close() {
-	p.conn.Close()
 }
 
 func NewPublisher(userIdHex string) (pub *Publisher) {
