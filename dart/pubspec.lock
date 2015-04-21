@@ -4,7 +4,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.24.5"
+    version: "0.24.6"
   angular:
     description:
       ref: null
@@ -39,7 +39,11 @@ packages:
   core_elements:
     description: core_elements
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1+2"
+  crypto:
+    description: crypto
+    source: hosted
+    version: "0.9.0"
   csslib:
     description: csslib
     source: hosted

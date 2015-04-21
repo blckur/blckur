@@ -10,6 +10,7 @@ dependencies:
   polymer: ">=0.16.1+4"
   core_elements: ">=0.7.0"
   paper_elements: ">=0.7.0"
+  crypto: ">=0.9.0"
 transformers:
 - blckur
 - angular
