@@ -98,7 +98,6 @@ func newPool(address string) (pool *redis.Pool) {
 func Get() (conn *ClusterConn) {
 	conn = &ClusterConn{
 		clst:  clst,
-		conns: map[string]redis.Conn{},
 	}
 	return
 }
