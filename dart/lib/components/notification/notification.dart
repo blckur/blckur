@@ -22,6 +22,86 @@ class NotificationComp {
   @NgOneWay('model')
   models.Notification model;
 
+  String get date {
+    var notf = DateTime.parse(this.model.timestamp);
+    var now = new DateTime.now();
+    var diff = now.difference(notf);
+
+    if (diff < const Duration(hours: 1)) {
+      return '${diff.inMinutes} minutes ago';
+    } else if (diff < const Duration(hours: 24)) {
+      return '${diff.inHours} hours ago';
+    } else if (diff < const Duration(days: 2)) {
+      return 'Yesterday';
+    } else if (diff < const Duration(days: 7)) {
+      switch (notf.weekday) {
+        case DateTime.MONDAY:
+          return 'Monday';
+          break;
+        case DateTime.TUESDAY:
+          return 'Tuesday';
+          break;
+        case DateTime.WEDNESDAY:
+          return 'Wednesday';
+          break;
+        case DateTime.THURSDAY:
+          return 'Thursday';
+          break;
+        case DateTime.FRIDAY:
+          return 'Friday';
+          break;
+        case DateTime.SATURDAY:
+          return 'Saturday';
+          break;
+        case DateTime.SUNDAY:
+          return 'Sunday';
+          break;
+      }
+    } else {
+      var month;
+
+      switch (notf.month) {
+        case DateTime.JANUARY:
+          month = 'Jan';
+          break;
+        case DateTime.FEBRUARY:
+          month = 'Feb';
+          break;
+        case DateTime.MARCH:
+          month = 'Mar';
+          break;
+        case DateTime.APRIL:
+          month = 'Apr';
+          break;
+        case DateTime.MAY:
+          month = 'May';
+          break;
+        case DateTime.JUNE:
+          month = 'Jun';
+          break;
+        case DateTime.JULY:
+          month = 'Jul';
+          break;
+        case DateTime.AUGUST:
+          month = 'Aug';
+          break;
+        case DateTime.SEPTEMBER:
+          month = 'Sep';
+          break;
+        case DateTime.OCTOBER:
+          month = 'Oct';
+          break;
+        case DateTime.NOVEMBER:
+          month = 'Nov';
+          break;
+        case DateTime.DECEMBER:
+          month = 'Dec';
+          break;
+      }
+      return '$month ${notf.day}';
+    }
+  }
+
   void toggleRead() {
     if (!this.loading.set()) {
       return;
