@@ -71,7 +71,6 @@ func StressPub() {
 				}
 			}
 
-			conn.Close()
 			wait.Done()
 		}(j)
 	}
