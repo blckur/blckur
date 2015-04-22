@@ -113,6 +113,7 @@ func RemAccount(db *database.Database, userId bson.ObjectId,
 	acctId bson.ObjectId) (err error) {
 
 	coll := db.Accounts()
+	streamsColl := db.Streams()
 
 	query := bson.M{
 		"_id": acctId,
@@ -120,6 +121,16 @@ func RemAccount(db *database.Database, userId bson.ObjectId,
 
 	if userId != "" {
 		query["user_id"] = userId
+	}
+
+	err = streamsColl.Remove(query)
+	if err != nil {
+		err = database.ParseError(err)
+		switch err.(type) {
+		case *database.NotFoundError:
+		default:
+			return
+		}
 	}
 
 	err = coll.Remove(query)
