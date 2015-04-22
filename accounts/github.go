@@ -231,7 +231,7 @@ func (g *GitHubClient) Sync(db *database.Database) (err error) {
 		db:   db,
 		acct: g.acct,
 	}
-	stream := stream.NewStream(db, g.acct.Id, backend)
+	stream := stream.NewStream(db, g.acct.Id, g.acct.UserId, backend)
 
 	err = stream.Start()
 	if err != nil {

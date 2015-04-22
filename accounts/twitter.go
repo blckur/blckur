@@ -140,7 +140,7 @@ func (t *TwitterClient) Sync(db *database.Database) (err error) {
 		db:   db,
 		acct: t.acct,
 	}
-	stream := stream.NewStream(db, t.acct.Id, backend)
+	stream := stream.NewStream(db, t.acct.Id, t.acct.UserId, backend)
 
 	err = stream.Start()
 	if err != nil {
