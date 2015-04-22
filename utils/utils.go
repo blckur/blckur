@@ -148,5 +148,9 @@ func GetVersion() (ver string) {
 
 	ver = strings.TrimSpace(string(output))
 
+	if len(ver) > 8 {
+		ver = ver[:8]
+	}
+
 	return
 }
