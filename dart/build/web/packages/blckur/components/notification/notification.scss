@@ -28,9 +28,16 @@ x-brand-logo {
 }
 
 .info {
-  z-index: 1;
   padding-left: 10px;
   padding-bottom: 12px;
+}
+
+.timestamp {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  font-size: 13px;
+  color: #8c8c8c;
 }
 
 .read {
@@ -38,7 +45,7 @@ x-brand-logo {
 }
 
 .buttons {
-  padding: 8px 2px 0 2px;
+  padding: 18px 2px 0 2px;
 }
 
 .buttons a {
