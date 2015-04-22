@@ -26,6 +26,3 @@ for name in os.listdir(base):
 
     with open(path, 'w') as dockerfile:
         dockerfile.write(file_data)
-
-    print file_data
-
