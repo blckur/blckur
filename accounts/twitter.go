@@ -6,6 +6,7 @@ import (
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/account"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/notification"
@@ -151,6 +152,7 @@ func (t *TwitterClient) Sync(db *database.Database) (err error) {
 }
 
 type twitterBackend struct {
+	stop   bool
 	db     *database.Database
 	stream *anaconda.Stream
 	acct   *account.Account
@@ -177,26 +179,40 @@ func (b *twitterBackend) newClient() (client *anaconda.TwitterApi) {
 }
 
 func (b *twitterBackend) Run() {
-	client := b.newClient()
+	for {
+		client := b.newClient()
 
-	streamVals := url.Values{}
-	streamVals.Add("with", "user")
-	streamVals.Add("replies", "all")
+		streamVals := url.Values{}
+		streamVals.Add("with", "user")
+		streamVals.Add("replies", "all")
 
-	s := client.UserStream(streamVals)
-	b.stream = &s
+		s := client.UserStream(streamVals)
+		b.stream = &s
 
-	for obj := range b.stream.C {
-		_, err := b.handle(obj)
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("account.twitter: Stream handle error")
+		for obj := range b.stream.C {
+			_, err := b.handle(obj)
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"id":    b.acct.Id,
+					"error": err,
+				}).Error("account.twitter: Stream handle error")
+			}
 		}
+
+		if b.stop {
+			return
+		}
+
+		logrus.WithFields(logrus.Fields{
+			"id": b.acct.Id,
+		}).Error("account.twitter: Unexpected stream end")
+
+		time.Sleep(constants.RetryDelay)
 	}
 }
 
 func (b *twitterBackend) Stop() {
+	b.stop = true
 	b.stream.Interrupt()
 	b.stream.End()
 }
