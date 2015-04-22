@@ -137,12 +137,18 @@ func Escape(s string) string {
 }
 
 func GetVersion() (ver string) {
-	pkgPath := path.Join(os.Getenv("GOPATH"), "src/github.com/blckur/blckur")
+	ver = "unknown"
+
+	goPath := os.Getenv("GOPATH")
+	if goPath == "" {
+		return
+	}
+
+	pkgPath := path.Join(goPath, "src/github.com/blckur/blckur")
 
 	output, err := exec.Command("git", "-C", pkgPath,
 		"rev-parse", "HEAD").Output()
 	if err != nil {
-		ver = "unknown"
 		return
 	}
 
