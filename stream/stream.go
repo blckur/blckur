@@ -17,6 +17,7 @@ type Backend interface {
 
 type Stream struct {
 	Id        bson.ObjectId `bson:"_id"`
+	UserId    bson.ObjectId `bson:"user_id"`
 	RunnerId  bson.ObjectId `bson:"runner_id"`
 	Timestamp time.Time     `bson:"timestamp"`
 	backend   Backend
@@ -136,12 +137,13 @@ func (s *Stream) initialize() (err error) {
 }
 
 func NewStream(db *database.Database, acctId bson.ObjectId,
-	backend Backend) (stream *Stream) {
+	userId bson.ObjectId, backend Backend) (stream *Stream) {
 
 	stream = &Stream{
 		backend: backend,
 		db:      db,
 		Id:      acctId,
+		UserId:  userId,
 	}
 
 	return
