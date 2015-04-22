@@ -54,12 +54,7 @@ func (w *WorkerNode) Start() {
 				}
 			}
 
-			err := job.Delete()
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("worker: Job delete error")
-			}
+			job.Delete()
 		}
 	})
 
