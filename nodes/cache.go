@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/node"
+	"github.com/blckur/blckur/utils"
 	"os/exec"
 	"strconv"
 	"time"
@@ -47,6 +48,7 @@ func (c *CacheNode) Start() {
 			"address":     c.Address,
 			"port":        c.Port,
 			"public_port": c.Port,
+			"version":     utils.GetVersion(),
 		}).Info("nodes.cache: Starting cache node")
 
 		cmd = exec.Command("redis-server", args...)

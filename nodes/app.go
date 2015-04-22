@@ -3,6 +3,7 @@ package nodes
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/handlers"
+	"github.com/blckur/blckur/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -37,6 +38,7 @@ func (a *AppNode) Start() {
 		"address":     a.Address,
 		"port":        a.Port,
 		"public_port": a.PublicPort,
+		"version":     utils.GetVersion(),
 	}).Info("nodes.app: Starting app node")
 
 	server.ListenAndServe()

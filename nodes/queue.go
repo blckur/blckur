@@ -7,6 +7,7 @@ import (
 	"github.com/blckur/blckur/logger"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/node"
+	"github.com/blckur/blckur/utils"
 	"os/exec"
 	"strconv"
 	"time"
@@ -44,6 +45,7 @@ func (q *QueueNode) Start() {
 			"address":     q.Address,
 			"port":        q.Port,
 			"public_port": q.Port,
+			"version":     utils.GetVersion(),
 		}).Info("nodes.queue: Starting queue node")
 
 		cmd = exec.Command("beanstalkd", args...)
