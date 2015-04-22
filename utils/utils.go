@@ -8,6 +8,9 @@ import (
 	"net"
 	"net/mail"
 	"os"
+	"os/exec"
+	"path"
+	"strings"
 )
 
 var (
@@ -131,4 +134,19 @@ func Escape(s string) string {
 		}
 	}
 	return string(t)
+}
+
+func GetVersion() (ver string) {
+	pkgPath := path.Join(os.Getenv("GOPATH"), "src/github.com/blckur/blckur")
+
+	output, err := exec.Command("git", "-C", pkgPath,
+		"rev-parse", "HEAD").Output()
+	if err != nil {
+		ver = "unknown"
+		return
+	}
+
+	ver = strings.TrimSpace(string(output))
+
+	return
 }
