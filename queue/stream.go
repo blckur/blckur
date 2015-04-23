@@ -15,6 +15,7 @@ type Stream struct {
 
 func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 	cacheConn := cache.Get()
+	start := time.Time{}
 
 	for {
 		if q.Stop {
@@ -24,9 +25,14 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 
 		conn, err := clst.conn(q.server)
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("queue.stream: Connection error")
+			if start.IsZero() {
+				start = time.Now()
+			} else if time.Since(start) > constants.ErrLogDelay {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("queue.stream: Connection error")
+			}
+
 			time.Sleep(constants.RetryDelay)
 			continue
 		}
@@ -37,9 +43,15 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 				err.Error() == "reserve-with-timeout: deadline soon" {
 				continue
 			}
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("queue.stream: Reserve error")
+
+			if start.IsZero() {
+				start = time.Now()
+			} else if time.Since(start) > constants.ErrLogDelay {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("queue.stream: Reserve error")
+			}
+
 			clst.close(q.server)
 			continue
 		}
@@ -47,9 +59,14 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 		job = &Job{}
 		err = json.Unmarshal(body, job)
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("queue.stream: Parse error")
+			if start.IsZero() {
+				start = time.Now()
+			} else if time.Since(start) > constants.ErrLogDelay {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("queue.stream: Parse error")
+			}
+
 			continue
 		}
 
@@ -59,11 +76,20 @@ func (q *Stream) Reserve(timeout time.Duration) (job *Job) {
 
 		val, err := cacheConn.GetString(job.Id.Hex())
 		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("queue.stream: Cache get error")
+			if start.IsZero() {
+				start = time.Now()
+			} else if time.Since(start) > constants.ErrLogDelay {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("queue.stream: Cache get error")
+			}
+
 			cacheConn = cache.Get()
 			continue
+		}
+
+		if !start.IsZero() {
+			start = time.Time{}
 		}
 
 		if val == "t" || time.Now().After(job.Timestamp.Add(job.Ttl)) {
