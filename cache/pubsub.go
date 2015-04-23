@@ -149,14 +149,12 @@ func (p *pubSubConn) Listen() {
 						return
 					}
 
-					logrus.WithFields(logrus.Fields{
-						"error": obj,
-					}).Error("cache.pubsub: Listen error")
-
 					break Loop
 				}
 			}
 		}
+
+		start := time.Now()
 
 		for {
 			if p.closed {
@@ -167,12 +165,17 @@ func (p *pubSubConn) Listen() {
 
 			conn, err := dialLong(p.address)
 			if err != nil {
-				err = &CacheError{
-					errors.Wrap(err, "cache.pubsub: Dial error"),
+				if time.Since(start) > constants.ErrLogDelay {
+					start = time.Now()
+
+					err = &CacheError{
+						errors.Wrap(err, "cache.pubsub: Dial error"),
+					}
+					logrus.WithFields(logrus.Fields{
+						"error": err,
+					}).Error("cache.pubsub: Dial error")
 				}
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("cache.pubsub: Dial error")
+
 				continue
 			}
 
