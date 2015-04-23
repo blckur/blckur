@@ -23,11 +23,6 @@ Copyright (c) 2015 Zachary Huff
 **use**     | beanstalkd server
 **docker**  | [![Docker Repository on Quay.io](https://quay.io/repository/blckur/queue/status "Docker Repository on Quay.io")](https://quay.io/repository/blckur/queue)
 
-**type**    | queue
------------ | -----------
-**use**     | beanstalkd server
-**docker**  | [![Docker Repository on Quay.io](https://quay.io/repository/blckur/queue/status "Docker Repository on Quay.io")](https://quay.io/repository/blckur/queue)
-
 **type**    | scheduler
 ----------- | -----------
 **use**     | schedule tasks in queue
