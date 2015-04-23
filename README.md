@@ -6,7 +6,7 @@ Copyright (c) 2015 Zachary Huff
 
 [![godoc](https://godoc.org/github.com/blckur/blckur?status.png)](https://godoc.org/github.com/blckur/blckur)
 
-## Node types
+## node types
 
 **type**    | app
 ----------- | -----------
@@ -33,7 +33,7 @@ Copyright (c) 2015 Zachary Huff
 **use**     | run tasks in queue
 **docker**  | [![Docker Repository on Quay.io](https://quay.io/repository/blckur/worker/status "Docker Repository on Quay.io")](https://quay.io/repository/blckur/worker)
 
-## Systems
+## systems
 
 ### cache
 
