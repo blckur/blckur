@@ -6,5 +6,6 @@ import (
 )
 
 const (
-	RetryDelay = 3 * time.Second
+	RetryDelay  = 3 * time.Second
+	ErrLogDelay = 3 * time.Minute
 )
