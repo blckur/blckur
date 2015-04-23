@@ -240,14 +240,7 @@ func newPubSubConn(address string) (psc *pubSubConn) {
 	}
 
 	conn, err := dialLong(address)
-	if err != nil {
-		err = &CacheError{
-			errors.Wrap(err, "cache.pubsub: Connection error"),
-		}
-		logrus.WithFields(logrus.Fields{
-			"error": err,
-		}).Error("cache.pubsub: Connection error")
-	} else {
+	if err == nil {
 		psc.conn = &redis.PubSubConn{
 			Conn: conn,
 		}
