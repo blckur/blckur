@@ -1,6 +1,6 @@
 [![blckur](media/logo.png)](https://github.com/blckur/blckur)
 
-# blckur: in development
+# blckur: simple notifications
 
 Copyright (c) 2015 Zachary Huff
 
