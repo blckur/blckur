@@ -75,6 +75,8 @@ func (p *pubSubConn) Unsubsribe(key string, id int) {
 }
 
 func (p *pubSubConn) parseQueue() {
+	start := time.Time{}
+
 	for {
 		if p.closed {
 			return
@@ -94,21 +96,35 @@ func (p *pubSubConn) parseQueue() {
 		if item.State {
 			err := conn.Subscribe(item.Key)
 			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("cache.pubsub: Subscribe error")
+				if start.IsZero() {
+					start = time.Now()
+				} else if time.Since(start) > constants.ErrLogDelay {
+					logrus.WithFields(logrus.Fields{
+						"error": err,
+					}).Error("cache.pubsub: Subscribe error")
+				}
+
 				time.Sleep(constants.RetryDelay)
 				continue
 			}
 		} else {
 			err := conn.Unsubscribe(item.Key)
 			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("cache.pubsub: Unsubscribe error")
+				if start.IsZero() {
+					start = time.Now()
+				} else if time.Since(start) > constants.ErrLogDelay {
+					logrus.WithFields(logrus.Fields{
+						"error": err,
+					}).Error("cache.pubsub: Unsubscribe error")
+				}
+
 				time.Sleep(constants.RetryDelay)
 				continue
 			}
+		}
+
+		if !start.IsZero() {
+			start = time.Time{}
 		}
 
 		p.mutex.Lock()
