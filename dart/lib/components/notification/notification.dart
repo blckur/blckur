@@ -6,6 +6,7 @@ import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' show Component, NgOneWay;
+import 'dart:math' as math;
 
 @Component(
   selector: 'x-notification',
@@ -28,7 +29,7 @@ class NotificationComp {
     var diff = now.difference(notf);
 
     if (diff < const Duration(hours: 1)) {
-      return '${diff.inMinutes} mins ago';
+      return '${math.max(1, diff.inMinutes)} mins ago';
     } else if (diff < const Duration(hours: 24)) {
       return '${diff.inHours} hours ago';
     } else if (diff < const Duration(days: 2)) {
