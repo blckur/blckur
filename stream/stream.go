@@ -3,6 +3,7 @@ package stream
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/settings"
 	"labix.org/v2/mgo"
@@ -72,7 +73,7 @@ func (s *Stream) Start() (err error) {
 				lastUpdate = time.Now()
 			}
 
-			if time.Since(lastUpdate) > 2*time.Minute {
+			if time.Since(lastUpdate) > constants.KeepAliveTimeout {
 				logrus.WithFields(logrus.Fields{
 					"account_id": s.Id.Hex(),
 					"runner_id":  s.RunnerId.Hex(),
