@@ -173,7 +173,7 @@ func (s *StripeClient) parse(evt *stripeEvent,
 	switch evt.Type {
 	case "charge.succeeded", "charge.failed", "charge.refunded":
 		title := strings.Split(evt.Type, ".")[1]
-		amount := evt.Data.Object.Amount / 100.
+		amount := float64(evt.Data.Object.Amount) / 100.
 		subject = fmt.Sprintf("Charge %s for $%.2f", title, amount)
 		link = fmt.Sprintf("https://dashboard.stripe.com/payments/%s",
 			evt.Data.Object.Id)
@@ -183,7 +183,7 @@ func (s *StripeClient) parse(evt *stripeEvent,
 
 	case "charge.dispute.created", "charge.dispute.closed":
 		title := strings.Split(evt.Type, ".")[2]
-		amount := evt.Data.Object.Amount / 100.
+		amount := float64(evt.Data.Object.Amount) / 100.
 		subject = fmt.Sprintf("Charge dispute %s for $%.2f", title, amount)
 		link = fmt.Sprintf("https://dashboard.stripe.com/payments/%s",
 			evt.Data.Object.Charge)
