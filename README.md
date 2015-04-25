@@ -1,4 +1,4 @@
-[![blckur](media/logo.png)](https://github.com/blckur/blckur)
+[![blckur](media/logo.png)](http://blckur.com)
 
 # blckur: simple notifications
 
