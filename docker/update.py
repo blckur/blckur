@@ -20,7 +20,7 @@ for name in os.listdir(base):
     file_data = open(path, 'r').read()
 
     file_data = re.sub(
-        'RUN go get github.com/blckur/blckur # [a-f0-9]',
+        'RUN go get github.com/blckur/blckur # ([a-f0-9]+)',
         'RUN go get github.com/blckur/blckur # %s' % commit,
         file_data)
 
