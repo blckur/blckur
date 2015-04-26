@@ -21,9 +21,35 @@ type QueueNode struct {
 	PublicPort int
 }
 
+func (q *QueueNode) ping() {
+	address := q.Address + ":" + strconv.Itoa(q.PublicPort)
+	db := database.GetDatabase()
+	defer db.Close()
+	coll := db.Nodes()
+
+	stat, err := coll.UpsertId(q.Id, &node.Node{
+		Id:        q.Id,
+		Type:      "queue",
+		Address:   address,
+		Timestamp: time.Now(),
+	})
+	if err != nil {
+		err = database.ParseError(err)
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("queue: Database upsert")
+		continue
+	}
+
+	time.Sleep(5 * time.Second)
+
+	if stat.Updated == 0 {
+		messenger.Publish(db, "queue", "update")
+	}
+}
+
 func (q *QueueNode) Start() {
 	port := strconv.Itoa(q.Port)
-	address := q.Address + ":" + strconv.Itoa(q.PublicPort)
 
 	args := []string{"-p", port}
 	if q.Host != "" {
@@ -56,9 +82,6 @@ func (q *QueueNode) Start() {
 			cmdErr = cmd.Run()
 		}()
 
-		db := database.GetDatabase()
-		coll := db.Nodes()
-
 		delay := false
 		for {
 			if delay {
@@ -74,25 +97,7 @@ func (q *QueueNode) Start() {
 				break
 			}
 
-			stat, err := coll.UpsertId(q.Id, &node.Node{
-				Id:        q.Id,
-				Type:      "queue",
-				Address:   address,
-				Timestamp: time.Now(),
-			})
-			if err != nil {
-				err = database.ParseError(err)
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("queue: Database upsert")
-				continue
-			}
-
-			time.Sleep(5 * time.Second)
-
-			if stat.Updated == 0 {
-				messenger.Publish(db, "queue", "update")
-			}
+			q.ping()
 		}
 	}
 }
