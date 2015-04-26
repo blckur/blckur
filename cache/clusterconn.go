@@ -124,6 +124,39 @@ func (c *ClusterConn) Exists(key string) (val bool, err error) {
 	return
 }
 
+func (c *ClusterConn) ExistsAll(key string) (val bool, err error) {
+	wait := utils.WaitCancel{}
+	val = true
+
+	for _, server := range c.clst.shrd.Select(key) {
+		wait.Add(1)
+		go func(server string) {
+			conn := c.clst.serverMap[server].Get()
+			defer conn.Close()
+
+			v, e := redis.Int(conn.Do("EXISTS", key))
+			if e != nil && e != redis.ErrNil {
+				val = false
+				err = &CacheError{
+					errors.Wrap(e, "cache.cluster: Exists error"),
+				}
+				wait.Done()
+				return
+			}
+
+			if v != 1 {
+				val = false
+			}
+
+			wait.Done()
+		}(server)
+	}
+
+	wait.Wait()
+
+	return
+}
+
 func (c *ClusterConn) Publish(channel string, typ string, data interface{}) (
 	err error) {
 
