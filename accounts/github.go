@@ -395,7 +395,8 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		repo := evt.Repo.Name
 
 		subject := fmt.Sprintf("Fork of %s created", repo)
-		body := fmt.Sprintf("Repository %s was forked to %s.", repo, forkName)
+		body := fmt.Sprintf("Repository %s was forked to %s.",
+			repo, forkName)
 
 		if !g.filter(typ, repo) {
 			return
