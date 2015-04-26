@@ -93,12 +93,14 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		timestamp := time.Unix(int64(data.Time), 0)
 
 		dataStore := struct {
+			Id    int       `json:"id"`
 			Title string    `json:"title"`
 			By    string    `json:"by"`
 			Time  time.Time `json:"time"`
 			Text  string    `json:"text"`
 			Url   string    `json:"url"`
 		}{
+			Id:    data.Id,
 			Title: data.Title,
 			By:    data.By,
 			Time:  timestamp,
