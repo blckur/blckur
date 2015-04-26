@@ -81,6 +81,7 @@ func (c *CacheNode) Start() {
 		go func() {
 			cmdErr = cmd.Run()
 		}()
+		defer cmd.Process.Kill()
 		time.Sleep(5 * time.Second)
 
 		delay := false
