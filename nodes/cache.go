@@ -21,9 +21,34 @@ type CacheNode struct {
 	PublicPort int
 }
 
-func (c *CacheNode) Start() {
+func (c *CacheNode) ping() {
 	address := c.Address + ":" + strconv.Itoa(c.PublicPort)
+	db := database.GetDatabase()
+	defer db.Close()
+	coll := db.Nodes()
 
+	stat, err := coll.UpsertId(c.Id, &node.Node{
+		Id:        c.Id,
+		Type:      "cache",
+		Address:   address,
+		Timestamp: time.Now(),
+	})
+	if err != nil {
+		err = database.ParseError(err)
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("cache: Database upsert")
+		continue
+	}
+
+	time.Sleep(5 * time.Second)
+
+	if stat.Updated == 0 {
+		messenger.Publish(db, "cache", "update")
+	}
+}
+
+func (c *CacheNode) Start() {
 	args := []string{
 		"--save", "",
 		"--port", strconv.Itoa(c.Port),
@@ -59,9 +84,6 @@ func (c *CacheNode) Start() {
 			cmdErr = cmd.Run()
 		}()
 
-		db := database.GetDatabase()
-		coll := db.Nodes()
-
 		delay := false
 		for {
 			if delay {
@@ -77,25 +99,7 @@ func (c *CacheNode) Start() {
 				break
 			}
 
-			stat, err := coll.UpsertId(c.Id, &node.Node{
-				Id:        c.Id,
-				Type:      "cache",
-				Address:   address,
-				Timestamp: time.Now(),
-			})
-			if err != nil {
-				err = database.ParseError(err)
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("cache: Database upsert")
-				continue
-			}
-
-			time.Sleep(5 * time.Second)
-
-			if stat.Updated == 0 {
-				messenger.Publish(db, "cache", "update")
-			}
+			c.ping()
 		}
 	}
 }
