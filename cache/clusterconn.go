@@ -13,7 +13,7 @@ import (
 
 // Connection to redis cluster
 type ClusterConn struct {
-	clst  *cluster
+	clst *cluster
 }
 
 func (c *ClusterConn) GetString(key string) (val string, err error) {
@@ -55,6 +55,7 @@ func (c *ClusterConn) GetString(key string) (val string, err error) {
 
 func (c *ClusterConn) SetString(key string, val string,
 	ttl time.Duration) (err error) {
+
 	wait := utils.WaitCancel{}
 	success := false
 	var er error
@@ -88,7 +89,8 @@ func (c *ClusterConn) SetString(key string, val string,
 }
 
 func (c *ClusterConn) Publish(channel string, typ string, data interface{}) (
-		err error) {
+	err error) {
+
 	wait := utils.WaitCancel{}
 	success := false
 	var er error
