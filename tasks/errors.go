@@ -7,3 +7,7 @@ import (
 type ApiError struct {
 	errors.DropboxError
 }
+
+type ParseError struct {
+	errors.DropboxError
+}
