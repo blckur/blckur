@@ -128,9 +128,19 @@ func RemNotification(db *database.Database, userId bson.ObjectId,
 
 	coll := db.Notifications()
 
-	err = coll.Remove(bson.M{
+	err = coll.Update(bson.M{
 		"_id":     notfId,
 		"user_id": userId,
+	}, bson.M{
+		"$unset": bson.M{
+			"read": "",
+			"type": "",
+			"resource": "",
+			"origin": "",
+			"link": "",
+			"subject": "",
+			"body": "",
+		},
 	})
 	if err != nil {
 		err = database.ParseError(err)
