@@ -41,8 +41,6 @@ func (q *QueueNode) ping() {
 		continue
 	}
 
-	time.Sleep(5 * time.Second)
-
 	if stat.Updated == 0 {
 		messenger.Publish(db, "queue", "update")
 	}
@@ -81,6 +79,7 @@ func (q *QueueNode) Start() {
 		go func() {
 			cmdErr = cmd.Run()
 		}()
+		time.Sleep(5 * time.Second)
 
 		delay := false
 		for {

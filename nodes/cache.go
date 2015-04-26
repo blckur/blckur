@@ -41,8 +41,6 @@ func (c *CacheNode) ping() {
 		continue
 	}
 
-	time.Sleep(5 * time.Second)
-
 	if stat.Updated == 0 {
 		messenger.Publish(db, "cache", "update")
 	}
@@ -83,6 +81,7 @@ func (c *CacheNode) Start() {
 		go func() {
 			cmdErr = cmd.Run()
 		}()
+		time.Sleep(5 * time.Second)
 
 		delay := false
 		for {
