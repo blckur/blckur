@@ -29,8 +29,8 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		err = &ApiError{
-			errors.Wrap(err, "Hacker News parse error"),
+		err = &ParseError{
+			errors.Wrap(err, "Hacker News io error"),
 		}
 		return
 	}
@@ -62,8 +62,8 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 		body, e = ioutil.ReadAll(resp.Body)
 		if e != nil {
-			err = &ApiError{
-				errors.Wrap(e, "Hacker News parse error"),
+			err = &ParseError{
+				errors.Wrap(e, "Hacker News io error"),
 			}
 			return
 		}
@@ -80,7 +80,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 		err = json.Unmarshal(body, &data)
 		if err != nil {
-			err = &ApiError{
+			err = &ParseError{
 				errors.Wrap(err, "Hacker News json error"),
 			}
 			return
@@ -106,7 +106,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 		dataByt, e := json.Marshal(dataStore)
 		if e != nil {
-			err = &ApiError{
+			err = &ParseError{
 				errors.Wrap(e, "Hacker News json error"),
 			}
 			return
@@ -124,8 +124,8 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 	dataByt, err := json.Marshal(stories[:30])
 	if err != nil {
-		err = &ApiError{
-			errors.Wrap(err, "Hacker News parse error"),
+		err = &ParseError{
+			errors.Wrap(err, "Hacker News json error"),
 		}
 		return
 	}
