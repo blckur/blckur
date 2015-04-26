@@ -46,5 +46,7 @@ func Register(name string, label string, typ int, auth interface{},
 	FilterTypes[name] = types
 	filterLabels[name] = labels
 
-	handlers = append(handlers, handler)
+	if handler != nil {
+		handlers = append(handlers, handler)
+	}
 }
