@@ -68,14 +68,12 @@ func Run() {
 		curTime := time.Now()
 		curTime = curTime.Add(-time.Duration(
 			curTime.Nanosecond()) * time.Nanosecond)
-		curTime = curTime.Add(-time.Duration(
-			curTime.Second()) * time.Second)
 
 		if curTime != lastCheck {
 			lastCheck = curTime
 			go runTasks(curTime)
 		}
 
-		time.Sleep(1 * time.Second)
+		time.Sleep(500 * time.Millisecond)
 	}
 }
