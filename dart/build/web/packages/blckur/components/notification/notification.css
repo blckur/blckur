@@ -1,6 +1,7 @@
 :host {
   position: relative;
-  display: block; }
+  display: block;
+  min-height: 95px; }
 
 x-brand-logo,
 .info {
@@ -18,7 +19,7 @@ x-brand-logo {
 
 .title {
   font-size: 18px;
-  margin: 15px 0 10px 0; }
+  margin: 17px 0 10px 0; }
 
 .info {
   padding-left: 10px;
@@ -26,7 +27,7 @@ x-brand-logo {
 
 .timestamp {
   position: absolute;
-  top: 7px;
+  top: 6px;
   right: 7px;
   font-size: 13px;
   color: #8c8c8c; }
