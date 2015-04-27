@@ -339,17 +339,19 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 
 	notf.RemoteId = hashEvent(b.acct.Id.Hex(), notf.Timestamp)
 
-	err = notf.Initialize(b.db)
+	newNotf, err := notf.Initialize(b.db)
 	if err != nil {
 		return
 	}
 
-	pub := notification.NewPublisher(b.acct.UserId.Hex())
-	defer pub.Close()
+	if newNotf {
+		pub := notification.NewPublisher(b.acct.UserId.Hex())
+		defer pub.Close()
 
-	err = pub.New(notf)
-	if err != nil {
-		return
+		err = pub.New(notf)
+		if err != nil {
+			return
+		}
 	}
 
 	return

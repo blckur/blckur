@@ -596,14 +596,12 @@ func (g *gitHubBackend) sync() {
 		}
 
 		if notf != nil {
-			err := notf.Initialize(g.db)
+			newNotf, err := notf.Initialize(g.db)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
 				}).Error("account.github: Failed to parse event")
-			}
-
-			if notf.Type != "" {
+			} else if newNotf && notf.Type != "" {
 				err = pub.New(notf)
 				if err != nil {
 					return

@@ -146,19 +146,19 @@ func (b *hackerNewsBackend) Run() {
 			}
 
 			if notf != nil {
-				err := notf.Initialize(b.db)
+				newNotf, err := notf.Initialize(b.db)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"error": err,
 					}).Error("account.hackernews: Failed to parse event")
-				}
+				} else if newNotf {
+					pub := notification.NewPublisher(b.acct.UserId.Hex())
+					defer pub.Close()
 
-				pub := notification.NewPublisher(b.acct.UserId.Hex())
-				defer pub.Close()
-
-				err = pub.New(notf)
-				if err != nil {
-					return
+					err = pub.New(notf)
+					if err != nil {
+						return
+					}
 				}
 			}
 		}()

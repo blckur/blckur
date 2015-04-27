@@ -303,12 +303,13 @@ Loop:
 	for i := len(notfs) - 1; i >= 0; i-- {
 		notf := notfs[i]
 
-		err = notf.Initialize(db)
-		if err != nil {
+		newNotf, e := notf.Initialize(db)
+		if e != nil {
+			err = e
 			return
 		}
 
-		if notf.Type != "" {
+		if newNotf && notf.Type != "" {
 			err = pub.New(notf)
 			if err != nil {
 				return
