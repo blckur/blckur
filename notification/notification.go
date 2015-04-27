@@ -26,11 +26,13 @@ type Notification struct {
 	Body        string        `bson:"body,omitempty" json:"body"`
 }
 
-func (n *Notification) Initialize(db *database.Database) (err error) {
+func (n *Notification) Initialize(db *database.Database) (
+	newNotf bool, err error) {
+
 	coll := db.Notifications()
 	notf := &Notification{}
 
-	_, err = coll.Find(bson.M{
+	info, err := coll.Find(bson.M{
 		"user_id":    n.UserId,
 		"account_id": n.AccountId,
 		"remote_id":  n.RemoteId,
@@ -46,6 +48,7 @@ func (n *Notification) Initialize(db *database.Database) (err error) {
 		return
 	}
 
+	newNotf = info.Updated == 0
 	n.Id = notf.Id
 
 	return
