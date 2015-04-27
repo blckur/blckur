@@ -59,6 +59,13 @@ func initSender() {
 				continue
 			}
 
+			err := rollbarSend(entry)
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("logger: Rollbar error")
+			}
+
 			if conn != nil {
 				err := paperTrailSend(conn, entry)
 				if err != nil {
