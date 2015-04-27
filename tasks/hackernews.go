@@ -40,9 +40,13 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 	stories := []int{}
 	json.Unmarshal(body, &stories)
 
+	if len(stories) > 10 {
+		stories = stories[:10]
+	}
+
 	conn := cache.Get()
 
-	for _, storyId := range stories[:30] {
+	for _, storyId := range stories {
 		exists, e := conn.ExistsAll(fmt.Sprintf("story-%d", storyId))
 		if e != nil {
 			err = e
@@ -146,7 +150,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		time.Sleep(1 * time.Second)
 	}
 
-	dataByt, err := json.Marshal(stories[:30])
+	dataByt, err := json.Marshal(stories)
 	if err != nil {
 		err = &ParseError{
 			errors.Wrap(err, "Hacker News json error"),
