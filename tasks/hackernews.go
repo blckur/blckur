@@ -8,6 +8,7 @@ import (
 	"github.com/dropbox/godropbox/errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -92,20 +93,30 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 		timestamp := time.Unix(int64(data.Time), 0)
 
+		url, e := url.Parse(data.Url)
+		if e != nil {
+			err = &ParseError{
+				errors.Wrap(e, "Hacker News url error"),
+			}
+			return
+		}
+
 		dataStore := struct {
-			Id    int       `json:"id"`
-			Title string    `json:"title"`
-			By    string    `json:"by"`
-			Time  time.Time `json:"time"`
-			Text  string    `json:"text"`
-			Url   string    `json:"url"`
+			Id     int       `json:"id"`
+			Title  string    `json:"title"`
+			By     string    `json:"by"`
+			Time   time.Time `json:"time"`
+			Text   string    `json:"text"`
+			Url    string    `json:"url"`
+			Domain string    `json:"domain"`
 		}{
-			Id:    data.Id,
-			Title: data.Title,
-			By:    data.By,
-			Time:  timestamp,
-			Text:  data.Text,
-			Url:   data.Url,
+			Id:     data.Id,
+			Title:  data.Title,
+			By:     data.By,
+			Time:   timestamp,
+			Text:   data.Text,
+			Url:    data.Url,
+			Domain: url.Host,
 		}
 
 		dataByt, e := json.Marshal(dataStore)
