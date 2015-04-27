@@ -46,6 +46,8 @@ func (q *QueueNode) ping() {
 }
 
 func (q *QueueNode) Start() {
+	constants.Node = "queue"
+
 	port := strconv.Itoa(q.Port)
 
 	args := []string{"-p", port}

@@ -33,6 +33,8 @@ func (w *WorkerNode) sync(db *database.Database, job *queue.Job) (err error) {
 }
 
 func (w *WorkerNode) Start() {
+	constants.Node = "worker"
+
 	logrus.WithFields(logrus.Fields{
 		"id":      w.Id,
 		"version": constants.Version,

@@ -20,6 +20,8 @@ type AppNode struct {
 }
 
 func (a *AppNode) Start() {
+	constants.Node = "app"
+
 	port := strconv.Itoa(a.Port)
 
 	router := gin.Default()

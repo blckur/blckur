@@ -11,6 +11,8 @@ type SchedulerNode struct {
 }
 
 func (w *SchedulerNode) Start() {
+	constants.Node = "scheduler"
+
 	logrus.WithFields(logrus.Fields{
 		"id":      w.Id,
 		"version": constants.Version,

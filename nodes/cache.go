@@ -46,6 +46,8 @@ func (c *CacheNode) ping() {
 }
 
 func (c *CacheNode) Start() {
+	constants.Node = "cache"
+
 	args := []string{
 		"--save", "",
 		"--port", strconv.Itoa(c.Port),
