@@ -17,6 +17,8 @@ const (
 
 var (
 	Version string
+	Node    string
+	Host    string
 )
 
 func init() {
