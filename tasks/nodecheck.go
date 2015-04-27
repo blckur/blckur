@@ -50,5 +50,5 @@ func (n *nodeCheck) Run(db *database.Database) (err error) {
 }
 
 func init() {
-	register(-1, -1, &nodeCheck{})
+	register(-1, -1, 0, &nodeCheck{})
 }

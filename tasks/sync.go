@@ -41,5 +41,5 @@ func (s *sync) Run(db *database.Database) (err error) {
 }
 
 func init() {
-	register(-1, -1, &sync{})
+	register(-1, -1, 30, &sync{})
 }
