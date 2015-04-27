@@ -90,12 +90,11 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (
 		return
 	}
 
-	var subject string
+	var body string
 	if story.Domain == "" {
-		subject = fmt.Sprintf("New story by %s", story.By)
+		body = fmt.Sprintf("New story by %s", story.By)
 	} else {
-		subject = fmt.Sprintf("New story on %s by %s", story.Domain,
-			story.By)
+		body = fmt.Sprintf("New story on %s by %s", story.Domain, story.By)
 	}
 
 	notf = &notification.Notification{
@@ -107,8 +106,8 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (
 		Type:        "story",
 		Origin:      story.By,
 		Link:        story.Url,
-		Subject:     subject,
-		Body:        story.Title,
+		Subject:     story.Title,
+		Body:        body,
 	}
 
 	return
