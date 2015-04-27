@@ -94,7 +94,8 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (
 	if story.Domain == "" {
 		subject = fmt.Sprintf("New story by %s", story.By)
 	} else {
-		subject = fmt.Sprintf("New story on %s by %s", story.Domain, story.By)
+		subject = fmt.Sprintf("New story on %s by %s", story.Domain,
+			story.By)
 	}
 
 	notf = &notification.Notification{
