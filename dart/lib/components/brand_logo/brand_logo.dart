@@ -10,6 +10,7 @@ var icons = {
   'digitalocean': '/s/img/digitalocean.png',
   'github': '/s/img/github.png',
   'gmail': '/s/img/gmail.png',
+  'hackernews': '/s/img/hackernews.png',
   'hipchat': '/s/img/hipchat.png',
   'stripe': '/s/img/stripe.png',
   'twitter': '/s/img/twitter.png',
