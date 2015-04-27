@@ -98,8 +98,12 @@ func initSender() {
 		for {
 			entry := <-buffer
 
+			if entry.Message[:6] == "logger" {
+				continue
+			}
+
 			if conn != nil {
-				err = paperTrailSend(conn, entry)
+				err := paperTrailSend(conn, entry)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"error": err,
