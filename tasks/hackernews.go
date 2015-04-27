@@ -106,7 +106,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			return
 		}
 
-		storyUrl := fmt.Sprintf("https://news.ycombinator.com/item?id=",
+		storyUrl := fmt.Sprintf("https://news.ycombinator.com/item?id=%d",
 			data.Id)
 
 		dataStore := struct {
