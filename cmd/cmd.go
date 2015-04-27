@@ -3,6 +3,7 @@ package cmd
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/utils"
 	"math/rand"
 	"os"
@@ -75,6 +76,8 @@ func getServiceOptions() (opts *serviceOptions) {
 	if id == "" {
 		id = utils.RandName()
 	}
+
+	constants.Host = id
 
 	host := os.Getenv("HOST")
 	address := getAddress()
