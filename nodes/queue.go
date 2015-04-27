@@ -38,7 +38,7 @@ func (q *QueueNode) ping() {
 		logrus.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("queue: Database upsert")
-		continue
+		return
 	}
 
 	if stat.Updated == 0 {

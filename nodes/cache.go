@@ -38,7 +38,7 @@ func (c *CacheNode) ping() {
 		logrus.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("cache: Database upsert")
-		continue
+		return
 	}
 
 	if stat.Updated == 0 {
