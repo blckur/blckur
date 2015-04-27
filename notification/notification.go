@@ -139,13 +139,13 @@ func RemNotification(db *database.Database, userId bson.ObjectId,
 		"user_id": userId,
 	}, bson.M{
 		"$unset": bson.M{
-			"read": "",
-			"type": "",
+			"read":     "",
+			"type":     "",
 			"resource": "",
-			"origin": "",
-			"link": "",
-			"subject": "",
-			"body": "",
+			"origin":   "",
+			"link":     "",
+			"subject":  "",
+			"body":     "",
 		},
 	})
 	if err != nil {
