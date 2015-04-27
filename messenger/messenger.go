@@ -74,6 +74,7 @@ func getCursorId(coll *database.Collection, channels []string) (
 
 func Publish(db *database.Database, channel string, data interface{}) (
 	err error) {
+
 	coll := db.Messages()
 
 	msg := &Message{
