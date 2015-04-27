@@ -3,9 +3,9 @@ package nodes
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/account"
+	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/queue"
-	"github.com/blckur/blckur/utils"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func (w *WorkerNode) sync(db *database.Database, job *queue.Job) (err error) {
 func (w *WorkerNode) Start() {
 	logrus.WithFields(logrus.Fields{
 		"id":      w.Id,
-		"version": utils.GetVersion(),
+		"version": constants.Version,
 	}).Info("nodes.worker: Starting worker node")
 
 	db := database.GetDatabase()
