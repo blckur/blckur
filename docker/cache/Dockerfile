@@ -6,6 +6,6 @@ RUN pacman -S --noconfirm go git bzr redis
 ENV GOPATH /go
 ENV PATH $PATH:/go/bin
 
-RUN go get github.com/blckur/blckur # 0e5366fac26b4d7513a39a9def06c259f66c8f3d
+RUN go get github.com/blckur/blckur # 8a355d9d4731eeddfb06dffaeb811edf61ec23ac
 
 CMD ["blckur", "cache"]
