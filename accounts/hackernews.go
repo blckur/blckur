@@ -21,10 +21,6 @@ const (
 	hackerNews = "hackernews"
 )
 
-var (
-	hackerNewsConf *oauth.Oauth2
-)
-
 func init() {
 	account.Register(hackerNews, "Hacker News", Oauth2,
 		HackerNewsAuth{}, HackerNewsClient{},
