@@ -163,5 +163,6 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 }
 
 func init() {
-	register(-1, -1, &hackerNews{})
+	registerMulti([]int{-1}, []int{-1}, []int{
+		3, 13, 23, 33, 43, 53}, &hackerNews{})
 }
