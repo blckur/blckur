@@ -39,7 +39,14 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 	}
 
 	stories := []int{}
-	json.Unmarshal(body, &stories)
+
+	err = json.Unmarshal(body, &stories)
+	if err != nil {
+		err = &ParseError{
+			errors.Wrap(err, "Hacker News json error"),
+		}
+		return
+	}
 
 	if len(stories) > 10 {
 		stories = stories[:10]
