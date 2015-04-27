@@ -9,8 +9,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"time"
 	"strings"
+	"time"
 )
 
 type hackerNews struct {
@@ -102,6 +102,9 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			return
 		}
 
+		storyUrl := fmt.Sprintf("https://news.ycombinator.com/item?id=",
+			data.Id)
+
 		dataStore := struct {
 			Id     int       `json:"id"`
 			Title  string    `json:"title"`
@@ -116,7 +119,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			By:     data.By,
 			Time:   timestamp,
 			Text:   data.Text,
-			Url:    data.Url,
+			Url:    storyUrl,
 			Domain: strings.Replace(url.Host, "www.", "", 1),
 		}
 
