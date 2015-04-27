@@ -70,7 +70,7 @@ func paperTrailConn() (conn net.Conn) {
 	return
 }
 
-func sendEntry(conn net.Conn, entry *logrus.Entry) (err error) {
+func paperTrailSend(conn net.Conn, entry *logrus.Entry) (err error) {
 	msg, err := entry.String()
 	if err != nil {
 		return
@@ -90,16 +90,22 @@ func initSender() {
 	var conn net.Conn
 
 	go func() {
-		conn = paperTrailConn()
+		go func() {
+			conn = paperTrailConn()
+		}()
+		time.Sleep(2 * time.Second)
 
 		for {
 			entry := <-buffer
-			err := sendEntry(conn, entry)
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("logger: Send entry")
-				conn = paperTrailConn()
+
+			if conn != nil {
+				err = paperTrailSend(conn, entry)
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"error": err,
+					}).Error("logger: Papertrail error")
+					conn = paperTrailConn()
+				}
 			}
 		}
 	}()
