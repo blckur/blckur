@@ -27,6 +27,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		err = &ApiError{
 			errors.Wrap(err, "Hacker News api error"),
 		}
+		return
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
