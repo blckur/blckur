@@ -8,7 +8,6 @@ import (
 	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/notification"
-	"github.com/blckur/blckur/oauth"
 	"github.com/blckur/blckur/settings"
 	"github.com/blckur/blckur/stream"
 	"github.com/dropbox/godropbox/errors"
