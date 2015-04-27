@@ -9,9 +9,9 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/settings"
+	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
 	"net/http"
-	"github.com/dropbox/godropbox/errors"
 )
 
 type rollbarMessage struct {
@@ -48,6 +48,12 @@ type rollbarItem struct {
 }
 
 func rollbarSend(entry *logrus.Entry) (err error) {
+	token := settings.Rollbar.Token
+
+	if token == "" {
+		return
+	}
+
 	msg := entry.Message
 
 	var error string
@@ -71,7 +77,7 @@ func rollbarSend(entry *logrus.Entry) (err error) {
 	hash := hex.EncodeToString(hashByt[:])
 
 	payload := rollbarItem{
-		AccessToken: settings.Rollbar.Token,
+		AccessToken: token,
 		Data: &rollbarData{
 			Environment: settings.Rollbar.Environment,
 			Level:       entry.Level.String(),
