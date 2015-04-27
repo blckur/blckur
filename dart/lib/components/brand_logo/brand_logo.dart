@@ -64,11 +64,12 @@ class BrandLogoComp extends all_aware.AllAware {
 
   void _updateSize() {
     if (this.imgElem != null) {
-      this.imgElem.style.maxWidth = this.size == null ? '80px' : this.size;
-      this.imgElem.style.maxHeight = this.size == null ? '58px' : this.size;
-      this.imgElem.style.width = 'auto';
-      this.imgElem.style.height = 'auto';
-      this.imgElem.style.margin = '0 auto';
+      this.imgElem.style
+        ..maxWidth = this.size == null ? '80px' : this.size
+        ..maxHeight = this.size == null ? '58px' : this.size
+        ..width = 'auto'
+        ..height = 'auto'
+        ..margin = '0 auto';
     }
   }
 
