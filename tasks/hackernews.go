@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"strings"
 )
 
 type hackerNews struct {
@@ -116,7 +117,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			Time:   timestamp,
 			Text:   data.Text,
 			Url:    data.Url,
-			Domain: url.Host,
+			Domain: strings.Replace(url.Host, "www.", "", 1),
 		}
 
 		dataByt, e := json.Marshal(dataStore)
