@@ -30,15 +30,21 @@ func (n *Notification) Initialize(db *database.Database) (err error) {
 	coll := db.Notifications()
 	notf := &Notification{}
 
-	coll.Find(bson.M{
+	_, err = coll.Find(bson.M{
 		"user_id":    n.UserId,
 		"account_id": n.AccountId,
 		"remote_id":  n.RemoteId,
 	}).Apply(mgo.Change{
-		Update:    n,
+		Update: bson.M{
+			"$setOnInsert": n,
+		},
 		Upsert:    true,
 		ReturnNew: true,
 	}, notf)
+	if err != nil {
+		err = database.ParseError(err)
+		return
+	}
 
 	n.Id = notf.Id
 
