@@ -138,6 +138,11 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			return
 		}
 
+		err = conn.Publish("hacker_news", "story", string(dataByt))
+		if err != nil {
+			return
+		}
+
 		time.Sleep(1 * time.Second)
 	}
 
