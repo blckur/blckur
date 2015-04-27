@@ -9,6 +9,7 @@ func init() {
 }
 
 type rollbar struct {
-	Id    string `bson:"_id"`
-	Token string `bson:"token"`
+	Id          string `bson:"_id"`
+	Token       string `bson:"token"`
+	Environment string `bson:"environment" default:"development"`
 }
