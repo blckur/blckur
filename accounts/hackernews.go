@@ -74,9 +74,7 @@ type hackerNewsStory struct {
 	Domain string    `json:"domain"`
 }
 
-func (b *hackerNewsBackend) parse(story *hackerNewsStory) (
-	notf *notification.Notification, err error) {
-
+func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 	match := false
 
 	for _, filter := range b.acct.Filters {
@@ -97,7 +95,7 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (
 		body = fmt.Sprintf("New story on %s by %s", story.Domain, story.By)
 	}
 
-	notf = &notification.Notification{
+	notf := &notification.Notification{
 		UserId:      b.acct.UserId,
 		AccountId:   b.acct.Id,
 		AccountType: hackerNews,
@@ -110,6 +108,63 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (
 		Body:        body,
 	}
 
+	newNotf, err := notf.Initialize(b.db)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("account.hackernews: Failed to parse event")
+	} else if newNotf {
+		pub := notification.NewPublisher(b.acct.UserId.Hex())
+		defer pub.Close()
+
+		err = pub.New(notf)
+		if err != nil {
+			return
+		}
+	}
+
+	return
+}
+
+func (b *hackerNewsBackend) backlog() (err error) {
+	conn := cache.Get()
+
+	storyIdsStr, err := conn.GetString("new_stories")
+	if err != nil {
+		return
+	}
+
+	storyIds := []int{}
+
+	err = json.Unmarshal([]byte(storyIdsStr), &storyIds)
+	if err != nil {
+		err = &ParseError{
+			errors.Wrap(err, "Hacker News backlog parse error"),
+		}
+		return
+	}
+
+	for _, storyId := range storyIds {
+		storyStr, e := conn.GetString(fmt.Sprintf("story-%d", storyId))
+		if e != nil {
+			err = e
+			return
+		}
+
+		story := &hackerNewsStory{}
+
+		e = json.Unmarshal([]byte(storyStr), story)
+		if e != nil {
+			err = e
+			return
+		}
+
+		err = b.parse(story)
+		if err != nil {
+			return
+		}
+	}
+
 	return
 }
 
@@ -118,6 +173,15 @@ func (b *hackerNewsBackend) Run() {
 	defer lst.Close()
 
 	sub := lst.Listen()
+
+	go func() {
+		err := b.backlog()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("accounts.hackernews: Unknown backlog error")
+		}
+	}()
 
 	for msg := range sub {
 		if msg == nil {
@@ -137,28 +201,11 @@ func (b *hackerNewsBackend) Run() {
 				}).Error("accounts.hackernews: Unknown error")
 			}
 
-			notf, err := b.parse(story)
+			err = b.parse(story)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"error": err,
 				}).Error("accounts.hackernews: Unknown parse error")
-			}
-
-			if notf != nil {
-				newNotf, err := notf.Initialize(b.db)
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error": err,
-					}).Error("account.hackernews: Failed to parse event")
-				} else if newNotf {
-					pub := notification.NewPublisher(b.acct.UserId.Hex())
-					defer pub.Close()
-
-					err = pub.New(notf)
-					if err != nil {
-						return
-					}
-				}
 			}
 		}()
 	}
