@@ -5,15 +5,39 @@ import 'package:blckur/all_aware.dart' as all_aware;
 import 'package:angular/angular.dart' show Component, NgAttr;
 import 'dart:html' as dom;
 
+const WIDE = 0;
+const NARROW = 1;
+
 // Used for static hash versioning search and replace
 var icons = {
-  'digitalocean': '/s/img/digitalocean.png',
-  'github': '/s/img/github.png',
-  'gmail': '/s/img/gmail.png',
-  'hackernews': '/s/img/hackernews.png',
-  'hipchat': '/s/img/hipchat.png',
-  'stripe': '/s/img/stripe.png',
-  'twitter': '/s/img/twitter.png',
+  'digitalocean': {
+    'url': '/s/img/digitalocean.png',
+    'style': WIDE,
+  },
+  'github': {
+    'url': '/s/img/github.png',
+    'style': WIDE,
+   },
+  'gmail': {
+    'url': '/s/img/gmail.png',
+    'style': WIDE,
+   },
+  'hackernews': {
+    'url': '/s/img/hackernews.png',
+    'style': NARROW,
+   },
+  'hipchat': {
+    'url': '/s/img/hipchat.png',
+    'style': WIDE,
+   },
+  'stripe': {
+    'url': '/s/img/stripe.png',
+    'style': WIDE,
+   },
+  'twitter': {
+    'url': '/s/img/twitter.png',
+    'style': WIDE,
+   },
 };
 
 @Component(
@@ -32,6 +56,7 @@ class BrandLogoComp extends all_aware.AllAware {
     if (val != this._icon) {
       this._icon = val;
       this._updateIcon();
+      this._updateSize();
     }
   }
 
@@ -54,7 +79,7 @@ class BrandLogoComp extends all_aware.AllAware {
       icon = "";
     }
 
-    return icon;
+    return icon['url'];
   }
 
   void _updateIcon() {
@@ -64,13 +89,23 @@ class BrandLogoComp extends all_aware.AllAware {
   }
 
   void _updateSize() {
+    var icon = icons[this.icon];
+
     if (this.imgElem != null) {
       this.imgElem.style
         ..maxWidth = this.size == null ? '80px' : this.size
         ..maxHeight = this.size == null ? '58px' : this.size
-        ..width = 'auto'
-        ..height = 'auto'
         ..margin = '0 auto';
+
+      if (icon != null && icon['style'] == NARROW) {
+        this.imgElem.style
+          ..width = 'auto'
+          ..height = '100%';
+      } else {
+        this.imgElem.style
+          ..width = '100%'
+          ..height = 'auto';
+      }
     }
   }
 
