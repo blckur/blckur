@@ -65,20 +65,40 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			continue
 		}
 
-		resp, e := http.Get(fmt.Sprintf(
-			"https://hacker-news.firebaseio.com/v0/item/%d.json", storyId))
-		if e != nil {
-			err = &ApiError{
-				errors.Wrap(e, "Hacker News api error"),
-			}
-			return
-		}
+		var body []byte
 
-		body, e = ioutil.ReadAll(resp.Body)
-		if e != nil {
-			err = &ParseError{
-				errors.Wrap(e, "Hacker News io error"),
+		for i := 0; i < 3; i++ {
+			resp, e := http.Get(fmt.Sprintf(
+				"https://hacker-news.firebaseio.com/v0/item/%d.json", storyId))
+			if e != nil {
+				err = &ApiError{
+					errors.Wrap(e, "Hacker News api error"),
+				}
+				time.Sleep(3 * time.Second)
+				continue
 			}
+
+			if resp.StatusCode != 200 {
+				err = &ApiError{
+					errors.Newf("Hacker News bad status %d", resp.StatusCode),
+				}
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
+			body, e = ioutil.ReadAll(resp.Body)
+			if e != nil {
+				err = &ParseError{
+					errors.Wrap(e, "Hacker News io error"),
+				}
+				time.Sleep(3 * time.Second)
+				continue
+			}
+
+			err = nil
+			break
+		}
+		if err != nil {
 			return
 		}
 
