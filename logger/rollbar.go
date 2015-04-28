@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
+	"github.com/blckur/blckur/errortypes"
 	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
@@ -103,17 +104,25 @@ func rollbarSend(entry *logrus.Entry) (err error) {
 
 	payloadByt, err := json.Marshal(payload)
 	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "logger.rollbar: Parse error"),
+		}
 		return
 	}
 
 	resp, err := http.Post("https://api.rollbar.com/api/1/item/",
 		"application/json", bytes.NewBuffer(payloadByt))
 	if err != nil {
+		err = &errortypes.UnknownError{
+			errors.Wrap(err, "logger.rollbar: Api error"),
+		}
 		return
 	}
 
 	if resp.StatusCode != 200 {
-		err = errors.New("Bad response code")
+		err = &errortypes.UnknownError{
+			errors.New("logger.rollbar: Bad response code"),
+		}
 		return
 	}
 
