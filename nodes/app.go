@@ -17,12 +17,19 @@ type AppNode struct {
 	Port       int
 	PublicPort int
 	Source     string
+	Debug      bool
 }
 
 func (a *AppNode) Start() {
 	constants.Node = "app"
 
 	port := strconv.Itoa(a.Port)
+
+	if a.Debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	router := gin.Default()
 	handlers.Register(router, a.Source)
