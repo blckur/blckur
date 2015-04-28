@@ -8,11 +8,11 @@ import (
 	"github.com/blckur/blckur/requires"
 	"net"
 	"os"
-	"time"
 )
 
 var (
-	buffer = make(chan *logrus.Entry, 128)
+	paperTrailBuffer = make(chan *logrus.Entry, 128)
+	rollbarBuffer    = make(chan *logrus.Entry, 128)
 )
 
 func formatLevel(lvl logrus.Level) (str string) {
@@ -47,17 +47,8 @@ func initSender() {
 	var conn net.Conn
 
 	go func() {
-		go func() {
-			conn = paperTrailConn()
-		}()
-		time.Sleep(2 * time.Second)
-
 		for {
-			entry := <-buffer
-
-			if entry.Message[:6] == "logger" {
-				continue
-			}
+			entry := <-rollbarBuffer
 
 			err := rollbarSend(entry)
 			if err != nil {
@@ -65,15 +56,25 @@ func initSender() {
 					"error": err,
 				}).Error("logger: Rollbar error")
 			}
+		}
+	}()
 
-			if conn != nil {
-				err := paperTrailSend(conn, entry)
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error": err,
-					}).Error("logger: Papertrail error")
-					conn = paperTrailConn()
-				}
+	go func() {
+		conn = paperTrailConn()
+
+		for {
+			entry := <-paperTrailBuffer
+
+			if entry.Message[:6] == "logger" {
+				continue
+			}
+
+			err := paperTrailSend(conn, entry)
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("logger: Papertrail error")
+				conn = paperTrailConn()
 			}
 		}
 	}()

@@ -7,10 +7,14 @@ import (
 type logHook struct{}
 
 func (h *logHook) Fire(entry *logrus.Entry) (err error) {
-	if len(buffer) > 125 {
-		return
+	if len(paperTrailBuffer) <= 125 {
+		paperTrailBuffer <- entry
 	}
-	buffer <- entry
+
+	if len(rollbarBuffer) <= 125 {
+		rollbarBuffer <- entry
+	}
+
 	return
 }
 
