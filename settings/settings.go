@@ -117,18 +117,30 @@ func setDefaults(obj interface{}) {
 
 		switch fld.Kind() {
 		case reflect.Bool:
+			if !fld.IsNil() {
+				break
+			}
+
 			parVal, err := strconv.ParseBool(tag)
 			if err != nil {
 				panic(err)
 			}
 			fld.SetBool(parVal)
 		case reflect.Int:
+			if fld.Int() != 0 {
+				break
+			}
+
 			parVal, err := strconv.Atoi(tag)
 			if err != nil {
 				panic(err)
 			}
 			fld.SetInt(int64(parVal))
 		case reflect.String:
+			if fld.String() != "" {
+				break
+			}
+
 			fld.SetString(tag)
 		}
 	}
