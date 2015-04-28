@@ -102,8 +102,6 @@ func newStaticHandler(source string) (handler *staticHandler) {
 		handler.Static = handler.proxy
 		handler.Index = handler.proxyIndex
 	} else {
-		gin.SetMode(gin.ReleaseMode)
-
 		source = filepath.Dir(source)
 		store, err := static.NewStore(source)
 		if err != nil {
