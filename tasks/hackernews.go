@@ -25,7 +25,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		"https://hacker-news.firebaseio.com/v0/newstories.json")
 	if err != nil {
 		err = &ApiError{
-			errors.Wrap(err, "Hacker News api error"),
+			errors.Wrap(err, "tasks.hackernews: Api error"),
 		}
 		return
 	}
@@ -33,7 +33,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		err = &ParseError{
-			errors.Wrap(err, "Hacker News io error"),
+			errors.Wrap(err, "tasks.hackernews: Io error"),
 		}
 		return
 	}
@@ -43,7 +43,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 	err = json.Unmarshal(body, &stories)
 	if err != nil {
 		err = &ParseError{
-			errors.Wrap(err, "Hacker News json error"),
+			errors.Wrap(err, "tasks.hackernews: Json error"),
 		}
 		return
 	}
@@ -72,7 +72,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 				"https://hacker-news.firebaseio.com/v0/item/%d.json", storyId))
 			if e != nil {
 				err = &ApiError{
-					errors.Wrap(e, "Hacker News api error"),
+					errors.Wrap(e, "tasks.hackernews: Api error"),
 				}
 				time.Sleep(3 * time.Second)
 				continue
@@ -80,7 +80,8 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 
 			if resp.StatusCode != 200 {
 				err = &ApiError{
-					errors.Newf("Hacker News bad status %d", resp.StatusCode),
+					errors.Newf("tasks.hackernews: Bad status %d",
+						resp.StatusCode),
 				}
 				time.Sleep(3 * time.Second)
 				continue
@@ -89,7 +90,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			body, e = ioutil.ReadAll(resp.Body)
 			if e != nil {
 				err = &ParseError{
-					errors.Wrap(e, "Hacker News io error"),
+					errors.Wrap(e, "tasks.hackernews: Io error"),
 				}
 				time.Sleep(3 * time.Second)
 				continue
@@ -115,7 +116,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		err = json.Unmarshal(body, &data)
 		if err != nil {
 			err = &ParseError{
-				errors.Wrap(err, "Hacker News json error"),
+				errors.Wrap(err, "tasks.hackernews: Json error"),
 			}
 			return
 		}
@@ -129,7 +130,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		url, e := url.Parse(data.Url)
 		if e != nil {
 			err = &ParseError{
-				errors.Wrap(e, "Hacker News url error"),
+				errors.Wrap(e, "tasks.hackernews: Url error"),
 			}
 			return
 		}
@@ -158,7 +159,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 		dataByt, e := json.Marshal(dataStore)
 		if e != nil {
 			err = &ParseError{
-				errors.Wrap(e, "Hacker News json error"),
+				errors.Wrap(e, "tasks.hackernews: Json error"),
 			}
 			return
 		}
@@ -181,7 +182,7 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 	dataByt, err := json.Marshal(stories)
 	if err != nil {
 		err = &ParseError{
-			errors.Wrap(err, "Hacker News json error"),
+			errors.Wrap(err, "tasks.hackernews: Json error"),
 		}
 		return
 	}
