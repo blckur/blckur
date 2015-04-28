@@ -8,6 +8,6 @@ RUN pacman -U --noconfirm beanstalkd-1.10-1-x86_64.pkg.tar.xz
 ENV GOPATH /go
 ENV PATH $PATH:/go/bin
 
-RUN go get github.com/blckur/blckur # 79819812ff2403048a03ad8a8eb2077485292b1d
+RUN go get github.com/blckur/blckur # f25a2cb084cf6f53f8f6c9c18080f69ac7f308b5
 
 CMD ["blckur", "queue"]
