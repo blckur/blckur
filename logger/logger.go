@@ -8,6 +8,7 @@ import (
 	"github.com/blckur/blckur/requires"
 	"net"
 	"os"
+	"time"
 )
 
 var (
@@ -45,10 +46,19 @@ func formatLevel(lvl logrus.Level) (str string) {
 
 func initSender() {
 	var conn net.Conn
+	rollbarLimit := map[string]time.Time
+	paperTrailLimit := map[string]time.Time
 
 	go func() {
 		for {
 			entry := <-rollbarBuffer
+
+			if timestamp, ok := rollbarLimit[entry.Message]; ok {
+				if time.Since(timestamp) < 5 * time.Minute {
+					continue
+				}
+			}
+			rollbarLimit[entry.Message] = time.Now()
 
 			err := rollbarSend(entry)
 			if err != nil {
@@ -64,6 +74,13 @@ func initSender() {
 
 		for {
 			entry := <-paperTrailBuffer
+
+			if timestamp, ok := paperTrailLimit[entry.Message]; ok {
+				if time.Since(timestamp) < 3 * time.Minute {
+					continue
+				}
+			}
+			paperTrailLimit[entry.Message] = time.Now()
 
 			if entry.Message[:6] == "logger" {
 				continue
