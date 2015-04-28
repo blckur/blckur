@@ -16,11 +16,11 @@ func paperTrailConn() (conn net.Conn) {
 			c, err := net.Dial("udp", settings.PapperTrail.Address)
 			if err != nil {
 				err = &errortypes.UnknownError{
-					errors.Wrap(err, "logger: Papertrail connection"),
+					errors.Wrap(err, "logger.papertrail: Connection error"),
 				}
 				logrus.WithFields(logrus.Fields{
 					"error": err,
-				}).Error("logger: Papertrail connection")
+				}).Error("logger.papertrail: Connection error")
 			} else {
 				conn = c
 				break
@@ -42,7 +42,7 @@ func paperTrailSend(conn net.Conn, entry *logrus.Entry) (err error) {
 	_, err = conn.Write([]byte(msg))
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "logger: Papertrail write"),
+			errors.Wrap(err, "logger.papertrail: Write error"),
 		}
 	}
 
