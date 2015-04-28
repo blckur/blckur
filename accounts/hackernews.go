@@ -134,6 +134,10 @@ func (b *hackerNewsBackend) backlog() (err error) {
 		return
 	}
 
+	if storyIdsStr == "" {
+		return
+	}
+
 	storyIds := []int{}
 
 	err = json.Unmarshal([]byte(storyIdsStr), &storyIds)
