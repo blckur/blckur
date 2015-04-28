@@ -9,6 +9,7 @@ func init() {
 }
 
 type papperTrail struct {
-	Id      string `bson:"_id"`
-	Address string `bson:"address"`
+	Id        string `bson:"_id"`
+	Address   string `bson:"address"`
+	RateLimit int    `bson:"rate_limit" default:"180"`
 }
