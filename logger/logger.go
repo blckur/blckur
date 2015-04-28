@@ -6,6 +6,7 @@ import (
 	"github.com/blckur/blckur/colorize"
 	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/settings"
 	"net"
 	"os"
 	"time"
@@ -46,15 +47,17 @@ func formatLevel(lvl logrus.Level) (str string) {
 
 func initSender() {
 	var conn net.Conn
-	rollbarLimit := map[string]time.Time
-	paperTrailLimit := map[string]time.Time
+	rollbarLimit := map[string]time.Time{}
+	paperTrailLimit := map[string]time.Time{}
 
 	go func() {
 		for {
 			entry := <-rollbarBuffer
 
 			if timestamp, ok := rollbarLimit[entry.Message]; ok {
-				if time.Since(timestamp) < 5 * time.Minute {
+				if time.Since(timestamp) < time.Duration(
+					settings.Rollbar.RateLimit)*time.Second {
+
 					continue
 				}
 			}
@@ -76,7 +79,9 @@ func initSender() {
 			entry := <-paperTrailBuffer
 
 			if timestamp, ok := paperTrailLimit[entry.Message]; ok {
-				if time.Since(timestamp) < 3 * time.Minute {
+				if time.Since(timestamp) < time.Duration(
+					settings.PapperTrail.RateLimit)*time.Second {
+
 					continue
 				}
 			}
