@@ -39,7 +39,7 @@ type Request struct {
 	Client    *http.Client
 }
 
-func (r *Request) Do() (err error) {
+func (r *Request) Do() (resp *Response, err error) {
 	if r.Timeout == 0 {
 		r.Timeout = DefaultTimeout
 	}
@@ -84,19 +84,46 @@ func (r *Request) Do() (err error) {
 		req.Header = r.Header
 	}
 
-	resp, err := client.Do(req)
+	res, err := client.Do(req)
 	if err != nil {
 		err = &RequestError{
 			errors.Wrap(err, "requests: Request failed"),
 		}
 	}
 
-	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		body, _ := ioutil.ReadAll(resp.Body)
+	if res.StatusCode < 200 || res.StatusCode > 299 {
+		body, _ := ioutil.ReadAll(res.Body)
 
 		err = &ResponseError{
 			errors.Newf("requests: %d Bad response:\n\n%s",
-				resp.StatusCode, body),
+				res.StatusCode, body),
+		}
+	}
+
+	resp = &Response{
+		res,
+	}
+
+	return
+}
+
+type Response struct {
+	*http.Response
+}
+
+func (r *Response) Json(v interface{}) (err error) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		err = &ParseError{
+			errors.Wrap(err, "requests: Io error"),
+		}
+		return
+	}
+
+	err = json.Unmarshal(body, v)
+	if err != nil {
+		err = &ParseError{
+			errors.Wrap(err, "requests: Json unmarshal error"),
 		}
 	}
 
