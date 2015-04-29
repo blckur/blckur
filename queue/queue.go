@@ -29,42 +29,40 @@ func put(job *Job, priority int, delay time.Duration,
 }
 
 func update() {
-	for {
-		db := database.GetDatabase()
-		coll := db.Nodes()
-		nodes := []*node.Node{}
+	db := database.GetDatabase()
+	defer db.Close()
 
-		err := coll.Find(bson.M{
-			"type": "queue",
-		}).All(&nodes)
-		if err != nil {
-			err = database.ParseError(err)
-			time.Sleep(constants.RetryDelay)
-			continue
-		}
+	coll := db.Nodes()
+	nodes := []*node.Node{}
 
-		mutex.Lock()
-		servers := set.NewSet()
-		serversSlc := []string{}
-
-		for _, node := range nodes {
-			servers.Add(node.Address)
-		}
-
-		for server := range servers.Iter() {
-			serversSlc = append(serversSlc, server.(string))
-		}
-
-		clst.servers = servers
-		clst.serversSlc = serversSlc
-
-		for _, lstnr := range listeners {
-			lstnr.updateStreams(clst.servers)
-		}
-		mutex.Unlock()
-
-		break
+	err := coll.Find(bson.M{
+		"type": "queue",
+	}).All(&nodes)
+	if err != nil {
+		err = database.ParseError(err)
+		time.Sleep(constants.RetryDelay)
+		update()
 	}
+
+	mutex.Lock()
+	servers := set.NewSet()
+	serversSlc := []string{}
+
+	for _, node := range nodes {
+		servers.Add(node.Address)
+	}
+
+	for server := range servers.Iter() {
+		serversSlc = append(serversSlc, server.(string))
+	}
+
+	clst.servers = servers
+	clst.serversSlc = serversSlc
+
+	for _, lstnr := range listeners {
+		lstnr.updateStreams(clst.servers)
+	}
+	mutex.Unlock()
 }
 
 func init() {
