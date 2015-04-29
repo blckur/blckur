@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/session"
 	"github.com/blckur/blckur/static"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
@@ -10,7 +11,13 @@ import (
 	"strings"
 )
 
+const (
+	Local = 0
+	Proxy = 1
+)
+
 type staticHandler struct {
+	Type   int
 	Static gin.HandlerFunc
 	Index  gin.HandlerFunc
 	source string
@@ -30,6 +37,19 @@ func (s *staticHandler) proxy(c *gin.Context) {
 	if err != nil {
 		c.Fail(500, err)
 		return
+	}
+
+	if c.Params.ByName("path") == "/" || c.Params.ByName("path") == "" {
+		sess := c.MustGet("session").(*session.Session)
+
+		var page string
+		if sess != nil {
+			page = "feed"
+		} else {
+			page = "login"
+		}
+
+		body = []byte(strings.Replace(string(body), "default-page", page, 1))
 	}
 
 	c.Writer.Header().Add("Cache-Control",
@@ -75,7 +95,14 @@ func (s *staticHandler) local(c *gin.Context) {
 }
 
 func (s *staticHandler) localIndex(c *gin.Context) {
-	path := s.source + "/index.html"
+	sess := c.MustGet("session").(*session.Session)
+	path := s.source
+
+	if sess != nil {
+		path += "/index-feed.html"
+	} else {
+		path += "/index-login.html"
+	}
 
 	file, ok := s.store.Files[path]
 	if !ok {
@@ -99,6 +126,7 @@ func newStaticHandler(source string) (handler *staticHandler) {
 	handler = &staticHandler{}
 
 	if source[:4] == "http" {
+		handler.Type = Proxy
 		handler.Static = handler.proxy
 		handler.Index = handler.proxyIndex
 	} else {
@@ -112,6 +140,7 @@ func newStaticHandler(source string) (handler *staticHandler) {
 		}
 
 		handler.store = store
+		handler.Type = Local
 		handler.Static = handler.local
 		handler.Index = handler.localIndex
 	}

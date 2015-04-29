@@ -94,6 +94,11 @@ func Register(engine *gin.Engine, source string) {
 	authGroup.DELETE("/notifications/:id", notificationDel)
 
 	staticHand := newStaticHandler(source)
-	engine.GET("/", staticHand.Index)
-	engine.GET("/s/*path", staticHand.Static)
+	if staticHand.Type == Proxy {
+		engine.GET("/", staticHand.Index)
+		sessGroup.GET("/s/*path", staticHand.Static)
+	} else {
+		sessGroup.GET("/", staticHand.Index)
+		engine.GET("/s/*path", staticHand.Static)
+	}
 }
