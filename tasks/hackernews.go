@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"github.com/blckur/blckur/cache"
 	"github.com/blckur/blckur/database"
+	"github.com/blckur/blckur/requests"
 	"github.com/dropbox/godropbox/errors"
-	"io/ioutil"
-	"net/http"
 	"net/url"
 	"strings"
 	"time"
@@ -21,30 +20,20 @@ func (h *hackerNews) Type() string {
 }
 
 func (h *hackerNews) Run(db *database.Database) (err error) {
-	resp, err := http.Get(
-		"https://hacker-news.firebaseio.com/v0/newstories.json")
-	if err != nil {
-		err = &ApiError{
-			errors.Wrap(err, "tasks.hackernews: Api error"),
-		}
-		return
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		err = &ParseError{
-			errors.Wrap(err, "tasks.hackernews: Io error"),
-		}
-		return
-	}
-
 	stories := []int{}
+	req := requests.Request{
+		Method:  requests.Get,
+		Url:     "https://hacker-news.firebaseio.com/v0/newstories.json",
+		Timeout: 5 * time.Second,
+	}
 
-	err = json.Unmarshal(body, &stories)
+	resp, err := req.Do()
 	if err != nil {
-		err = &ParseError{
-			errors.Wrap(err, "tasks.hackernews: Json error"),
-		}
+		return
+	}
+
+	err = resp.Json(&stories)
+	if err != nil {
 		return
 	}
 
@@ -65,44 +54,6 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			continue
 		}
 
-		var body []byte
-
-		for i := 0; i < 3; i++ {
-			resp, e := http.Get(fmt.Sprintf(
-				"https://hacker-news.firebaseio.com/v0/item/%d.json", storyId))
-			if e != nil {
-				err = &ApiError{
-					errors.Wrap(e, "tasks.hackernews: Api error"),
-				}
-				time.Sleep(3 * time.Second)
-				continue
-			}
-
-			if resp.StatusCode != 200 {
-				err = &ApiError{
-					errors.Newf("tasks.hackernews: Bad status %d",
-						resp.StatusCode),
-				}
-				time.Sleep(3 * time.Second)
-				continue
-			}
-
-			body, e = ioutil.ReadAll(resp.Body)
-			if e != nil {
-				err = &ParseError{
-					errors.Wrap(e, "tasks.hackernews: Io error"),
-				}
-				time.Sleep(3 * time.Second)
-				continue
-			}
-
-			err = nil
-			break
-		}
-		if err != nil {
-			return
-		}
-
 		data := struct {
 			Id    int    `json:"id"`
 			Title string `json:"title"`
@@ -112,12 +63,22 @@ func (h *hackerNews) Run(db *database.Database) (err error) {
 			Text  string `json:"text"`
 			Url   string `json:"url"`
 		}{}
+		req := requests.Request{
+			Method: requests.Get,
+			Url: fmt.Sprintf(
+				"https://hacker-news.firebaseio.com/v0/item/%d.json",
+				storyId),
+			Timeout: 5 * time.Second,
+		}
 
-		err = json.Unmarshal(body, &data)
+		resp, e := req.Do()
+		if e != nil {
+			err = e
+			return
+		}
+
+		err = resp.Json(&data)
 		if err != nil {
-			err = &ParseError{
-				errors.Wrap(err, "tasks.hackernews: Json error"),
-			}
 			return
 		}
 
