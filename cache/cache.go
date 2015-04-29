@@ -97,69 +97,67 @@ func newPool(address string) (pool *redis.Pool) {
 
 func Get() (conn *ClusterConn) {
 	conn = &ClusterConn{
-		clst:  clst,
+		clst: clst,
 	}
 	return
 }
 
 func update() {
-	for {
-		db := database.GetDatabase()
-		coll := db.Nodes()
-		nodes := []*node.Node{}
-		cls := &cluster{
-			serverMap:   map[string]*redis.Pool{},
-			pubsubConns: map[string]*pubSubConn{},
-		}
+	db := database.GetDatabase()
+	defer db.Close()
 
-		err := coll.Find(bson.M{
-			"type": "cache",
-		}).All(&nodes)
-		if err != nil {
-			err = database.ParseError(err)
-			logrus.WithFields(logrus.Fields{
-				"error": err,
-			}).Error("cache: Update error")
-			time.Sleep(constants.RetryDelay)
-			continue
-		}
-
-		svrKeys := []string{}
-
-		for _, node := range nodes {
-			svrKeys = append(svrKeys, node.Id)
-			cls.serverMap[node.Id] = newPool(node.Address)
-			cls.pubsubConns[node.Id] = newPubSubConn(node.Address)
-		}
-
-		cls.shrd = shard.New(svrKeys, settings.Cache.Consistency)
-
-		clstMutex.Lock()
-
-		curClst := clst
-		clst = cls
-
-		if curClst != nil {
-			for _, psc := range curClst.pubsubConns {
-				psc.Close()
-			}
-		}
-
-		for _, psc := range clst.pubsubConns {
-			go func(psc *pubSubConn) {
-				psc.Listen()
-			}(psc)
-		}
-
-		for lstnrIntf := range subs.Iter() {
-			lstnr := lstnrIntf.(*Listener)
-			lstnr.reshard()
-		}
-
-		clstMutex.Unlock()
-
-		break
+	coll := db.Nodes()
+	nodes := []*node.Node{}
+	cls := &cluster{
+		serverMap:   map[string]*redis.Pool{},
+		pubsubConns: map[string]*pubSubConn{},
 	}
+
+	err := coll.Find(bson.M{
+		"type": "cache",
+	}).All(&nodes)
+	if err != nil {
+		err = database.ParseError(err)
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("cache: Update error")
+		time.Sleep(constants.RetryDelay)
+		update()
+	}
+
+	svrKeys := []string{}
+
+	for _, node := range nodes {
+		svrKeys = append(svrKeys, node.Id)
+		cls.serverMap[node.Id] = newPool(node.Address)
+		cls.pubsubConns[node.Id] = newPubSubConn(node.Address)
+	}
+
+	cls.shrd = shard.New(svrKeys, settings.Cache.Consistency)
+
+	clstMutex.Lock()
+
+	curClst := clst
+	clst = cls
+
+	if curClst != nil {
+		for _, psc := range curClst.pubsubConns {
+			psc.Close()
+		}
+	}
+
+	for _, psc := range clst.pubsubConns {
+		go func(psc *pubSubConn) {
+			psc.Listen()
+		}(psc)
+	}
+
+	for lstnrIntf := range subs.Iter() {
+		lstnr := lstnrIntf.(*Listener)
+		lstnr.reshard()
+	}
+
+	clstMutex.Unlock()
 }
 
 func init() {
