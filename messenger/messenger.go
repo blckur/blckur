@@ -171,6 +171,39 @@ func Register(channel string, event string, callback func(*Message)) {
 	listeners[key] = append(callbacks, callback)
 }
 
+func subscribe(channels []string) {
+	db := database.GetDatabase()
+	defer db.Close()
+
+	err := Subscribe(db, channels, 10*time.Second,
+		func(msg *Message) bool {
+			if msg == nil {
+				return true
+			}
+
+			key := msg.Channel + ":all"
+			for _, listener := range listeners[key] {
+				listener(msg)
+			}
+
+			key = msg.Channel + ":" + msg.Data.(string)
+			for _, listener := range listeners[key] {
+				listener(msg)
+			}
+
+			return true
+		})
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("messenger: Listener")
+	}
+
+	time.Sleep(constants.RetryDelay)
+
+	subscribe(channels)
+}
+
 func init() {
 	module := requires.New("messenger")
 	module.After("settings")
@@ -189,35 +222,7 @@ func init() {
 				channels = append(channels, channel.(string))
 			}
 
-			for {
-				db := database.GetDatabase()
-
-				err := Subscribe(db, channels, 10*time.Second,
-					func(msg *Message) bool {
-						if msg == nil {
-							return true
-						}
-
-						key := msg.Channel + ":all"
-						for _, listener := range listeners[key] {
-							listener(msg)
-						}
-
-						key = msg.Channel + ":" + msg.Data.(string)
-						for _, listener := range listeners[key] {
-							listener(msg)
-						}
-
-						return true
-					})
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error": err,
-					}).Error("messenger: Listener")
-				}
-
-				time.Sleep(constants.RetryDelay)
-			}
+			subscribe(channels)
 		}()
 	}
 }
