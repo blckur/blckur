@@ -1,3 +1,4 @@
+// Http request interface.
 package requests
 
 import (
