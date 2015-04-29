@@ -89,6 +89,7 @@ func (r *Request) Do() (resp *Response, err error) {
 		err = &RequestError{
 			errors.Wrap(err, "requests: Request failed"),
 		}
+		return
 	}
 
 	if res.StatusCode < 200 || res.StatusCode > 299 {
@@ -98,6 +99,7 @@ func (r *Request) Do() (resp *Response, err error) {
 			errors.Newf("requests: %d Bad response:\n\n%s",
 				res.StatusCode, body),
 		}
+		return
 	}
 
 	resp = &Response{
