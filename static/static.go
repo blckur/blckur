@@ -98,6 +98,18 @@ func (s *Store) addDir(dir string) (err error) {
 		s.Files[fullPath] = file
 
 		if name == "index.html" {
+			for _, page := range []string{"login", "feed"} {
+				fileCopy := File(*file)
+
+				fileCopy.Data = []byte(strings.Replace(
+					string(fileCopy.Data), "default-page", page, 1))
+
+				path := strings.Replace(fullPath, "index.html",
+					"index-"+page+".html", 1)
+
+				s.Files[path] = &fileCopy
+			}
+
 			continue
 		}
 
