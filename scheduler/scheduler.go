@@ -24,6 +24,7 @@ func runTasks(tme time.Time) {
 	}
 
 	db := database.GetDatabase()
+	defer db.Close()
 	coll := db.Tasks()
 
 	for _, task := range tasks {
