@@ -102,7 +102,7 @@ class AuthComp implements ng.ShadowRootAware {
 
     this.model.login(['email', 'password', 'remember']).then((_) {
       this.clearErrors();
-      this.router.gotoUrl('/').then((_) {
+      this.router.gotoUrl('/feed').then((_) {
         this.model.clear();
       });
     }).catchError((err) {
