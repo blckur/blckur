@@ -41,6 +41,7 @@ func (w *WorkerNode) Start() {
 	}).Info("nodes.worker: Starting worker node")
 
 	db := database.GetDatabase()
+	defer db.Close()
 
 	queue.NewListener(func(stream *queue.Stream) {
 		for {
