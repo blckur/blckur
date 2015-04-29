@@ -8,6 +8,8 @@ import (
 // Clear cluster node info in database
 func Clear() {
 	db := database.GetDatabase()
+	defer db.Close()
+
 	coll := db.Nodes()
 
 	_, err := coll.RemoveAll(bson.M{})
