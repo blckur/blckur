@@ -3,13 +3,26 @@ library main_rout;
 import 'package:blckur/alert.dart' as alert;
 
 import 'package:angular/angular.dart' as ng;
+import 'dart:js' as js;
 
 MainRout(ng.Router router, ng.RouteViewFactory views) {
   views.configure({
+    'root': ng.ngRoute(
+      path: '/',
+      defaultRoute: true,
+      enter: (_) {
+        var page = js.context['defaultPage'];
+
+        if (page != null && page != '') {
+          router.gotoUrl('/' + page);
+        } else {
+          router.gotoUrl('/feed');
+        }
+      }
+    ),
     'feed': ng.ngRoute(
       path: '/feed',
       view: 'packages/blckur/views/feed.html',
-      defaultRoute: true,
       enter: (_) {
         alert.clear();
       }
