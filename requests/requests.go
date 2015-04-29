@@ -61,7 +61,7 @@ func (r *Request) Do() (err error) {
 
 	body := r.Body
 	if r.Json != nil {
-		body, e := json.Marshal(r.Json)
+		data, e := json.Marshal(r.Json)
 		if e != nil {
 			err = &ParseError{
 				errors.Wrap(e, "requests: Json marshal error"),
@@ -69,7 +69,7 @@ func (r *Request) Do() (err error) {
 			return
 		}
 
-		body = bytes.NewBuffer(body)
+		body = bytes.NewReader(data)
 	}
 
 	req, err := http.NewRequest(r.Method, r.Url, body)
