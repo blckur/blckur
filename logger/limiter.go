@@ -2,19 +2,23 @@ package logger
 
 import (
 	"github.com/Sirupsen/logrus"
+	"hash/fnv"
 	"time"
 )
 
-type limiter map[string]time.Time
+type limiter map[uint32]time.Time
 
 func (l limiter) Check(entry *logrus.Entry, limit time.Duration) bool {
-	// TODO Use hash for key
-	if timestamp, ok := l[entry.Message]; ok &&
+	hash := fnv.New32a()
+	hash.Write([]byte(entry.Message))
+	key := hash.Sum32()
+
+	if timestamp, ok := l[key]; ok &&
 		time.Since(timestamp) < limit {
 
 		return false
 	}
-	l[entry.Message] = time.Now()
+	l[key] = time.Now()
 
 	return true
 }
