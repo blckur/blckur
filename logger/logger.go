@@ -4,17 +4,13 @@ package logger
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/colorize"
-	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/requires"
-	"github.com/blckur/blckur/settings"
-	"net"
 	"os"
-	"time"
 )
 
 var (
-	paperTrailBuffer = make(chan *logrus.Entry, 128)
-	rollbarBuffer    = make(chan *logrus.Entry, 128)
+	buffer  = make(chan *logrus.Entry, 32)
+	senders = []sender{}
 )
 
 func formatLevel(lvl logrus.Level) (str string) {
@@ -46,66 +42,23 @@ func formatLevel(lvl logrus.Level) (str string) {
 }
 
 func initSender() {
-	var conn net.Conn
-	rollbarLimit := map[string]time.Time{}
-	paperTrailLimit := map[string]time.Time{}
+	for _, sndr := range senders {
+		sndr.Init()
+	}
 
 	go func() {
 		for {
-			entry := <-rollbarBuffer
+			entry := <-buffer
 
-			if timestamp, ok := rollbarLimit[entry.Message]; ok {
-				if time.Since(timestamp) < time.Duration(
-					settings.Rollbar.RateLimit)*time.Second {
-
-					continue
-				}
-			}
-			rollbarLimit[entry.Message] = time.Now()
-
-			err := rollbarSend(entry)
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("logger: Rollbar error")
-			}
-		}
-	}()
-
-	go func() {
-		conn = paperTrailConn()
-
-		for {
-			entry := <-paperTrailBuffer
-
-			if timestamp, ok := paperTrailLimit[entry.Message]; ok {
-				if time.Since(timestamp) < time.Duration(
-					settings.PapperTrail.RateLimit)*time.Second {
-
-					continue
-				}
-			}
-			paperTrailLimit[entry.Message] = time.Now()
-
-			if entry.Message[:6] == "logger" {
+			if len(entry.Message) > 7 && entry.Message[:7] == "logger:" {
 				continue
 			}
 
-			err := paperTrailSend(conn, entry)
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"error": err,
-				}).Error("logger: Papertrail error")
-				conn = paperTrailConn()
+			for _, sndr := range senders {
+				sndr.Parse(entry)
 			}
 		}
 	}()
-
-	messenger.Register("settings", "papertrail", func(_ *messenger.Message) {
-		if conn != nil {
-			conn.Close()
-		}
-	})
 }
 
 func init() {
