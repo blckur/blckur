@@ -25,7 +25,8 @@ const (
 )
 
 var (
-	DefaultTimeout = 10 * time.Second
+	DefaultTimeout      = 10 * time.Second
+	DefaultWatchTimeout = 2 * time.Minute
 )
 
 type Event struct {
@@ -46,7 +47,7 @@ func (w *Watcher) scan() {
 	defer w.Close()
 
 	var typ string
-	timer := time.AfterFunc(60 * time.Second, func() {
+	timer := time.AfterFunc(w.timeout, func() {
 		w.Close()
 	})
 
@@ -64,7 +65,7 @@ func (w *Watcher) scan() {
 		}
 
 		if typ == "keep-alive" {
-			timer.Reset(60 * time.Second)
+			timer.Reset(w.timeout)
 			continue
 		}
 
@@ -92,8 +93,9 @@ type Request struct {
 }
 
 func (r *Request) client() (client *http.Client) {
-	if r.Timeout == 0 {
-		r.Timeout = DefaultTimeout
+	timeout := r.Timeout
+	if timeout == 0 {
+		timeout = DefaultTimeout
 	}
 
 	transport := r.Transport
@@ -192,10 +194,16 @@ func (r *Request) Watch() (watcher *Watcher, err error) {
 		return
 	}
 
+	timeout := r.Timeout
+	if timeout == 0 {
+		timeout = DefaultWatchTimeout
+	}
+
 	watcher = &Watcher{
-		res: res,
+		res:     res,
 		scanner: bufio.NewScanner(res.Body),
-		Stream: make(chan *Event),
+		timeout: timeout,
+		Stream:  make(chan *Event),
 	}
 
 	watcher.scanner.Split(bufio.ScanLines)
