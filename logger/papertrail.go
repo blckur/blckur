@@ -12,7 +12,8 @@ import (
 )
 
 func init() {
-	senders = append(senders, &paperTrailSender{})
+	// Disabled
+	//senders = append(senders, &paperTrailSender{})
 }
 
 type paperTrailSender struct {

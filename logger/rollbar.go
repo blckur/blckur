@@ -17,7 +17,8 @@ import (
 )
 
 func init() {
-	senders = append(senders, &rollbarSender{})
+	// Disabled
+	//senders = append(senders, &rollbarSender{})
 }
 
 type rollbarMessage struct {
