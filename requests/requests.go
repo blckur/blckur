@@ -51,7 +51,7 @@ func (r *Request) client() (client *http.Client) {
 	if transport == nil {
 		transport = &http.Transport{
 			Dial: func(network string, addr string) (net.Conn, error) {
-				return net.DialTimeout(network, addr, r.Timeout)
+				return net.DialTimeout(network, addr, timeout)
 			},
 		}
 	}
