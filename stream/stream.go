@@ -26,7 +26,10 @@ type Stream struct {
 }
 
 func (s *Stream) Start() (err error) {
-	coll := s.db.Streams()
+	db := database.GetDatabase()
+	defer db.Close()
+
+	coll := db.Streams()
 
 	count, err := coll.FindId(s.Id).Count()
 	if err != nil {
@@ -88,7 +91,10 @@ func (s *Stream) Start() (err error) {
 }
 
 func (s *Stream) Update() (stop bool, err error) {
-	coll := s.db.Streams()
+	db := database.GetDatabase()
+	defer db.Close()
+
+	coll := db.Streams()
 	stop = false
 
 	change := mgo.Change{
@@ -123,7 +129,10 @@ func (s *Stream) Update() (stop bool, err error) {
 }
 
 func (s *Stream) initialize() (err error) {
-	coll := s.db.Streams()
+	db := database.GetDatabase()
+	defer db.Close()
+
+	coll := db.Streams()
 
 	s.Timestamp = time.Now()
 	s.RunnerId = bson.NewObjectId()
@@ -142,7 +151,6 @@ func NewStream(db *database.Database, acctId bson.ObjectId,
 
 	stream = &Stream{
 		backend: backend,
-		db:      db,
 		Id:      acctId,
 		UserId:  userId,
 	}
