@@ -13,7 +13,12 @@ import (
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
 	"net/http"
+	"time"
 )
+
+func init() {
+	senders = append(senders, &rollbarSender{})
+}
 
 type rollbarMessage struct {
 	Body string `json:"body"`
@@ -48,9 +53,46 @@ type rollbarItem struct {
 	Data        *rollbarData `json:"data"`
 }
 
+type rollbarSender struct {
+	limit  map[string]time.Time
+	buffer chan *logrus.Entry
+}
+
+func (r *rollbarSender) listen() {
+	for {
+		entry := <-r.buffer
+
+		// TODO Use r.send(entry)
+		err := rollbarSend(entry)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("logger: Rollbar send error")
+		}
+	}
+}
+
+func (r *rollbarSender) Init() {
+	r.buffer = make(chan *logrus.Entry, 128)
+	go r.listen()
+}
+
+func (r *rollbarSender) Limit() time.Duration {
+	return time.Duration(settings.Rollbar.RateLimit) * time.Second
+}
+
+func (r *rollbarSender) Parse(entry *logrus.Entry) {
+	if settings.Rollbar.Token == "" {
+		return
+	}
+
+	if len(buffer) <= 125 {
+		r.buffer <- entry
+	}
+}
+
 func rollbarSend(entry *logrus.Entry) (err error) {
 	token := settings.Rollbar.Token
-
 	if token == "" {
 		return
 	}
