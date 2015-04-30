@@ -1,0 +1,17 @@
+[Unit]
+Description=blckur-kibana
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill %p-%i
+ExecStartPre=-/usr/bin/docker rm %p-%i
+ExecStartPre=/usr/bin/docker pull quay.io/blckur/kibana
+ExecStart=/usr/bin/docker run --rm --name %p-%i \
+    -p 5601:5601 \
+    -e ELASTIC=http://thriving-waterfall-6629.blckur.vpc:9200 \
+    quay.io/blckur/kibana
+ExecStop=/usr/bin/docker stop %p-%i
+
+[X-Fleet]
+X-Conflicts=%p@*.service
