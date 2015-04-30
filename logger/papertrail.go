@@ -16,6 +16,7 @@ func init() {
 }
 
 type paperTrailSender struct {
+	limit  limiter
 	buffer chan *logrus.Entry
 	conn   net.Conn
 }
@@ -37,6 +38,7 @@ func (p *paperTrailSender) listen() {
 }
 
 func (p *paperTrailSender) Init() {
+	p.limit = limiter{}
 	p.buffer = make(chan *logrus.Entry, 128)
 
 	go p.listen()
@@ -48,12 +50,14 @@ func (p *paperTrailSender) Init() {
 	})
 }
 
-func (p *paperTrailSender) Limit() time.Duration {
-	return time.Duration(settings.PapperTrail.RateLimit) * time.Second
-}
-
 func (p *paperTrailSender) Parse(entry *logrus.Entry) {
 	if settings.PapperTrail.Address == "" {
+		return
+	}
+
+	if !p.limit.Check(entry,
+		time.Duration(settings.PapperTrail.RateLimit)*time.Second) {
+
 		return
 	}
 

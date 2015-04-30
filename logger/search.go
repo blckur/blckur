@@ -54,14 +54,9 @@ func (s *searchSender) listen() {
 }
 
 func (s *searchSender) Init() {
-	s.limit = map[string]time.Time{}
+	s.limit = limiter{}
 	s.buffer = make(chan *logrus.Entry, 128)
 	go s.listen()
-}
-
-func (s *searchSender) Limit() time.Duration {
-	// TODO
-	return 3 * time.Second
 }
 
 func (s *searchSender) Parse(entry *logrus.Entry) {

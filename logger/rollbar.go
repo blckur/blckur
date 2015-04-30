@@ -54,7 +54,7 @@ type rollbarItem struct {
 }
 
 type rollbarSender struct {
-	limit  map[string]time.Time
+	limit  limiter
 	buffer chan *logrus.Entry
 }
 
@@ -73,16 +73,19 @@ func (r *rollbarSender) listen() {
 }
 
 func (r *rollbarSender) Init() {
+	r.limit = limiter{}
 	r.buffer = make(chan *logrus.Entry, 128)
 	go r.listen()
 }
 
-func (r *rollbarSender) Limit() time.Duration {
-	return time.Duration(settings.Rollbar.RateLimit) * time.Second
-}
-
 func (r *rollbarSender) Parse(entry *logrus.Entry) {
 	if settings.Rollbar.Token == "" {
+		return
+	}
+
+	if !r.limit.Check(entry,
+		time.Duration(settings.Rollbar.RateLimit)*time.Second) {
+
 		return
 	}
 
