@@ -91,6 +91,11 @@ Pub/sub messaging system using mongodb tailable cursor
 -------- | --------
 **use**  | mongodb replica set name
 
+**name** | thriving-waterfall-6629
+-------- | --------
+**use**  | elasticsearch node
+**dns**  | thriving-waterfall-6629.blckur.vpc
+
 **name** | autumn-stars-6522
 -------- | --------
 **use**  | coreos fleet node
