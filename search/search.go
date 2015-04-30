@@ -2,6 +2,7 @@
 package search
 
 import (
+	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/mattbaird/elastigo/lib"
 	"strings"
@@ -12,7 +13,7 @@ type Mapping map[string]interface{}
 
 func (m Mapping) Add(field string, enabled bool, typ string, index string) {
 	fieldMap := map[string]interface{}{
-		"type":  typ,
+		"type": typ,
 	}
 
 	if !enabled {
@@ -80,12 +81,23 @@ func (s *Session) Index(index string, typ string, id string, doc interface{}) (
 }
 
 func NewSession() (conn *Session) {
+	addr := settings.Search.Address
+
+	if addr == "" {
+		return
+	}
+
+	addrs := strings.SplitN(addr, ":", 2)
+	if len(addrs) < 2 {
+		return
+	}
+
 	conn = &Session{
 		conn: &elastigo.Conn{
 			Protocol:       elastigo.DefaultProtocol,
-			Domain:         elastigo.DefaultDomain,
-			ClusterDomains: []string{elastigo.DefaultDomain},
-			Port:           elastigo.DefaultPort,
+			Domain:         addrs[0],
+			ClusterDomains: []string{addrs[0]},
+			Port:           addrs[1],
 			DecayDuration: time.Duration(
 				elastigo.DefaultDecayDuration * time.Second),
 		},
