@@ -9,8 +9,9 @@ func init() {
 }
 
 type system struct {
-	Id        string `bson:"_id"`
-	CookieKey []byte `bson:"cookie_key"`
-	Domain    string `bson:"domain"`
-	AppHome   string `bson:"app_home"`
+	Id          string `bson:"_id"`
+	CookieKey   []byte `bson:"cookie_key"`
+	Domain      string `bson:"domain"`
+	AppHome     string `bson:"app_home"`
+	Environment string `bson:"environment", default:"development"`
 }
