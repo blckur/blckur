@@ -4,11 +4,63 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/errortypes"
+	"github.com/blckur/blckur/messenger"
 	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/errors"
 	"net"
 	"time"
 )
+
+func init() {
+	senders = append(senders, &paperTrailSender{})
+}
+
+type paperTrailSender struct {
+	buffer chan *logrus.Entry
+	conn   net.Conn
+}
+
+func (p *paperTrailSender) listen() {
+	p.conn = paperTrailConn()
+
+	for {
+		entry := <-p.buffer
+
+		err := paperTrailSend(p.conn, entry)
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("logger: Papertrail send error")
+			p.conn = paperTrailConn()
+		}
+	}
+}
+
+func (p *paperTrailSender) Init() {
+	p.buffer = make(chan *logrus.Entry, 128)
+
+	go p.listen()
+
+	messenger.Register("settings", "papertrail", func(_ *messenger.Message) {
+		if p.conn != nil {
+			p.conn.Close()
+		}
+	})
+}
+
+func (p *paperTrailSender) Limit() time.Duration {
+	return time.Duration(settings.PapperTrail.RateLimit) * time.Second
+}
+
+func (p *paperTrailSender) Parse(entry *logrus.Entry) {
+	if settings.PapperTrail.Address == "" {
+		return
+	}
+
+	if len(buffer) <= 125 {
+		p.buffer <- entry
+	}
+}
 
 func paperTrailConn() (conn net.Conn) {
 	for {
