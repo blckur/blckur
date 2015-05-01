@@ -33,6 +33,11 @@ Copyright (c) 2015 Zachary Huff
 **use**     | run tasks in queue
 **docker**  | [![Docker Repository on Quay.io](https://quay.io/repository/blckur/worker/status "Docker Repository on Quay.io")](https://quay.io/repository/blckur/worker)
 
+**type**    | kibana
+----------- | -----------
+**use**     | kibana elasticsearch client
+**docker**  | [![Docker Repository on Quay.io](https://quay.io/repository/blckur/kibana/status "Docker Repository on Quay.io")](https://quay.io/repository/blckur/kibana)
+
 ## systems
 
 ### cache
