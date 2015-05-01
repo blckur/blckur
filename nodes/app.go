@@ -25,13 +25,15 @@ func (a *AppNode) Start() {
 
 	port := strconv.Itoa(a.Port)
 
+	router := gin.New()
+
 	if a.Debug {
+		router.Use(gin.Logger())
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	router := gin.Default()
 	handlers.Register(router, a.Source)
 
 	server := &http.Server{
