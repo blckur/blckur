@@ -48,6 +48,7 @@ func (a *AppNode) Start() {
 		"port":        a.Port,
 		"public_port": a.PublicPort,
 		"version":     constants.Version,
+		"debug":       a.Debug,
 	}).Info("nodes.app: Starting app node")
 
 	server.ListenAndServe()
