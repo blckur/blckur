@@ -64,7 +64,7 @@ func (s *searchSender) Parse(entry *logrus.Entry) {
 		return
 	}
 
-	if len(buffer) <= 125 {
+	if len(s.buffer) <= 125 {
 		s.buffer <- entry
 	}
 }

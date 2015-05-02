@@ -90,7 +90,7 @@ func (r *rollbarSender) Parse(entry *logrus.Entry) {
 		return
 	}
 
-	if len(buffer) <= 125 {
+	if len(r.buffer) <= 125 {
 		r.buffer <- entry
 	}
 }

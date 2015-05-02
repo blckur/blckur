@@ -62,7 +62,7 @@ func (p *paperTrailSender) Parse(entry *logrus.Entry) {
 		return
 	}
 
-	if len(buffer) <= 125 {
+	if len(p.buffer) <= 125 {
 		p.buffer <- entry
 	}
 }
