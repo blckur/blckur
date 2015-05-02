@@ -89,4 +89,6 @@ func init() {
 		})
 		update()
 	}
+
+	go listen()
 }
