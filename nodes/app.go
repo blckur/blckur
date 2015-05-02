@@ -53,5 +53,8 @@ func (a *AppNode) Start() {
 		"debug":       a.Debug,
 	}).Info("nodes.app: Starting app node")
 
-	server.ListenAndServe()
+	err := server.ListenAndServe()
+	if err != nil {
+		panic(err)
+	}
 }
