@@ -36,7 +36,7 @@ func (s *Session) Close() {
 }
 
 func (s *Session) CreateIndex(index string) (err error) {
-	_, err = s.conn.CreateIndex("logs")
+	_, err = s.conn.CreateIndex(index)
 	if err != nil {
 		if strings.Contains(err.Error(), "already exists") {
 			err = nil
