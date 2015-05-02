@@ -57,6 +57,7 @@ func Session(required bool) gin.HandlerFunc {
 	}
 }
 
+// Recover panics
 func Recovery(c *gin.Context) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -71,6 +72,7 @@ func Recovery(c *gin.Context) {
 	c.Next()
 }
 
+// Log analytics to elasticsearch
 func Analytics(c *gin.Context) {
 	entry := analytics.Entry{
 		Client:    c.Request.RemoteAddr,
