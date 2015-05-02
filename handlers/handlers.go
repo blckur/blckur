@@ -4,11 +4,13 @@ package handlers
 import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
+	"github.com/blckur/blckur/analytics"
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/session"
 	"github.com/dropbox/godropbox/errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 // Limit size of request body
@@ -69,10 +71,20 @@ func Recovery(c *gin.Context) {
 	c.Next()
 }
 
+func Analytics(c *gin.Context) {
+	entry := analytics.Entry{
+		Client:    c.Request.RemoteAddr,
+		Path:      c.Request.URL.Path,
+		Timestamp: time.Now().UTC().Format("2006-01-02T15:04:05"),
+	}
+	entry.Send()
+}
+
 // Register all endpoint handlers
 func Register(engine *gin.Engine, source string) {
 	engine.Use(Limiter)
 	engine.Use(Recovery)
+	engine.Use(Analytics)
 
 	dbGroup := engine.Group("")
 	dbGroup.Use(Database)
