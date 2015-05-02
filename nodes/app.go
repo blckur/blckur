@@ -4,6 +4,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/blckur/blckur/constants"
 	"github.com/blckur/blckur/handlers"
+	"github.com/blckur/blckur/proxy"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -53,7 +54,7 @@ func (a *AppNode) Start() {
 		"debug":       a.Debug,
 	}).Info("nodes.app: Starting app node")
 
-	err := server.ListenAndServe()
+	err := proxy.ListenAndServe(server)
 	if err != nil {
 		panic(err)
 	}
