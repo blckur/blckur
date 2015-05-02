@@ -142,6 +142,7 @@ func updateSearch() {
 		}).Error("logger.elasticsearch: Update error")
 		time.Sleep(constants.RetryDelay)
 		updateSearch()
+		return
 	}
 
 	err = conn.PutMapping("logs", "entry", searchEntry{}, mapping)
@@ -151,6 +152,7 @@ func updateSearch() {
 		}).Error("logger.elasticsearch: Update error")
 		time.Sleep(constants.RetryDelay)
 		updateSearch()
+		return
 	}
 }
 
