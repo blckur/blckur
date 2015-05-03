@@ -80,9 +80,9 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     return false;
   }
 
-  void append(dynamic data) {
+  model.Model append(dynamic data) {
     if (this.update(data)) {
-      return;
+      return null;
     }
 
     var model = this.newModel();
@@ -90,11 +90,13 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     model.init();
     model.import(data);
     this._collection.add(model);
+
+    return model;
   }
 
-  void prepend(dynamic data) {
+  model.Model prepend(dynamic data) {
     if (this.update(data)) {
-      return;
+      return null;
     }
 
     var model = this.newModel();
@@ -102,6 +104,8 @@ abstract class Collection extends remote.Remote with collection.IterableMixin {
     model.init();
     model.import(data);
     this._collection.insert(0, model);
+
+    return model;
   }
 
   void import(dynamic responseData) {
