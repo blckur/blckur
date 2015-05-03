@@ -138,18 +138,23 @@ func (c *Cookie) Save() (err error) {
 func GetCookie(con *gin.Context) (cook *Cookie, err error) {
 	store, err := Store.New(con.Request, "blckur")
 	if err != nil {
-		err = err.(securecookie.MultiError)[0]
-
-		switch err {
-		case securecookie.ErrMacInvalid:
-			err = nil
-		default:
-			err = &errortypes.UnknownError{
-				errors.Wrap(err, "auth: Unknown cookie error"),
-			}
-			return
+		err = &errortypes.UnknownError{
+			errors.Wrap(err.(securecookie.MultiError)[0],
+				"auth: Unknown cookie error"),
 		}
+		return
 	}
+
+	cook = &Cookie{
+		store: store,
+		con:   con,
+	}
+
+	return
+}
+
+func NewCookie(con *gin.Context) (cook *Cookie) {
+	store, _ := Store.New(con.Request, "blckur")
 
 	cook = &Cookie{
 		store: store,
