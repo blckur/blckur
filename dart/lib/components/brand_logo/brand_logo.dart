@@ -1,44 +1,10 @@
 library brand_logo_comp;
 
+import 'package:blckur/constants.dart';
 import 'package:blckur/all_aware.dart' as all_aware;
 
 import 'package:angular/angular.dart' show Component, NgAttr;
 import 'dart:html' as dom;
-
-const WIDE = 0;
-const NARROW = 1;
-
-// Used for static hash versioning search and replace
-var icons = {
-  'digitalocean': {
-    'url': '/s/img/digitalocean.png',
-    'style': WIDE,
-  },
-  'github': {
-    'url': '/s/img/github.png',
-    'style': WIDE,
-   },
-  'gmail': {
-    'url': '/s/img/gmail.png',
-    'style': WIDE,
-   },
-  'hackernews': {
-    'url': '/s/img/hackernews.png',
-    'style': NARROW,
-   },
-  'hipchat': {
-    'url': '/s/img/hipchat.png',
-    'style': WIDE,
-   },
-  'stripe': {
-    'url': '/s/img/stripe.png',
-    'style': WIDE,
-   },
-  'twitter': {
-    'url': '/s/img/twitter.png',
-    'style': WIDE,
-   },
-};
 
 @Component(
   selector: 'x-brand-logo',
