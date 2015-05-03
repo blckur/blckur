@@ -17,8 +17,6 @@ void notify(String title, String icon, String body) {
       icon = iconData['url'];
     }
 
-    print(icon);
-
     try {
       new dom.Notification(title, body:body, icon:icon);
       return;
