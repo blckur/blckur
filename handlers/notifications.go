@@ -18,7 +18,8 @@ func notificationGet(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
 
-	accts, err := notification.GetNotifications(db, sess.UserId)
+	// TODO
+	accts, err := notification.GetNotifications(db, sess.UserId, 25)
 	if err != nil {
 		c.Fail(500, err)
 		return

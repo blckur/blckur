@@ -83,8 +83,8 @@ func GetNotification(db *database.Database, userId bson.ObjectId,
 	return
 }
 
-func GetNotifications(db *database.Database, userId bson.ObjectId) (
-	notfs []*Notification, err error) {
+func GetNotifications(db *database.Database, userId bson.ObjectId,
+	limit int) (notfs []*Notification, err error) {
 
 	coll := db.Notifications()
 	notfs = []*Notification{}
@@ -92,7 +92,7 @@ func GetNotifications(db *database.Database, userId bson.ObjectId) (
 	iter := coll.Find(bson.M{
 		"user_id": userId,
 		"type":    bson.M{"$exists": true},
-	}).Limit(100).Sort("-timestamp").Iter()
+	}).Limit(limit).Sort("-timestamp").Iter()
 
 	notf := &Notification{}
 	for iter.Next(notf) {
