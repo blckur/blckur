@@ -72,6 +72,10 @@ func Recovery(c *gin.Context) {
 
 // Log analytics to elasticsearch
 func Analytics(c *gin.Context) {
+	if c.Request.URL.Path == "/check" {
+		return
+	}
+
 	entry := analytics.Entry{
 		Client:    c.Request.RemoteAddr,
 		Path:      c.Request.URL.Path,
