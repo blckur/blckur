@@ -8,7 +8,6 @@ import 'dart:js' as js;
 MainRout(ng.Router router, ng.RouteViewFactory views) {
   views.configure({
     'root': ng.ngRoute(
-      path: '/',
       defaultRoute: true,
       enter: (_) {
         var page = js.context['defaultPage'];
