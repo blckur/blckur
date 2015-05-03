@@ -1,15 +1,14 @@
 name: blckur
 version: 1.0.0
 dependencies:
-  angular:
-    git: https://github.com/zachhuff386/angular.dart.git
-  web_components: ">=0.11.2"
+  angular: ">=1.1.2"
+  web_components: ">=0.11.4"
   browser: ">=0.10.0+2"
   barback: ">=0.15.2+4"
   logging: ">=0.9.3"
-  polymer: ">=0.16.1+4"
-  core_elements: ">=0.7.0"
-  paper_elements: ">=0.7.0"
+  polymer: ">=0.16.3+1"
+  core_elements: ">=0.7.1+2"
+  paper_elements: ">=0.7.1"
   crypto: ">=0.9.0"
 transformers:
 - blckur
