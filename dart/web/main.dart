@@ -7,6 +7,7 @@ import 'package:blckur/decorators/decorators.dart' as decorators;
 import 'package:blckur/formatters/formatters.dart' as formatters;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/app.dart' as app;
+import 'package:blckur/notification.dart' as notification;
 
 import 'package:angular/angular.dart' as ng;
 import 'package:angular/application_factory.dart' as appfactory;
@@ -27,4 +28,6 @@ void main() {
     app.root.get(ng.Router)).start();
 
   dom.document.querySelector('.startup-background').remove();
+
+  notification.init();
 }
