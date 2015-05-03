@@ -54,11 +54,7 @@ func loginPost(c *gin.Context) {
 		return
 	}
 
-	cook, err := session.GetCookie(c)
-	if err != nil {
-		c.Fail(500, err)
-		return
-	}
+	cook := session.NewCookie(c)
 
 	sess, err = cook.NewSession(db, usr.Id, data.Remember)
 	if err != nil {
@@ -113,11 +109,7 @@ func signupPost(c *gin.Context) {
 		return
 	}
 
-	cook, err := session.GetCookie(c)
-	if err != nil {
-		c.Fail(500, err)
-		return
-	}
+	cook := session.NewCookie(c)
 
 	_, err = cook.NewSession(db, usr.Id, true)
 	if err != nil {
@@ -144,11 +136,7 @@ func resetGet(c *gin.Context) {
 		}
 	}
 
-	cook, err := session.GetCookie(c)
-	if err != nil {
-		c.Fail(500, err)
-		return
-	}
+	cook := session.NewCookie(c)
 
 	_, err = cook.NewSession(db, usr.Id, true)
 	if err != nil {

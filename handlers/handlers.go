@@ -31,21 +31,19 @@ func Session(required bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := c.MustGet("db").(*database.Database)
 
-		cook, err := session.GetCookie(c)
-		if err != nil {
-			c.Fail(500, err)
-			return
-		}
+		var sess *session.Session
 
-		sess, err := cook.GetSession(db)
-		switch err.(type) {
-		case nil:
-		case *session.NotFoundError:
-			sess = nil
-			err = nil
-		default:
-			c.Fail(500, err)
-			return
+		cook, err := session.GetCookie(c)
+		if err == nil {
+			sess, err = cook.GetSession(db)
+			switch err.(type) {
+			case nil:
+			case *session.NotFoundError:
+				sess = nil
+			default:
+				c.Fail(500, err)
+				return
+			}
 		}
 
 		if required && sess == nil {
