@@ -6,6 +6,10 @@ import 'package:angular/angular.dart' as ng;
 import 'dart:js' as js;
 
 MainRout(ng.Router router, ng.RouteViewFactory views) {
+  if (js.context['defaultPage'] == 'feed') {
+    router.gotoUrl('/feed');
+  }
+
   views.configure({
     'root': ng.ngRoute(
       defaultRoute: true,
