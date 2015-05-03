@@ -5,6 +5,7 @@ import 'package:blckur/collections/collections.dart' as collections;
 import 'package:blckur/utils/utils.dart' as utils;
 import 'package:blckur/logger.dart' as logger;
 import 'package:blckur/alert.dart' as alert;
+import 'package:blckur/notification.dart' as notification;
 
 import 'package:angular/angular.dart' show Component, NgOneWay;
 import 'package:angular/angular.dart' as ng;
@@ -34,7 +35,12 @@ class NotificationsComp implements ng.ScopeAware, ng.ShadowRootAware {
     });
 
     scope.on('notf_new').listen((evt) {
-      this.notifications.prepend(evt.data.data);
+      var model = this.notifications.prepend(evt.data.data);
+
+      if (model != null) {
+        notification.notify(model.subject, model.type, model.body);
+      }
+
       this.list.click();
     });
 
