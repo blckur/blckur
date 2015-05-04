@@ -13,6 +13,7 @@ import (
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -105,10 +106,59 @@ type hackerNewsStory struct {
 func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 	match := false
 
+	titleLower := ""
+	urlLower := ""
+	textLower := ""
+	fromLower := ""
+
 	for _, filter := range b.acct.Filters {
 		switch filter.Type {
 		case "all":
 			match = true
+		case "story_title":
+			if titleLower == "" {
+				titleLower = strings.ToLower(story.Title)
+			}
+
+			match = strings.Contains(titleLower,
+				strings.ToLower(filter.Value))
+
+			if match {
+				break
+			}
+		case "story_url":
+			if urlLower == "" {
+				urlLower = strings.ToLower(story.Url)
+			}
+
+			match = strings.Contains(urlLower,
+				strings.ToLower(filter.Value))
+
+			if match {
+				break
+			}
+		case "story_text":
+			if textLower == "" {
+				textLower = strings.ToLower(story.Text)
+			}
+
+			match = strings.Contains(textLower,
+				strings.ToLower(filter.Value))
+
+			if match {
+				break
+			}
+		case "story_from":
+			if fromLower == "" {
+				fromLower = strings.ToLower(story.By)
+			}
+
+			match = strings.Contains(fromLower,
+				strings.ToLower(filter.Value))
+
+			if match {
+				break
+			}
 		}
 	}
 
