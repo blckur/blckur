@@ -28,6 +28,27 @@ func init() {
 				Label: "All new stories",
 				Type:  "all",
 			},
+			&account.FilterType{
+				Label:       "Story matching title",
+				Type:        "story_title",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial text to match",
+				ValueHolder: "Title text",
+			},
+			&account.FilterType{
+				Label:       "Story matching url",
+				Type:        "story_url",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial url to match",
+				ValueHolder: "Url to match",
+			},
+			&account.FilterType{
+				Label:       "Story matching text",
+				Type:        "story_text",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial text to match",
+				ValueHolder: "Story text",
+			},
 		}, nil)
 }
 
