@@ -49,6 +49,13 @@ func init() {
 				ValueLabel:  "Enter complete or partial text to match",
 				ValueHolder: "Story text",
 			},
+			&account.FilterType{
+				Label:       "Story matching user",
+				Type:        "story_from",
+				ValueType:   "input",
+				ValueLabel:  "Enter complete or partial user to match",
+				ValueHolder: "Username",
+			},
 		}, nil)
 }
 
