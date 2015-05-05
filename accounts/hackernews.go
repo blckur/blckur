@@ -41,7 +41,7 @@ func init() {
 				Type:        "story_url",
 				ValueType:   "input",
 				ValueLabel:  "Enter complete or partial url to match",
-				ValueHolder: "Url to match",
+				ValueHolder: "Story url",
 			},
 			&account.FilterType{
 				Label:       "Story matching text",
