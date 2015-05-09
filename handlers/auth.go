@@ -129,11 +129,10 @@ func resetGet(c *gin.Context) {
 		switch err.(type) {
 		case *database.NotFoundError:
 			c.Fail(404, err)
-			return
 		default:
 			c.Fail(500, err)
-			return
 		}
+		return
 	}
 
 	cook := session.NewCookie(c)
