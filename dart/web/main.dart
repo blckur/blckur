@@ -1,7 +1,7 @@
 library blckur;
 
 import 'package:blckur/routers/routers.dart' as routers;
-import 'package:blckur/collections/events.dart' as evnts;
+import 'package:blckur/collections/events.dart' as events;
 import 'package:blckur/components/components.dart' as components;
 import 'package:blckur/decorators/decorators.dart' as decorators;
 import 'package:blckur/formatters/formatters.dart' as formatters;
@@ -24,7 +24,7 @@ void main() {
     .addModule(new animate.AnimationModule())
     .run();
 
-  new evnts.Events(app.root.get(ng.RootScope),
+  new events.Events(app.root.get(ng.RootScope),
     app.root.get(ng.Router)).start();
 
   dom.document.querySelector('.startup-background').remove();
