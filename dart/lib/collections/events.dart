@@ -14,6 +14,7 @@ class Events extends collection.Collection {
   ng.RootScope rootScope;
   dom.WebSocket socket;
   ng.Router router;
+  bool state;
 
   Events(this.rootScope, this.router) : super();
 
@@ -37,7 +38,11 @@ class Events extends collection.Collection {
   }
 
   void onClose(_) {
-    this.openDelay();
+    this.socket = null;
+
+    if (this.state == true) {
+      this.openDelay();
+    }
   }
 
   void openSocket() {
@@ -53,6 +58,8 @@ class Events extends collection.Collection {
       proto = 'wss';
     }
 
+    this.stop();
+
     this.socket = new dom.WebSocket(
       '${proto}://${dom.window.location.host}${this.url}');
     this.socket.onMessage.listen(this.onEvent);
@@ -66,6 +73,15 @@ class Events extends collection.Collection {
   }
 
   void start() {
+    this.state = true;
     this.openSocket();
+  }
+
+  void stop() {
+    this.state = false;
+
+    if (this.socket != null) {
+      this.socket.close();
+    }
   }
 }
