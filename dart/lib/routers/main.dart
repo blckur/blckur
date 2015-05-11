@@ -1,6 +1,8 @@
 library main_rout;
 
+import 'package:blckur/collections/collections.dart' as collections;
 import 'package:blckur/alert.dart' as alert;
+import 'package:blckur/app.dart' as app;
 
 import 'package:angular/angular.dart' as ng;
 import 'dart:js' as js;
@@ -27,7 +29,15 @@ MainRout(ng.Router router, ng.RouteViewFactory views) {
       path: '/feed',
       view: 'packages/blckur/views/feed.html',
       enter: (_) {
+        if (app.events != null) {
+          app.events.start();
+        }
         alert.clear();
+      },
+      leave: (_) {
+        if (app.events != null) {
+          app.events.stop();
+        }
       }
     ),
     'login': ng.ngRoute(
