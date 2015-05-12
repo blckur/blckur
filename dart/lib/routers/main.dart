@@ -1,6 +1,5 @@
 library main_rout;
 
-import 'package:blckur/collections/collections.dart' as collections;
 import 'package:blckur/alert.dart' as alert;
 import 'package:blckur/app.dart' as app;
 
