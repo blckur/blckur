@@ -1,4 +1,4 @@
-app0: sudo ID=lively-stars-5752 DB=mongodb://localhost:27017/blckur PORT=80 SOURCE=http://localhost:8080 ./blckur app
+app0: sudo ID=lively-stars-5752 DEBUG=true DB=mongodb://localhost:27017/blckur PORT=80 SOURCE=http://localhost:8080 ./blckur app
 cache0: ID=autumn-skies-7820 DB=mongodb://localhost:27017/blckur PORT=25100 ./blckur cache
 cache1: ID=guarded-thunder-1056 DB=mongodb://localhost:27017/blckur PORT=25101 ./blckur cache
 cache3: ID=evening-plains-3434 DB=mongodb://localhost:27017/blckur PORT=25102 ./blckur cache
