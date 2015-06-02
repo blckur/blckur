@@ -111,10 +111,12 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 	textLower := ""
 	fromLower := ""
 
+Loop:
 	for _, filter := range b.acct.Filters {
 		switch filter.Type {
 		case "all":
 			match = true
+            break Loop
 		case "story_title":
 			if titleLower == "" {
 				titleLower = strings.ToLower(story.Title)
@@ -124,7 +126,7 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 				strings.ToLower(filter.Value))
 
 			if match {
-				break
+				break Loop
 			}
 		case "story_url":
 			if urlLower == "" {
@@ -135,7 +137,7 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 				strings.ToLower(filter.Value))
 
 			if match {
-				break
+				break Loop
 			}
 		case "story_text":
 			if textLower == "" {
@@ -146,7 +148,7 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 				strings.ToLower(filter.Value))
 
 			if match {
-				break
+				break Loop
 			}
 		case "story_from":
 			if fromLower == "" {
@@ -157,7 +159,7 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 				strings.ToLower(filter.Value))
 
 			if match {
-				break
+				break Loop
 			}
 		}
 	}
