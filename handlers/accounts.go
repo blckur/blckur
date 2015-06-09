@@ -33,7 +33,7 @@ func accountsPost(c *gin.Context) {
 
 	url, err := auth.Request(db, sess.UserId)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 	acct.Redirect = url
@@ -47,7 +47,7 @@ func accountsGet(c *gin.Context) {
 
 	accts, err := account.GetAccounts(db, sess.UserId)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -66,7 +66,7 @@ func accountsPut(c *gin.Context) {
 
 	acct, err := account.GetAccount(db, sess.UserId, acctId)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -77,7 +77,7 @@ func accountsPut(c *gin.Context) {
 
 	err = acct.CommitFields(db, set.NewSet("filters", "new"))
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -94,7 +94,7 @@ func accountsDel(c *gin.Context) {
 		switch err.(type) {
 		case *database.NotFoundError:
 		default:
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 			return
 		}
 	}

@@ -41,7 +41,7 @@ func Session(required bool) gin.HandlerFunc {
 			case *session.NotFoundError:
 				sess = nil
 			default:
-				c.Fail(500, err)
+				c.AbortWithError(500, err)
 				return
 			}
 		}

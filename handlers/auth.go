@@ -41,7 +41,7 @@ func loginPost(c *gin.Context) {
 			})
 			return
 		default:
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 			return
 		}
 	}
@@ -58,7 +58,7 @@ func loginPost(c *gin.Context) {
 
 	sess, err = cook.NewSession(db, usr.Id, data.Remember)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -70,7 +70,7 @@ func sessionDelete(c *gin.Context) {
 
 	err := sess.Remove()
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -104,7 +104,7 @@ func signupPost(c *gin.Context) {
 				Message: "Email is already signed up",
 			})
 		default:
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 		}
 		return
 	}
@@ -113,7 +113,7 @@ func signupPost(c *gin.Context) {
 
 	_, err = cook.NewSession(db, usr.Id, true)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -128,9 +128,9 @@ func resetGet(c *gin.Context) {
 	if err != nil {
 		switch err.(type) {
 		case *database.NotFoundError:
-			c.Fail(404, err)
+			c.AbortWithError(404, err)
 		default:
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 		}
 		return
 	}
@@ -139,7 +139,7 @@ func resetGet(c *gin.Context) {
 
 	_, err = cook.NewSession(db, usr.Id, true)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -161,14 +161,14 @@ func resetPut(c *gin.Context) {
 			})
 			return
 		default:
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 			return
 		}
 	}
 
 	key, err := usr.ResetPassword(db)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 

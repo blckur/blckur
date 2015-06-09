@@ -21,7 +21,7 @@ func notificationGet(c *gin.Context) {
 	// TODO
 	accts, err := notification.GetNotifications(db, sess.UserId, 32)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -35,7 +35,7 @@ func notificationDel(c *gin.Context) {
 
 	err := notification.RemNotification(db, sess.UserId, notfId)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -56,7 +56,7 @@ func notificationPut(c *gin.Context) {
 
 	notf, err := notification.GetNotification(db, sess.UserId, notfId)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -64,7 +64,7 @@ func notificationPut(c *gin.Context) {
 
 	err = notf.CommitFields(db, set.NewSet("read"))
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 

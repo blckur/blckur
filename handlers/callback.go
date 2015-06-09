@@ -54,7 +54,7 @@ func callbackGet(c *gin.Context) {
 
 		_, err = auth.Authorize(db, x, y)
 		if err != nil {
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 			return
 		}
 	}

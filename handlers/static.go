@@ -28,14 +28,14 @@ type staticHandler struct {
 func (s *staticHandler) proxy(c *gin.Context) {
 	resp, err := http.Get(s.source + c.Params.ByName("path"))
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 

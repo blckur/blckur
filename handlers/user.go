@@ -17,7 +17,7 @@ func userGet(c *gin.Context) {
 
 	usr, err := sess.GetUser()
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -35,7 +35,7 @@ func userPut(c *gin.Context) {
 
 	usr, err := sess.GetUser()
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
@@ -55,14 +55,14 @@ func userPut(c *gin.Context) {
 	if data.Password != "" {
 		err = usr.SetPassword(data.Password)
 		if err != nil {
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
 			return
 		}
 	}
 
 	err = usr.Commit(db)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
 		return
 	}
 
