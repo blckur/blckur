@@ -17,10 +17,10 @@ func (f *formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 	msg := fmt.Sprintf("%s %s %s", formatLevel(entry.Level), blueArrow,
 		entry.Message)
 
-	var error string
+	var errStr string
 	for key, val := range entry.Data {
 		if key == "error" {
-			error = fmt.Sprintf("%s", val)
+			errStr = fmt.Sprintf("%s", val)
 			continue
 		}
 
@@ -30,8 +30,8 @@ func (f *formatter) Format(entry *logrus.Entry) (output []byte, err error) {
 				colorize.GreenBold, colorize.None))
 	}
 
-	if error != "" {
-		msg += "\n" + colorize.ColorString(error, colorize.Red, colorize.None)
+	if errStr != "" {
+		msg += "\n" + colorize.ColorString(errStr, colorize.Red, colorize.None)
 	}
 
 	if string(msg[len(msg)-1]) != "\n" {
