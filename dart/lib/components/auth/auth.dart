@@ -145,7 +145,7 @@ class AuthComp implements ng.ShadowRootAware {
     this.model.logout().then((_) {
       this.setMode('login');
     }).catchError((err) {
-      logger.severe('Failed to logout', err);
+      logger.severe('Error logging out', err);
     });
   }
 
