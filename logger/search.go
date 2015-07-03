@@ -75,17 +75,17 @@ func (s *searchSender) send(conn *search.Session, entry *logrus.Entry) (
 	msg := entry.Message
 	fields := searchFields{}
 
-	var err string
+	var errStr string
 	for key, val := range entry.Data {
 		if key == "error" {
-			err = fmt.Sprintf("%s", val)
+			errStr = fmt.Sprintf("%s", val)
 		} else {
 			fields[key] = fmt.Sprintf("%v", val)
 		}
 	}
 
-	if err != "" {
-		msg += "\n\n" + err
+	if errStr != "" {
+		msg += "\n\n" + errStr
 	}
 
 	if string(msg[len(msg)-1]) != "\n" {
