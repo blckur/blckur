@@ -29,7 +29,7 @@ func userPut(c *gin.Context) {
 	sess := c.MustGet("session").(*session.Session)
 	data := userData{}
 
-	if !c.Bind(&data) {
+	if err := c.Bind(&data); err != nil {
 		return
 	}
 

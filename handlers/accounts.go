@@ -60,7 +60,7 @@ func accountsPut(c *gin.Context) {
 	acctId := bson.ObjectIdHex(c.Params.ByName("id"))
 	data := accountData{}
 
-	if !c.Bind(&data) {
+	if err := c.Bind(&data); err != nil {
 		return
 	}
 
