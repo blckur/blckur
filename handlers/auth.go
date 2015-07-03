@@ -148,8 +148,11 @@ func resetGet(c *gin.Context) {
 
 func resetPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
-	data := &authData{}
-	c.Bind(data)
+	data := authData{}
+
+	if err := c.Bind(&data); err != nil {
+		return
+	}
 
 	usr, err := user.FindUser(db, data.Email)
 	if err != nil {
