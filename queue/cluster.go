@@ -106,7 +106,7 @@ func (c *cluster) Put(job *Job, priority int,
 
 	servers := stack.NewStringStack(utils.ShuffleStringsNew(c.serversSlc))
 
-	waiters := &sync.WaitGroup{}
+	waiters := sync.WaitGroup{}
 	waiters.Add(c.defaultConsistency)
 	sent := 0
 	sentMutex := sync.Mutex{}
