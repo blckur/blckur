@@ -10,7 +10,7 @@ Thumbs.db
 *.egg
 *.egg-info
 .sass-cache
-blckur.iml
+/blckur.iml
 /.vagrant
 /dart/.pub
 /dart/packages
