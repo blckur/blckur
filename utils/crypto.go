@@ -34,7 +34,6 @@ func seedRand() {
 	}
 
 	mathrand.Seed(n.Int64())
-
 	return
 }
 
