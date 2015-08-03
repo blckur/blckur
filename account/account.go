@@ -4,6 +4,7 @@ package account
 import (
 	"github.com/blckur/blckur/database"
 	"github.com/blckur/blckur/requires"
+	"github.com/blckur/blckur/settings"
 	"github.com/dropbox/godropbox/container/set"
 	"github.com/dropbox/godropbox/errors"
 	"labix.org/v2/mgo/bson"
@@ -35,6 +36,7 @@ type Account struct {
 	Oauth2RefTokn string        `bson:"oauth2_ref_tokn,omitempty" json:"-"`
 	Oauth2Exp     time.Time     `bson:"oauth2_exp,omitempty" json:"-"`
 	Filters       []*Filter     `bson:"filters" json:"filters"`
+	lastUpdate    time.Time
 }
 
 func (a *Account) Commit(db *database.Database) (err error) {
@@ -48,6 +50,25 @@ func (a *Account) CommitFields(db *database.Database,
 
 	coll := db.Accounts()
 	err = coll.CommitFields(a.Id, a, fields)
+
+	return
+}
+
+func (a *Account) Update(db *database.Database) (err error) {
+	if time.Since(a.lastUpdate) < settings.Account.UpdateRate*time.Second {
+		return
+	}
+
+	coll := db.Accounts()
+
+	err = coll.FindOne(bson.M{
+		"_id": a.Id,
+	}, a)
+	if err != nil {
+		return
+	}
+
+	a.lastUpdate = time.Now()
 
 	return
 }
@@ -104,6 +125,8 @@ func GetAccount(db *database.Database, userId bson.ObjectId,
 	if err != nil {
 		return
 	}
+
+	acct.lastUpdate = time.Now()
 
 	return
 }
