@@ -221,6 +221,11 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 	notf *notification.Notification, err error) {
 	var timestamp string
 
+	err = b.acct.Update(b.db)
+	if err != nil {
+		return
+	}
+
 	if evt, ok := evtInf.(anaconda.Tweet); ok {
 		var evtType string
 		var subject string
