@@ -100,9 +100,8 @@ func GetAccount(db *database.Database, userId bson.ObjectId,
 		query["user_id"] = userId
 	}
 
-	err = coll.Find(query).One(acct)
+	err = coll.FindOne(query, acct)
 	if err != nil {
-		err = database.ParseError(err)
 		return
 	}
 
