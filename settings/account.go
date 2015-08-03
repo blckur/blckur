@@ -9,6 +9,7 @@ func init() {
 }
 
 type account struct {
-	Id        string `bson:"_id"`
-	BodyLimit int    `bson:"body_limit" default:"300"`
+	Id         string `bson:"_id"`
+	UpdateRate int    `bson:"update_rate" default:"60"`
+	BodyLimit  int    `bson:"body_limit" default:"300"`
 }
