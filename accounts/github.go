@@ -294,7 +294,7 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 	}()
 
-	err = b.acct.Update(b.db)
+	err = g.acct.Update(g.db)
 	if err != nil {
 		return
 	}
