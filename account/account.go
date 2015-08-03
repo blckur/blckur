@@ -55,7 +55,9 @@ func (a *Account) CommitFields(db *database.Database,
 }
 
 func (a *Account) Update(db *database.Database) (err error) {
-	if time.Since(a.lastUpdate) < settings.Account.UpdateRate*time.Second {
+	if time.Since(a.lastUpdate) < time.Duration(
+		settings.Account.UpdateRate)*time.Second {
+
 		return
 	}
 
