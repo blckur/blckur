@@ -105,11 +105,15 @@ type hackerNewsStory struct {
 
 func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 	match := false
-
 	titleLower := ""
 	urlLower := ""
 	textLower := ""
 	fromLower := ""
+
+	err = b.acct.Update(b.db)
+	if err != nil {
+		return
+	}
 
 Loop:
 	for _, filter := range b.acct.Filters {
