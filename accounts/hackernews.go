@@ -116,7 +116,7 @@ Loop:
 		switch filter.Type {
 		case "all":
 			match = true
-            break Loop
+			break Loop
 		case "story_title":
 			if titleLower == "" {
 				titleLower = strings.ToLower(story.Title)
