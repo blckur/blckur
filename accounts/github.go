@@ -294,6 +294,11 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 		}
 	}()
 
+	err = b.acct.Update(b.db)
+	if err != nil {
+		return
+	}
+
 	stop = false
 
 	timestamp, err := time.Parse("2006-01-02T15:04:05Z", evt.CreatedAt)
