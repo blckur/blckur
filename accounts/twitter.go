@@ -223,6 +223,11 @@ func (b *twitterBackend) handle(evtInf interface{}) (
 
 	err = b.acct.Update(b.db)
 	if err != nil {
+		switch err.(type) {
+		case *database.NotFoundError:
+			err = nil
+			b.Stop()
+		}
 		return
 	}
 

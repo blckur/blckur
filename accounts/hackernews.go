@@ -112,6 +112,11 @@ func (b *hackerNewsBackend) parse(story *hackerNewsStory) (err error) {
 
 	err = b.acct.Update(b.db)
 	if err != nil {
+		switch err.(type) {
+		case *database.NotFoundError:
+			err = nil
+			b.Stop()
+		}
 		return
 	}
 

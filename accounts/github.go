@@ -296,6 +296,11 @@ func (g *gitHubBackend) parse(evt *gitHubEvent, force bool) (
 
 	err = g.acct.Update(g.db)
 	if err != nil {
+		switch err.(type) {
+		case *database.NotFoundError:
+			err = nil
+			g.Stop()
+		}
 		return
 	}
 
