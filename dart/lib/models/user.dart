@@ -28,6 +28,7 @@ class User extends model.Model {
       'id': () => this.id,
       'email': () => this.email,
       'password': () => this.password,
+      'apikey': () => this.apikey,
     };
   }
 
