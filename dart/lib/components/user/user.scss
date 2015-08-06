@@ -33,6 +33,14 @@
 }
 
 .active .settings {
-  max-height: 170px;
+  max-height: 190px;
   opacity: 1;
+}
+
+x-input {
+  height: 45px;
+}
+
+paper-button {
+  margin-top: 18px;
 }
