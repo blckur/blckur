@@ -16,7 +16,7 @@ packages:
   barback:
     description: barback
     source: hosted
-    version: "0.15.2+4"
+    version: "0.15.2+6"
   browser:
     description: browser
     source: hosted
@@ -44,11 +44,11 @@ packages:
   csslib:
     description: csslib
     source: hosted
-    version: "0.12.0+1"
+    version: "0.12.1"
   dart_style:
     description: dart_style
     source: hosted
-    version: "0.1.8"
+    version: "0.1.8+2"
   di:
     description: di
     source: hosted
@@ -56,11 +56,11 @@ packages:
   glob:
     description: glob
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   html:
     description: html
     source: hosted
-    version: "0.12.1+1"
+    version: "0.12.1+2"
   html5lib:
     description: html5lib
     source: hosted
@@ -96,7 +96,7 @@ packages:
   path:
     description: path
     source: hosted
-    version: "1.3.5"
+    version: "1.3.6"
   perf_api:
     description: perf_api
     source: hosted
@@ -116,7 +116,7 @@ packages:
   pool:
     description: pool
     source: hosted
-    version: "1.0.2"
+    version: "1.1.0"
   quiver:
     description: quiver
     source: hosted
@@ -128,7 +128,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.3.3+1"
+    version: "0.3.4"
   source_maps:
     description: source_maps
     source: hosted
@@ -140,7 +140,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.3.3"
+    version: "1.3.4"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -156,7 +156,7 @@ packages:
   watcher:
     description: watcher
     source: hosted
-    version: "0.9.6"
+    version: "0.9.7"
   web_components:
     description: web_components
     source: hosted

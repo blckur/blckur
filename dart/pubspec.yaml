@@ -1,15 +1,15 @@
 name: blckur
 version: 1.0.0
 dependencies:
-  angular: ">=1.1.2"
-  web_components: ">=0.11.4"
-  browser: ">=0.10.0+2"
-  barback: ">=0.15.2+4"
-  logging: ">=0.9.3"
-  polymer: ">=0.16.3+1"
-  core_elements: ">=0.7.1+2"
-  paper_elements: ">=0.7.1"
-  crypto: ">=0.9.0"
+  angular: "^1.1.2"
+  web_components: "^0.11.4+2"
+  browser: "^0.10.0+2"
+  barback: "^0.15.2+6"
+  logging: "^0.11.1"
+  polymer: "^0.16.3+3"
+  core_elements: "^0.7.1+2"
+  paper_elements: "^0.7.1+1"
+  crypto: "^0.9.0"
 transformers:
 - blckur
 - angular
