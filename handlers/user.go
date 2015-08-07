@@ -69,7 +69,6 @@ func userPut(c *gin.Context) {
 	c.JSON(200, usr)
 }
 
-
 func userApiKeyPut(c *gin.Context) {
 	db := c.MustGet("db").(*database.Database)
 	sess := c.MustGet("session").(*session.Session)
