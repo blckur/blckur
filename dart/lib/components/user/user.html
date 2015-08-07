@@ -18,7 +18,8 @@
     <x-input type="password" placeholder="Password"
       model="settingsModel.password" theme="dark"></x-input>
     <div class="apikey" layout horizontal>
-      <x-input type="text" readonly placeholder="API Key"
+      <div class="label">API Key</div>
+      <x-input type="text" readonly
         model="settingsModel.apikey" theme="dark"></x-input>
       <core-icon-button icon="refresh"
         touch-click="onRefreshApi()"></core-icon-button>

@@ -33,7 +33,7 @@
 }
 
 .active .settings {
-  max-height: 190px;
+  max-height: 210px;
   opacity: 1;
 }
 
@@ -43,4 +43,21 @@ x-input {
 
 paper-button {
   margin-top: 18px;
+}
+
+.apikey {
+  position: relative;
+  margin-top: 20px;
+}
+
+.apikey .label {
+  position: absolute;
+  top: 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.apikey core-icon-button {
+  margin-top: 21px;
+  margin-left: 10px;
 }
