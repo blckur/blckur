@@ -2,6 +2,8 @@ library user_mod;
 
 import 'package:blckur/model.dart' as model;
 
+import 'dart:async' as async;
+
 class User extends model.Model {
   String id;
 
@@ -18,6 +20,8 @@ class User extends model.Model {
       throw new model.Invalid('empty', 'Password cannot be empty');
     }
   }
+
+  String apikey;
 
   model.Model newModel() {
     return new User();
@@ -37,6 +41,7 @@ class User extends model.Model {
       'id': (x) => this.id = x,
       'email': (x) => this.email = x,
       'password': (x) => this.password = x,
+      'apikey': (x) => this.apikey = x,
     };
   }
 
@@ -48,4 +53,9 @@ class User extends model.Model {
   }
 
   String url = '/user';
+
+  async.Future refreshApi() {
+    this.url = '/user/apikey';
+    return this.save();
+  }
 }
