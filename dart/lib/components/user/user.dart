@@ -48,6 +48,19 @@ class UserComp {
     });
   }
 
+  void onRefreshApi() {
+    models.User model = this.model.clone();
+
+    model.refreshApi().then((_) {
+      this.model.apikey = model.apikey;
+      this.settingsModel.apikey = model.apikey;
+      print('refresh');
+    }).catchError((err) {
+      logger.severe('Failed to refresh apikey', err);
+      new alert.Alert('Failed to refresh apikey');
+    });
+  }
+
   void onSettings() {
     this.settingsModel = this.model.clone();
     this.settings = this.settings != true;
