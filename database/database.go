@@ -177,6 +177,18 @@ func addIndexes() (err error) {
 		}
 	}
 
+	coll = db.Users()
+	err = coll.EnsureIndex(mgo.Index{
+		Key:        []string{"apikey"},
+		Unique:     true,
+		Background: true,
+	})
+	if err != nil {
+		err = &IndexError{
+			errors.Wrap(err, "database: Index error"),
+		}
+	}
+
 	coll = db.Messages()
 	err = coll.EnsureIndex(mgo.Index{
 		Key:        []string{"channel"},
