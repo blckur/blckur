@@ -119,6 +119,7 @@ func Register(engine *gin.Engine, source string) {
 
 	authGroup.GET("/user", userGet)
 	authGroup.PUT("/user", userPut)
+	authGroup.PUT("/user/apikey", userApiKeyPut)
 
 	authGroup.GET("/events", eventGet)
 

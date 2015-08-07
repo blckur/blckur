@@ -17,6 +17,7 @@ import (
 type User struct {
 	Id           bson.ObjectId `bson:"_id,omitempty" json:"id"`
 	Email        string        `bson:"email" json:"email"`
+	ApiKey       string        `bson:"apikey" json:"apikey"`
 	PasswordSalt []byte        `bson:"pass_salt" json:"-"`
 	PasswordHash []byte        `bson:"pass_hash" json:"-"`
 }
@@ -55,6 +56,10 @@ func (u *User) SetPassword(password string) (err error) {
 	u.PasswordHash = u.hashPassword(password)
 
 	return
+}
+
+func (u *User) RefreshApiKey() {
+	u.ApiKey = utils.RandStr(20)
 }
 
 func (u *User) Commit(db *database.Database) (err error) {

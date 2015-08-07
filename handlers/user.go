@@ -68,3 +68,25 @@ func userPut(c *gin.Context) {
 
 	c.JSON(200, usr)
 }
+
+
+func userApiKeyPut(c *gin.Context) {
+	db := c.MustGet("db").(*database.Database)
+	sess := c.MustGet("session").(*session.Session)
+
+	usr, err := sess.GetUser()
+	if err != nil {
+		c.AbortWithError(500, err)
+		return
+	}
+
+	usr.RefreshApiKey()
+
+	err = usr.Commit(db)
+	if err != nil {
+		c.AbortWithError(500, err)
+		return
+	}
+
+	c.JSON(200, usr)
+}
