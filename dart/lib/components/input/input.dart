@@ -15,6 +15,16 @@ class InputComp extends all_aware.AllAware {
   String labelClass;
   bool labelFloat;
 
+  bool isReadonly;
+  @NgAttr('readonly')
+  void set readonly(String val) {
+    if (val == '') {
+      this.isReadonly = true;
+    } else {
+      this.isReadonly = false;
+    }
+  }
+
   @NgAttr('type')
   String type;
 

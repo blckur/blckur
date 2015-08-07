@@ -1,4 +1,5 @@
 <paper-input-decorator label="{{label}}"
     floatingLabel="{{labelFloat}}" ng-class="[labelClass, theme]">
-  <input is="core-input" ng-model="model" autocapitalize="off">
+  <input is="core-input" ng-model="model" ng-readonly="isReadonly"
+    autocapitalize="off">
 </paper-input-decorator>
