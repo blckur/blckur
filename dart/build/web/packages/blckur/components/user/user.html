@@ -17,6 +17,13 @@
       model="settingsModel.email" theme="dark"></x-input>
     <x-input type="password" placeholder="Password"
       model="settingsModel.password" theme="dark"></x-input>
+    <div class="apikey" layout horizontal>
+      <div class="label">API Key</div>
+      <x-input type="text" readonly
+        model="settingsModel.apikey" theme="dark"></x-input>
+      <core-icon-button icon="refresh"
+        touch-click="onRefreshApi()"></core-icon-button>
+    </div>
     <paper-button role="button" tabindex="0"
       delay-click="onSave()">Save</paper-button>
   </form>

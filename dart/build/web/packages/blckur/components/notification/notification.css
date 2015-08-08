@@ -23,7 +23,8 @@ x-brand-logo {
 
 .info {
   padding-left: 10px;
-  padding-bottom: 12px; }
+  padding-bottom: 12px;
+  word-wrap: break-word; }
 
 .timestamp {
   position: absolute;
