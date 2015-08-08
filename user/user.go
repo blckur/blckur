@@ -89,6 +89,22 @@ func FindUser(db *database.Database, email string) (usr *User, err error) {
 	return
 }
 
+func FindUserApiKey(db *database.Database, apikey string) (
+	usr *User, err error) {
+
+	coll := db.Users()
+	usr = &User{}
+
+	err = coll.FindOne(bson.M{
+		"apikey": apikey,
+	}, usr)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func GetUser(db *database.Database, id bson.ObjectId) (usr *User, err error) {
 	coll := db.Users()
 	usr = &User{}
