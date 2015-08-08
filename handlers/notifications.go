@@ -103,7 +103,7 @@ func notificationPost(c *gin.Context) {
 		UserId:    usr.Id,
 		AccountId: usr.Id,
 		RemoteId:  bson.NewObjectId().String(),
-		Timestamp: time.Now(),
+		Timestamp: time.Unix(time.Now().Unix(), 0),
 		Type:      "blckur",
 		Origin:    data.Origin,
 		Link:      data.Link,
