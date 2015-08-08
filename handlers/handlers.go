@@ -126,6 +126,7 @@ func Register(engine *gin.Engine, source string) {
 	authGroup.GET("/notifications", notificationGet)
 	authGroup.PUT("/notifications/:id", notificationPut)
 	authGroup.DELETE("/notifications/:id", notificationDel)
+	dbGroup.POST("/notifications/:apikey", notificationPost)
 
 	staticHand := newStaticHandler(source)
 	if staticHand.Type == Proxy {
