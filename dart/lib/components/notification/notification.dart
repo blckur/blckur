@@ -24,16 +24,7 @@ class NotificationComp {
   models.Notification model;
 
   String get date {
-    var sIndex = this.model.timestamp.lastIndexOf('.');
-    var eIndex = this.model.timestamp.lastIndexOf('-');
-    var timestamp;
-    if (sIndex != -1 && eIndex != -1) {
-      timestamp = this.model.timestamp.substring(0, sIndex) +
-        this.model.timestamp.substring(eIndex);
-    } else {
-      timestamp = this.model.timestamp;
-    }
-    var notf = DateTime.parse(timestamp);
+    var notf = DateTime.parse(this.model.timestamp);
     var now = new DateTime.now();
     var diff = now.difference(notf);
 
