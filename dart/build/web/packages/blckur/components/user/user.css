@@ -30,7 +30,7 @@
   transition: max-height 0.2s, opacity 0.2s; }
 
 .active .settings {
-  max-height: 210px;
+  max-height: 230px;
   opacity: 1; }
 
 x-input {

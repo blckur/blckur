@@ -8726,7 +8726,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     toggleOverlay: function() {
-      this.opened = !this.opened;
+      if (!this.dropdown.contains(event.target) && !this.disabled) {
+        this.opened = !this.opened;
+      }
     }
 
   });
