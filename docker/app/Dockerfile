@@ -6,6 +6,6 @@ RUN pacman -S --noconfirm go git bzr
 ENV GOPATH /go
 ENV PATH $PATH:/go/bin
 
-RUN go get github.com/blckur/blckur # c032e87e78c103654ba7f1a2de5889759fcdd856
+RUN go get github.com/blckur/blckur # 95a98e938b8514979d860248892fea1d01b3509a
 
 CMD ["blckur", "app"]
