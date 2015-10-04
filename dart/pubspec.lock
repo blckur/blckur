@@ -6,8 +6,11 @@ packages:
     source: hosted
     version: "0.24.6"
   angular:
-    description: angular
-    source: hosted
+    description:
+      ref: null
+      resolved-ref: bbe4d10837803a6ac49d763fb1c6fafb9aa3cdce
+      url: "https://github.com/blckur/angular.dart.git"
+    source: git
     version: "1.1.2"
   args:
     description: args
@@ -16,11 +19,15 @@ packages:
   barback:
     description: barback
     source: hosted
-    version: "0.15.2+6"
+    version: "0.15.2+7"
   browser:
     description: browser
     source: hosted
     version: "0.10.0+2"
+  charcode:
+    description: charcode
+    source: hosted
+    version: "1.1.0"
   cli_util:
     description: cli_util
     source: hosted
@@ -28,19 +35,22 @@ packages:
   code_transformers:
     description: code_transformers
     source: hosted
-    version: "0.2.9"
+    version: "0.2.9+3"
   collection:
     description: collection
     source: hosted
-    version: "1.1.1"
+    version: "1.1.3"
   core_elements:
-    description: core_elements
-    source: hosted
-    version: "0.7.1+2"
+    description:
+      ref: null
+      resolved-ref: "156504d175fb6a30b19d4470b9488902ce97ae42"
+      url: "https://github.com/blckur/core-elements.git"
+    source: git
+    version: "0.7.1+3"
   crypto:
     description: crypto
     source: hosted
-    version: "0.9.0"
+    version: "0.9.1"
   csslib:
     description: csslib
     source: hosted
@@ -60,7 +70,7 @@ packages:
   html:
     description: html
     source: hosted
-    version: "0.12.1+2"
+    version: "0.12.2"
   html5lib:
     description: html5lib
     source: hosted
@@ -68,30 +78,29 @@ packages:
   initialize:
     description: initialize
     source: hosted
-    version: "0.6.1"
+    version: "0.6.1+2"
   intl:
     description: intl
     source: hosted
-    version: "0.8.10+4"
+    version: "0.12.4+2"
   logging:
     description: logging
     source: hosted
-    version: "0.11.1"
+    version: "0.11.2"
   matcher:
     description: matcher
     source: hosted
     version: "0.12.0+1"
-  meta:
-    description: meta
-    source: hosted
-    version: "0.8.8"
   observe:
     description: observe
     source: hosted
-    version: "0.13.1+1"
+    version: "0.13.1+2"
   paper_elements:
-    description: paper_elements
-    source: hosted
+    description:
+      ref: null
+      resolved-ref: d743adccda8a4aae895257bc64c75dbdb329d32d
+      url: "https://github.com/blckur/paper-elements.git"
+    source: git
     version: "0.7.1+1"
   path:
     description: path
@@ -101,17 +110,30 @@ packages:
     description: perf_api
     source: hosted
     version: "0.0.9"
-  polymer:
-    description: polymer
+  petitparser:
+    description: petitparser
     source: hosted
+    version: "1.4.3"
+  polymer:
+    description:
+      ref: null
+      resolved-ref: "7a7fdfb0aaf359d153a62e81c5fb8ac2570897b9"
+      url: "https://github.com/blckur/polymer-dart.git"
+    source: git
     version: "0.16.3+3"
   polymer_expressions:
-    description: polymer_expressions
-    source: hosted
-    version: "0.13.1"
+    description:
+      ref: null
+      resolved-ref: "768c7ad82129e69cda2d6a339f7aa5d8e857521c"
+      url: "https://github.com/blckur/polymer-expressions.git"
+    source: git
+    version: "0.13.0+2"
   polymer_interop:
-    description: polymer_interop
-    source: hosted
+    description:
+      ref: null
+      resolved-ref: cc35cefc9e5ebd91641e115441446a65477cc3a7
+      url: "https://github.com/blckur/polymer_interop.git"
+    source: git
     version: "0.1.1"
   pool:
     description: pool
@@ -128,7 +150,7 @@ packages:
   smoke:
     description: smoke
     source: hosted
-    version: "0.3.4"
+    version: "0.3.5"
   source_maps:
     description: source_maps
     source: hosted
@@ -136,18 +158,21 @@ packages:
   source_span:
     description: source_span
     source: hosted
-    version: "1.1.2"
+    version: "1.2.1"
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.3.4"
+    version: "1.4.2"
   string_scanner:
     description: string_scanner
     source: hosted
-    version: "0.1.3+1"
+    version: "0.1.4"
   template_binding:
-    description: template_binding
-    source: hosted
+    description:
+      ref: null
+      resolved-ref: "1d5ae926c5c6c225829526ee73368f92a7a0dbde"
+      url: "https://github.com/blckur/template-binding.git"
+    source: git
     version: "0.14.0+2"
   utf:
     description: utf
@@ -160,7 +185,7 @@ packages:
   web_components:
     description: web_components
     source: hosted
-    version: "0.11.4+2"
+    version: "0.12.0+3"
   when:
     description: when
     source: hosted
@@ -172,4 +197,4 @@ packages:
   yaml:
     description: yaml
     source: hosted
-    version: "2.1.3"
+    version: "2.1.7"
