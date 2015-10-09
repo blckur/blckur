@@ -11,7 +11,7 @@ import (
 )
 
 func RandBytes(size int) (bytes []byte, err error) {
-	bytes = make([]byte, 32)
+	bytes = make([]byte, size)
 	_, err = rand.Read(bytes)
 	if err != nil {
 		err = &errortypes.UnknownError{
