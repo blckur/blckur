@@ -80,7 +80,7 @@ func update() {
 func init() {
 	buffer = make(chan *Entry, 1024)
 
-	module := requires.New("logger.search")
+	module := requires.New("analytics")
 	module.After("settings")
 
 	module.Handler = func() {
