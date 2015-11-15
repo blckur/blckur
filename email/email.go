@@ -16,6 +16,7 @@ type Client struct {
 
 func (c *Client) Send(to *mail.Address, subject string,
 	body string) (err error) {
+
 	headers := map[string]string{}
 	headers["From"] = c.from.String()
 	headers["To"] = to.String()
