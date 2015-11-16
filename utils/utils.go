@@ -55,7 +55,7 @@ func GetLocalAddress() (addr string, err error) {
 	name, err := os.Hostname()
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "beanstalkd: Get ip"),
+			errors.Wrap(err, "utils: Get ip"),
 		}
 		return
 	}
@@ -63,7 +63,7 @@ func GetLocalAddress() (addr string, err error) {
 	addrs, err := net.LookupHost(name)
 	if err != nil {
 		err = &errortypes.UnknownError{
-			errors.Wrap(err, "beanstalkd: Get ip"),
+			errors.Wrap(err, "utils: Get ip"),
 		}
 		return
 	}
